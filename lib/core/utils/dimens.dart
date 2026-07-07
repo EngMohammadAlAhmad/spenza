@@ -1,21 +1,14 @@
-// Padding begin.
-const double kDefaultPadding = 16.0;
+class AppDimens {
+  AppDimens._();
 
-const double kTextPadding = 4.0;
-// Padding end.
+  static const double screenPadding = 16.0;
+  static const double radiusS = 8.0;
+  static const double radiusM = 14.0;
+  static const double radiusL = 20.0;
+  static const double radiusPill = 100.0;
 
-// Screen width begin.
-const double kScreenWidthSm = 576.0;
-
-const double kScreenWidthMd = 768.0;
-
-const double kScreenWidthLg = 992.0;
-
-const double kScreenWidthXl = 1200.0;
-
-const double kScreenWidthXxl = 1400.0;
-// Screen width end.
-
-// Dialog width begin.
-const double kDialogWidth = 460.0;
-// Dialog width end.
+  static const double spaceXS = 4.0;
+  static const double spaceS = 8.0;
+  static const double spaceM = 16.0;
+  static const double spaceL = 24.0;
+}

@@ -23,44 +23,44 @@ class AppTheme {
     final textTheme = TextTheme(
       // Display styles
       displayLarge: TextStyle(
-        fontSize: 32,
+        fontSize: 32.0,
         fontWeight: .bold,
         color: baseTextColor,
         letterSpacing: -0.5,
       ),
       displayMedium: TextStyle(
-        fontSize: 28,
+        fontSize: 28.0,
         fontWeight: .bold,
         color: baseTextColor,
         letterSpacing: -0.3,
       ),
       displaySmall: TextStyle(
-        fontSize: 24,
+        fontSize: 24.0,
         fontWeight: .w600,
         color: baseTextColor,
       ),
 
       // Headline styles
       headlineLarge: TextStyle(
-        fontSize: 24,
+        fontSize: 24.0,
         fontWeight: .bold,
         color: baseTextColor,
         letterSpacing: -0.3,
       ),
       headlineMedium: TextStyle(
-        fontSize: 20,
+        fontSize: 20.0,
         fontWeight: .w600,
         color: baseTextColor,
       ),
       headlineSmall: TextStyle(
-        fontSize: 18,
+        fontSize: 18.0,
         fontWeight: .w600,
         color: baseTextColor,
       ),
 
       // Title styles
       titleLarge: TextStyle(
-        fontSize: 20,
+        fontSize: 20.0,
         fontWeight: .w600,
         color: baseTextColor,
         fontFamily: 'Zain',
@@ -71,26 +71,26 @@ class AppTheme {
         color: baseTextColor,
       ),
       titleSmall: TextStyle(
-        fontSize: 14,
+        fontSize: 14.0,
         fontWeight: .w500,
         color: baseTextColor,
       ),
 
       // Body styles
       bodyLarge: TextStyle(
-        fontSize: 16,
+        fontSize: 16.0,
         fontWeight: .w400,
         color: baseTextColor,
         height: 1.5,
       ),
       bodyMedium: TextStyle(
-        fontSize: 14,
+        fontSize: 14.0,
         fontWeight: .w400,
         color: baseTextColor,
         height: 1.5,
       ),
       bodySmall: TextStyle(
-        fontSize: 12,
+        fontSize: 12.0,
         fontWeight: .w400,
         color: secondaryTextColor,
         height: 1.4,
@@ -98,18 +98,18 @@ class AppTheme {
 
       // Label styles
       labelLarge: TextStyle(
-        fontSize: 14,
+        fontSize: 14.0,
         //fontWeight: .w600,
         color: baseTextColor,
         letterSpacing: 0.3,
       ),
       labelMedium: TextStyle(
-        fontSize: 13,
+        fontSize: 13.0,
         fontWeight: .w500,
         color: baseTextColor,
       ),
       labelSmall: TextStyle(
-        fontSize: 11,
+        fontSize: 11.0,
         fontWeight: .w500,
         color: secondaryTextColor,
         letterSpacing: 0.5,

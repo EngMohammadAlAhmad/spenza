@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({
@@ -62,8 +64,8 @@ class _HomeShellState extends State<HomeShell> {
 
   @override
   Widget build(BuildContext context) {
-    const Color activeTabColor = Color(0xFFE8706A);
-    final inactiveColor = Colors.grey.shade600;
+    const Color activeTabColor = AppColors.primary;
+    final inactiveColor = AppColors.neutral;
 
     final items = [
       _NavItem(icon: 'assets/icons/home_icon.svg', label: 'home'.tr()),
@@ -110,29 +112,29 @@ class _HomeShellState extends State<HomeShell> {
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 250),
                       curve: Curves.easeInOut,
-                      padding: const EdgeInsets.symmetric(vertical: 5.0), // Fixed typo
+                      padding: const .symmetric(vertical: 5.0),
                       decoration: BoxDecoration(
                         color: isSelected ? activeTabColor : Colors.transparent,
-                        borderRadius: BorderRadius.circular(72.0), // Fixed typo
+                        borderRadius: AppRadius.extra4Large,
                       ),
                       child: Column(
-                        mainAxisSize: MainAxisSize.min, // Fixed typo
-                        mainAxisAlignment: MainAxisAlignment.center, // Fixed typo
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         spacing: 2.0,
                         children: [
                           SvgPicture.asset(
                             item.icon,
                             colorFilter: ColorFilter.mode(
                               isSelected ? Colors.white : inactiveColor,
-                              BlendMode.srcIn, // Fixed typo
+                              BlendMode.srcIn,
                             ),
+                            width: 25.0,
                           ),
                           Text(
                             item.label,
-                            style: TextStyle(
+                            style: Theme.of(context).textTheme.bodySmall!.copyWith(
                               color: isSelected ? Colors.white : inactiveColor,
-                              fontSize: 11,
-                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                              fontWeight: isSelected ? .w700 : FontWeight.normal,
                             ),
                             textAlign: TextAlign.center,
                           ),

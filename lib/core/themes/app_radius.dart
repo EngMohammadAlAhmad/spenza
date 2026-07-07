@@ -13,6 +13,8 @@ class AppRadius {
   static final BorderRadius extraLarge2 = .circular(25.0);
   static final BorderRadius extraLarge3 = .circular(28.0);
   static final BorderRadius extra2Large = .circular(32.0);
+  static final BorderRadius extra3Large = .circular(32.0);
+  static final BorderRadius extra4Large = .circular(72.0);
 
   // Or using individual radius values
   static const double smallValue = 4;
