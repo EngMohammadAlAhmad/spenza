@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/general_pages/error_page.dart';
 import 'package:spenza/core/general_pages/home_shell.dart';
 import 'package:spenza/core/routes/route_paths.dart';
+import 'package:spenza/core/routes/animated_branch_container.dart'; // Import the new widget
 import 'package:spenza/features/home/presentation/screens/home_screen.dart';
 import 'package:spenza/features/categories/presentation/screens/categories_screen.dart';
 import 'package:spenza/features/orders/presentation/screens/orders_screen.dart';
@@ -19,10 +20,16 @@ class AppRouter {
     debugLogDiagnostics: true,
     initialLocation: RoutePaths.home,
     routes: [
-      // Use .indexedStack instead of the default constructor
-      StatefulShellRoute.indexedStack(
+      // Use StatefulShellRoute instead of .indexedStack
+      StatefulShellRoute(
+        navigatorContainerBuilder: (context, navigationShell, children) {
+          // This wraps the branch navigators in our custom animated container
+          return AnimatedBranchContainer(
+            currentIndex: navigationShell.currentIndex,
+            children: children,
+          );
+        },
         builder: (context, state, navigationShell) {
-          // Return your HomeShell here, passing only the navigationShell
           return HomeShell(navigationShell: navigationShell);
         },
         branches: [

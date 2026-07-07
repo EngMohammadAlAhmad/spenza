@@ -266,7 +266,7 @@ class AppButtonStyles {
         fontSize: 14,
         fontWeight: .w600,
         letterSpacing: 0.2,
-        fontFamily: 'Baloo2',
+        fontFamily: 'Zain',
       ),
     );
   }

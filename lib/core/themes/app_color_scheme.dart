@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 
 class AppColorScheme extends ThemeExtension<AppColorScheme> {
@@ -67,3 +68,4 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
     );
   }
 }
+*/

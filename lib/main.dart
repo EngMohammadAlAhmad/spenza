@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:spenza/app.dart';
 import 'package:spenza/core/translations/codegen_loader.g.dart';
+//import 'package:spenza/core/translations/codegen_loader.g.dart';
 import 'package:spenza/injection_locator.dart' as di;
 
 Future<void> main() async {
@@ -20,3 +21,6 @@ Future<void> main() async {
     ),
   );
 }
+
+// dart run easy_localization:generate -S "assets/translations" -O "lib/core/translations"
+// dart run easy_localization:generate -S "assets/translations" -O "lib/core/translations" -o "locale_keys.g.dart" -f keys

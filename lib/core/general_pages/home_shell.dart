@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({
@@ -33,15 +35,19 @@ class _HomeShellState extends State<HomeShell> {
 
     if (velocity.abs() > 300) {
       if (velocity < 0) {
+        // Swiping LEFT -> Go to PREVIOUS tab
         newIndex--;
       } else if (velocity > 0) {
+        // Swiping RIGHT -> Go to NEXT tab
         newIndex++;
       }
       shouldNavigate = true;
     } else if (_dragDistance.abs() > 100) {
       if (_dragDistance < 0) {
+        // Dragged LEFT -> Go to PREVIOUS tab
         newIndex--;
       } else if (_dragDistance > 0) {
+        // Dragged RIGHT -> Go to NEXT tab
         newIndex++;
       }
       shouldNavigate = true;
@@ -60,10 +66,10 @@ class _HomeShellState extends State<HomeShell> {
     final inactiveColor = Colors.grey.shade600;
 
     final items = [
-      _NavItem(icon: Icons.home_rounded, label: 'Home'),
-      _NavItem(icon: Icons.grid_view_rounded, label: 'Categories'),
-      _NavItem(icon: Icons.receipt_long_rounded, label: 'Orders'),
-      _NavItem(icon: Icons.person_outline_rounded, label: 'Account'),
+      _NavItem(icon: 'assets/icons/home_icon.svg', label: 'home'.tr()),
+      _NavItem(icon: 'assets/icons/categories_icon.svg', label: 'categories'.tr()),
+      _NavItem(icon: 'assets/icons/orders_icon.svg', label: 'orders'.tr()),
+      _NavItem(icon: 'assets/icons/account_icon.svg', label: 'account'.tr()),
     ];
 
     return Scaffold(
@@ -71,6 +77,7 @@ class _HomeShellState extends State<HomeShell> {
         behavior: HitTestBehavior.translucent,
         onHorizontalDragUpdate: _onHorizontalDragUpdate,
         onHorizontalDragEnd: _onHorizontalDragEnd,
+        // Removed AnimatedSwitcher to fix the Duplicate GlobalKey error
         child: widget.navigationShell,
       ),
       bottomNavigationBar: Container(
@@ -103,19 +110,22 @@ class _HomeShellState extends State<HomeShell> {
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 250),
                       curve: Curves.easeInOut,
-                      padding: const .symmetric(vertical: 5.0),
+                      padding: const EdgeInsets.symmetric(vertical: 5.0), // Fixed typo
                       decoration: BoxDecoration(
                         color: isSelected ? activeTabColor : Colors.transparent,
-                        borderRadius: .circular(72.0),
+                        borderRadius: BorderRadius.circular(72.0), // Fixed typo
                       ),
                       child: Column(
-                        mainAxisSize: .min,
-                        mainAxisAlignment: .center,
+                        mainAxisSize: MainAxisSize.min, // Fixed typo
+                        mainAxisAlignment: MainAxisAlignment.center, // Fixed typo
+                        spacing: 2.0,
                         children: [
-                          Icon(
+                          SvgPicture.asset(
                             item.icon,
-                            color: isSelected ? Colors.white : inactiveColor,
-                            size: 24.0,
+                            colorFilter: ColorFilter.mode(
+                              isSelected ? Colors.white : inactiveColor,
+                              BlendMode.srcIn, // Fixed typo
+                            ),
                           ),
                           Text(
                             item.label,
@@ -141,7 +151,7 @@ class _HomeShellState extends State<HomeShell> {
 }
 
 class _NavItem {
-  final IconData icon;
+  final String icon;
   final String label;
 
   const _NavItem({required this.icon, required this.label});

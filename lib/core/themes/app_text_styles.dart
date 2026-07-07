@@ -60,7 +60,7 @@ class AppTextStyles {
     return TextStyle(
       fontSize: 14.0,
       fontWeight: .w400,
-      fontFamily: 'Baloo2',
+      fontFamily: 'Zain',
       color: Theme.of(context).colorScheme.onSurface,
       height: 1.5,
     );
@@ -71,7 +71,7 @@ class AppTextStyles {
     return TextStyle(
       fontSize: 12.0,
       fontWeight: .w400,
-      fontFamily: 'Baloo2',
+      fontFamily: 'Zain',
       color: Theme.of(context).colorScheme.onSurface,
       height: 1.4,
     );

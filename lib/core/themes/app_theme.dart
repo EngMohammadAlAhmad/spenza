@@ -18,7 +18,7 @@ class AppTheme {
 
     final baseTextColor = isDark ? AppColors.onSurfaceDark : AppColors.onSurfaceLight;
     final secondaryTextColor = isDark ? AppColors.secondaryTextDark : AppColors.secondaryTextLight;
-    //final isArabic = locale.languageCode == 'ar';
+    final isArabic = locale.languageCode == 'ar';
 
     final textTheme = TextTheme(
       // Display styles
@@ -63,7 +63,7 @@ class AppTheme {
         fontSize: 20,
         fontWeight: .w600,
         color: baseTextColor,
-        fontFamily: 'Baloo2',
+        fontFamily: 'Zain',
       ),
       titleMedium: TextStyle(
         fontSize: 16.0,
@@ -149,7 +149,7 @@ class AppTheme {
       primaryColor: colorScheme.primary,
       disabledColor: isDark ? AppColors.disabledDark : AppColors.disabledLight,
       textTheme: textTheme,
-      fontFamily: 'Baloo2',
+      fontFamily: 'Zain',
 
       // APP BAR
       appBarTheme: AppBarTheme(
@@ -183,7 +183,7 @@ class AppTheme {
             fontSize: 14,
             fontWeight: .normal,
             letterSpacing: 0.3,
-            fontFamily: 'Baloo2',
+            fontFamily: 'Zain',
           ),
         ),
       ),
@@ -201,7 +201,7 @@ class AppTheme {
             fontSize: 14.0,
             fontWeight: .bold,
             letterSpacing: 0.3,
-            fontFamily: 'Baloo2',
+            fontFamily: 'Zain',
           ),
         ),
       ),
@@ -215,7 +215,7 @@ class AppTheme {
             fontSize: 16.0,
             fontWeight: .normal,
             letterSpacing: 0.2,
-            fontFamily: 'Baloo2',
+            fontFamily: 'Zain',
           ),
         ),
       ),

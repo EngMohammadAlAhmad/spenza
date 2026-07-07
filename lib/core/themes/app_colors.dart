@@ -2,17 +2,11 @@ import 'dart:ui';
 
 class AppColors {
   // Primary - Professional Blue Gradient
-  static const Color primary = Color(0xFFE43905);
-  static const Color primary300 = Color(0xFFF4977D);
-  static const Color primary400 = Color(0xFFF17551);
-  static const Color primary500 = Color(0xFFED5226);
-  static const Color primary600 = Color(0xFFDD3F12);
+  static const Color primary = Color(0xFFD46B60);
   static const Color primaryDark = Color(0xFFC64420);
 
   // Secondary / accent - Professional Purple
   static const Color secondary = Color(0xFF543D8D);
-  static const Color secondary400 = Color(0xFF4A148C);
-  static const Color secondary600 = Color(0xFF6A1B9A);
   static const Color secondaryDark = Color(0xFF463376);
 
   // Surfaces / backgrounds
