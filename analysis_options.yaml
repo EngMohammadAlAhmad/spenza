@@ -1,0 +1,13 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+
+  rules:
+    avoid_print: false
+    constant_identifier_names: false
+    non_constant_identifier_names: false
+    use_build_context_synchronously: false
+    depend_on_referenced_packages: false
+
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options

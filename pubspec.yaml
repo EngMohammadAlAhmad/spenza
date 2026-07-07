@@ -1,0 +1,61 @@
+name: spenza
+description: "A new Flutter project."
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  internet_connection_checker_plus:
+  dio:
+  shared_preferences:
+  dartz:
+  flutter_bloc:
+  equatable:
+  get_it:
+  bloc_concurrency:
+  go_router:
+  flutter_svg:
+  cached_network_image:
+  intl:
+  easy_localization:
+  image_picker:
+  flutter_secure_storage:
+  salomon_bottom_bar:
+  convex_bottom_bar:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/fonts/
+
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/to/font-from-package
