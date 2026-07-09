@@ -28,6 +28,8 @@ dependencies:
   easy_localization:
   image_picker:
   flutter_secure_storage:
+  carousel_slider:
+  smooth_page_indicator:
 
 dev_dependencies:
   flutter_test:
@@ -42,6 +44,8 @@ flutter:
   assets:
     - assets/icons/
     - assets/fonts/
+    - assets/images/
+    - assets/images/temp/
 
   fonts:
     - family: Zain

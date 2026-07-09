@@ -7,6 +7,7 @@ class AppRadius {
   static final BorderRadius ordinary = .circular(10.0);
   static final BorderRadius medium = .circular(12.0);
   static final BorderRadius overMedium = .circular(16.0);
+  static final BorderRadius mediumMiddle = .circular(17.0);
   static final BorderRadius upMedium = .circular(18.0);
   static final BorderRadius large = .circular(20.0);
   static final BorderRadius extraLarge = .circular(24.0);
