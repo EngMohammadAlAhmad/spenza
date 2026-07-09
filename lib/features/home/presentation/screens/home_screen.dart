@@ -7,6 +7,7 @@ import 'package:spenza/core/widgets/custom_text_field.dart';
 import 'package:spenza/features/home/presentation/widgets/banner_slider.dart';
 import 'package:spenza/features/home/presentation/widgets/best_selling_section.dart';
 import 'package:spenza/features/home/presentation/widgets/dummy_banner_slider_data.dart';
+import 'package:spenza/features/home/presentation/widgets/order_again_section.dart';
 import 'package:spenza/features/home/presentation/widgets/shop_by_brand_section.dart';
 import 'package:spenza/features/home/presentation/widgets/shop_by_category_section.dart';
 import 'package:spenza/features/home/presentation/widgets/today_orders_section.dart';
@@ -81,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: SingleChildScrollView(
               physics:  const BouncingScrollPhysics(),
-              padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+              padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 100.0),
               child: Column(
                 spacing: 15.0,
                 children: [
@@ -91,6 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ShopByBrandSection(),
                   TodayOffersSection(),
                   BestSellingSection(),
+                  OrderAgainSection(),
                 ],
               ),
             ),

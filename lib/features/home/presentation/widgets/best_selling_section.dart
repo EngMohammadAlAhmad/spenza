@@ -31,22 +31,30 @@ class _BestSellingSectionState extends State<BestSellingSection> {
   final List<BestSellingItem> items = const [
     BestSellingItem(
       imagePath: 'assets/images/temp/offer_image_1.png',
-      discountPercent: 20,
-      rating: 4.6,
-      brandName: 'Pentel',
-      title: 'أقلام فلوماستر تحديد - 6 ألوان نيون',
-      price: 24000,
-    ),
-    BestSellingItem(
-      imagePath: 'assets/images/temp/offer_image_2.png',
       discountPercent: 15,
       rating: 4.8,
       brandName: 'Roco',
       title: 'دفتر سلكي 200 - A4 ورقة مسطر',
       price: 22000,
+    ),
+    BestSellingItem(
+      imagePath: 'assets/images/temp/offer_image_2.png',
+      discountPercent: 20,
+      rating: 4.6,
+      brandName: 'Pentel',
+      title: 'أقلام فلوماستر تحديد - 6 ألوان نيون',
+      price: 24000,
     ),
     BestSellingItem(
       imagePath: 'assets/images/temp/offer_image_1.png',
+      discountPercent: 15,
+      rating: 4.8,
+      brandName: 'Roco',
+      title: 'دفتر سلكي 200 - A4 ورقة مسطر',
+      price: 22000,
+    ),
+    BestSellingItem(
+      imagePath: 'assets/images/temp/offer_image_2.png',
       discountPercent: 20,
       rating: 4.6,
       brandName: 'Pentel',
@@ -54,12 +62,20 @@ class _BestSellingSectionState extends State<BestSellingSection> {
       price: 24000,
     ),
     BestSellingItem(
-      imagePath: 'assets/images/temp/offer_image_2.png',
+      imagePath: 'assets/images/temp/offer_image_1.png',
       discountPercent: 15,
       rating: 4.8,
       brandName: 'Roco',
       title: 'دفتر سلكي 200 - A4 ورقة مسطر',
       price: 22000,
+    ),
+    BestSellingItem(
+      imagePath: 'assets/images/temp/offer_image_2.png',
+      discountPercent: 20,
+      rating: 4.6,
+      brandName: 'Pentel',
+      title: 'أقلام فلوماستر تحديد - 6 ألوان نيون',
+      price: 24000,
     ),
   ];
 

@@ -75,6 +75,8 @@ class _HomeShellState extends State<HomeShell> {
     ];
 
     return Scaffold(
+      extendBody: true,
+      backgroundColor: AppColors.backgroundLight,
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onHorizontalDragUpdate: _onHorizontalDragUpdate,
@@ -83,10 +85,11 @@ class _HomeShellState extends State<HomeShell> {
         child: widget.navigationShell,
       ),
       bottomNavigationBar: Container(
+        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(25),
+            top: Radius.circular(30.0),
           ),
           boxShadow: [
             BoxShadow(

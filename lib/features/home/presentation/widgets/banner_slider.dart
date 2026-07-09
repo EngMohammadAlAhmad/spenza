@@ -29,7 +29,7 @@ class _BannerSliderState extends State<BannerSlider> {
           itemCount: widget.banners.length,
           itemBuilder: (context, index, realIndex) {
             return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10.0),
+              margin: const .symmetric(horizontal: 10.0),
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/temp/ad.png'),

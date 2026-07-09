@@ -6,7 +6,7 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(child: Text('Account')),
+      body: Center(child: Text('Account page is\ncoming soon', style: TextStyle(fontSize: 20.0),textAlign: .center,)),
     );
   }
 }
