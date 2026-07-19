@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "773812918253",
+    "project_id": "spenza-app-95ce1",
+    "storage_bucket": "spenza-app-95ce1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773812918253:android:4c43f0cfbfa91cb0b579e4",
+        "android_client_info": {
+          "package_name": "com.spenza.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjFb12SiCAce-wJXre2OstLc4ywZ-OJ_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
