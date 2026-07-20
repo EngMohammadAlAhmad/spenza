@@ -32,6 +32,8 @@ dependencies:
   smooth_page_indicator:
   firebase_core:
   firebase_crashlytics:
+  flutter_staggered_animations:
+  flutter_animate:
 
 dev_dependencies:
   flutter_test:

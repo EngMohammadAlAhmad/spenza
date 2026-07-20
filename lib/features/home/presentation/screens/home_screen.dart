@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
-import 'package:spenza/core/utils/dimens.dart';
-import 'package:spenza/core/widgets/custom_text_field.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/features/home/presentation/widgets/banner_slider.dart';
 import 'package:spenza/features/home/presentation/widgets/best_selling_section.dart';
 import 'package:spenza/features/home/presentation/widgets/dummy_banner_slider_data.dart';
+import 'package:spenza/features/home/presentation/widgets/home_header.dart';
 import 'package:spenza/features/home/presentation/widgets/order_again_section.dart';
 import 'package:spenza/features/home/presentation/widgets/shop_by_brand_section.dart';
 import 'package:spenza/features/home/presentation/widgets/shop_by_category_section.dart';
@@ -26,73 +26,48 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: AppColors.primary.withValues(alpha: 0.1),
       body: Column(
         children: [
-          Container(
-            width: double.infinity,
-            height: 186.44,
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top,
-              left: 16.0,
-              right: 16.0,
-            ),
-            decoration: BoxDecoration(
-              color: AppColors.backgroundLight,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(34.0),
-                bottomRight: Radius.circular(34.0),
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: .spaceEvenly,
-              children: [
-                Row(
-                  mainAxisAlignment: .spaceBetween,
-                  children: [
-                    SvgPicture.asset('assets/icons/location_icon.svg'),
-                    Column(
-                      crossAxisAlignment: .start,
-                      children: [
-                        Text('التوصيل إلى', style: Theme.of(context).textTheme.bodySmall!.copyWith(color: AppColors.neutral)),
-                        Text('المنزل - دمشق', style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w700,
-                        )),
-                      ],
-                    ),
-                    Spacer(),
-                    IconButton(
-                      onPressed: () {},
-                      icon: SvgPicture.asset('assets/icons/temp.svg'),
-                    ),
-                  ],
-                ),
-                CustomTextField(
-                  controller: TextEditingController(),
-                  fillColor: AppColors.fillColor,
-                  prefixIcon: Padding(
-                    padding: const EdgeInsetsGeometry.directional(start: 16.0, end: 5.0),
-                    child: SvgPicture.asset('assets/icons/search_icon.svg'),
-                  ),
-                  hintText: 'ابحث عن قلم، دفتر، حقيبة...',
-                ),
-                SizedBox(height: AppDimens.spaceS),
-              ],
-            ),
-          ),
-
+          const HomeHeader(),
           Expanded(
             child: SingleChildScrollView(
-              physics:  const BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 100.0),
               child: Column(
                 spacing: 15.0,
                 children: [
-                  BannerSlider(banners: dummyBanners),
-                  ShopByCategorySection(),
-                  FreeDeliveryCard(),
-                  ShopByBrandSection(),
-                  TodayOffersSection(),
-                  BestSellingSection(),
-                  OrderAgainSection(),
+                  BannerSlider(banners: dummyBanners)
+                      .animate()
+                      .fadeIn(duration: 500.ms)
+                      .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic),
+
+                  ShopByCategorySection()
+                      .animate(delay: 80.ms)
+                      .fadeIn(duration: 450.ms)
+                      .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
+
+                  const FreeDeliveryCard()
+                      .animate(delay: 160.ms)
+                      .fadeIn(duration: 450.ms)
+                      .scaleXY(begin: 0.94, end: 1, curve: Curves.easeOutCubic),
+
+                  ShopByBrandSection()
+                      .animate(delay: 240.ms)
+                      .fadeIn(duration: 450.ms)
+                      .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
+
+                  TodayOffersSection()
+                      .animate(delay: 320.ms)
+                      .fadeIn(duration: 450.ms)
+                      .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
+
+                  BestSellingSection()
+                      .animate(delay: 400.ms)
+                      .fadeIn(duration: 450.ms)
+                      .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
+
+                  OrderAgainSection()
+                      .animate(delay: 480.ms)
+                      .fadeIn(duration: 450.ms)
+                      .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
                 ],
               ),
             ),
@@ -125,10 +100,7 @@ class FreeDeliveryCard extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 17.0,
-                vertical: 12.75,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 17.0, vertical: 12.75),
               child: Row(
                 spacing: 25.0,
                 children: [

@@ -6,6 +6,8 @@ import 'package:spenza/core/databases/api/api_consumer.dart';
 import 'package:spenza/core/databases/api/dio_consumer.dart';
 import 'package:spenza/core/databases/api/language_interpretation.dart';
 import 'package:spenza/core/databases/cache/cache_helper.dart';
+import 'package:spenza/core/services/crash_reporter.dart';
+import 'package:spenza/core/services/firebase_crash_reporter.dart';
 import 'package:spenza/features/language/data/repositories/language_repo_impl.dart';
 import 'package:spenza/features/language/domain/repositories/language_repository.dart';
 import 'package:spenza/features/language/presentation/blocs/language_bloc.dart';
@@ -42,6 +44,7 @@ Future<void> init() async {
     cacheHelper.init();
     return Future.value(cacheHelper);
   });
+  sl.registerLazySingleton<CrashReporter>(() => FirebaseCrashReporter());
 
   //! External
 

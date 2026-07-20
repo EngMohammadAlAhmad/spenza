@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
@@ -85,7 +86,9 @@ class _OrderAgainSectionState extends State<OrderAgainSection> {
             return Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
               child: OrderAgainCard(item: items[index]),
-            );
+            ).animate(delay: (70 * index).ms)
+                .fadeIn(duration: 400.ms)
+                .slideY(begin: 0.15, end: 0, curve: Curves.easeOutCubic);
           },
         ),
       ],
@@ -93,85 +96,104 @@ class _OrderAgainSectionState extends State<OrderAgainSection> {
   }
 }
 
-class OrderAgainCard extends StatelessWidget {
+class OrderAgainCard extends StatefulWidget {
   final OrderAgainItem item;
 
   const OrderAgainCard({super.key, required this.item});
 
   @override
+  State<OrderAgainCard> createState() => _OrderAgainCardState();
+}
+
+class _OrderAgainCardState extends State<OrderAgainCard> {
+  bool _pressed = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 80.0,
-      padding: const EdgeInsets.all(12.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: AppRadius.overMedium,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 16.0,
-            spreadRadius: 0.0,
-            offset: const Offset(0, 6),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 4.0,
-            spreadRadius: 0.0,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: .center,
-        spacing: 15.0,
-        children: [
-          ClipRRect(
+    final item = widget.item;
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTapCancel: () => setState(() => _pressed = false),
+      onTap: () {},
+      child: AnimatedScale(
+        scale: _pressed ? 0.97 : 1.0,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeOut,
+        child: Container(
+          height: 80.0,
+          padding: const EdgeInsets.all(12.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: AppRadius.overMedium,
-            child: Image.asset(
-              item.imagePath,
-              width: 56.0,
-              height: 56.0,
-              fit: BoxFit.cover,
-            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 16.0,
+                spreadRadius: 0.0,
+                offset: const Offset(0, 6),
+              ),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 4.0,
+                spreadRadius: 0.0,
+                offset: const Offset(0, 1),
+              ),
+            ],
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: .start,
-              mainAxisAlignment: .center,
-              spacing: 5.0,
-              children: [
-                Text(
-                  item.title,
-                  maxLines: 1,
-                  overflow: .ellipsis,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppColors.neutral900,
-                    fontWeight: .w700,
-                  ),
+          child: Row(
+            crossAxisAlignment: .center,
+            spacing: 15.0,
+            children: [
+              ClipRRect(
+                borderRadius: AppRadius.overMedium,
+                child: Image.asset(
+                  item.imagePath,
+                  width: 56.0,
+                  height: 56.0,
+                  fit: BoxFit.cover,
                 ),
-                Row(
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: .start,
+                  mainAxisAlignment: .center,
                   spacing: 5.0,
                   children: [
                     Text(
-                      item.price.toString(),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: .w800,
-                        color: AppColors.primary,
+                      item.title,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: AppColors.neutral900,
+                        fontWeight: .w700,
                       ),
                     ),
-                    Text(
-                      'ل.س',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.neutral,
-                        fontWeight: .w800,
-                      ),
+                    Row(
+                      spacing: 5.0,
+                      children: [
+                        Text(
+                          item.price.toString(),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontWeight: .w800,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                        Text(
+                          'ل.س',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppColors.neutral,
+                            fontWeight: .w800,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

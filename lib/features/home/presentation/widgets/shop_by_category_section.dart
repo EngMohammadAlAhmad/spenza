@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 
 class ShopByCategorySection extends StatelessWidget {
@@ -32,7 +33,7 @@ class ShopByCategorySection extends StatelessWidget {
               'تسوّق حسب التصنيف',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: .bold,
-                color: AppColors.primary
+                color: AppColors.primary,
               ),
             ),
             TextButton(
@@ -58,7 +59,9 @@ class ShopByCategorySection extends StatelessWidget {
                 width: 87.0,
                 height: 87.0,
                 fit: BoxFit.contain,
-              );
+              ).animate(delay: (70 * index).ms)
+                  .fadeIn(duration: 500.ms)
+                  .slideX(begin: 0.2, end: 0, curve: Curves.easeOutCubic);
             },
           ),
         ),

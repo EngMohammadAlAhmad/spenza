@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 
@@ -119,7 +120,9 @@ class _BestSellingSectionState extends State<BestSellingSection> {
               return Padding(
                 padding: const EdgeInsets.only(left: 10.0),
                 child: BestSellingCard(item: items[index]),
-              );
+              ).animate(delay: (70 * index).ms)
+                  .fadeIn(duration: 1000.ms)
+                  .slideX(begin: 0.15, end: 0, curve: Curves.easeOutCubic);
             },
           ),
         ),
@@ -128,156 +131,166 @@ class _BestSellingSectionState extends State<BestSellingSection> {
   }
 }
 
-class BestSellingCard extends StatelessWidget {
+class BestSellingCard extends StatefulWidget {
   final BestSellingItem item;
 
   const BestSellingCard({super.key, required this.item});
 
   @override
+  State<BestSellingCard> createState() => _BestSellingCardState();
+}
+
+class _BestSellingCardState extends State<BestSellingCard> {
+  bool _pressed = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 172.0,
-      height: 284.0,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 16.0,
-            spreadRadius: 0.0,
-            offset: const Offset(0, 6),
+    final item = widget.item;
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTapCancel: () => setState(() => _pressed = false),
+      onTap: () {},
+      child: AnimatedScale(
+        scale: _pressed ? 0.96 : 1.0,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeOut,
+        child: Container(
+          width: 172.0,
+          height: 284.0,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 16.0,
+                spreadRadius: 0.0,
+                offset: const Offset(0, 6),
+              ),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 4.0,
+                spreadRadius: 0.0,
+                offset: const Offset(0, 1),
+              ),
+            ],
           ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 4.0,
-            spreadRadius: 0.0,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: .start,
-        children: [
-          // Section 1: Image + badges — fixed height 160.0
-          SizedBox(
-            height: 160.0,
-            width: double.infinity,
-            child: Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
-                  child: Image.asset(
-                    item.imagePath,
-                    width: double.infinity,
-                    height: 160.0,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                // Discount badge
-                Positioned(
-                  top: 8.0,
-                  right: 8.0,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                    decoration: BoxDecoration(
-                      color: AppColors.secondary,
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: Text(
-                      '-${item.discountPercent}%',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.black,
-                        fontWeight: .bold,
+          child: Column(
+            crossAxisAlignment: .start,
+            children: [
+              SizedBox(
+                height: 160.0,
+                width: double.infinity,
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
+                      child: Image.asset(
+                        item.imagePath,
+                        width: double.infinity,
+                        height: 160.0,
+                        fit: BoxFit.cover,
                       ),
                     ),
-                  ),
-                ),
-                // Favorite icon
-                Positioned(
-                  top: 8.0,
-                  left: 8.0,
-                  child: Container(
-                    height: 39.0,
-                    width: 39.0,
-                    padding: const EdgeInsets.all(4.0),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.favorite_border,
-                      size: 20.0,
-                      color: AppColors.neutral,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Section 2: Text + price info — takes remaining space
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: .start,
-                mainAxisAlignment: .spaceBetween,
-                children: [
-                  // Rating + brand
-                  Row(
-                    children: [
-                      Text(
-                        item.rating.toString(),
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const SizedBox(width: 2.0),
-                      Icon(Icons.star, size: 20.0, color: AppColors.secondary),
-                      const SizedBox(width: 4.0),
-                      const Text('•', style: TextStyle(color: AppColors.neutral)),
-                      const SizedBox(width: 4.0),
-                      Text(
-                        item.brandName,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      const SizedBox(width: 4.0),
-                    ],
-                  ),
-                  const SizedBox(height: 4.0),
-                  // Title
-                  Text(
-                    item.title,
-                    maxLines: 2,
-                    overflow: .ellipsis,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.neutral900,
-                    ),
-                  ),
-
-                  // Price (no old price)
-                  Row(
-                    spacing: 5.0,
-                    children: [
-                      Text(
-                        item.price.toString(),
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: .bold,
-                          color: AppColors.primary,
+                    Positioned(
+                      top: 8.0,
+                      right: 8.0,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        decoration: BoxDecoration(
+                          color: AppColors.secondary,
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Text(
+                          '-${item.discountPercent}%',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.black,
+                            fontWeight: .bold,
+                          ),
                         ),
                       ),
-                      Text(
-                        'ل.س',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    ),
+                    Positioned(
+                      top: 8.0,
+                      left: 8.0,
+                      child: Container(
+                        height: 39.0,
+                        width: 39.0,
+                        padding: const EdgeInsets.all(4.0),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.favorite_border,
+                          size: 20.0,
                           color: AppColors.neutral,
                         ),
                       ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: .start,
+                    mainAxisAlignment: .spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            item.rating.toString(),
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          const SizedBox(width: 2.0),
+                          Icon(Icons.star, size: 20.0, color: AppColors.secondary),
+                          const SizedBox(width: 4.0),
+                          const Text('•', style: TextStyle(color: AppColors.neutral)),
+                          const SizedBox(width: 4.0),
+                          Text(
+                            item.brandName,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          const SizedBox(width: 4.0),
+                        ],
+                      ),
+                      const SizedBox(height: 4.0),
+                      Text(
+                        item.title,
+                        maxLines: 2,
+                        overflow: .ellipsis,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppColors.neutral900,
+                        ),
+                      ),
+                      Row(
+                        spacing: 5.0,
+                        children: [
+                          Text(
+                            item.price.toString(),
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontWeight: .bold,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                          Text(
+                            'ل.س',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: AppColors.neutral,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

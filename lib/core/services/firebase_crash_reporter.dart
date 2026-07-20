@@ -1,10 +1,7 @@
-/*
 // core/services/crash/firebase_crash_reporter.dart
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:injectable/injectable.dart';
-import 'package:spenza/core/services/crash_reporter.dart';
+import 'crash_reporter.dart';
 
-@LazySingleton(as: CrashReporter)
 class FirebaseCrashReporter implements CrashReporter {
   final _crashlytics = FirebaseCrashlytics.instance;
 
@@ -19,5 +16,8 @@ class FirebaseCrashReporter implements CrashReporter {
   Future<void> setUserId(String id) => _crashlytics.setUserIdentifier(id);
 
   @override
-  Future<void> setCustomKey(String key, dynamic value) => _crashlytics.setCustomKey(key, value);
-}*/
+  Future<void> setCustomKey(String key, value) {
+    // TODO: implement setCustomKey
+    throw UnimplementedError();
+  }
+}
