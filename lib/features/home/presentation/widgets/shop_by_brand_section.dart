@@ -28,7 +28,7 @@ class ShopByBrandSection extends StatelessWidget {
           mainAxisAlignment: .spaceBetween,
           children: [
             Text(
-              'تسوّق حسب التصنيف',
+              'تسوّق حسب الماركة',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: .bold,
                   color: AppColors.primary
