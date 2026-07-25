@@ -2,6 +2,8 @@ class EndPoints {
 
   static const String baseUrl = "https://api.spenzastore.com/public";
 
+  static const String getHome = "/api/home";
+
 }
 
 /*class ApiKey {

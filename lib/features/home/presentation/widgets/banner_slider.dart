@@ -2,13 +2,15 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:spenza/core/themes/app_colors.dart';
-import 'package:spenza/features/home/domain/entities/dummy_banner_entity.dart';
-
+import 'package:spenza/features/home/domain/entities/banner_entity.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 
 class BannerSlider extends StatefulWidget {
-  final List<DummyBannerEntity> banners;
+  final List<BannerEntity> banners;
+  final bool isLoading;
 
-  const BannerSlider({super.key, required this.banners});
+  const BannerSlider({super.key, required this.banners, this.isLoading = false});
 
   @override
   State<BannerSlider> createState() => _BannerSliderState();
@@ -20,6 +22,17 @@ class _BannerSliderState extends State<BannerSlider> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isLoading) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: ShimmerPlaceholder(
+          width: double.infinity,
+          height: 152.0,
+          borderRadius: BorderRadius.circular(16),
+        ),
+      );
+    }
+
     if (widget.banners.isEmpty) return const SizedBox.shrink();
 
     return Column(
@@ -28,11 +41,23 @@ class _BannerSliderState extends State<BannerSlider> {
           carouselController: _controller,
           itemCount: widget.banners.length,
           itemBuilder: (context, index, realIndex) {
+            final banner = widget.banners[index];
             return Container(
-              margin: const .symmetric(horizontal: 10.0),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/temp/ad.png'),
+              margin: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: CachedNetworkImage(
+                  imageUrl: banner.image,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  placeholder: (context, url) => const ShimmerPlaceholder(
+                    width: double.infinity,
+                    height: 152.0,
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: AppColors.fillColor,
+                    child: const Icon(Icons.error),
+                  ),
                 ),
               ),
             );
@@ -63,84 +88,6 @@ class _BannerSliderState extends State<BannerSlider> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _BannerCard extends StatelessWidget {
-  final DummyBannerEntity banner;
-
-  const _BannerCard({required this.banner});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        color: banner.bgColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    banner.title,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 1,
-                    overflow: .ellipsis,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    banner.subtitle,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.9),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      banner.buttonText,
-                      style: TextStyle(
-                        color: banner.bgColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Image.asset(
-              banner.image,
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) {
-                return const Icon(Icons.image, color: Colors.white54, size: 50);
-              },
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -40,9 +40,9 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.1
 
 flutter:
-
   uses-material-design: true
 
   assets:
@@ -56,12 +56,22 @@ flutter:
       fonts:
         - asset: assets/fonts/Zain-Light.ttf
           weight: 300
-
         - asset: assets/fonts/Zain-Regular.ttf
           weight: 400
-
         - asset: assets/fonts/Zain-Bold.ttf
           weight: 700
-
         - asset: assets/fonts/Zain-ExtraBold.ttf
           weight: 800
+
+# App Icon Configuration
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app_icon.png"
+
+  # Android Adaptive Icon (for Android 8.0+)
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/images/app_icon.png"
+
+  # iOS specific settings
+  remove_alpha_ios: true

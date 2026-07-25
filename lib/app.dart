@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
           final themeType = state.data?.themeType ?? ThemeType.light;
 
           return MaterialApp.router(
-            title: 'Spenza App',
+            title: 'Spenza Store',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.getTheme(
               isDark: themeType == ThemeType.dark,

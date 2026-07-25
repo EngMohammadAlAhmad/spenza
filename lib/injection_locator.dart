@@ -17,6 +17,11 @@ import 'package:spenza/features/theme/domain/repositories/theme_repository.dart'
 import 'package:spenza/features/theme/domain/usecases/get_theme_usecase.dart';
 import 'package:spenza/features/theme/domain/usecases/save_theme_usecase.dart';
 import 'package:spenza/features/theme/presentation/blocs/theme_bloc.dart';
+import 'package:spenza/features/home/data/datasource/home_datasource.dart';
+import 'package:spenza/features/home/data/repositories/home_repo_impl.dart';
+import 'package:spenza/features/home/domain/repositories/home_repository.dart';
+import 'package:spenza/features/home/domain/usecases/get_home_data.dart';
+import 'package:spenza/features/home/presentation/blocs/home_bloc/home_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 
@@ -69,6 +74,12 @@ Future<void> init() async {
   // Repository
   sl.registerLazySingleton<ThemeRepository>(() => ThemeRepositoryImpl(themeLocalDatasource: sl()));
   sl.registerLazySingleton<LanguageRepository>(() => LanguageRepositoryImpl());
+
+  // Home Feature
+  sl.registerFactory(() => HomeBloc(getHomeDataUseCase: sl()));
+  sl.registerLazySingleton(() => GetHomeDataUseCase(homeRepository: sl()));
+  sl.registerLazySingleton<HomeRepository>(() => HomeRepositoryImpl(homeDatasource: sl()));
+  sl.registerLazySingleton(() => HomeDatasource(api: sl(), cacheHelper: sl()));
 
   // Datasource
   sl.registerLazySingleton<ThemeLocalDatasource>(() => ThemeLocalDatasource(cacheHelper: sl()));

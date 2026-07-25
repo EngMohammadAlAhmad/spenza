@@ -2,107 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/shared/entities/product_entity.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 
-class OfferItem {
-  final String imagePath;
-  final int discountPercent;
-  final double rating;
-  final String brandName;
-  final String title;
-  final int oldPrice;
-  final int newPrice;
+class TodayOffersSection extends StatelessWidget {
+  final List<ProductEntity> products;
+  final bool isLoading;
 
-  const OfferItem({
-    required this.imagePath,
-    required this.discountPercent,
-    required this.rating,
-    required this.brandName,
-    required this.title,
-    required this.oldPrice,
-    required this.newPrice,
+  const TodayOffersSection({
+    super.key,
+    required this.products,
+    this.isLoading = false,
   });
-}
-
-class TodayOffersSection extends StatefulWidget {
-  const TodayOffersSection({super.key});
-
-  @override
-  State<TodayOffersSection> createState() => _TodayOffersSectionState();
-}
-
-class _TodayOffersSectionState extends State<TodayOffersSection> {
-  final List<OfferItem> offers = const [
-    OfferItem(
-      imagePath: 'assets/images/temp/offer_image_1.png',
-      discountPercent: 15,
-      rating: 4.8,
-      brandName: 'Roco',
-      title: 'دفتر سلكي 200 - A4 ورقة مسطر',
-      oldPrice: 26000,
-      newPrice: 22000,
-    ),
-    OfferItem(
-      imagePath: 'assets/images/temp/offer_image_2.png',
-      discountPercent: 20,
-      rating: 4.6,
-      brandName: 'Pental',
-      title: 'أقلام فلوماستر تحديد - 6 ألوان نيون',
-      oldPrice: 30000,
-      newPrice: 24000,
-    ),
-    OfferItem(
-      imagePath: 'assets/images/temp/offer_image_1.png',
-      discountPercent: 15,
-      rating: 4.8,
-      brandName: 'Roco',
-      title: 'دفتر سلكي 200 - A4 ورقة مسطر',
-      oldPrice: 26000,
-      newPrice: 22000,
-    ),
-    OfferItem(
-      imagePath: 'assets/images/temp/offer_image_2.png',
-      discountPercent: 20,
-      rating: 4.6,
-      brandName: 'Pental',
-      title: 'أقلام فلوماستر تحديد - 6 ألوان نيون',
-      oldPrice: 30000,
-      newPrice: 24000,
-    ),
-    OfferItem(
-      imagePath: 'assets/images/temp/offer_image_1.png',
-      discountPercent: 15,
-      rating: 4.8,
-      brandName: 'Roco',
-      title: 'دفتر سلكي 200 - A4 ورقة مسطر',
-      oldPrice: 26000,
-      newPrice: 22000,
-    ),
-    OfferItem(
-      imagePath: 'assets/images/temp/offer_image_2.png',
-      discountPercent: 20,
-      rating: 4.6,
-      brandName: 'Pental',
-      title: 'أقلام فلوماستر تحديد - 6 ألوان نيون',
-      oldPrice: 30000,
-      newPrice: 24000,
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: .start,
-      mainAxisAlignment: .spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
-          mainAxisAlignment: .spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           spacing: 5.0,
           children: [
             SvgPicture.asset('assets/icons/today_offers_icon.svg'),
             Text(
               'عروض اليوم',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: .bold,
+                fontWeight: FontWeight.bold,
                 color: AppColors.primary,
               ),
             ),
@@ -120,17 +48,29 @@ class _TodayOffersSectionState extends State<TodayOffersSection> {
         ),
         SizedBox(
           height: 298.2,
-          child: ListView.builder(
-            itemCount: offers.length,
+          child: isLoading
+              ? ListView.separated(
+            padding: EdgeInsets.zero,
+            itemCount: 3,
+            scrollDirection: Axis.horizontal,
+            separatorBuilder: (context, index) => const SizedBox(width: 15.0),
+            itemBuilder: (context, index) => ShimmerPlaceholder(
+              width: 172,
+              height: 298.2,
+              borderRadius: BorderRadius.circular(16),
+            ),
+          )
+              : ListView.separated(
+            padding: EdgeInsets.zero,
+            itemCount: products.length,
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
+            separatorBuilder: (context, index) => const SizedBox(width: 15.0),
             itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: OfferCard(offer: offers[index]),
-              ).animate(delay: (70 * index).ms)
-                  .fadeIn(duration: 400.ms)
-                  .slideX(begin: 0.15, end: 0, curve: Curves.easeOutCubic);
+              return OfferCard(product: products[index])
+                  .animate(delay: (30 * index).ms)
+                  .fadeIn(duration: 500.ms)
+                  .scale(begin: const Offset(0.9, 0.9), end: const Offset(1.0, 1.0));
             },
           ),
         ),
@@ -140,9 +80,9 @@ class _TodayOffersSectionState extends State<TodayOffersSection> {
 }
 
 class OfferCard extends StatefulWidget {
-  final OfferItem offer;
+  final ProductEntity product;
 
-  const OfferCard({super.key, required this.offer});
+  const OfferCard({super.key, required this.product});
 
   @override
   State<OfferCard> createState() => _OfferCardState();
@@ -153,7 +93,7 @@ class _OfferCardState extends State<OfferCard> {
 
   @override
   Widget build(BuildContext context) {
-    final offer = widget.offer;
+    final product = widget.product;
     return GestureDetector(
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) => setState(() => _pressed = false),
@@ -169,23 +109,9 @@ class _OfferCardState extends State<OfferCard> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.08),
-                blurRadius: 16.0,
-                spreadRadius: 0.0,
-                offset: const Offset(0, 6),
-              ),
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 4.0,
-                spreadRadius: 0.0,
-                offset: const Offset(0, 1),
-              ),
-            ],
           ),
           child: Column(
-            crossAxisAlignment: .start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: 160.0,
@@ -194,12 +120,16 @@ class _OfferCardState extends State<OfferCard> {
                   children: [
                     ClipRRect(
                       borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
-                      child: Image.asset(
-                        offer.imagePath,
+                      child: product.photo != null
+                          ? CachedNetworkImage(
+                        imageUrl: product.photo!,
                         width: double.infinity,
                         height: 160.0,
                         fit: BoxFit.cover,
-                      ),
+                        placeholder: (context, url) => const ShimmerPlaceholder(width: 172, height: 160),
+                        errorWidget: (context, url, error) => Icon(Icons.image, size: 100.0, color: Colors.grey[300]),
+                      )
+                          : Icon(Icons.image, size: 100.0, color: Colors.grey[300]),
                     ),
                     Positioned(
                       top: 8.0,
@@ -211,10 +141,10 @@ class _OfferCardState extends State<OfferCard> {
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                         child: Text(
-                          '-${offer.discountPercent}%',
+                          '-${product.discountPercentage.toInt()}%',
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Colors.black,
-                            fontWeight: .bold,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -231,32 +161,30 @@ class _OfferCardState extends State<OfferCard> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
-                    crossAxisAlignment: .start,
-                    mainAxisAlignment: .spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
                           Text(
-                            offer.rating.toString(),
+                            product.rate.toString(),
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           const SizedBox(width: 2.0),
-                          Icon(Icons.star, size: 20.0, color: AppColors.secondary),
+                          const Icon(Icons.star_rounded, size: 20.0, color: AppColors.secondary),
                           const SizedBox(width: 4.0),
                           const Text('•', style: TextStyle(color: AppColors.neutral)),
                           const SizedBox(width: 4.0),
                           Text(
-                            offer.brandName,
+                            product.brand,
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
-                          const SizedBox(width: 4.0),
                         ],
                       ),
-                      const SizedBox(height: 4.0),
                       Text(
-                        offer.title,
+                        product.title,
                         maxLines: 2,
-                        overflow: .ellipsis,
+                        overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppColors.neutral900,
                         ),
@@ -265,9 +193,9 @@ class _OfferCardState extends State<OfferCard> {
                         spacing: 5.0,
                         children: [
                           Text(
-                            offer.newPrice.toString(),
+                            product.discountedPrice.toString(),
                             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontWeight: .bold,
+                              fontWeight: FontWeight.bold,
                               color: AppColors.primary,
                             ),
                           ),
@@ -279,13 +207,14 @@ class _OfferCardState extends State<OfferCard> {
                           ),
                         ],
                       ),
-                      Text(
-                        '${offer.oldPrice}',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.neutral,
-                          decoration: TextDecoration.lineThrough,
+
+                        Text(
+                          '${product.price}',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppColors.neutral,
+                            decoration: TextDecoration.lineThrough,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -304,26 +233,25 @@ class _FavoriteButton extends StatefulWidget {
 }
 
 class _FavoriteButtonState extends State<_FavoriteButton> {
-  bool _favorited = false;
+  bool _isFavorite = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => setState(() => _favorited = !_favorited),
+      onTap: () => setState(() => _isFavorite = !_isFavorite),
       child: Container(
         height: 39.0,
         width: 39.0,
-        padding: const EdgeInsets.all(4.0),
         decoration: const BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
         ),
         child: Icon(
-          _favorited ? Icons.favorite : Icons.favorite_border,
+          _isFavorite ? Icons.favorite : Icons.favorite_border,
           size: 20.0,
-          color: _favorited ? Colors.red : AppColors.neutral,
-        ).animate(target: _favorited ? 1 : 0)
-            .scaleXY(begin: 1.0, end: 1.3, duration: 150.ms, curve: Curves.easeOut)
+          color: _isFavorite ? Colors.red : AppColors.neutral,
+        ).animate(target: _isFavorite ? 1 : 0)
+            .scaleXY(begin: 1.0, end: 1.3, duration: 150.ms)
             .then()
             .scaleXY(begin: 1.3, end: 1.0, duration: 150.ms),
       ),

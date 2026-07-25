@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 
-/// Interceptor that automatically adds Accept-Language header to all requests
+/// Interceptor that automatically adds the locale as a query parameter to all requests
 class LanguageInterceptor extends Interceptor {
-  String _currentLanguage = 'en'; // Default language
+  String _currentLanguage = 'ar'; // Default language
 
-  /// Update the current language
+  /// Update the current language (Call this on app startup or when user changes language)
   void setLanguage(String languageCode) {
     _currentLanguage = languageCode;
   }
@@ -14,8 +14,9 @@ class LanguageInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    // Add Accept-Language header to all requests
-    options.headers['Accept-Language'] = _currentLanguage;
+    // Add locale strictly as a query parameter
+    // Dio will automatically format this as ?locale=en or &locale=en
+    options.queryParameters['locale'] = _currentLanguage;
 
     // Continue with the request
     handler.next(options);
