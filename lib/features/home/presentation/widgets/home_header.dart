@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/dimens.dart';
-import 'package:spenza/core/widgets/custom_text_field.dart';
+import 'package:spenza/core/widgets/app_search_field.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
@@ -55,15 +55,7 @@ class HomeHeader extends StatelessWidget {
               ),
             ],
           ),
-          CustomTextField(
-            controller: TextEditingController(),
-            fillColor: AppColors.fillColor,
-            prefixIcon: Padding(
-              padding: const EdgeInsetsGeometry.directional(start: 16.0, end: 5.0),
-              child: SvgPicture.asset('assets/icons/search_icon.svg'),
-            ),
-            hintText: 'ابحث عن قلم، دفتر، حقيبة...',
-          ),
+          const AppSearchField(),
           SizedBox(height: AppDimens.spaceS),
         ],
       ),

@@ -69,7 +69,7 @@ class _HomeShellState extends State<HomeShell> {
 
     final items = [
       _NavItem(icon: 'assets/icons/home_icon.svg', label: 'home'.tr()),
-      _NavItem(icon: 'assets/icons/categories_icon.svg', label: 'categories'.tr()),
+      _NavItem(icon: 'assets/icons/shopping_icon.svg', label: 'shopping'.tr()),
       _NavItem(icon: 'assets/icons/orders_icon.svg', label: 'orders'.tr()),
       _NavItem(icon: 'assets/icons/account_icon.svg', label: 'account'.tr()),
     ];

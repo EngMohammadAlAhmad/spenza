@@ -4,6 +4,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/features/home/domain/entities/banner_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:spenza/core/widgets/app_icon_placeholder.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 
 class BannerSlider extends StatefulWidget {
@@ -56,7 +57,7 @@ class _BannerSliderState extends State<BannerSlider> {
                   ),
                   errorWidget: (context, url, error) => Container(
                     color: AppColors.fillColor,
-                    child: const Icon(Icons.error),
+                    child: const AppIconPlaceholder(size: 60),
                   ),
                 ),
               ),

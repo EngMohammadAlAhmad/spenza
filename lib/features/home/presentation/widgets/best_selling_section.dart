@@ -5,6 +5,7 @@ import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/shared/entities/product_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
+import 'package:spenza/core/widgets/app_icon_placeholder.dart';
 
 class BestSellingSection extends StatelessWidget {
   final List<ProductEntity> products;
@@ -19,11 +20,11 @@ class BestSellingSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: .start,
+      mainAxisAlignment: .spaceBetween,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: .spaceBetween,
           spacing: 5.0,
           children: [
             SvgPicture.asset('assets/icons/best_selling_icon.svg'),
@@ -50,29 +51,29 @@ class BestSellingSection extends StatelessWidget {
           height: 284.0,
           child: isLoading
               ? ListView.separated(
-            padding: EdgeInsets.zero,
-            itemCount: 3,
-            scrollDirection: Axis.horizontal,
-            separatorBuilder: (context, index) => const SizedBox(width: 15.0),
-            itemBuilder: (context, index) => ShimmerPlaceholder(
-              width: 172,
-              height: 284.0,
-              borderRadius: BorderRadius.circular(16),
-            ),
-          )
+                  padding: EdgeInsets.zero,
+                  itemCount: 3,
+                  scrollDirection: Axis.horizontal,
+                  separatorBuilder: (context, index) => const SizedBox(width: 15.0),
+                  itemBuilder: (context, index) => ShimmerPlaceholder(
+                    width: 172,
+                    height: 284.0,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                )
               : ListView.separated(
-            padding: EdgeInsets.zero,
-            itemCount: products.length,
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            separatorBuilder: (context, index) => const SizedBox(width: 15.0),
-            itemBuilder: (context, index) {
-              return BestSellingCard(product: products[index])
-                  .animate(delay: (30 * index).ms)
-                  .fadeIn(duration: 500.ms)
-                  .scale(begin: const Offset(0.9, 0.9), end: const Offset(1.0, 1.0));
-            },
-          ),
+                  padding: EdgeInsets.zero,
+                  itemCount: products.length,
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                  separatorBuilder: (context, index) => const SizedBox(width: 15.0),
+                  itemBuilder: (context, index) {
+                    return BestSellingCard(product: products[index])
+                        .animate(delay: (30 * index).ms)
+                        .fadeIn(duration: 500.ms)
+                        .scale(begin: const Offset(0.9, 0.9), end: const Offset(1.0, 1.0));
+                  },
+                ),
         ),
       ],
     );
@@ -111,7 +112,7 @@ class _BestSellingCardState extends State<BestSellingCard> {
             borderRadius: BorderRadius.circular(16.0),
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               SizedBox(
                 height: 160.0,
@@ -120,18 +121,17 @@ class _BestSellingCardState extends State<BestSellingCard> {
                   children: [
                     ClipRRect(
                       borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
-                      child: product.photo != null
+                      child: product.photo != null && product.photo!.isNotEmpty
                           ? CachedNetworkImage(
-                        imageUrl: product.photo!,
-                        width: double.infinity,
-                        height: 160.0,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => const ShimmerPlaceholder(width: 172, height: 160),
-                        errorWidget: (context, url, error) => Icon(Icons.image, size: 100.0, color: Colors.grey[300]),
-                      )
-                          : Icon(Icons.image, size: 100.0, color: Colors.grey[300]),
+                              imageUrl: product.photo!,
+                              width: double.infinity,
+                              height: 160.0,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => const ShimmerPlaceholder(width: 172, height: 160),
+                              errorWidget: (context, url, error) => const AppIconPlaceholder(size: 60),
+                            )
+                          : const AppIconPlaceholder(size: 100.0),
                     ),
-                    /*if (product.discountPercentage > 0)*/
                     Positioned(
                       top: 8.0,
                       right: 8.0,
@@ -174,8 +174,8 @@ class _BestSellingCardState extends State<BestSellingCard> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: .start,
+                    mainAxisAlignment: .spaceBetween,
                     children: [
                       Row(
                         children: [

@@ -17,6 +17,16 @@ import 'package:spenza/features/theme/domain/repositories/theme_repository.dart'
 import 'package:spenza/features/theme/domain/usecases/get_theme_usecase.dart';
 import 'package:spenza/features/theme/domain/usecases/save_theme_usecase.dart';
 import 'package:spenza/features/theme/presentation/blocs/theme_bloc.dart';
+import 'package:spenza/features/brands/data/datasource/brands_datasource.dart';
+import 'package:spenza/features/brands/data/repositories/brands_repository_impl.dart';
+import 'package:spenza/features/brands/domain/repositories/brands_repository.dart';
+import 'package:spenza/features/brands/domain/usecases/get_brands_use_case.dart';
+import 'package:spenza/features/brands/presentation/blocs/brands_bloc/brands_bloc.dart';
+import 'package:spenza/features/categories/data/datasource/categories_datasource.dart';
+import 'package:spenza/features/categories/data/repositories/categories_repository_impl.dart';
+import 'package:spenza/features/categories/domain/repositories/categories_repository.dart';
+import 'package:spenza/features/categories/domain/usecases/get_categories_use_case.dart';
+import 'package:spenza/features/categories/presentation/blocs/categories_bloc/categories_bloc.dart';
 import 'package:spenza/features/home/data/datasource/home_datasource.dart';
 import 'package:spenza/features/home/data/repositories/home_repo_impl.dart';
 import 'package:spenza/features/home/domain/repositories/home_repository.dart';
@@ -80,6 +90,18 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetHomeDataUseCase(homeRepository: sl()));
   sl.registerLazySingleton<HomeRepository>(() => HomeRepositoryImpl(homeDatasource: sl()));
   sl.registerLazySingleton(() => HomeDatasource(api: sl(), cacheHelper: sl()));
+
+  // Categories Feature
+  sl.registerFactory(() => CategoriesBloc(getCategoriesUseCase: sl()));
+  sl.registerLazySingleton(() => GetCategoriesUseCase(repository: sl()));
+  sl.registerLazySingleton<CategoriesRepository>(() => CategoriesRepositoryImpl(datasource: sl()));
+  sl.registerLazySingleton(() => CategoriesDatasource(api: sl()));
+
+  // Brands Feature
+  sl.registerFactory(() => BrandsBloc(getBrandsUseCase: sl()));
+  sl.registerLazySingleton(() => GetBrandsUseCase(repository: sl()));
+  sl.registerLazySingleton<BrandsRepository>(() => BrandsRepositoryImpl(datasource: sl()));
+  sl.registerLazySingleton(() => BrandsDatasource(api: sl()));
 
   // Datasource
   sl.registerLazySingleton<ThemeLocalDatasource>(() => ThemeLocalDatasource(cacheHelper: sl()));

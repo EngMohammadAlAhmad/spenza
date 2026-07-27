@@ -3,11 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/general_pages/error_page.dart';
 import 'package:spenza/core/general_pages/home_shell.dart';
 import 'package:spenza/core/routes/route_paths.dart';
-import 'package:spenza/core/routes/animated_branch_container.dart'; // Import the new widget
+import 'package:spenza/core/routes/animated_branch_container.dart';
 import 'package:spenza/features/home/presentation/screens/home_screen.dart';
-import 'package:spenza/features/categories/presentation/screens/categories_screen.dart';
 import 'package:spenza/features/orders/presentation/screens/orders_screen.dart';
 import 'package:spenza/features/account/presentation/screens/account_screen.dart';
+import 'package:spenza/features/shopping/presentation/screens/shopping_screen.dart';
 
 class AppRouter {
   AppRouter._();
@@ -45,7 +45,7 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: RoutePaths.categories,
-                builder: (context, state) => const CategoriesScreen(),
+                builder: (context, state) => const ShoppingScreen(),
               ),
             ],
           ),

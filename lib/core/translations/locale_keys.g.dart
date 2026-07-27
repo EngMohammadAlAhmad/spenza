@@ -7,5 +7,6 @@ abstract class  LocaleKeys {
   static const categories = 'categories';
   static const orders = 'orders';
   static const account = 'account';
+  static const shopping = 'shopping';
 
 }
