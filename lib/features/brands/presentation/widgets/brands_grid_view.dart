@@ -61,7 +61,7 @@ class _BrandsGridViewState extends State<BrandsGridView> {
           physics: const BouncingScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            childAspectRatio: 0.82,
+            childAspectRatio: 174.0 / 179.0,
             crossAxisSpacing: 16.0,
             mainAxisSpacing: 16.0,
           ),
@@ -92,7 +92,7 @@ class _BrandsGridViewState extends State<BrandsGridView> {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.82,
+        childAspectRatio: 174.0 / 179.0,
         crossAxisSpacing: 16.0,
         mainAxisSpacing: 16.0,
       ),

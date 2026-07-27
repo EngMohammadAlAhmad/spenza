@@ -9,7 +9,8 @@ import 'package:spenza/features/shopping/presentation/widgets/shopping_header.da
 import 'package:spenza/injection_locator.dart' as di;
 
 class ShoppingScreen extends StatefulWidget {
-  const ShoppingScreen({super.key});
+  final int initialTab;
+  const ShoppingScreen({super.key, this.initialTab = 0});
 
   @override
   State<ShoppingScreen> createState() => _ShoppingScreenState();
@@ -17,12 +18,21 @@ class ShoppingScreen extends StatefulWidget {
 
 class _ShoppingScreenState extends State<ShoppingScreen> {
   late final PageController _pageController;
-  int _currentPage = 0;
+  late int _currentPage;
 
   @override
   void initState() {
     super.initState();
+    _currentPage = widget.initialTab;
     _pageController = PageController(initialPage: _currentPage);
+  }
+
+  @override
+  void didUpdateWidget(ShoppingScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialTab != widget.initialTab) {
+      _onTabTapped(widget.initialTab);
+    }
   }
 
   @override

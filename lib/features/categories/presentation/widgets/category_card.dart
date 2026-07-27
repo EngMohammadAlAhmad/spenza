@@ -61,8 +61,8 @@ class CategoryCard extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: .start,
+                mainAxisAlignment: .center,
                 children: [
                   Text(
                     title,

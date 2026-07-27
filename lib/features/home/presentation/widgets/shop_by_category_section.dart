@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
+import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/shared/entities/category_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -33,7 +35,7 @@ class ShopByCategorySection extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () => context.go('${RoutePaths.categories}?tab=0'),
               child: Text(
                 'عرض الكل >',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(

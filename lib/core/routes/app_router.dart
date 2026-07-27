@@ -45,7 +45,10 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: RoutePaths.categories,
-                builder: (context, state) => const ShoppingScreen(),
+                builder: (context, state) {
+                  final tab = int.tryParse(state.uri.queryParameters['tab'] ?? '0') ?? 0;
+                  return ShoppingScreen(initialTab: tab);
+                },
               ),
             ],
           ),

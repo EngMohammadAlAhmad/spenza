@@ -52,7 +52,7 @@ class ShoppingHeader extends StatelessWidget {
           const SizedBox(height: 24.0),
           // Selector (Tabs)
           Container(
-            height: 54.0,
+            height: 48.0,
             padding: const EdgeInsets.all(4.0),
             decoration: BoxDecoration(
               color: AppColors.fillColor,
