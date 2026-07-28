@@ -8,17 +8,21 @@ class CategoryCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final String? imageUrl;
+  final VoidCallback? onTap;
 
   const CategoryCard({
     super.key,
     required this.title,
     required this.subtitle,
     this.imageUrl,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24.0),
@@ -87,6 +91,7 @@ class CategoryCard extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 }

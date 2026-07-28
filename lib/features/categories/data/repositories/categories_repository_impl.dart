@@ -5,6 +5,8 @@ import 'package:spenza/features/categories/data/datasource/categories_datasource
 import 'package:spenza/features/categories/domain/entities/categories_result_entity.dart';
 import 'package:spenza/features/categories/domain/repositories/categories_repository.dart';
 
+import 'package:spenza/features/categories/domain/entities/category_products_result_entity.dart';
+
 class CategoriesRepositoryImpl implements CategoriesRepository {
   final CategoriesDatasource datasource;
 
@@ -16,6 +18,19 @@ class CategoriesRepositoryImpl implements CategoriesRepository {
     required int perPage,
   }) async {
     return await handleRepositoryCall(() => datasource.getCategories(
+          page: page,
+          perPage: perPage,
+        ));
+  }
+
+  @override
+  Future<Either<Failure, CategoryProductsResultEntity>> getCategoryProducts({
+    required int categoryId,
+    required int page,
+    required int perPage,
+  }) async {
+    return await handleRepositoryCall(() => datasource.getCategoryProducts(
+          categoryId: categoryId,
           page: page,
           perPage: perPage,
         ));

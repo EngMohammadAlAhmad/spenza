@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
+import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/features/brands/presentation/blocs/brands_bloc/brands_bloc.dart';
@@ -79,6 +81,7 @@ class _BrandsGridViewState extends State<BrandsGridView> {
               title: brand.name,
               subtitle: '${brand.productsCount ?? 0} منتج',
               imageUrl: brand.image,
+              onTap: () => context.go('${RoutePaths.categories}/brand/${brand.id}'),
             ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0);
           },
         );

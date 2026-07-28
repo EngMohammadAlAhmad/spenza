@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
+import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/features/categories/presentation/blocs/categories_bloc/categories_bloc.dart';
@@ -79,6 +81,7 @@ class _CategoriesGridViewState extends State<CategoriesGridView> {
               title: category.name,
               subtitle: '${category.productsCount ?? 0} منتج',
               imageUrl: category.image,
+              onTap: () => context.go('${RoutePaths.categories}/${category.id}'),
             ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0);
           },
         );

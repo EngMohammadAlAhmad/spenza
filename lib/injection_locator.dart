@@ -22,16 +22,25 @@ import 'package:spenza/features/brands/data/repositories/brands_repository_impl.
 import 'package:spenza/features/brands/domain/repositories/brands_repository.dart';
 import 'package:spenza/features/brands/domain/usecases/get_brands_use_case.dart';
 import 'package:spenza/features/brands/presentation/blocs/brands_bloc/brands_bloc.dart';
+import 'package:spenza/features/brands/domain/usecases/get_brand_products_use_case.dart';
+import 'package:spenza/features/brands/presentation/blocs/brand_products_bloc/brand_products_bloc.dart';
 import 'package:spenza/features/categories/data/datasource/categories_datasource.dart';
 import 'package:spenza/features/categories/data/repositories/categories_repository_impl.dart';
 import 'package:spenza/features/categories/domain/repositories/categories_repository.dart';
 import 'package:spenza/features/categories/domain/usecases/get_categories_use_case.dart';
 import 'package:spenza/features/categories/presentation/blocs/categories_bloc/categories_bloc.dart';
+import 'package:spenza/features/categories/domain/usecases/get_category_products_use_case.dart';
+import 'package:spenza/features/categories/presentation/blocs/category_products_bloc/category_products_bloc.dart';
 import 'package:spenza/features/home/data/datasource/home_datasource.dart';
 import 'package:spenza/features/home/data/repositories/home_repo_impl.dart';
 import 'package:spenza/features/home/domain/repositories/home_repository.dart';
 import 'package:spenza/features/home/domain/usecases/get_home_data.dart';
 import 'package:spenza/features/home/presentation/blocs/home_bloc/home_bloc.dart';
+import 'package:spenza/features/products/data/datasource/products_datasource.dart';
+import 'package:spenza/features/products/data/repositories/product_details_repository_impl.dart';
+import 'package:spenza/features/products/domain/repositories/product_details_repository.dart';
+import 'package:spenza/features/products/domain/usecases/get_product_details_use_case.dart';
+import 'package:spenza/features/products/presentation/blocs/product_details_bloc/product_details_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 
@@ -93,7 +102,9 @@ Future<void> init() async {
 
   // Categories Feature
   sl.registerFactory(() => CategoriesBloc(getCategoriesUseCase: sl()));
+  sl.registerFactory(() => CategoryProductsBloc(getCategoryProductsUseCase: sl()));
   sl.registerLazySingleton(() => GetCategoriesUseCase(repository: sl()));
+  sl.registerLazySingleton(() => GetCategoryProductsUseCase(repository: sl()));
   sl.registerLazySingleton<CategoriesRepository>(() => CategoriesRepositoryImpl(datasource: sl()));
   sl.registerLazySingleton(() => CategoriesDatasource(api: sl()));
 
@@ -102,6 +113,15 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetBrandsUseCase(repository: sl()));
   sl.registerLazySingleton<BrandsRepository>(() => BrandsRepositoryImpl(datasource: sl()));
   sl.registerLazySingleton(() => BrandsDatasource(api: sl()));
+
+  // Products Feature
+  sl.registerFactory(() => ProductDetailsBloc(getProductDetailsUseCase: sl()));
+  sl.registerLazySingleton(() => GetProductDetailsUseCase(repository: sl()));
+  sl.registerLazySingleton<ProductDetailsRepository>(() => ProductDetailsRepositoryImpl(datasource: sl()));
+  sl.registerLazySingleton(() => ProductsDatasource(api: sl()));
+
+  sl.registerFactory(() => BrandProductsBloc(getBrandProductsUseCase: sl()));
+  sl.registerLazySingleton(() => GetBrandProductsUseCase(repository: sl()));
 
   // Datasource
   sl.registerLazySingleton<ThemeLocalDatasource>(() => ThemeLocalDatasource(cacheHelper: sl()));
