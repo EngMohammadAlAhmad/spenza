@@ -22,6 +22,9 @@ class ProductItemEntity extends Equatable {
   final String description;
   final String? mainImage;
   final List<String> gallery;
+  final List<String> sideImages;
+  final String? video;
+  final String? model3d;
   final BrandEntity brand;
   final CategoryEntity category;
   final num rate;
@@ -42,6 +45,9 @@ class ProductItemEntity extends Equatable {
     required this.description,
     this.mainImage,
     required this.gallery,
+    required this.sideImages,
+    this.video,
+    this.model3d,
     required this.brand,
     required this.category,
     required this.rate,
@@ -59,9 +65,27 @@ class ProductItemEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id, title, description, mainImage, gallery, brand, category,
-        rate, ratingsCount, price, discountedPrice, discountPercentage,
-        defaultUnitId, units, variantOptions, variants, defaultVariantId, storage,
+        id,
+        title,
+        description,
+        mainImage,
+        gallery,
+        sideImages,
+        video,
+        model3d,
+        brand,
+        category,
+        rate,
+        ratingsCount,
+        price,
+        discountedPrice,
+        discountPercentage,
+        defaultUnitId,
+        units,
+        variantOptions,
+        variants,
+        defaultVariantId,
+        storage,
       ];
 }
 

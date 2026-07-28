@@ -84,6 +84,7 @@ class _HomeShellState extends State<HomeShell> {
         child: widget.navigationShell,
       ),
       bottomNavigationBar: Container(
+
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -91,7 +92,7 @@ class _HomeShellState extends State<HomeShell> {
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 20,
+              blurRadius: 20.0,
               offset: const Offset(0, -5),
             ),
           ],
@@ -142,9 +143,10 @@ class _NavTabItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
+      height: 47.0,
       duration: const Duration(milliseconds: 280),
       curve: Curves.easeOutCubic,
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      //padding: const EdgeInsets.symmetric(vertical: 3.0),
       decoration: BoxDecoration(
         color: isSelected ? activeColor : Colors.transparent,
         borderRadius: AppRadius.extra4Large,
@@ -160,13 +162,14 @@ class _NavTabItem extends StatelessWidget {
           // No SizedBox around the icon: the layout size stays exactly
           // 25x25 (as before), scaleXY only affects paint, not layout,
           // so the overshoot never grows the row's height.
+          const SizedBox(height: 2.0),
           SvgPicture.asset(
             item.icon,
             colorFilter: ColorFilter.mode(
               isSelected ? Colors.white : inactiveColor,
               BlendMode.srcIn,
             ),
-            width: 25.0,
+            width: 22.0,
           )
               .animate(target: isSelected ? 1 : 0)
               .scaleXY(

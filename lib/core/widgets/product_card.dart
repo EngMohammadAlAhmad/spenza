@@ -113,50 +113,46 @@ class _ProductCardState extends State<ProductCard> {
                     mainAxisAlignment: .spaceBetween,
                     children: [
                       Row(
+                        crossAxisAlignment: .start,
                         children: [
                           Text(
-                            product.rate.toString(),
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
+                            product.brand,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.neutral),
                           ),
-                          const SizedBox(width: 4.0),
-                          const Icon(Icons.star_rounded, size: 16.0, color: AppColors.secondary),
                           const SizedBox(width: 4.0),
                           const Text('•', style: TextStyle(color: AppColors.neutral)),
                           const SizedBox(width: 4.0),
-                          Expanded(
-                            child: Text(
-                              product.brand,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.neutral),
-                            ),
+                          const Icon(Icons.star_rounded, size: 14.0, color: AppColors.secondary),
+                          Text(
+                            product.rate.toString(),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold, color: AppColors.secondary),
                           ),
+                          const SizedBox(width: 4.0),
                         ],
                       ),
                       Text(
                         product.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              height: 1.2,
-                            ),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.2),
                       ),
                       const Spacer(),
                       Row(
-                        crossAxisAlignment: .end,
+                        crossAxisAlignment: .center,
                         children: [
                           Text(
                             product.discountedPrice.toString(),
                             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
+                                  fontWeight: FontWeight.w800,
                                   color: AppColors.primary,
                                 ),
                           ),
                           const SizedBox(width: 4.0),
                           Text(
                             'ل.س',
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.neutral),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.neutral),
                           ),
                         ],
                       ),
@@ -185,15 +181,22 @@ class _FavoriteButtonState extends State<_FavoriteButton> {
     return GestureDetector(
       onTap: () => setState(() => _isFavorite = !_isFavorite),
       child: Container(
-        padding: const EdgeInsets.all(6.0),
-        decoration: const BoxDecoration(
+        padding: const EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Icon(
           _isFavorite ? Icons.favorite : Icons.favorite_border,
           size: 18.0,
-          color: _isFavorite ? Colors.red : AppColors.neutral,
+          color: _isFavorite ? Colors.red : AppColors.grey,
         ).animate(target: _isFavorite ? 1 : 0)
             .scaleXY(begin: 1.0, end: 1.3, duration: 150.ms)
             .then()

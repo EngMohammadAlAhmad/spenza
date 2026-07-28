@@ -55,7 +55,7 @@ class ShoppingHeader extends StatelessWidget {
             height: 48.0,
             padding: const EdgeInsets.all(4.0),
             decoration: BoxDecoration(
-              color: AppColors.fillColor,
+              color: AppColors.neutral200,
               borderRadius: AppRadius.extra4Large,
             ),
             child: Row(

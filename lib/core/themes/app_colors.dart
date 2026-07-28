@@ -8,6 +8,7 @@ class AppColors {
   static const Color primaryDark = Color(0xFFC64420);
 
   static const Color neutral = Color(0xFF737373);
+  static const Color neutral200 = Color(0xFFF0F0F0);
   static const Color neutral900 = Color(0xFF444444);
 
   static const Color secondary = Color(0xFFF2B211);
@@ -65,6 +66,6 @@ class AppColors {
   static const Color blue = Color(0xFF566AB0);
   static const Color blue2 = Color(0xFF1447E6);
   static const Color blueAccent = Color(0xFFDBEAFE);
-  static const Color grey = Color(0xFF999899);
+  static const Color grey = Color(0xFFB9B3A9);
 
 }

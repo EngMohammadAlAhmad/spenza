@@ -19,7 +19,7 @@ class AppSearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomTextField(
       controller: controller ?? TextEditingController(),
-      fillColor: AppColors.fillColor,
+      fillColor: AppColors.neutral200,
       prefixIcon: Padding(
         padding: const EdgeInsetsDirectional.only(start: 16.0, end: 8.0),
         child: SvgPicture.asset(

@@ -84,7 +84,7 @@ class CustomTextField extends StatelessWidget {
             const BoxConstraints(minWidth: 25.0, minHeight: 25.0),
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: fillColor ?? AppColors.secondary.withValues(alpha: 0.1),
+        fillColor: fillColor ?? AppColors.neutral200,
         border: OutlineInputBorder(
           borderRadius: AppRadius.extra4Large,
           borderSide: BorderSide.none,
@@ -92,7 +92,8 @@ class CustomTextField extends StatelessWidget {
         enabledBorder: OutlineInputBorder(
           borderRadius: AppRadius.extra4Large,
           borderSide: BorderSide(
-            color: borderColor ?? AppColors.borderColor.withValues(alpha: 0.2),
+            //color: borderColor ?? AppColors.borderColor.withValues(alpha: 0.2),
+            color: Colors.transparent,
           ),
         ),
         focusedBorder: OutlineInputBorder(
