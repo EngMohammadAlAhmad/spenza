@@ -8,20 +8,22 @@ sealed class SearchEvent extends Equatable {
 }
 
 class PerformSearchEvent extends SearchEvent {
-  final String q;
+  final String? q;
   final int? categoryId;
   final int? brandId;
+  final String? sort;
   final bool isRefresh;
 
   const PerformSearchEvent({
-    required this.q,
+    this.q,
     this.categoryId,
     this.brandId,
+    this.sort,
     this.isRefresh = false,
   });
 
   @override
-  List<Object?> get props => [q, categoryId, brandId, isRefresh];
+  List<Object?> get props => [q, categoryId, brandId, sort, isRefresh];
 }
 
 class LoadMoreSearchEvent extends SearchEvent {

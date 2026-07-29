@@ -1,12 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-//import 'package:go_router/go_router.dart';
+import 'package:spenza/core/connection/network_info.dart';
 import 'package:spenza/core/databases/api/api_consumer.dart';
 import 'package:spenza/core/databases/api/end_points.dart';
 import 'package:spenza/core/databases/api/language_interpretation.dart';
 import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/errors/exceptions.dart';
-//import 'package:spenza/core/routes/route_paths.dart';
 import 'dart:convert';
 
 import 'package:spenza/core/utils/strings.dart';
@@ -16,12 +15,14 @@ class DioConsumer extends ApiConsumer {
   final LanguageInterceptor languageInterceptor;
   final CacheHelper cacheHelper;
   final GlobalKey<NavigatorState> navigatorKey;
+  final NetworkInfo networkInfo;
 
   DioConsumer({
     required this.dio,
     required this.languageInterceptor,
     required this.cacheHelper,
     required this.navigatorKey,
+    required this.networkInfo,
   }) {
     dio.options.baseUrl = EndPoints.baseUrl;
     dio.options.responseType = ResponseType.json;
@@ -281,6 +282,12 @@ class DioConsumer extends ApiConsumer {
   // API METHODS
   // =============================
 
+  Future<void> _checkConnectivity() async {
+    if (!await networkInfo.isConnected) {
+      throw OfflineException();
+    }
+  }
+
   @override
   Future post(
       String path, {
@@ -289,6 +296,7 @@ class DioConsumer extends ApiConsumer {
         bool isFormData = false,
         String? token,
       }) async {
+    await _checkConnectivity();
     try {
       final res = await dio.post(
         path,
@@ -311,6 +319,7 @@ class DioConsumer extends ApiConsumer {
         Map<String, dynamic>? queryParameters,
         String? token,
       }) async {
+    await _checkConnectivity();
     try {
       final res = await dio.get(
         path,
@@ -333,6 +342,7 @@ class DioConsumer extends ApiConsumer {
         Map<String, dynamic>? queryParameters,
         String? token,
       }) async {
+    await _checkConnectivity();
     try {
       final res = await dio.delete(
         path,
@@ -356,6 +366,7 @@ class DioConsumer extends ApiConsumer {
         bool isFormData = false,
         String? token,
       }) async {
+    await _checkConnectivity();
     try {
       final res = await dio.patch(
         path,

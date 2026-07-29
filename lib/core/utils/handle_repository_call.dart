@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:spenza/core/connection/network_info.dart';
 import 'package:spenza/core/errors/exceptions.dart';
 import 'package:spenza/core/errors/failure.dart';
 
@@ -8,8 +9,13 @@ import 'package:spenza/core/errors/failure.dart';
 ///
 Future<Either<Failure, T>> handleRepositoryCall<T>(
     Future<T> Function() repositoryCall, {
+      NetworkInfo? networkInfo,
       Failure Function(dynamic exception)? onError,
     }) async {
+  if (networkInfo != null && !await networkInfo.isConnected) {
+    return const Left(OfflineFailure());
+  }
+
   try {
     final response = await repositoryCall();
     return Right(response);
@@ -19,12 +25,17 @@ Future<Either<Failure, T>> handleRepositoryCall<T>(
       return Left(onError(e));
     }
 
-    // 2. Default behavior: handle ServerException specifically.
+    // 2. Handle OfflineException specifically.
+    if (e is OfflineException) {
+      return const Left(OfflineFailure());
+    }
+
+    // 3. Handle ServerException specifically.
     if (e is ServerException) {
       return Left(Failure(errMessage: e.errorModel.errorMessage));
     }
 
-    // 3. If it's not a ServerException and no custom mapper is provided,
+    // 4. If it's not a handled exception and no custom mapper is provided,
     // re-throw it to perfectly preserve your original logic (letting it bubble up).
     rethrow;
   }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/widgets/product_card.dart';
+import 'package:spenza/core/errors/failure.dart';
+import 'package:spenza/core/widgets/no_internet_widget.dart';
 import 'package:spenza/features/products/domain/entities/product_details_entity.dart';
 import 'package:spenza/features/products/presentation/blocs/product_details_bloc/product_details_bloc.dart';
 import 'package:spenza/features/products/presentation/widgets/product_image_gallery.dart';
@@ -24,7 +27,11 @@ class ProductDetailsScreen extends StatelessWidget {
           body: data != null
               ? _buildContent(context, state, data)
               : state.dataState.isError
-                  ? SafeArea(child: Center(child: Text(state.dataState.errorMessage)))
+                  ? (state.dataState.failure is OfflineFailure
+                      ? NoInternetWidget(
+                          onRetry: () => context.read<ProductDetailsBloc>().add(GetProductDetailsEvent(productId: productId)),
+                        )
+                      : SafeArea(child: Center(child: Text(state.dataState.errorMessage))))
                   : _buildLoadingGrid(),
         );
       },
@@ -75,10 +82,10 @@ class ProductDetailsScreen extends StatelessWidget {
                       'وفّر ${(product.price - product.discountedPrice).toStringAsFixed(0)} ل.س',
                       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
                     ),
-                  ),
+                  ).animate().scale(delay: 400.ms, duration: 400.ms, curve: Curves.easeInOut),
                 ),
             ],
-          ),
+          ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.1, end: 0),
           
           Padding(
             padding: const EdgeInsets.all(24.0),
@@ -96,13 +103,13 @@ class ProductDetailsScreen extends StatelessWidget {
                     product.category.name,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.primary, fontWeight: .bold),
                   ),
-                ),
+                ).animate().fadeIn(delay: 200.ms).slideX(begin: 0.1, end: 0),
                 const SizedBox(height: 10.0),
                 Text(
                   product.title,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .w800),
                   textAlign: TextAlign.right,
-                ),
+                ).animate().fadeIn(delay: 300.ms).slideX(begin: 0.1, end: 0),
                 
                 // Rating
                 const SizedBox(height: 16.0),
@@ -123,7 +130,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       style: const TextStyle(color: AppColors.neutral, fontSize: 14.0),
                     ),
                   ],
-                ),
+                ).animate().fadeIn(delay: 400.ms),
                 const SizedBox(height: 16.0),
                 Text.rich(
                   TextSpan(
@@ -152,7 +159,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
+                ).animate().fadeIn(delay: 500.ms).slideX(begin: 0.1, end: 0),
                 const SizedBox(height: 16.0),
                 Row(
                   spacing: 5.0,
@@ -163,30 +170,30 @@ class ProductDetailsScreen extends StatelessWidget {
                       style: TextStyle(color: isOutOfStock ? Colors.red : Colors.green, fontWeight: FontWeight.bold, fontSize: 12.0),
                     ),
                   ],
-                ),
+                ).animate().fadeIn(delay: 600.ms),
                 const SizedBox(height: 20.0),
                 // Units
-                Text('الوحدة', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: .bold)),
+                Text('الوحدة', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: .bold)).animate().fadeIn(delay: 700.ms),
                 const SizedBox(height: 12),
                 _buildOptionsRow(
                   context,
                   options: product.units.map((u) => _SelectionItem(id: u.id, label: u.title)).toList(),
                   selectedId: state.selectedUnitId,
                   onSelected: (id) => context.read<ProductDetailsBloc>().add(SelectUnitEvent(id)),
-                ),
+                ).animate().fadeIn(delay: 750.ms).slideY(begin: 0.1, end: 0),
                 
                 const SizedBox(height: 24),
                 
                 // Variants
                 for (var option in product.variantOptions) ...[
-                  Text(option.name, style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: .bold)),
+                  Text(option.name, style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: .bold)).animate().fadeIn(delay: 800.ms),
                   const SizedBox(height: 12),
                   _buildOptionsRow(
                     context,
                     options: option.values.map((v) => _SelectionItem(id: v.valueId, label: v.name)).toList(),
                     selectedId: state.selectedOptions[option.attributeId] ?? 0,
                     onSelected: (valId) => context.read<ProductDetailsBloc>().add(SelectVariantOptionEvent(attributeId: option.attributeId, valueId: valId)),
-                  ),
+                  ).animate().fadeIn(delay: 850.ms).slideY(begin: 0.1, end: 0),
                   const SizedBox(height: 24),
                 ],
                 
@@ -209,22 +216,22 @@ class ProductDetailsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
+                ).animate(delay: 900.ms).fadeIn().scale(begin: const Offset(0.95, 0.95)),
                 
                 const SizedBox(height: 30.0),
                 // Description
-                Text('الوصف', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: .bold, color: AppColors.primary)),
+                Text('الوصف', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: .bold, color: AppColors.primary)).animate().fadeIn(delay: 1000.ms),
                 const SizedBox(height: 12.0),
                 Text(
                   product.description,
                   style: Theme.of(context).textTheme.bodyMedium,
                   /*textAlign: TextAlign.right,*/
-                ),
+                ).animate().fadeIn(delay: 1100.ms),
                 
                 const SizedBox(height: 48),
                 
                 // Related
-                Text('قد يعجبك أيضاً', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: .bold, color: AppColors.primary)),
+                Text('قد يعجبك أيضاً', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: .bold, color: AppColors.primary)).animate().fadeIn(delay: 1200.ms),
                 const SizedBox(height: 20),
                 SizedBox(
                   height: 300,
@@ -239,7 +246,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       child: ProductCard(product: data.relatedProducts[index]),
                     ),
                   ),
-                ),
+                ).animate().fadeIn(delay: 1300.ms).slideY(begin: 0.1, end: 0),
                 const SizedBox(height: 75.0),
               ],
             ),
@@ -299,10 +306,7 @@ class ProductDetailsScreen extends StatelessWidget {
         Container(
           constraints: const BoxConstraints(minWidth: 40),
           alignment: Alignment.center,
-          child: Text(
-            quantity.toString(),
-            style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontWeight: .bold),
-          ),
+          child: _AnimatedFlipCounter(value: quantity),
         ),
         InkWell(
           onTap: () => context.read<ProductDetailsBloc>().add(const UpdateQuantityEvent(1)),
@@ -318,6 +322,61 @@ class ProductDetailsScreen extends StatelessWidget {
 
   Widget _buildLoadingGrid() {
     return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+  }
+}
+
+class _AnimatedFlipCounter extends StatefulWidget {
+  final int value;
+  const _AnimatedFlipCounter({required this.value});
+
+  @override
+  State<_AnimatedFlipCounter> createState() => _AnimatedFlipCounterState();
+}
+
+class _AnimatedFlipCounterState extends State<_AnimatedFlipCounter> {
+  int? _oldValue;
+
+  @override
+  void didUpdateWidget(covariant _AnimatedFlipCounter oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      _oldValue = oldWidget.value;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isIncrement = _oldValue == null || widget.value > _oldValue!;
+
+    return ClipRect(
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 350),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          final isNew = child.key == ValueKey<int>(widget.value);
+
+          final Offset begin = isIncrement
+              ? (isNew ? const Offset(0.0, 1.2) : const Offset(0.0, -1.2))
+              : (isNew ? const Offset(0.0, -1.2) : const Offset(0.0, 1.2));
+
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: animation.drive(
+                Tween<Offset>(begin: begin, end: Offset.zero).chain(
+                  CurveTween(curve: Curves.easeOutCubic),
+                ),
+              ),
+              child: child,
+            ),
+          );
+        },
+        child: Text(
+          widget.value.toString(),
+          key: ValueKey<int>(widget.value),
+          style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
   }
 }
 

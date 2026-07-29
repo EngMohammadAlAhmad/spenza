@@ -35,6 +35,7 @@ class HomeHeader extends StatelessWidget {
             mainAxisAlignment: .spaceBetween,
             children: [
               SvgPicture.asset('assets/icons/location_icon.svg'),
+              const SizedBox(width: 8.0),
               Column(
                 crossAxisAlignment: .start,
                 children: [
@@ -57,7 +58,7 @@ class HomeHeader extends StatelessWidget {
                 icon: SvgPicture.asset('assets/icons/temp.svg'),
               ),
             ],
-          ),
+          ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideX(begin: 0.1, end: 0),
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTapDown: (details) {
@@ -74,10 +75,10 @@ class HomeHeader extends StatelessWidget {
                 readOnly: true,
               ),
             ),
-          ),
+          ).animate().fadeIn(delay: 400.ms, duration: 600.ms).scale(begin: const Offset(0.95, 0.95)),
           SizedBox(height: AppDimens.spaceS),
         ],
       ),
-    ).animate().fadeIn(duration: 1000.ms).slideY(begin: -0.1, end: 0, curve: Curves.easeOut);
+    ).animate().fadeIn(duration: 800.ms).slideY(begin: -0.05, end: 0, curve: Curves.easeOutCubic);
   }
 }

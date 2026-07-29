@@ -10,6 +10,8 @@ class ServerException implements Exception {
   ServerException(this.errorModel);
 }
 
+class OfflineException implements Exception {}
+
 class CacheException implements Exception {
   final String errorMessage;
   CacheException({required this.errorMessage});
@@ -133,10 +135,7 @@ void handleDioException(DioException e) {
 
   switch (e.type) {
     case DioExceptionType.connectionError:
-      print(e.message);
-      throw ConnectionErrorException(
-        ErrorModel(errorMessage: e.message ?? 'Connection error occurred.'),
-      );
+      throw OfflineException();
 
     case DioExceptionType.badCertificate:
       throw BadCertificateException(
@@ -144,19 +143,13 @@ void handleDioException(DioException e) {
       );
 
     case DioExceptionType.connectionTimeout:
-      throw ConnectionTimeoutException(
-        ErrorModel(errorMessage: 'Connection timed out.'),
-      );
+      throw OfflineException();
 
     case DioExceptionType.receiveTimeout:
-      throw ReceiveTimeoutException(
-        ErrorModel(errorMessage: 'Server response timed out.'),
-      );
+      throw OfflineException();
 
     case DioExceptionType.sendTimeout:
-      throw SendTimeoutException(
-        ErrorModel(errorMessage: 'Request send timed out.'),
-      );
+      throw OfflineException();
 
     case DioExceptionType.cancel:
       throw CancelException(
@@ -180,7 +173,7 @@ void handleDioException(DioException e) {
         case 405:
           throw MethodNotAllowedException(errorModel);
         case 408:
-          throw RequestTimeoutException(errorModel);
+          throw OfflineException();
         case 409:
           throw CoefficientException(errorModel);
         case 410:
@@ -210,12 +203,14 @@ void handleDioException(DioException e) {
       }
 
     case DioExceptionType.unknown:
+      if (e.message?.contains('SocketException') == true || e.message?.contains('host lookup') == true) {
+        throw OfflineException();
+      }
       throw UnknownException(
         ErrorModel(errorMessage: e.message ?? 'Unknown error occurred'),
       );
     case DioExceptionType.transformTimeout:
-      // TODO: Handle this case.
-      throw UnimplementedError();
+      throw OfflineException();
   }
 }
 

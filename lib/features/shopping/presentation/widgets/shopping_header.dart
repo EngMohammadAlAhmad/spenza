@@ -46,7 +46,7 @@ class ShoppingHeader extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: AppColors.primary,
                     ),
-              ),
+              ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideX(begin: 0.2, end: 0.0),
               Expanded(
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
@@ -65,7 +65,7 @@ class ShoppingHeader extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
+              ).animate().fadeIn(delay: 400.ms, duration: 600.ms).scale(begin: const Offset(0.9, 0.9)),
             ],
           ),
           const SizedBox(height: 24.0),
@@ -131,9 +131,9 @@ class ShoppingHeader extends StatelessWidget {
                 ),
               ],
             ),
-          ),
+          ).animate().fadeIn(delay: 600.ms, duration: 600.ms).slideY(begin: 0.2, end: 0),
         ],
       ),
-    ).animate().fadeIn(duration: 1000.ms).slideY(begin: -0.1, end: 0, curve: Curves.easeOut);
+    ).animate().fadeIn(duration: 800.ms).slideY(begin: -0.05, end: 0, curve: Curves.easeOutCubic);
   }
 }

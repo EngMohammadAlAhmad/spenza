@@ -67,6 +67,7 @@ Future<void> init() async {
     languageInterceptor: sl(),
     cacheHelper: sl(),
     navigatorKey: navigatorKey,
+    networkInfo: sl(),
   ));
   sl.registerSingletonAsync<CacheHelper>(() {
     final cacheHelper = CacheHelper();
@@ -107,7 +108,10 @@ Future<void> init() async {
 
   // Categories Feature
   sl.registerFactory(() => CategoriesBloc(getCategoriesUseCase: sl()));
-  sl.registerFactory(() => CategoryProductsBloc(getCategoryProductsUseCase: sl()));
+  sl.registerFactory(() => CategoryProductsBloc(
+        getCategoryProductsUseCase: sl(),
+        searchProductsUseCase: sl(),
+      ));
   sl.registerLazySingleton(() => GetCategoriesUseCase(repository: sl()));
   sl.registerLazySingleton(() => GetCategoryProductsUseCase(repository: sl()));
   sl.registerLazySingleton<CategoriesRepository>(() => CategoriesRepositoryImpl(datasource: sl()));
@@ -131,7 +135,10 @@ Future<void> init() async {
   sl.registerLazySingleton<SearchRepository>(() => SearchRepositoryImpl(datasource: sl()));
   sl.registerLazySingleton(() => SearchDatasource(api: sl()));
 
-  sl.registerFactory(() => BrandProductsBloc(getBrandProductsUseCase: sl()));
+  sl.registerFactory(() => BrandProductsBloc(
+        getBrandProductsUseCase: sl(),
+        searchProductsUseCase: sl(),
+      ));
   sl.registerLazySingleton(() => GetBrandProductsUseCase(repository: sl()));
 
   // Datasource

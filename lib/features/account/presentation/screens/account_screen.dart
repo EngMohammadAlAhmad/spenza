@@ -78,7 +78,7 @@ class AccountScreen extends StatelessWidget {
                 child: AnimatedTextKit(
                   animatedTexts: [
                     TyperAnimatedText(
-                      'قريباً ستتمكن من تعديل بياناتك الشخصية، إدارة عناوين التوصيل، والتحكم في إعدادات التطبيق بكل سهولة.',
+                      'قريباً ستتمكن من تعديل بياناتك الشخصية، إدارة حسابك، والتحكم في إعدادات التطبيق بكل سهولة.',
                       textAlign: TextAlign.center,
                       textStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: AppColors.neutral,

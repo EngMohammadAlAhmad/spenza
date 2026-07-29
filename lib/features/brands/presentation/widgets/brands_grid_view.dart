@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
+import 'package:spenza/core/errors/failure.dart';
+import 'package:spenza/core/widgets/no_internet_widget.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/features/brands/presentation/blocs/brands_bloc/brands_bloc.dart';
@@ -52,6 +54,11 @@ class _BrandsGridViewState extends State<BrandsGridView> {
         }
 
         if (state.isError && (state.data == null || state.data!.isEmpty)) {
+          if (state.failure is OfflineFailure) {
+            return NoInternetWidget(
+              onRetry: () => context.read<BrandsBloc>().add(const GetBrandsEvent(isRefresh: true)),
+            );
+          }
           return Center(child: Text(state.errorMessage));
         }
 

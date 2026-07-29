@@ -8,15 +8,21 @@ class SearchDatasource {
   SearchDatasource({required this.api});
 
   Future<SearchResultModel> searchProducts(SearchParams params) async {
+    final Map<String, dynamic> queryParameters = {
+      'category_id': params.categoryId,
+      'brand_id': params.brandId,
+      'sort': params.sort,
+      'page': params.page,
+      'per_page': params.perPage,
+      'q': params.q,
+    };
+
+    // Remove all null parameters so they aren't sent to the API
+    queryParameters.removeWhere((key, value) => value == null);
+
     final response = await api.get(
       '/api/products/search',
-      queryParameters: {
-        'q': params.q,
-        'category_id': params.categoryId,
-        'brand_id': params.brandId,
-        'page': params.page,
-        'per_page': params.perPage,
-      },
+      queryParameters: queryParameters,
     );
 
     return SearchResultModel.fromJson(response);

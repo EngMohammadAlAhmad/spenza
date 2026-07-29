@@ -16,6 +16,7 @@ class SearchBloc extends Bloc<SearchEvent, BaseState<SearchResultEntity>> {
   String? _lastQuery;
   int? _lastCategoryId;
   int? _lastBrandId;
+  String? _lastSort;
 
   SearchBloc({required this.searchProductsUseCase})
       : super(const BaseState<SearchResultEntity>()) {
@@ -36,6 +37,7 @@ class SearchBloc extends Bloc<SearchEvent, BaseState<SearchResultEntity>> {
     _lastQuery = event.q;
     _lastCategoryId = event.categoryId;
     _lastBrandId = event.brandId;
+    _lastSort = event.sort;
 
     emit(const BaseState<SearchResultEntity>(requestStatus: RequestStatus.loading));
 
@@ -43,6 +45,7 @@ class SearchBloc extends Bloc<SearchEvent, BaseState<SearchResultEntity>> {
       q: event.q,
       categoryId: event.categoryId,
       brandId: event.brandId,
+      sort: event.sort,
       page: 1,
       perPage: 20,
     ));
@@ -65,14 +68,15 @@ class SearchBloc extends Bloc<SearchEvent, BaseState<SearchResultEntity>> {
     LoadMoreSearchEvent event,
     Emitter<BaseState<SearchResultEntity>> emit,
   ) async {
-    if (state.hasReachedMax == true || state.requestStatus == RequestStatus.loading || _lastQuery == null) return;
+    if (state.hasReachedMax == true || state.requestStatus == RequestStatus.loading || (_lastQuery == null && _lastCategoryId == null && _lastBrandId == null)) return;
 
     emit(state.copyWith(requestStatus: RequestStatus.loading));
 
     final result = await searchProductsUseCase.call(SearchParams(
-      q: _lastQuery!,
+      q: _lastQuery,
       categoryId: _lastCategoryId,
       brandId: _lastBrandId,
+      sort: _lastSort,
       page: state.currentPage,
       perPage: 20,
     ));

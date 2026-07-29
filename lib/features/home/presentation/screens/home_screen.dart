@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/utils/base_state.dart';
+import 'package:spenza/core/widgets/no_internet_widget.dart';
+import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/features/home/domain/entities/home_data_entity.dart';
 import 'package:spenza/features/home/presentation/blocs/home_bloc/home_bloc.dart';
 import 'package:spenza/features/home/presentation/widgets/banner_slider.dart';
@@ -28,10 +31,30 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => di.sl<HomeBloc>()..add(const GetHomeDataEvent()),
-      child: Scaffold(
-        backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          backgroundColor: AppColors.primary.withValues(alpha: 0.1),
         body: BlocBuilder<HomeBloc, BaseState<HomeDataEntity>>(
           builder: (context, state) {
+            if (state.isError && state.data == null) {
+              if (state.failure is OfflineFailure) {
+                return Column(
+                  children: [
+                    const HomeHeader(),
+                    Expanded(
+                      child: NoInternetWidget(
+                        onRetry: () {
+                          context.read<HomeBloc>().add(const GetHomeDataEvent());
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              }
+              return Center(child: Text(state.errorMessage));
+            }
+
             final data = state.data;
             final isLoading = state.isLoading || data == null;
 
@@ -92,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
-    );
+    ),);
   }
 }
 
@@ -110,25 +133,62 @@ class FreeDeliveryCard extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
+            // News Ticker Background
             Positioned.fill(
+              left: -100,
+              right: -100,
               child: SvgPicture.asset(
                 'assets/images/container_background.svg',
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(Colors.white.withValues(alpha: 0.1), BlendMode.srcIn),
-              ),
+              ).animate(onPlay: (controller) => controller.repeat())
+               .moveX(begin: -20, end: 20, duration: 3.seconds, curve: Curves.linear)
+               .then()
+               .moveX(begin: 20, end: -20, duration: 3.seconds, curve: Curves.linear),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 17.0, vertical: 12.75),
               child: Row(
                 spacing: 25.0,
                 children: [
-                  Image.asset('assets/images/delivery_image.png'),
+                  // Highway driving bounce animation
+                  Image.asset('assets/images/delivery_image.png')
+                      .animate(onPlay: (controller) => controller.repeat(reverse: true))
+                      .moveY(begin: -2.5, end: 2.5, duration: 600.ms, curve: Curves.easeInOut),
                   Column(
-                    crossAxisAlignment: .start,
-                    mainAxisAlignment: .center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('توصيل مجاني للطلبات فوق', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold)),
-                      Text('150,000 ل.س', style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: AppColors.primary500, fontWeight: FontWeight.bold)),
+                      DefaultTextStyle(
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Zain',
+                              color: Colors.black,
+                            ),
+                        child: AnimatedTextKit(
+                          animatedTexts: [
+                            TyperAnimatedText(
+                              'توصيل مجاني للطلبات فوق',
+                              speed: const Duration(milliseconds: 100),
+                            ),
+                          ],
+                          repeatForever: true,
+                          pause: const Duration(seconds: 3),
+                        ),
+                      ),
+                      
+                      // Pulsing and Shimmering Price Text
+                      Text(
+                        '150,000 ل.س',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: AppColors.primary500, fontWeight: FontWeight.bold),
+                      )
+                          .animate(onPlay: (controller) => controller.repeat())
+                          .shimmer(delay: 2.seconds, duration: 1500.ms, color: Colors.white.withValues(alpha: 0.5))
+                          .animate(onPlay: (controller) => controller.repeat(reverse: true))
+                          .scale(begin: const Offset(1, 1), end: const Offset(1.08, 1.08), duration: 1.seconds, curve: Curves.easeInOut)
+                          .animate() // Entrance
+                          .fadeIn(delay: 300.ms, duration: 600.ms)
+                          .slideX(begin: 0.3, end: 0),
                     ],
                   ),
                 ],

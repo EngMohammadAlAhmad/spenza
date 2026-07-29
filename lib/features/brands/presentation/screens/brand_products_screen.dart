@@ -9,6 +9,8 @@ import 'package:spenza/core/widgets/product_card.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/core/utils/animations/circular_reveal_route.dart';
 import 'package:spenza/features/search/presentation/screens/search_screen.dart';
+import 'package:spenza/core/widgets/no_internet_widget.dart';
+import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/features/brands/domain/entities/brand_products_result_entity.dart';
 import 'package:spenza/features/brands/presentation/blocs/brand_products_bloc/brand_products_bloc.dart';
 
@@ -27,7 +29,7 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
   final OverlayPortalController _sortDropdownController = OverlayPortalController();
   final LayerLink _sortLayerLink = LayerLink();
 
-  String _selectedSort = 'الأكثر رواجاً';
+  String _selectedSort = 'الأحدث';
   final List<String> _sortOptions = [
     'الأكثر رواجاً',
     'السعر: الأقل أولاً',
@@ -50,7 +52,28 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
 
   void _onScroll() {
     if (_isBottom) {
-      context.read<BrandProductsBloc>().add(GetBrandProductsEvent(brandId: widget.brandId));
+      final sortKey = _getSortKey(_selectedSort);
+      context.read<BrandProductsBloc>().add(GetBrandProductsEvent(
+            brandId: widget.brandId,
+            sort: sortKey,
+          ));
+    }
+  }
+
+  String _getSortKey(String label) {
+    switch (label) {
+      case 'الأحدث':
+        return 'newest';
+      case 'السعر: الأقل أولاً':
+        return 'price_asc';
+      case 'السعر: الأعلى أولاً':
+        return 'price_desc';
+      case 'الأعلى تقييماً':
+        return 'rating';
+      case 'الأكثر رواجاً':
+        return 'popular';
+      default:
+        return 'newest';
     }
   }
 
@@ -63,11 +86,13 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-      body: Column(
-        spacing: 15.0,
-        children: [
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+        body: Column(
+          spacing: 15.0,
+          children: [
           BlocBuilder<BrandProductsBloc, BaseState<BrandProductsResultEntity>>(
             builder: (context, state) {
               return _buildHeader(context, state);
@@ -84,6 +109,16 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
                 }
 
                 if (state.isError && products.isEmpty) {
+                  if (state.failure is OfflineFailure) {
+                    return NoInternetWidget(
+                      onRetry: () {
+                        context.read<BrandProductsBloc>().add(GetBrandProductsEvent(
+                              brandId: widget.brandId,
+                              isRefresh: true,
+                            ));
+                      },
+                    );
+                  }
                   return Center(child: Text(state.errorMessage));
                 }
 
@@ -121,7 +156,7 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
           ),
         ],
       ),
-    );
+      ),);
   }
 
   Widget _buildHeader(BuildContext context, BaseState<BrandProductsResultEntity> state) {
@@ -279,6 +314,14 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
                                     onTap: () {
                                       setState(() => _selectedSort = option);
                                       _sortDropdownController.hide();
+                                      final sortKey = _getSortKey(option);
+                                      context.read<BrandProductsBloc>().add(
+                                            GetBrandProductsEvent(
+                                              brandId: widget.brandId,
+                                              sort: sortKey,
+                                              isRefresh: true,
+                                            ),
+                                          );
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

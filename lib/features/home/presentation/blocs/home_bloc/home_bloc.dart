@@ -49,8 +49,8 @@ class HomeBloc extends Bloc<HomeEvent, BaseState<HomeDataEntity>> {
     final result = await useCaseFuture;
 
     result.fold(
-          (failure) => _emitError(emit, failure.errMessage),
-          (successData) => onSuccess(successData),
+      (failure) => _emitError(emit, failure),
+      (successData) => onSuccess(successData),
     );
   }
 
@@ -58,10 +58,10 @@ class HomeBloc extends Bloc<HomeEvent, BaseState<HomeDataEntity>> {
     emit(state.copyWith(requestStatus: RequestStatus.loading));
   }
 
-  void _emitError(Emitter<BaseState<HomeDataEntity>> emit, String? message) {
+  void _emitError(Emitter<BaseState<HomeDataEntity>> emit, Failure failure) {
     emit(state.copyWith(
       requestStatus: RequestStatus.error,
-      message: message ?? 'حدث خطأ غير متوقّع',
+      failure: failure,
     ));
   }
 

@@ -13,6 +13,7 @@ class BaseState<T> extends Equatable {
   final String? message; // for adding , deleting , creating , benefit from the message returned bt the Backend
 
   final int currentPage;
+  final String? sort; // for sorting filters
 
   const BaseState({
     this.requestStatus = RequestStatus.init,
@@ -21,6 +22,7 @@ class BaseState<T> extends Equatable {
     this.data,
     this.message,
     this.currentPage = 1,
+    this.sort,
   });
 
   BaseState<T> copyWith({
@@ -30,6 +32,7 @@ class BaseState<T> extends Equatable {
     T? data,
     String? message,
     int? currentPage,
+    String? sort,
   }) => BaseState<T>(
     data: data ?? this.data,
     failure: failure ?? this.failure,
@@ -37,10 +40,11 @@ class BaseState<T> extends Equatable {
     hasReachedMax: hasReachedMax ?? this.hasReachedMax,
     message: message ?? this.message,
     currentPage: currentPage ?? this.currentPage,
+    sort: sort ?? this.sort,
   );
 
   @override
-  List<Object?> get props => [requestStatus, failure, data, hasReachedMax, message, currentPage];
+  List<Object?> get props => [requestStatus, failure, data, hasReachedMax, message, currentPage, sort];
 
   BaseState<T> loading() {
     return copyWith(requestStatus: RequestStatus.loading);
