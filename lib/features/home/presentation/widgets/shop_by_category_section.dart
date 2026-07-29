@@ -83,14 +83,6 @@ class ShopByCategorySection extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(16.0),
-                              border: Border.all(color: AppColors.fillColor, width: 1.5),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.04),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(16),
@@ -123,7 +115,9 @@ class ShopByCategorySection extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ).animate().fadeIn(duration: 500.ms).slideX(begin: 0.1, end: 0);
+                    ).animate(delay: (30 * index).ms)
+                        .fadeIn(duration: 500.ms)
+                        .scale(begin: const Offset(0.9, 0.9), end: const Offset(1.0, 1.0));
                   },
                 ),
         ),

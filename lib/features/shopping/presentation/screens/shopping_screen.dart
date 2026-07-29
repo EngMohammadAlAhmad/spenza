@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/features/brands/presentation/blocs/brands_bloc/brands_bloc.dart';
 import 'package:spenza/features/brands/presentation/widgets/brands_grid_view.dart';
@@ -53,40 +55,47 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => di.sl<CategoriesBloc>()..add(const GetCategoriesEvent(isRefresh: true)),
-        ),
-        BlocProvider(
-          create: (context) => di.sl<BrandsBloc>()..add(const GetBrandsEvent(isRefresh: true)),
-        ),
-      ],
-      child: Scaffold(
-        backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-        body: Column(
-          children: [
-            ShoppingHeader(
-              currentPage: _currentPage,
-              onTabTapped: _onTabTapped,
-            ),
-            const SizedBox(height: 16.0),
-            // Animated Content
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: (index) => setState(() => _currentPage = index),
-                  physics: const BouncingScrollPhysics(),
-                  children: const [
-                    CategoriesGridView(),
-                    BrandsGridView(),
-                  ],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        context.go(RoutePaths.home);
+      },
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => di.sl<CategoriesBloc>()..add(const GetCategoriesEvent(isRefresh: true)),
+          ),
+          BlocProvider(
+            create: (context) => di.sl<BrandsBloc>()..add(const GetBrandsEvent(isRefresh: true)),
+          ),
+        ],
+        child: Scaffold(
+          backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+          body: Column(
+            children: [
+              ShoppingHeader(
+                currentPage: _currentPage,
+                onTabTapped: _onTabTapped,
+              ),
+              const SizedBox(height: 16.0),
+              // Animated Content
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: PageView(
+                    controller: _pageController,
+                    onPageChanged: (index) => setState(() => _currentPage = index),
+                    physics: const BouncingScrollPhysics(),
+                    children: const [
+                      CategoriesGridView(),
+                      BrandsGridView(),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

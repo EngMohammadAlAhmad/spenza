@@ -7,6 +7,8 @@ import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
 import 'package:spenza/core/widgets/product_card.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
+import 'package:spenza/core/utils/animations/circular_reveal_route.dart';
+import 'package:spenza/features/search/presentation/screens/search_screen.dart';
 import 'package:spenza/features/brands/domain/entities/brand_products_result_entity.dart';
 import 'package:spenza/features/brands/presentation/blocs/brand_products_bloc/brand_products_bloc.dart';
 
@@ -21,6 +23,18 @@ class BrandProductsScreen extends StatefulWidget {
 
 class _BrandProductsScreenState extends State<BrandProductsScreen> {
   final ScrollController _scrollController = ScrollController();
+
+  final OverlayPortalController _sortDropdownController = OverlayPortalController();
+  final LayerLink _sortLayerLink = LayerLink();
+
+  String _selectedSort = 'الأكثر رواجاً';
+  final List<String> _sortOptions = [
+    'الأكثر رواجاً',
+    'السعر: الأقل أولاً',
+    'السعر: الأعلى أولاً',
+    'الأعلى تقييماً',
+    'الأحدث',
+  ];
 
   @override
   void initState() {
@@ -50,14 +64,20 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
+      backgroundColor: AppColors.primary.withValues(alpha: 0.1),
       body: Column(
+        spacing: 15.0,
         children: [
-          _buildHeader(context),
+          BlocBuilder<BrandProductsBloc, BaseState<BrandProductsResultEntity>>(
+            builder: (context, state) {
+              return _buildHeader(context, state);
+            },
+          ),
           Expanded(
             child: BlocBuilder<BrandProductsBloc, BaseState<BrandProductsResultEntity>>(
               builder: (context, state) {
-                final products = state.data?.products ?? [];
+                final data = state.data;
+                final products = data?.products ?? [];
 
                 if (state.isLoading && products.isEmpty) {
                   return _buildLoadingGrid();
@@ -73,7 +93,7 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
 
                 return GridView.builder(
                   controller: _scrollController,
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
                   physics: const BouncingScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -104,62 +124,225 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, BaseState<BrandProductsResultEntity> state) {
+    final brandName = state.data?.brand.name ?? "";
+    final totalProducts = state.data?.total ?? 0;
+
     return Container(
+      height: 200.0,
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 8,
-        left: 16,
-        right: 16,
-        bottom: 16,
+        top: MediaQuery.of(context).padding.top + 8.0,
+        left: 16.0,
+        right: 16.0,
+        bottom: 10.0,
       ),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
+          bottomLeft: Radius.circular(30.0),
+          bottomRight: Radius.circular(30.0),
         ),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             spacing: 8.0,
             children: [
-              IconButton(
-                onPressed: () => context.pop(),
-                icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+              InkWell(
+                onTap: () => context.pop(),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(15.0, 15.0, 20.0, 15.0),
+                  decoration: BoxDecoration(
+                    color: AppColors.neutral200,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Center(child: Icon(Icons.arrow_back_ios, size: 20.0)),
+                ),
               ),
-              const Expanded(child: AppSearchField()),
+              Expanded(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTapDown: (details) {
+                    Navigator.push(
+                      context,
+                      CircularRevealRoute(
+                        page: SearchScreen(brandId: widget.brandId),
+                        center: details.globalPosition,
+                      ),
+                    );
+                  },
+                  child: const AbsorbPointer(
+                    child: AppSearchField(
+                      readOnly: true,
+                      hintText: 'ابحث عن منتج...',
+                    ),
+                  ),
+                ),
+              ),
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(13.0),
                 decoration: BoxDecoration(
-                  color: AppColors.fillColor,
+                  color: AppColors.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.tune, size: 20, color: AppColors.primary),
+                child: const Icon(Icons.tune, size: 25.0, color: AppColors.primary),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 13.0),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              BlocBuilder<BrandProductsBloc, BaseState<BrandProductsResultEntity>>(
-                builder: (context, state) {
-                  return Text(
-                    state.data?.brand.name ?? "",
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  );
-                },
-              ),
-              const Icon(Icons.arrow_forward_ios, size: 12, color: AppColors.neutral),
               const Text(
-                ' الماركات ',
+                'الماركات',
                 style: TextStyle(color: AppColors.blue, fontWeight: FontWeight.bold),
               ),
+              const Icon(Icons.arrow_forward_ios, size: 12.0, color: AppColors.neutral),
+              Text(
+                brandName,
+                style: const TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
+          ),
+          const Spacer(),
+          _buildSortRow(context, totalProducts),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSortRow(BuildContext context, int total) {
+    return SizedBox(
+      height: 37.0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: total.toString(),
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.primary,
+                  ),
+                ),
+                const TextSpan(text: ' '),
+                TextSpan(
+                  text: 'منتج',
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: AppColors.neutral,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          CompositedTransformTarget(
+            link: _sortLayerLink,
+            child: OverlayPortal(
+              controller: _sortDropdownController,
+              overlayChildBuilder: (context) {
+                return CompositedTransformFollower(
+                  link: _sortLayerLink,
+                  targetAnchor: Alignment.bottomLeft,
+                  followerAnchor: Alignment.topLeft,
+                  offset: const Offset(0.0, 8.0),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: TapRegion(
+                      onTapOutside: (event) => _sortDropdownController.hide(),
+                      child: Material(
+                        elevation: 15.0,
+                        shadowColor: Colors.black.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white,
+                        child: Container(
+                          width: 158.0,
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: AppColors.fillColor),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: _sortOptions.map((option) {
+                              final isSelected = _selectedSort == option;
+                              final isLast = option == _sortOptions.last;
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() => _selectedSort = option);
+                                      _sortDropdownController.hide();
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            option,
+                                            style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                              color: isSelected ? AppColors.primary : Colors.black87,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          if (isSelected)
+                                            const Icon(Icons.check, color: AppColors.primary, size: 20)
+                                          else
+                                            const SizedBox(width: 20),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  if (!isLast)
+                                    const Divider(height: 1, color: AppColors.fillColor),
+                                ],
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              child: GestureDetector(
+                onTap: () => _sortDropdownController.toggle(),
+                child: Container(
+                  width: 150.0,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: AppColors.fillColor),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.swap_vert, size: 18, color: Colors.black),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          _selectedSort,
+                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.keyboard_arrow_down, size: 18, color: Colors.black),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -176,7 +359,7 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
         mainAxisSpacing: 12,
       ),
       itemCount: 6,
-      itemBuilder: (_, __) => const ShimmerPlaceholder(
+      itemBuilder: (_, _) => const ShimmerPlaceholder(
         width: double.infinity,
         height: double.infinity,
         borderRadius: BorderRadius.all(Radius.circular(16)),

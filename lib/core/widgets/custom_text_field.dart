@@ -25,6 +25,11 @@ class CustomTextField extends StatelessWidget {
   final double? horizontalContentPadding;
   final double? verticalContentPadding;
   final void Function(String)? onChanged;
+  final void Function(String)? onSubmitted;
+  final FocusNode? focusNode;
+  final bool readOnly;
+  final VoidCallback? onTap;
+  final TextInputAction? textInputAction;
 
   const CustomTextField({
     super.key,
@@ -49,6 +54,11 @@ class CustomTextField extends StatelessWidget {
     this.horizontalContentPadding = 16.0,
     this.verticalContentPadding = 16.0,
     this.onChanged,
+    this.onSubmitted,
+    this.focusNode,
+    this.readOnly = false,
+    this.onTap,
+    this.textInputAction,
   });
 
   @override
@@ -69,6 +79,11 @@ class CustomTextField extends StatelessWidget {
     Widget textField = TextFormField(
       controller: controller,
       validator: validator,
+      focusNode: focusNode,
+      readOnly: readOnly,
+      onTap: onTap,
+      onFieldSubmitted: onSubmitted,
+      textInputAction: textInputAction ?? (onSubmitted != null ? TextInputAction.search : TextInputAction.next),
       // Automatically switch to the phone keyboard layout if forPhone is true
       keyboardType: shouldRestrictPhone ? (keyboardType ?? TextInputType.phone) : keyboardType,
       obscureText: obscureText,

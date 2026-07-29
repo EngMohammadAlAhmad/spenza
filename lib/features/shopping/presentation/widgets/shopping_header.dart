@@ -4,6 +4,9 @@ import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
 
+import 'package:spenza/core/utils/animations/circular_reveal_route.dart';
+import 'package:spenza/features/search/presentation/screens/search_screen.dart';
+
 class ShoppingHeader extends StatelessWidget {
   final int currentPage;
   final Function(int) onTabTapped;
@@ -44,8 +47,24 @@ class ShoppingHeader extends StatelessWidget {
                       color: AppColors.primary,
                     ),
               ),
-              const Expanded(
-                child: AppSearchField(),
+              Expanded(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTapDown: (details) {
+                    Navigator.push(
+                      context,
+                      CircularRevealRoute(
+                        page: const SearchScreen(),
+                        center: details.globalPosition,
+                      ),
+                    );
+                  },
+                  child: const AbsorbPointer(
+                    child: AppSearchField(
+                      readOnly: true,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

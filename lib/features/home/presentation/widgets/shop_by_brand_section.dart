@@ -72,15 +72,17 @@ class ShopByBrandSection extends StatelessWidget {
                       height: 64.0,
                       child: Card(
                         margin: EdgeInsets.zero,
-                        elevation: 0,
+                        elevation: 0.0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
-                          side: BorderSide(color: AppColors.fillColor, width: 1),
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: brand.image != null && brand.image!.isNotEmpty
-                              ? CachedNetworkImage(
+                          child: brand.name.isNotEmpty
+                              ? Center(child: Text(brand.name, style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontSize: 15.0,
+                            fontWeight: .w800,
+                          )))/*CachedNetworkImage(
                                   imageUrl: brand.image!,
                                   fit: BoxFit.contain,
                                   placeholder: (context, url) => const ShimmerPlaceholder(
@@ -88,14 +90,13 @@ class ShopByBrandSection extends StatelessWidget {
                                     height: 64.0,
                                   ),
                                   errorWidget: (context, url, error) => const AppIconPlaceholder(size: 75.0, padding: 8.0),
-                                )
+                                )*/
                               : const AppIconPlaceholder(size: 75.0, padding: 8),
                         ),
                       ),
-                    ).animate().fadeIn(duration: 400.ms).scale(
-                          begin: const Offset(0.9, 0.9),
-                          end: const Offset(1, 1),
-                        );
+                    ).animate(delay: (30 * index).ms)
+                        .fadeIn(duration: 500.ms)
+                        .scale(begin: const Offset(0.9, 0.9), end: const Offset(1.0, 1.0));
                   },
                 ),
         ),

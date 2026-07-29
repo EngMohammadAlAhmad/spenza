@@ -9,7 +9,9 @@ import 'package:spenza/core/widgets/product_card.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/features/categories/domain/entities/category_products_result_entity.dart';
 import 'package:spenza/features/categories/presentation/blocs/category_products_bloc/category_products_bloc.dart';
-import 'package:spenza/injection_locator.dart' as di;
+import 'package:spenza/core/utils/animations/circular_reveal_route.dart';
+import 'package:spenza/features/search/presentation/screens/search_screen.dart';
+//import 'package:spenza/injection_locator.dart' as di;
 
 class CategoryProductsScreen extends StatefulWidget {
   final int categoryId;
@@ -126,15 +128,37 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
           Row(
             spacing: 8.0,
             children: [
-              Container(
-                padding: const EdgeInsets.fromLTRB(15.0, 15.0, 20.0, 15.0),
-                decoration: BoxDecoration(
-                  color: AppColors.neutral200,
-                  shape: BoxShape.circle,
+              InkWell(
+                onTap: () => context.pop(),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(15.0, 15.0, 20.0, 15.0),
+                  decoration: BoxDecoration(
+                    color: AppColors.neutral200,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(child: Icon(Icons.arrow_back_ios, size: 20.0)),
                 ),
-                child: Center(child: Icon(Icons.arrow_back_ios, size: 20.0)),
               ),
-              const Expanded(child: AppSearchField(hintText: 'ابحث عن منتج...')),
+              Expanded(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTapDown: (details) {
+                    Navigator.push(
+                      context,
+                      CircularRevealRoute(
+                        page: SearchScreen(categoryId: _currentCategoryId),
+                        center: details.globalPosition,
+                      ),
+                    );
+                  },
+                  child: const AbsorbPointer(
+                    child: AppSearchField(
+                      readOnly: true,
+                      hintText: 'ابحث عن منتج...',
+                    ),
+                  ),
+                ),
+              ),
               Container(
                 padding: const EdgeInsets.all(13.0),
                 decoration: BoxDecoration(

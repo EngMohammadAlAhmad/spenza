@@ -32,7 +32,7 @@ class _ProductCardState extends State<ProductCard> {
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) => setState(() => _pressed = false),
       onTapCancel: () => setState(() => _pressed = false),
-      onTap: widget.onTap ?? () => context.go('${RoutePaths.categories}/product/${product.id}'),
+      onTap: widget.onTap ?? () => context.push('${RoutePaths.categories}/product/${product.id}'),
       child: AnimatedScale(
         scale: _pressed ? 0.96 : 1.0,
         duration: const Duration(milliseconds: 100),
@@ -43,7 +43,7 @@ class _ProductCardState extends State<ProductCard> {
             borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha: 0.04),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),

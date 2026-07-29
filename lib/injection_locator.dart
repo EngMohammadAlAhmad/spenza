@@ -11,6 +11,11 @@ import 'package:spenza/core/services/firebase_crash_reporter.dart';
 import 'package:spenza/features/language/data/repositories/language_repo_impl.dart';
 import 'package:spenza/features/language/domain/repositories/language_repository.dart';
 import 'package:spenza/features/language/presentation/blocs/language_bloc.dart';
+import 'package:spenza/features/search/data/datasource/search_datasource.dart';
+import 'package:spenza/features/search/data/repositories/search_repository_impl.dart';
+import 'package:spenza/features/search/domain/repositories/search_repository.dart';
+import 'package:spenza/features/search/domain/usecases/search_products_use_case.dart';
+import 'package:spenza/features/search/presentation/blocs/search_bloc/search_bloc.dart';
 import 'package:spenza/features/theme/data/datasources/theme_local_datasource.dart';
 import 'package:spenza/features/theme/data/repositories/theme_repo_impl.dart';
 import 'package:spenza/features/theme/domain/repositories/theme_repository.dart';
@@ -119,6 +124,12 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetProductDetailsUseCase(repository: sl()));
   sl.registerLazySingleton<ProductDetailsRepository>(() => ProductDetailsRepositoryImpl(datasource: sl()));
   sl.registerLazySingleton(() => ProductsDatasource(api: sl()));
+
+  // Search Feature
+  sl.registerFactory(() => SearchBloc(searchProductsUseCase: sl()));
+  sl.registerLazySingleton(() => SearchProductsUseCase(repository: sl()));
+  sl.registerLazySingleton<SearchRepository>(() => SearchRepositoryImpl(datasource: sl()));
+  sl.registerLazySingleton(() => SearchDatasource(api: sl()));
 
   sl.registerFactory(() => BrandProductsBloc(getBrandProductsUseCase: sl()));
   sl.registerLazySingleton(() => GetBrandProductsUseCase(repository: sl()));

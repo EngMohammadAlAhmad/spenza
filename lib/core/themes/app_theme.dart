@@ -18,7 +18,7 @@ class AppTheme {
 
     final baseTextColor = isDark ? AppColors.onSurfaceDark : AppColors.onSurfaceLight;
     final secondaryTextColor = isDark ? AppColors.secondaryTextDark : AppColors.secondaryTextLight;
-    final isArabic = locale.languageCode == 'ar';
+    //final isArabic = locale.languageCode == 'ar';
 
     final textTheme = TextTheme(
       // Display styles

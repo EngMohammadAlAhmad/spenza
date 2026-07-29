@@ -18,7 +18,7 @@ class AppIconPlaceholder extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(padding),
         child: Image.asset(
-          'assets/images/app_icon.png',
+          'assets/images/logo_watermark.png',
           width: size,
           height: size,
           color: color ?? Colors.grey[300],

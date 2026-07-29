@@ -5,6 +5,9 @@ import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/dimens.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
 
+import 'package:spenza/core/utils/animations/circular_reveal_route.dart';
+import 'package:spenza/features/search/presentation/screens/search_screen.dart';
+
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
 
@@ -18,7 +21,7 @@ class HomeHeader extends StatelessWidget {
         left: 16.0,
         right: 16.0,
       ),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.backgroundLight,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(34.0),
@@ -48,14 +51,30 @@ class HomeHeader extends StatelessWidget {
                   ),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               IconButton(
                 onPressed: () {},
                 icon: SvgPicture.asset('assets/icons/temp.svg'),
               ),
             ],
           ),
-          const AppSearchField(),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTapDown: (details) {
+              Navigator.push(
+                context,
+                CircularRevealRoute(
+                  page: const SearchScreen(),
+                  center: details.globalPosition,
+                ),
+              );
+            },
+            child: const AbsorbPointer(
+              child: AppSearchField(
+                readOnly: true,
+              ),
+            ),
+          ),
           SizedBox(height: AppDimens.spaceS),
         ],
       ),

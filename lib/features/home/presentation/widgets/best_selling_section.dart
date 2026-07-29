@@ -132,6 +132,7 @@ class _BestSellingCardState extends State<BestSellingCard> {
                             )
                           : const AppIconPlaceholder(size: 100.0),
                     ),
+                    if (product.discountPercentage > 0)
                     Positioned(
                       top: 8.0,
                       right: 8.0,
