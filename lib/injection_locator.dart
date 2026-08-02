@@ -46,6 +46,12 @@ import 'package:spenza/features/products/data/repositories/product_details_repos
 import 'package:spenza/features/products/domain/repositories/product_details_repository.dart';
 import 'package:spenza/features/products/domain/usecases/get_product_details_use_case.dart';
 import 'package:spenza/features/products/presentation/blocs/product_details_bloc/product_details_bloc.dart';
+import 'package:spenza/features/onboarding/data/datasources/onboarding_local_datasource.dart';
+import 'package:spenza/features/onboarding/data/repositories/onboarding_repository_impl.dart';
+import 'package:spenza/features/onboarding/domain/repositories/onboarding_repository.dart';
+import 'package:spenza/features/onboarding/domain/usecases/get_onboarding_status_usecase.dart';
+import 'package:spenza/features/onboarding/domain/usecases/set_onboarding_status_usecase.dart';
+import 'package:spenza/features/onboarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 
@@ -91,16 +97,25 @@ Future<void> init() async {
   // Bloc
   sl.registerFactory(() => ThemeBloc(getThemeUseCase: sl(), saveThemeUseCase: sl()));
   sl.registerFactory(() => LanguageBloc());
+  sl.registerFactory(() => OnboardingBloc(
+        getOnboardingStatusUseCase: sl(),
+        setOnboardingStatusUseCase: sl(),
+      ));
 
   // Use-cases
   sl.registerLazySingleton(() => GetThemeUseCase(themeRepository: sl()));
   sl.registerLazySingleton(() => SaveThemeUseCase(themeRepository: sl()));
+  sl.registerLazySingleton(() => GetOnboardingStatusUseCase(repository: sl()));
+  sl.registerLazySingleton(() => SetOnboardingStatusUseCase(repository: sl()));
 
   // Repository
   sl.registerLazySingleton<ThemeRepository>(() => ThemeRepositoryImpl(themeLocalDatasource: sl()));
   sl.registerLazySingleton<LanguageRepository>(() => LanguageRepositoryImpl());
+  sl.registerLazySingleton<OnboardingRepository>(() => OnboardingRepositoryImpl(localDataSource: sl()));
 
-  // Home Feature
+  // Datasource
+  sl.registerLazySingleton<OnboardingLocalDataSource>(() => OnboardingLocalDataSourceImpl(sharedPreferences: sl()));
+  sl.registerLazySingleton<ThemeLocalDatasource>(() => ThemeLocalDatasource(cacheHelper: sl()));
   sl.registerFactory(() => HomeBloc(getHomeDataUseCase: sl()));
   sl.registerLazySingleton(() => GetHomeDataUseCase(homeRepository: sl()));
   sl.registerLazySingleton<HomeRepository>(() => HomeRepositoryImpl(homeDatasource: sl()));
@@ -142,7 +157,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetBrandProductsUseCase(repository: sl()));
 
   // Datasource
-  sl.registerLazySingleton<ThemeLocalDatasource>(() => ThemeLocalDatasource(cacheHelper: sl()));
+  //sl.registerLazySingleton<ThemeLocalDatasource>(() => ThemeLocalDatasource(cacheHelper: sl()));
 
   // Ensure all async registrations are complete
   await sl.allReady();

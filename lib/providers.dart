@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spenza/features/language/presentation/blocs/language_bloc.dart';
+import 'package:spenza/features/onboarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:spenza/features/theme/presentation/blocs/theme_bloc.dart';
 import 'package:spenza/injection_locator.dart' as di;
 import 'package:flutter/material.dart';
@@ -19,6 +20,9 @@ class AppBlocProviders extends StatelessWidget {
         ),
         BlocProvider<LanguageBloc>(
           create: (context) => di.sl<LanguageBloc>(),
+        ),
+        BlocProvider<OnboardingBloc>(
+          create: (context) => di.sl<OnboardingBloc>(),
         ),
       ],
       child: child,

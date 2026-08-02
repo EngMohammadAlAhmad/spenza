@@ -15,6 +15,8 @@ import 'package:spenza/features/shopping/presentation/screens/shopping_screen.da
 import 'package:spenza/features/categories/presentation/screens/category_products_screen.dart';
 import 'package:spenza/features/products/presentation/blocs/product_details_bloc/product_details_bloc.dart';
 import 'package:spenza/features/products/presentation/screens/product_details_screen.dart';
+import 'package:spenza/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:spenza/features/onboarding/presentation/screens/splash_screen.dart';
 import 'package:spenza/injection_locator.dart' as di;
 
 class AppRouter {
@@ -26,8 +28,16 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     navigatorKey: rootNavigatorKey,
     debugLogDiagnostics: true,
-    initialLocation: RoutePaths.home,
+    initialLocation: RoutePaths.splash,
     routes: [
+      GoRoute(
+        path: RoutePaths.splash,
+        builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.onboarding,
+        builder: (context, state) => const OnboardingScreen(),
+      ),
       StatefulShellRoute(
         navigatorContainerBuilder: (context, navigationShell, children) {
           return AnimatedBranchContainer(

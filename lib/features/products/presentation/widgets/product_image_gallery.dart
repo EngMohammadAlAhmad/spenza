@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/widgets/app_icon_placeholder.dart';
+import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 
 enum GalleryItemType { image, video, model3d }
@@ -109,13 +110,13 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _CircleActionButton(
+                    CircleActionButton(
                       icon: Icons.arrow_back_ios_rounded,
                       onTap: () => context.pop(),
                     ),
                     Row(
                       children: [
-                        _CircleActionButton(
+                        CircleActionButton(
                           icon: Icons.share_outlined,
                           onTap: () {},
                           shareButton: true,
@@ -263,39 +264,6 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
   }
 }
 
-class _CircleActionButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-  final bool? shareButton;
-
-  const _CircleActionButton({required this.icon, required this.onTap, this.shareButton = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Icon(
-          icon,
-          size: 22.0,
-          color: shareButton! ? AppColors.primary : AppColors.neutral,
-        ),
-      ),
-    );
-  }
-}
 
 class _FavoriteButton extends StatefulWidget {
   @override
