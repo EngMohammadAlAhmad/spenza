@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
-import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_images.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import '../bloc/onboarding_bloc.dart';
 
@@ -21,10 +21,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int _currentIndex = 0;
 
 
-  final List<String> images = [
-    'assets/images/onboarding_1.png',
-    'assets/images/onboarding_2.png',
-    'assets/images/onboarding_3.png',
+  final List<OnboardingData> onboardingData = [
+    OnboardingData(
+      image: AppAssets.onboarding1,
+      title: 'كل احتياجاتك، بمكان واحد',
+      description: 'منتجات مختارة من تصنيفات متنوعة،\nمرتبة بوضوح حتى تلاقي احتياجك\nبسرعة وبثقة.',
+    ),
+    OnboardingData(
+      image: AppAssets.onboarding2,
+      title: 'توصيل على كيفك',
+      description: 'اختار اللي بناسبك من خيارات التوصيل المتاحة بمنطقتك، ونحن منوصل\nطلبك لعندك.',
+    ),
+    OnboardingData(
+      image: AppAssets.onboarding3,
+      title: 'كل طلب بيزيد نقاطك',
+      description: 'اجمع نقاط مع كل طلب، واستبدلها\nبكوبونات وخصومات ومكافآت حلوة.\n',
+    ),
   ];
 
   @override
@@ -34,7 +46,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _onNext() {
-    if (_currentIndex < images.length - 1) {
+    if (_currentIndex < onboardingData.length - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
@@ -58,31 +70,45 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: Stack(
           children: [
             // Content
-            Column(
-              children: [
-                const SizedBox(height: 20.0),
-                Expanded(
-                  flex: 5,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    onPageChanged: (index) => setState(() => _currentIndex = index),
-                    itemCount: images.length,
-                    itemBuilder: (context, index) {
-                      final image = images[index];
-                      return Image.asset(image);
-                    },
+            Padding(
+              padding: .fromLTRB(24.0, MediaQuery.sizeOf(context).height * 0.11, 24.0, 0.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: PageView.builder(
+                      controller: _pageController,
+                      onPageChanged: (index) => setState(() => _currentIndex = index),
+                      itemCount: onboardingData.length,
+                      itemBuilder: (context, index) {
+                        final data = onboardingData[index];
+                        return Column(
+                          children: [
+                            Expanded(child: Image.asset(data.image)),
+                            const SizedBox(height: 20.0),
+                            _buildTitle(index),
+                            const SizedBox(height: 12.0),
+                            Text(
+                              data.description,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                color: AppColors.neutral,
+                                fontWeight: .normal,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Padding(
-                    padding: const .symmetric(horizontal: 24.0),
+                  Expanded(
+                    flex: 2,
                     child: Column(
                       children: [
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 20.0),
                         SmoothPageIndicator(
                           controller: _pageController,
-                          count: images.length,
+                          count: onboardingData.length,
                           effect: ExpandingDotsEffect(
                             dotHeight: 7.0,
                             dotWidth: 7.0,
@@ -91,15 +117,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ),
                         ),
                         SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
-                        if (_currentIndex < images.length - 1) ...[
-                          _buildPrimaryButton('التالي', _onNext),
+                        if (_currentIndex < onboardingData.length - 1) ...[
+                          _buildPrimaryButton(text: 'التالي',onPressed: _onNext),
                           const SizedBox(height: 10.0),
                           _buildTextButton('تخطي', _complete),
                         ] else ...[
-                          _buildPrimaryButton('بلّش تسوّق كزائر', _complete),
+                          _buildPrimaryButton(
+                            text: 'إنشاء حساب جديد',
+                            onPressed: () => context.push(RoutePaths.signup),
+                            showArrow: false,
+                            decreaseFont: true,
+                          ),
                           const SizedBox(height: 12),
-                          _buildSecondaryButton('إنشاء حساب جديد', () {
-                            _complete();
+                          _buildSecondaryButton('عندي حساب — تسجيل الدخول', () {
+                            context.push(RoutePaths.login);
                           }),
                           SizedBox(height: MediaQuery.sizeOf(context).height * 0.015),
                           _buildFooterText(),
@@ -108,8 +139,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Positioned(
               right: MediaQuery.sizeOf(context).width * 0.05,
@@ -122,64 +153,86 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onTap: () => _pageController.previousPage(duration: const Duration(milliseconds: 500), curve: Curves.easeInOut),
               ) : SizedBox(),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-  Widget _buildPrimaryButton(String text, VoidCallback onPressed) {
-    return SizedBox(
-      width: double.infinity,
-      height: 48.0,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
-          elevation: 0.0,
-          padding: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: AppRadius.extra4Large,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: .center,
-          children: [
-            Text(
-              text,
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                height: 1.1, // Adjust for font baseline if necessary
+            Positioned(
+              top: MediaQuery.sizeOf(context).height * 0.06,
+              left: MediaQuery.sizeOf(context).width * 0.06,
+              child: Text(
+                '${_currentIndex + 1}/${onboardingData.length}',
+                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            const SizedBox(width: 8.0),
-            const Icon(Icons.arrow_forward_ios, size: 16),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSecondaryButton(String text, VoidCallback onPressed) {
-    return SizedBox(
-      width: double.infinity,
-      height: 48.0,
-      child: OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: AppColors.primary, width: 1.5),
-          foregroundColor: AppColors.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: AppRadius.extra4Large,
+  Widget _buildTitle(int index) {
+    String firstPart = '';
+    String coloredPart = '';
+    String lastPart = '';
+
+    if (index == 0) {
+      firstPart = 'كل احتياجاتك، ';
+      coloredPart = 'بمكان';
+      lastPart = ' واحد';
+    } else if (index == 1) {
+      firstPart = 'توصيل على ';
+      coloredPart = 'كيفك';
+    } else if (index == 2) {
+      firstPart = 'كل طلب بيزيد ';
+      coloredPart = 'نقاطك';
+    }
+
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: firstPart,
+            style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+              color: AppColors.neutral900,
+            ),
           ),
-          padding: EdgeInsets.zero,
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Zain'),
-        ),
+          TextSpan(
+            text: coloredPart,
+            style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+              color: AppColors.primary,
+            ),
+          ),
+          if (lastPart.isNotEmpty) TextSpan(
+            text: lastPart,
+            style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+              color: AppColors.neutral900,
+            ),
+          ),
+        ],
       ),
+      style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+      textAlign: TextAlign.center,
+    );
+  }
+  Widget _buildPrimaryButton({required String text, required VoidCallback onPressed, bool showArrow = true, bool decreaseFont = false}) {
+    return CustomButton(
+      text: text,
+      onPressed: onPressed,
+      height: 48.0,
+      showArrow: showArrow,
+      fontSize: decreaseFont ? 14.0 : null,
+    );
+  }
+
+  Widget _buildSecondaryButton(String text, VoidCallback onPressed) {
+    return CustomButton(
+      text: text,
+      onPressed: onPressed,
+      height: 48.0,
+      isOutlined: true,
     );
   }
 
@@ -188,39 +241,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       onPressed: onPressed,
       child: Text(
         text,
-        style: const TextStyle(
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
           color: AppColors.primary,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Zain',
         ),
       ),
     );
   }
 
   Widget _buildFooterText() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text(
-          'عندك حساب؟ ',
-          style: TextStyle(color: Color(0xFF777777), fontFamily: 'Zain'),
-        ),
-        GestureDetector(
-          onTap: () {
-            // TODO: Navigate to Login
-            _complete();
-          },
-          child: const Text(
-            'تسجيل الدخول',
-            style: TextStyle(
-              color: AppColors.primary,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Zain',
-            ),
-          ),
-        ),
-      ],
+    return Text(
+      'كمل تصفّح كضيف',
+      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+        fontWeight: FontWeight.w700,
+      ),
     );
   }
 }

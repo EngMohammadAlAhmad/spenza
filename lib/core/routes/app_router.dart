@@ -5,6 +5,8 @@ import 'package:spenza/core/general_pages/error_page.dart';
 import 'package:spenza/core/general_pages/home_shell.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/routes/animated_branch_container.dart';
+import 'package:spenza/features/auth/presentation/screens/login_screen.dart';
+import 'package:spenza/features/auth/presentation/screens/signup_screen.dart';
 import 'package:spenza/features/brands/presentation/blocs/brand_products_bloc/brand_products_bloc.dart';
 import 'package:spenza/features/brands/presentation/screens/brand_products_screen.dart';
 import 'package:spenza/features/categories/presentation/blocs/category_products_bloc/category_products_bloc.dart';
@@ -37,6 +39,14 @@ class AppRouter {
       GoRoute(
         path: RoutePaths.onboarding,
         builder: (context, state) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.login,
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.signup,
+        builder: (context, state) => const SignupScreen(),
       ),
       StatefulShellRoute(
         navigatorContainerBuilder: (context, navigationShell, children) {

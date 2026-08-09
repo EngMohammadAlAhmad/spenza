@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+
 import 'package:spenza/core/themes/app_radius.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -8,6 +9,7 @@ class CustomTextField extends StatelessWidget {
   final String? label;
   final TextStyle? labelStyle;
   final String? hintText;
+  final TextStyle? hintStyle;
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
   final bool obscureText;
@@ -30,6 +32,8 @@ class CustomTextField extends StatelessWidget {
   final bool readOnly;
   final VoidCallback? onTap;
   final TextInputAction? textInputAction;
+  final TextStyle? style;
+  final List<TextInputFormatter>? inputFormatters;
 
   const CustomTextField({
     super.key,
@@ -37,6 +41,7 @@ class CustomTextField extends StatelessWidget {
     this.label,
     this.labelStyle,
     this.hintText,
+    this.hintStyle,
     this.validator,
     this.keyboardType,
     this.obscureText = false,
@@ -59,6 +64,8 @@ class CustomTextField extends StatelessWidget {
     this.readOnly = false,
     this.onTap,
     this.textInputAction,
+    this.style,
+    this.inputFormatters,
   });
 
   @override
@@ -67,17 +74,20 @@ class CustomTextField extends StatelessWidget {
     final bool shouldRestrictPhone = forPhone == true;
 
     // Determine the correct input formatters dynamically
-    List<TextInputFormatter> formatters = [];
-    if (shouldRestrictDecimals) {
-      formatters.add(FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}$')));
-    } else if (shouldRestrictPhone) {
-      // Allows: 0-9, +, -, spaces, and parentheses ()
-      // Blocks: letters, @, #, *, etc.
-      formatters.add(FilteringTextInputFormatter.allow(RegExp(r'^[0-9+\-\s()]*$')));
+    List<TextInputFormatter> formatters = inputFormatters ?? [];
+    if (formatters.isEmpty) {
+      if (shouldRestrictDecimals) {
+        formatters.add(FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}$')));
+      } else if (shouldRestrictPhone) {
+        // Allows: 0-9, +, -, spaces, and parentheses ()
+        // Blocks: letters, @, #, *, etc.
+        formatters.add(FilteringTextInputFormatter.allow(RegExp(r'^[0-9+\-\s()]*$')));
+      }
     }
 
     Widget textField = TextFormField(
       controller: controller,
+      style: style,
       validator: validator,
       focusNode: focusNode,
       readOnly: readOnly,
@@ -94,39 +104,49 @@ class CustomTextField extends StatelessWidget {
       inputFormatters: formatters,
       decoration: InputDecoration(
         hintText: hintText,
+        hintStyle: hintStyle ??
+            Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: AppColors.neutral,
+                ),
         prefixIcon: prefixIcon,
-        prefixIconConstraints: prefixIconConstraints ??
-            const BoxConstraints(minWidth: 25.0, minHeight: 25.0),
+        prefixIconConstraints: prefixIconConstraints ?? const BoxConstraints(minWidth: 25.0, minHeight: 25.0),
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: fillColor ?? AppColors.neutral200,
         border: OutlineInputBorder(
-          borderRadius: AppRadius.extra4Large,
-          borderSide: BorderSide.none,
+          borderRadius: AppRadius.brandRadius,
+          borderSide: BorderSide(
+            color: borderColor ?? AppColors.neutral200,
+          ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: AppRadius.extra4Large,
+          borderRadius: AppRadius.brandRadius,
           borderSide: BorderSide(
-            //color: borderColor ?? AppColors.borderColor.withValues(alpha: 0.2),
-            color: Colors.transparent,
+            color: borderColor ?? AppColors.neutral200,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: AppRadius.extra4Large,
+          borderRadius: AppRadius.brandRadius,
           borderSide: BorderSide(
             color: Theme.of(context).primaryColor,
             width: 1.0,
           ),
         ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: AppRadius.brandRadius,
+          borderSide: BorderSide(
+            color: (borderColor ?? AppColors.neutral200).withValues(alpha: 0.5),
+          ),
+        ),
         errorBorder: OutlineInputBorder(
-          borderRadius: AppRadius.extra4Large,
+          borderRadius: AppRadius.brandRadius,
           borderSide: const BorderSide(
             color: Colors.red,
             width: 1.0,
           ),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: AppRadius.extra4Large,
+          borderRadius: AppRadius.brandRadius,
           borderSide: const BorderSide(
             color: Colors.red,
             width: 1.0,
