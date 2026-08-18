@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/shared/entities/product_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -99,7 +100,9 @@ class _BestSellingCardState extends State<BestSellingCard> {
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) => setState(() => _pressed = false),
       onTapCancel: () => setState(() => _pressed = false),
-      onTap: () {},
+      onTap: () {
+        context.push('/categories/product/${product.id}');
+      },
       child: AnimatedScale(
         scale: _pressed ? 0.96 : 1.0,
         duration: const Duration(milliseconds: 100),

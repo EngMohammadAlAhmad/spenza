@@ -14,5 +14,7 @@ class AppAssets {
   static const String onboarding1 = '$_images/onboarding_1.png';
   static const String onboarding2 = '$_images/onboarding_2.png';
   static const String onboarding3 = '$_images/onboarding_3.png';
+  static const String vector1 = '$_images/vector_1.png';
+  static const String vector2 = '$_images/vector_2.png';
 
 }
