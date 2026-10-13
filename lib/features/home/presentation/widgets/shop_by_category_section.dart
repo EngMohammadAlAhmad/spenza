@@ -7,6 +7,7 @@ import 'package:spenza/core/shared/entities/category_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/core/widgets/app_icon_placeholder.dart';
+import 'package:spenza/core/widgets/view_all_button.dart';
 
 class ShopByCategorySection extends StatelessWidget {
   final List<CategoryEntity> categories;
@@ -21,6 +22,7 @@ class ShopByCategorySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      spacing: 15.0,
       crossAxisAlignment: .start,
       mainAxisAlignment: .spaceBetween,
       children: [
@@ -28,20 +30,13 @@ class ShopByCategorySection extends StatelessWidget {
           mainAxisAlignment: .spaceBetween,
           children: [
             Text(
-              'تسوّق حسب التصنيف',
+              'الأقسام',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: .bold,
-                color: AppColors.primary,
               ),
             ),
-            TextButton(
+            ViewAllButton(
               onPressed: () => context.go('${RoutePaths.categories}?tab=0'),
-              child: Text(
-                'عرض الكل >',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppColors.blue,
-                ),
-              ),
             ),
           ],
         ),
@@ -49,7 +44,7 @@ class ShopByCategorySection extends StatelessWidget {
           height: 125.0,
           child: isLoading
               ? ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: EdgeInsets.zero,
                   itemCount: 5,
                   scrollDirection: Axis.horizontal,
                   separatorBuilder: (context, index) => const SizedBox(width: 16.0),
@@ -60,13 +55,13 @@ class ShopByCategorySection extends StatelessWidget {
                         height: 80.0,
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 8.0),
                       const ShimmerPlaceholder(width: 50, height: 10),
                     ],
                   ),
                 )
               : ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: EdgeInsets.zero,
                   itemCount: categories.length,
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),

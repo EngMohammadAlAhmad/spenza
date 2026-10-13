@@ -21,6 +21,8 @@ class SnackbarConfig {
 }
 
 class SnackbarService {
+  static OverlayEntry? _currentOverlayEntry;
+
   static final Map<SnackbarType, SnackbarConfig> _configs = {
     SnackbarType.success: const SnackbarConfig(
       backgroundColor: Color(0xFF10B981), // Green
@@ -62,6 +64,10 @@ class SnackbarService {
     final effectiveForegroundColor = foregroundColor ?? config.foregroundColor;
     final effectiveIcon = icon ?? config.icon;
 
+    // Dismiss previous snackbar if exists
+    _currentOverlayEntry?.remove();
+    _currentOverlayEntry = null;
+
     // Get the overlay to show snackbar on top of everything
     final overlay = Overlay.of(context);
     late OverlayEntry overlayEntry;
@@ -76,16 +82,23 @@ class SnackbarService {
         duration: duration,
         showCloseButton: showCloseButton,
         onTap: onTap,
-        onDismiss: () => overlayEntry.remove(),
+        onDismiss: () {
+          if (_currentOverlayEntry == overlayEntry) {
+            overlayEntry.remove();
+            _currentOverlayEntry = null;
+          }
+        },
       ),
     );
 
+    _currentOverlayEntry = overlayEntry;
     overlay.insert(overlayEntry);
 
     // Auto-dismiss after duration
     Future.delayed(duration, () {
-      if (overlayEntry.mounted) {
+      if (_currentOverlayEntry == overlayEntry) {
         overlayEntry.remove();
+        _currentOverlayEntry = null;
       }
     });
   }

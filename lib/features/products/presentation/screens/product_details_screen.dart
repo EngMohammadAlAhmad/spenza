@@ -9,6 +9,7 @@ import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
 import 'package:spenza/features/products/domain/entities/product_details_entity.dart';
 import 'package:spenza/features/products/presentation/blocs/product_details_bloc/product_details_bloc.dart';
+import 'package:spenza/features/products/presentation/widgets/product_details_bottom_bar.dart';
 import 'package:spenza/features/products/presentation/widgets/product_image_gallery.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
@@ -33,6 +34,15 @@ class ProductDetailsScreen extends StatelessWidget {
                         )
                       : SafeArea(child: Center(child: Text(state.dataState.errorMessage))))
                   : _buildLoadingGrid(),
+          bottomNavigationBar: data != null
+              ? ProductDetailsBottomBar(
+                  state: state,
+                  data: data,
+                  onAddToCart: () {
+                    // Action for adding to cart
+                  },
+                )
+              : null,
         );
       },
     );
@@ -63,6 +73,7 @@ class ProductDetailsScreen extends StatelessWidget {
           Stack(
             children: [
               ProductImageGallery(
+                product: product.toProductEntity(),
                 images: product.gallery,
                 sideImages: product.sideImages,
                 video: product.video,
@@ -94,40 +105,41 @@ class ProductDetailsScreen extends StatelessWidget {
               children: [
                 // Category & Brand
                 Container(
-                  padding: .symmetric(horizontal: 10.0, vertical: 3.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
                   decoration: BoxDecoration(
                     color: AppColors.primary.withValues(alpha: 0.3),
                     borderRadius: AppRadius.extra2Large,
                   ),
                   child: Text(
                     product.category.name,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.primary, fontWeight: .bold),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
                   ),
                 ).animate().fadeIn(delay: 200.ms).slideX(begin: 0.1, end: 0),
                 const SizedBox(height: 10.0),
                 Text(
                   product.title,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .w800),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w800),
                   textAlign: TextAlign.right,
                 ).animate().fadeIn(delay: 300.ms).slideX(begin: 0.1, end: 0),
                 
                 // Rating
                 const SizedBox(height: 16.0),
                 Row(
-                  spacing: 5.0,
                   children: [
                     const Icon(Icons.star_rounded, color: AppColors.secondary, size: 22.0),
+                    const SizedBox(width: 5.0),
                     Text(
                       product.rate.toString(),
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                     ),
+                    const SizedBox(width: 5.0),
                     Text(
                       ' (${product.ratingsCount} تقييم)',
                       style: const TextStyle(color: AppColors.neutral, fontSize: 14.0),
                     ),
-                    Text(
+                    const Text(
                       '   .    N/A عملية بيع',
-                      style: const TextStyle(color: AppColors.neutral, fontSize: 14.0),
+                      style: TextStyle(color: AppColors.neutral, fontSize: 14.0),
                     ),
                   ],
                 ).animate().fadeIn(delay: 400.ms),
@@ -138,7 +150,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       TextSpan(
                         text: '${formatter.format(product.discountedPrice)} ',
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          fontWeight: .w800,
+                          fontWeight: FontWeight.w800,
                           color: AppColors.primary,
                         ),
                       ),
@@ -154,7 +166,7 @@ class ProductDetailsScreen extends StatelessWidget {
                         text: formatter.format(product.price),
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: AppColors.neutral,
-                          decoration: .lineThrough,
+                          decoration: TextDecoration.lineThrough,
                         ),
                       ),
                     ],
@@ -162,9 +174,9 @@ class ProductDetailsScreen extends StatelessWidget {
                 ).animate().fadeIn(delay: 500.ms).slideX(begin: 0.1, end: 0),
                 const SizedBox(height: 16.0),
                 Row(
-                  spacing: 5.0,
                   children: [
-                    CircleAvatar(backgroundColor: Colors.green, radius: 4.0),
+                    const CircleAvatar(backgroundColor: Colors.green, radius: 4.0),
+                    const SizedBox(width: 5.0),
                     Text(
                       isOutOfStock ? 'نفذت الكمية' : 'متوفر في المخزون',
                       style: TextStyle(color: isOutOfStock ? Colors.red : Colors.green, fontWeight: FontWeight.bold, fontSize: 12.0),
@@ -173,7 +185,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 ).animate().fadeIn(delay: 600.ms),
                 const SizedBox(height: 20.0),
                 // Units
-                Text('الوحدة', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: .bold)).animate().fadeIn(delay: 700.ms),
+                Text('الوحدة', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold)).animate().fadeIn(delay: 700.ms),
                 const SizedBox(height: 12),
                 _buildOptionsRow(
                   context,
@@ -186,7 +198,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 
                 // Variants
                 for (var option in product.variantOptions) ...[
-                  Text(option.name, style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: .bold)).animate().fadeIn(delay: 800.ms),
+                  Text(option.name, style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold)).animate().fadeIn(delay: 800.ms),
                   const SizedBox(height: 12),
                   _buildOptionsRow(
                     context,
@@ -201,16 +213,16 @@ class ProductDetailsScreen extends StatelessWidget {
                 Container(
                   height: 72.0,
                   width: double.infinity,
-                  padding: .symmetric(horizontal: 20.0, vertical: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                   decoration: BoxDecoration(
                     color: AppColors.neutral200,
                     borderRadius: AppRadius.overMedium,
                   ),
                   child: Center(
                     child: Row(
-                      mainAxisAlignment: .center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('الكمية', style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: .bold)),
+                        Text('الكمية', style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold)),
                         const Spacer(),
                         _buildQuantitySelector(context, state.quantity),
                       ],
@@ -220,24 +232,22 @@ class ProductDetailsScreen extends StatelessWidget {
                 
                 const SizedBox(height: 30.0),
                 // Description
-                Text('الوصف', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: .bold, color: AppColors.primary)).animate().fadeIn(delay: 1000.ms),
+                Text('الوصف', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold, color: AppColors.primary)).animate().fadeIn(delay: 1000.ms),
                 const SizedBox(height: 12.0),
                 Text(
                   product.description,
                   style: Theme.of(context).textTheme.bodyMedium,
-                  /*textAlign: TextAlign.right,*/
                 ).animate().fadeIn(delay: 1100.ms),
                 
                 const SizedBox(height: 48),
                 
                 // Related
-                Text('قد يعجبك أيضاً', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: .bold, color: AppColors.primary)).animate().fadeIn(delay: 1200.ms),
+                Text('قد يعجبك أيضاً', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold, color: AppColors.primary)).animate().fadeIn(delay: 1200.ms),
                 const SizedBox(height: 20),
                 SizedBox(
                   height: 300,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
-                    //reverse: true, // RTL feel
                     physics: const BouncingScrollPhysics(),
                     itemCount: data.relatedProducts.length,
                     separatorBuilder: (_, _) => const SizedBox(width: 16),
@@ -247,7 +257,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     ),
                   ),
                 ).animate().fadeIn(delay: 1300.ms).slideY(begin: 0.1, end: 0),
-                const SizedBox(height: 75.0),
+                const SizedBox(height: 20.0),
               ],
             ),
           ),
@@ -277,13 +287,12 @@ class ProductDetailsScreen extends StatelessWidget {
                 color: isSelected ? AppColors.primary : AppColors.fillColor,
                 width: 1.5,
               ),
-              //boxShadow: isSelected ? [BoxShadow(color: AppColors.primary.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4))] : [],
             ),
             child: Text(
               opt.label,
               style: Theme.of(context).textTheme.bodySmall!.copyWith(
                 color: isSelected ? AppColors.primary : null,
-                fontWeight: .bold,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -297,7 +306,7 @@ class ProductDetailsScreen extends StatelessWidget {
       children: [
         InkWell(
           onTap: () => context.read<ProductDetailsBloc>().add(const UpdateQuantityEvent(-1)),
-          child: CircleAvatar(
+          child: const CircleAvatar(
             backgroundColor: Colors.white,
             radius: 20.0,
             child: Icon(Icons.remove, size: 15.0, color: AppColors.primary),
@@ -310,7 +319,7 @@ class ProductDetailsScreen extends StatelessWidget {
         ),
         InkWell(
           onTap: () => context.read<ProductDetailsBloc>().add(const UpdateQuantityEvent(1)),
-          child: CircleAvatar(
+          child: const CircleAvatar(
             backgroundColor: AppColors.secondary,
             radius: 20.0,
             child: Icon(Icons.add, size: 15.0, color: Colors.black),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/dimens.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
@@ -32,15 +34,19 @@ class HomeHeader extends StatelessWidget {
         mainAxisAlignment: .spaceEvenly,
         children: [
           Row(
+            spacing: 5.0,
             mainAxisAlignment: .spaceBetween,
             children: [
-              SvgPicture.asset('assets/icons/location_icon.svg'),
-              const SizedBox(width: 8.0),
+              IconButton(
+                padding: EdgeInsets.zero,
+                icon: SvgPicture.asset('assets/icons/location_icon.svg'),
+                onPressed: () {},
+              ),
               Column(
                 crossAxisAlignment: .start,
                 children: [
                   Text(
-                    'التوصيل إلى',
+                    'التوصيل لِـ',
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(color: AppColors.neutral),
                   ),
                   Text(
@@ -54,8 +60,18 @@ class HomeHeader extends StatelessWidget {
               ),
               const Spacer(),
               IconButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  if (GoRouterState.of(context).matchedLocation != RoutePaths.cart) {
+                    context.push(RoutePaths.cart);
+                  }
+                },
+                icon: SvgPicture.asset('assets/icons/cart_icon.svg'),
+              ),
+              IconButton(
+                padding: EdgeInsets.zero,
                 onPressed: () {},
-                icon: SvgPicture.asset('assets/icons/temp.svg'),
+                icon: SvgPicture.asset('assets/icons/notifications_icon.svg'),
               ),
             ],
           ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideX(begin: 0.1, end: 0),

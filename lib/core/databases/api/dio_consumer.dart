@@ -298,13 +298,16 @@ class DioConsumer extends ApiConsumer {
       }) async {
     await _checkConnectivity();
     try {
+      final authToken = token ?? cacheHelper.getAuthToken();
       final res = await dio.post(
         path,
         data: isFormData ? FormData.fromMap(data) : data,
         queryParameters: queryParameters,
-        options: token != null
-            ? Options(headers: {'Authorization': 'Bearer $token'})
-            : null,
+        options: Options(
+          headers: {
+            if (authToken.isNotEmpty) 'Authorization': 'Bearer $authToken',
+          },
+        ),
       );
       return res.data;
     } on DioException catch (e) {
@@ -321,13 +324,16 @@ class DioConsumer extends ApiConsumer {
       }) async {
     await _checkConnectivity();
     try {
+      final authToken = token ?? cacheHelper.getAuthToken();
       final res = await dio.get(
         path,
         data: data,
         queryParameters: queryParameters,
-        options: token != null
-            ? Options(headers: {'Authorization': 'Bearer $token'})
-            : null,
+        options: Options(
+          headers: {
+            if (authToken.isNotEmpty) 'Authorization': 'Bearer $authToken',
+          },
+        ),
       );
       return res.data;
     } on DioException catch (e) {
@@ -344,13 +350,16 @@ class DioConsumer extends ApiConsumer {
       }) async {
     await _checkConnectivity();
     try {
+      final authToken = token ?? cacheHelper.getAuthToken();
       final res = await dio.delete(
         path,
         data: data,
         queryParameters: queryParameters,
-        options: token != null
-            ? Options(headers: {'Authorization': 'Bearer $token'})
-            : null,
+        options: Options(
+          headers: {
+            if (authToken.isNotEmpty) 'Authorization': 'Bearer $authToken',
+          },
+        ),
       );
       return res.data;
     } on DioException catch (e) {
@@ -368,13 +377,16 @@ class DioConsumer extends ApiConsumer {
       }) async {
     await _checkConnectivity();
     try {
+      final authToken = token ?? cacheHelper.getAuthToken();
       final res = await dio.patch(
         path,
         data: isFormData ? FormData.fromMap(data) : data,
         queryParameters: queryParameters,
-        options: token != null
-            ? Options(headers: {'Authorization': 'Bearer $token'})
-            : null,
+        options: Options(
+          headers: {
+            if (authToken.isNotEmpty) 'Authorization': 'Bearer $authToken',
+          },
+        ),
       );
       return res.data;
     } on DioException catch (e) {

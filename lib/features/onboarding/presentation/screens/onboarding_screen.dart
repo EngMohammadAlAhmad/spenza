@@ -8,17 +8,20 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/widgets/circle_action_button.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
+import 'package:spenza/features/onboarding/domain/usecases/set_onboarding_status_usecase.dart';
+import 'package:spenza/injection_locator.dart' as di;
 import '../bloc/onboarding_bloc.dart';
 
-enum _VectorType { none, mark, underline }
+enum VectorType { none, mark, underline }
 
-class _WordSpec {
+class WordSpec {
   final String text;
   final bool isPrimary;
-  final _VectorType vector;
+  final VectorType vector;
 
-  const _WordSpec(this.text, this.isPrimary, this.vector);
+  const WordSpec(this.text, this.isPrimary, this.vector);
 }
 
 class OnboardingScreen extends StatefulWidget {
@@ -68,25 +71,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<double> _underlineWidthFactorPerPage = [0.8, 0.8, 0.8];
 
-  final List<List<_WordSpec>> _pageWords = const [
+  final List<List<WordSpec>> _pageWords = const [
     // Page 1: كل (mark) احتياجاتك، بمكان (underline) واحد
     [
-      _WordSpec('كل', false, _VectorType.mark),
-      _WordSpec(' احتياجاتك، ', false, _VectorType.none),
-      _WordSpec('بمكان', true, _VectorType.underline),
-      _WordSpec(' واحد', false, _VectorType.none),
+      WordSpec('كل', false, VectorType.mark),
+      WordSpec(' احتياجاتك، ', false, VectorType.none),
+      WordSpec('بمكان', true, VectorType.underline),
+      WordSpec(' واحد', false, VectorType.none),
     ],
     // Page 2: توصيل (underline) على كيفك (mark)
     [
-      _WordSpec('توصيل', true, _VectorType.underline),
-      _WordSpec(' على ', false, _VectorType.none),
-      _WordSpec('كيفك', false, _VectorType.mark),
+      WordSpec('توصيل', true, VectorType.underline),
+      WordSpec(' على ', false, VectorType.none),
+      WordSpec('كيفك', false, VectorType.mark),
     ],
     // Page 3: كل (mark) طلب بيزيد نقاطك (underline)
     [
-      _WordSpec('كل', false, _VectorType.mark),
-      _WordSpec(' طلب بيزيد ', false, _VectorType.none),
-      _WordSpec('نقاطك', true, _VectorType.underline),
+      WordSpec('كل', false, VectorType.mark),
+      WordSpec(' طلب بيزيد ', false, VectorType.none),
+      WordSpec('نقاطك', true, VectorType.underline),
     ],
   ];
 
@@ -128,9 +131,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     }
   }
 
-  void _complete() {
+  void _complete() async {
     context.read<OnboardingBloc>().add(CompleteOnboardingEvent());
-    context.go(RoutePaths.home);
+    // Ensure the onboarding status is saved in SharedPreferences BEFORE navigating.
+    // This prevents a race condition where the GoRouter redirect checks the status
+    // before the async write operation has finished.
+    await di.sl<SetOnboardingStatusUseCase>().call(true);
+    if (mounted) {
+      context.go(RoutePaths.login);
+    }
   }
 
   void _measureAnchors(int index) {
@@ -193,6 +202,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     flex: 4,
                     child: PageView.builder(
                       controller: _pageController,
+                      physics: const NeverScrollableScrollPhysics(),
                       onPageChanged: (index) =>
                           setState(() => _currentIndex = index),
                       itemCount: onboardingData.length,
@@ -247,15 +257,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           _buildTextButton('تخطي', _complete),
                         ] else ...[
                           _buildPrimaryButton(
-                            text: 'إنشاء حساب جديد',
-                            onPressed: () => context.push(RoutePaths.signup),
+                            text: 'يلا نبلش',
+                            onPressed: _complete,
                             showArrow: false,
                             decreaseFont: true,
                           ),
                           const SizedBox(height: 12),
-                          _buildSecondaryButton('عندي حساب — تسجيل الدخول', () {
+                          /*_buildSecondaryButton('عندي حساب — تسجيل الدخول', () {
                             context.push(RoutePaths.login);
-                          }),
+                          }),*/
                           SizedBox(height: MediaQuery.sizeOf(context).height * 0.015),
                           _buildFooterText(),
                         ],
@@ -387,8 +397,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: words.map((w) {
         GlobalKey? key;
-        if (w.vector == _VectorType.mark) key = _markKeys[index];
-        if (w.vector == _VectorType.underline) key = _underlineKeys[index];
+        if (w.vector == VectorType.mark) key = _markKeys[index];
+        if (w.vector == VectorType.underline) key = _underlineKeys[index];
 
         return Text(
           w.text,
@@ -417,14 +427,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget _buildSecondaryButton(String text, VoidCallback onPressed) {
+  /*Widget _buildSecondaryButton(String text, VoidCallback onPressed) {
     return CustomButton(
       text: text,
       onPressed: onPressed,
       height: 48.0,
       isOutlined: true,
     );
-  }
+  }*/
 
   Widget _buildTextButton(String text, VoidCallback onPressed) {
     return TextButton(
@@ -439,10 +449,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Widget _buildFooterText() {
-    return Text(
-      'كمل تصفّح كضيف',
-      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-        fontWeight: FontWeight.w700,
+    return InkWell(
+      onTap: () async {
+        context.read<OnboardingBloc>().add(CompleteOnboardingEvent());
+        await di.sl<SetOnboardingStatusUseCase>().call(true);
+        if (mounted) {
+          context.go(RoutePaths.home);
+        }
+      },
+      child: Text(
+        'كمل تصفّح كضيف',
+        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }

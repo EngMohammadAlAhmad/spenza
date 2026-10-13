@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:spenza/core/utils/base_state.dart';
+import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favorites_bloc.dart';
+import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favorites_event.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/shared/entities/product_entity.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/widgets/app_icon_placeholder.dart';
+import 'package:spenza/core/widgets/favorite_button.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 class ProductCard extends StatefulWidget {
   final ProductEntity product;
@@ -98,7 +102,19 @@ class _ProductCardState extends State<ProductCard> {
                     Positioned(
                       top: 8.0,
                       left: 8.0,
-                      child: _FavoriteButton(),
+                      child: BlocBuilder<FavoritesBloc, BaseState<List<ProductEntity>>>(
+                        builder: (context, state) {
+                          final isFavorite = state.data?.any((p) => p.id == product.id) ?? false;
+                          return FavoriteButton(
+                            size: 18.0,
+                            color: AppColors.grey,
+                            initialFavorite: isFavorite,
+                            onFavoriteChanged: (isFav) {
+                              context.read<FavoritesBloc>().add(ToggleFavoriteEvent(product));
+                            },
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -163,44 +179,6 @@ class _ProductCardState extends State<ProductCard> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _FavoriteButton extends StatefulWidget {
-  @override
-  State<_FavoriteButton> createState() => _FavoriteButtonState();
-}
-
-class _FavoriteButtonState extends State<_FavoriteButton> {
-  bool _isFavorite = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => setState(() => _isFavorite = !_isFavorite),
-      child: Container(
-        padding: const EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Icon(
-          _isFavorite ? Icons.favorite : Icons.favorite_border,
-          size: 18.0,
-          color: _isFavorite ? Colors.red : AppColors.grey,
-        ).animate(target: _isFavorite ? 1 : 0)
-            .scaleXY(begin: 1.0, end: 1.3, duration: 150.ms)
-            .then()
-            .scaleXY(begin: 1.3, end: 1.0, duration: 150.ms),
       ),
     );
   }

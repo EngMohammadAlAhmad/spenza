@@ -18,10 +18,10 @@ class AppRadius {
   static final BorderRadius extra4Large = .circular(72.0);
 
   static const BorderRadius brandRadius = BorderRadius.only(
-    topLeft: Radius.circular(16.0),
-    topRight: Radius.circular(16.0),
-    bottomLeft: Radius.circular(16.0),
-    bottomRight: Radius.circular(4.0),
+    topLeft: Radius.circular(20.0),
+    topRight: Radius.circular(20.0),
+    bottomLeft: Radius.circular(20.0),
+    bottomRight: Radius.circular(8.0),
   );
 
   // Or using individual radius values

@@ -272,7 +272,7 @@ class _SearchScreenState extends State<SearchScreen> {
         mainAxisSpacing: 12,
       ),
       itemCount: 6,
-      itemBuilder: (_, __) => const ShimmerPlaceholder(
+      itemBuilder: (_, _) => const ShimmerPlaceholder(
         width: double.infinity,
         height: double.infinity,
         borderRadius: BorderRadius.all(Radius.circular(16)),

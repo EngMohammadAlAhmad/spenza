@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 
@@ -35,7 +35,7 @@ class _HomeShellState extends State<HomeShell> {
   void _onHorizontalDragEnd(DragEndDetails details) {
     final velocity = details.primaryVelocity ?? 0;
     int newIndex = widget.navigationShell.currentIndex;
-    const totalBranches = 4;
+    const totalBranches = 5;
     bool shouldNavigate = false;
 
     if (velocity.abs() > 300) {
@@ -64,14 +64,34 @@ class _HomeShellState extends State<HomeShell> {
 
   @override
   Widget build(BuildContext context) {
-    const Color activeTabColor = AppColors.primary;
     final inactiveColor = AppColors.neutral;
 
     final items = [
-      _NavItem(icon: 'assets/icons/home_icon.svg', label: 'home'.tr()),
-      _NavItem(icon: 'assets/icons/shopping_icon.svg', label: 'shopping'.tr()),
-      _NavItem(icon: 'assets/icons/orders_icon.svg', label: 'orders'.tr()),
-      _NavItem(icon: 'assets/icons/account_icon.svg', label: 'account'.tr()),
+      _NavItem(
+        icon: 'assets/icons/home_icon.svg',
+        selectedIcon: 'assets/icons/home_selected.svg',
+        label: 'home'.tr(),
+      ),
+      _NavItem(
+        icon: 'assets/icons/sections_icon.svg',
+        selectedIcon: 'assets/icons/sections_selected.svg',
+        label: 'sections'.tr(),
+      ),
+      _NavItem(
+        icon: 'assets/icons/favorites_icon.svg',
+        selectedIcon: 'assets/icons/favorites_selected.svg',
+        label: 'favorites'.tr(),
+      ),
+      _NavItem(
+        icon: 'assets/icons/orders_icon.svg',
+        selectedIcon: 'assets/icons/orders_selected.svg',
+        label: 'orders'.tr(),
+      ),
+      _NavItem(
+        icon: 'assets/icons/account_icon.svg',
+        selectedIcon: 'assets/icons/account_selected.svg',
+        label: 'account'.tr(),
+      ),
     ];
 
     return Scaffold(
@@ -84,7 +104,6 @@ class _HomeShellState extends State<HomeShell> {
         child: widget.navigationShell,
       ),
       bottomNavigationBar: Container(
-
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -99,7 +118,7 @@ class _HomeShellState extends State<HomeShell> {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: List.generate(items.length, (index) {
@@ -113,7 +132,6 @@ class _HomeShellState extends State<HomeShell> {
                     child: _NavTabItem(
                       item: item,
                       isSelected: isSelected,
-                      activeColor: activeTabColor,
                       inactiveColor: inactiveColor,
                     ),
                   ),
@@ -130,80 +148,72 @@ class _HomeShellState extends State<HomeShell> {
 class _NavTabItem extends StatelessWidget {
   final _NavItem item;
   final bool isSelected;
-  final Color activeColor;
   final Color inactiveColor;
 
   const _NavTabItem({
     required this.item,
     required this.isSelected,
-    required this.activeColor,
     required this.inactiveColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      height: 47.0,
-      duration: const Duration(milliseconds: 280),
-      curve: Curves.easeOutCubic,
-      //padding: const EdgeInsets.symmetric(vertical: 3.0),
-      decoration: BoxDecoration(
-        color: isSelected ? activeColor : Colors.transparent,
-        borderRadius: AppRadius.extra4Large,
-      ),
-      // clipBehavior stays default (none) so the icon's paint-time scale
-      // overshoot is never clipped, and mainAxisSize.min keeps the column
-      // exactly as tall as its unscaled content — same as the original.
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        spacing: 2.0,
-        children: [
-          // No SizedBox around the icon: the layout size stays exactly
-          // 25x25 (as before), scaleXY only affects paint, not layout,
-          // so the overshoot never grows the row's height.
-          const SizedBox(height: 2.0),
-          SvgPicture.asset(
-            item.icon,
-            colorFilter: ColorFilter.mode(
-              isSelected ? Colors.white : inactiveColor,
-              BlendMode.srcIn,
-            ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.primaryTint : Colors.transparent,
+            borderRadius: AppRadius.extra4Large,
+          ),
+          child: SvgPicture.asset(
+            isSelected ? item.selectedIcon : item.icon,
+            colorFilter: isSelected
+                ? null
+                : ColorFilter.mode(inactiveColor, BlendMode.srcIn),
             width: 22.0,
+            height: 22.0,
           )
               .animate(target: isSelected ? 1 : 0)
               .scaleXY(
-            begin: 1.0,
-            end: 1.15,
-            duration: 400.ms,
-            curve: Curves.elasticOut,
+                begin: 1.0,
+                end: 1.15,
+                duration: 400.ms,
+                curve: Curves.elasticOut,
+              ),
+        ),
+        const SizedBox(height: 3.0),
+        AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                color: isSelected ? AppColors.primary : inactiveColor,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
+              ),
+          child: Text(
+            item.label,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          // Label is always rendered — only its style (color/weight)
-          // animates. No opacity/fade tied to isSelected, so every tab's
-          // label stays visible at all times.
-          AnimatedDefaultTextStyle(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeOut,
-            style: Theme.of(context).textTheme.bodySmall!.copyWith(
-              color: isSelected ? Colors.white : inactiveColor,
-              fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
-            ),
-            child: Text(
-              item.label,
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
 class _NavItem {
   final String icon;
+  final String selectedIcon;
   final String label;
 
-  const _NavItem({required this.icon, required this.label});
+  const _NavItem({
+    required this.icon,
+    required this.selectedIcon,
+    required this.label,
+  });
 }

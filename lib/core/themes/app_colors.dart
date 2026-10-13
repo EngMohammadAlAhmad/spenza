@@ -2,19 +2,25 @@ import 'dart:ui';
 
 class AppColors {
   static const Color primary = Color(0xFFD46B60);
+  static const Color primaryBold = Color(0xFFA94443);
   static const Color primary500 = Color(0xFFC74436);
   static const Color primary600 = Color(0xFF9D352B);
   static const Color primary700 = Color(0xFF772820);
   static const Color primaryDark = Color(0xFFC64420);
   static const Color primaryLight = Color(0xFFEFC6C2);
+  static const Color primaryTint = Color(0xFFFAE6E3);
 
   static const Color neutral = Color(0xFF737373);
   static const Color neutral200 = Color(0xFFF0F0F0);
+  static const Color neutralBackground = Color(0xFFF7F4F0);
+  static const Color neutralBorderStrong = Color(0xFFDDD8D2);
   static const Color neutral700 = Color(0xFF555555);
   static const Color neutral900 = Color(0xFF444444);
 
   static const Color secondary = Color(0xFFF2B211);
   static const Color secondaryDark = Color(0xFFF59E0B);
+
+  static const Color tertiary = Color(0xFF756F6A);
 
   static const Color fillColor = Color(0xFFF6F2EC);
   static const Color borderColor = Color(0xFF383839);
@@ -36,6 +42,8 @@ class AppColors {
   // Secondary text
   static const Color secondaryTextLight = Color(0xFF64748B);
   static const Color secondaryTextDark = Color(0xFF94A3B8);
+  static const Color textSecondary = Color(0xFF9D9791);
+  static const Color textBody = Color(0xFF57524E);
 
   // Success
   static const Color successLight = Color(0xFF10B981);
@@ -44,8 +52,10 @@ class AppColors {
   // Warning
   static const Color warningLight = Color(0xFFF59E0B);
   static const Color warningDark = Color(0xFFFBBF24);
+  static const Color warningAlert = Color(0xFF735406);
 
   // Error
+  static const Color error = Color(0xFFD00416);
   static const Color errorLight = Color(0xFFEF4444);
   static const Color errorDark = Color(0xFFF87171);
 

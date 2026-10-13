@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/widgets/custom_button.dart';
 
 class NoInternetWidget extends StatelessWidget {
   final VoidCallback onRetry;
@@ -14,53 +16,32 @@ class NoInternetWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.wifi_off_rounded,
-                size: 80,
-                color: AppColors.primary,
-              ),
-            ),
+            SvgPicture.asset('assets/icons/no_wifi_icon.svg'),
             const SizedBox(height: 24),
             Text(
-              'لا يوجد اتصال بالإنترنت',
+              'النت قاطع عندك',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.neutral900,
-                  ),
+                fontWeight: FontWeight.bold,
+                color: AppColors.neutral900,
+              ),
             ),
             const SizedBox(height: 12),
             Text(
-              'يرجى التحقق من اتصالك بالشبكة وإعادة المحاولة للوصول إلى المنتجات.',
+              'سلتك محفوظة. أول ما يرجع النت منكمل من وين وقفت.',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.neutral,
-                  ),
+                color: AppColors.neutral,
+              ),
             ),
             const SizedBox(height: 32),
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                onPressed: onRetry,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  elevation: 0,
-                ),
-                child: const Text(
-                  'إعادة المحاولة',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
+            CustomButton(
+              text: 'جرب مرة تانية',
+              isOutlined: true,
+              icon: SvgPicture.asset('assets/icons/refresh_icon.svg'),
+              width: 146.0,
+              height: 40.0,
+              underlayerColor: Colors.white,
+              onPressed: onRetry,
             ),
           ],
         ),

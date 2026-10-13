@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
-import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/shared/entities/product_entity.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
-import 'package:spenza/core/widgets/app_icon_placeholder.dart';
+import 'package:spenza/core/widgets/view_all_button.dart';
+import 'package:spenza/features/home/presentation/widgets/offer_card.dart';
 
 class TodayOffersSection extends StatelessWidget {
   final List<ProductEntity> products;
@@ -21,30 +18,22 @@ class TodayOffersSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: .start,
+      spacing: 15.0,
+      crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: .spaceBetween,
       children: [
         Row(
           mainAxisAlignment: .spaceBetween,
-          spacing: 5.0,
           children: [
-            SvgPicture.asset('assets/icons/today_offers_icon.svg'),
             Text(
               'عروض اليوم',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: AppColors.primary,
               ),
             ),
             const Spacer(),
-            TextButton(
+            ViewAllButton(
               onPressed: () {},
-              child: Text(
-                'عرض الكل >',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppColors.blue,
-                ),
-              ),
             ),
           ],
         ),
@@ -77,188 +66,6 @@ class TodayOffersSection extends StatelessWidget {
                 ),
         ),
       ],
-    );
-  }
-}
-
-class OfferCard extends StatefulWidget {
-  final ProductEntity product;
-
-  const OfferCard({super.key, required this.product});
-
-  @override
-  State<OfferCard> createState() => _OfferCardState();
-}
-
-class _OfferCardState extends State<OfferCard> {
-  bool _pressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final product = widget.product;
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _pressed = true),
-      onTapUp: (_) => setState(() => _pressed = false),
-      onTapCancel: () => setState(() => _pressed = false),
-      onTap: () {
-        context.push('/categories/product/${product.id}');
-      },
-      child: AnimatedScale(
-        scale: _pressed ? 0.96 : 1.0,
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.easeOut,
-        child: Container(
-          width: 172.0,
-          height: 298.2,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          child: Column(
-            crossAxisAlignment: .start,
-            children: [
-              SizedBox(
-                height: 160.0,
-                width: double.infinity,
-                child: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
-                      child: product.photo != null && product.photo!.isNotEmpty
-                          ? CachedNetworkImage(
-                              imageUrl: product.photo!,
-                              width: double.infinity,
-                              height: 160.0,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => const ShimmerPlaceholder(width: 172, height: 160),
-                              errorWidget: (context, url, error) => const AppIconPlaceholder(size: 60),
-                            )
-                          : const AppIconPlaceholder(size: 100.0),
-                    ),
-                    if (product.discountPercentage > 0)
-                    Positioned(
-                      top: 8.0,
-                      right: 8.0,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                        decoration: BoxDecoration(
-                          color: AppColors.secondary,
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: Text(
-                          '-${product.discountPercentage.toInt()}%',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 8.0,
-                      left: 8.0,
-                      child: _FavoriteButton(),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: .start,
-                    mainAxisAlignment: .spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            product.rate.toString(),
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          const SizedBox(width: 2.0),
-                          const Icon(Icons.star_rounded, size: 20.0, color: AppColors.secondary),
-                          const SizedBox(width: 4.0),
-                          const Text('•', style: TextStyle(color: AppColors.neutral)),
-                          const SizedBox(width: 4.0),
-                          Text(
-                            product.brand,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                      Text(
-                        product.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.neutral900,
-                        ),
-                      ),
-                      Row(
-                        spacing: 5.0,
-                        children: [
-                          Text(
-                            product.discountedPrice.toString(),
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                          Text(
-                            'ل.س',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColors.neutral,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        '${product.price}',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.neutral,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _FavoriteButton extends StatefulWidget {
-  @override
-  State<_FavoriteButton> createState() => _FavoriteButtonState();
-}
-
-class _FavoriteButtonState extends State<_FavoriteButton> {
-  bool _isFavorite = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => setState(() => _isFavorite = !_isFavorite),
-      child: Container(
-        height: 39.0,
-        width: 39.0,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          _isFavorite ? Icons.favorite : Icons.favorite_border,
-          size: 20.0,
-          color: _isFavorite ? Colors.red : AppColors.neutral,
-        ).animate(target: _isFavorite ? 1 : 0)
-            .scaleXY(begin: 1.0, end: 1.3, duration: 150.ms)
-            .then()
-            .scaleXY(begin: 1.3, end: 1.0, duration: 150.ms),
-      ),
     );
   }
 }

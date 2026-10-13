@@ -185,7 +185,7 @@ void handleDioException(DioException e) {
         case 423:
           throw LockedException(errorModel);
         case 429:
-          throw TooManyRequestsException(ErrorModel(errorMessage: 'Too many requests. Try again later.'));
+          throw TooManyRequestsException(errorModel);
 
       // 🔥 5xx — Server errors
         case 500:

@@ -8,6 +8,17 @@ import 'package:spenza/core/databases/api/language_interpretation.dart';
 import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/services/crash_reporter.dart';
 import 'package:spenza/core/services/firebase_crash_reporter.dart';
+import 'package:spenza/features/addresses/data/datasources/addresses_datasource.dart';
+import 'package:spenza/features/addresses/data/repositories/addresses_repository_impl.dart';
+import 'package:spenza/features/addresses/domain/repositories/addresses_repository.dart';
+import 'package:spenza/features/addresses/domain/usecases/add_address_use_case.dart';
+import 'package:spenza/features/addresses/domain/usecases/get_addresses_use_case.dart';
+import 'package:spenza/features/addresses/presentation/bloc/addresses_bloc.dart';
+import 'package:spenza/features/orders/data/datasources/orders_datasource.dart';
+import 'package:spenza/features/orders/data/repositories/orders_repository_impl.dart';
+import 'package:spenza/features/orders/domain/repositories/orders_repository.dart';
+import 'package:spenza/features/orders/domain/usecases/create_order_use_case.dart';
+import 'package:spenza/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:spenza/features/language/data/repositories/language_repo_impl.dart';
 import 'package:spenza/features/language/domain/repositories/language_repository.dart';
 import 'package:spenza/features/language/presentation/blocs/language_bloc.dart';
@@ -52,6 +63,39 @@ import 'package:spenza/features/onboarding/domain/repositories/onboarding_reposi
 import 'package:spenza/features/onboarding/domain/usecases/get_onboarding_status_usecase.dart';
 import 'package:spenza/features/onboarding/domain/usecases/set_onboarding_status_usecase.dart';
 import 'package:spenza/features/onboarding/presentation/bloc/onboarding_bloc.dart';
+import 'package:spenza/features/auth/data/datasource/auth_datasource.dart';
+import 'package:spenza/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:spenza/features/auth/domain/repositories/auth_repository.dart';
+import 'package:spenza/features/auth/domain/usecases/register_usecase.dart';
+import 'package:spenza/features/auth/domain/usecases/request_otp_usecase.dart';
+import 'package:spenza/features/auth/domain/usecases/verify_otp_usecase.dart';
+import 'package:spenza/features/account/data/datasource/account_datasource.dart';
+import 'package:spenza/features/account/data/repositories/account_repository_impl.dart';
+import 'package:spenza/features/account/domain/repositories/account_repository.dart';
+import 'package:spenza/features/account/domain/usecases/get_user_profile_use_case.dart';
+import 'package:spenza/features/account/presentation/blocs/account_bloc/account_bloc.dart';
+import 'package:spenza/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:spenza/features/auth/presentation/bloc/auth_status_bloc.dart';
+import 'package:spenza/features/favorites/data/datasource/favorites_local_datasource.dart';
+import 'package:spenza/features/favorites/data/repositories/favorites_repository_impl.dart';
+import 'package:spenza/features/favorites/domain/repositories/favorites_repository.dart';
+import 'package:spenza/features/favorites/domain/usecases/get_favorites_use_case.dart';
+import 'package:spenza/features/favorites/domain/usecases/toggle_favorite_use_case.dart';
+import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favorites_bloc.dart';
+import 'package:spenza/features/cart/data/datasources/cart_local_datasource.dart';
+import 'package:spenza/features/cart/data/repositories/cart_repository_impl.dart';
+import 'package:spenza/features/cart/domain/repositories/cart_repository.dart';
+import 'package:spenza/features/cart/domain/usecases/add_to_cart_use_case.dart';
+import 'package:spenza/features/cart/domain/usecases/clear_cart_use_case.dart';
+import 'package:spenza/features/cart/domain/usecases/get_cart_use_case.dart';
+import 'package:spenza/features/cart/domain/usecases/remove_from_cart_use_case.dart';
+import 'package:spenza/features/cart/domain/usecases/update_cart_quantity_use_case.dart';
+import 'package:spenza/features/cart/presentation/blocs/cart_bloc/cart_bloc.dart';
+import 'package:spenza/features/points_market/data/datasource/points_market_datasource.dart';
+import 'package:spenza/features/points_market/data/repositories/points_market_repository_impl.dart';
+import 'package:spenza/features/points_market/domain/repositories/points_market_repository.dart';
+import 'package:spenza/features/points_market/domain/usecases/get_user_points_use_case.dart';
+import 'package:spenza/features/points_market/presentation/blocs/points_market_bloc/points_market_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 
@@ -75,10 +119,10 @@ Future<void> init() async {
     navigatorKey: navigatorKey,
     networkInfo: sl(),
   ));
-  sl.registerSingletonAsync<CacheHelper>(() {
+  sl.registerSingletonAsync<CacheHelper>(() async {
     final cacheHelper = CacheHelper();
-    cacheHelper.init();
-    return Future.value(cacheHelper);
+    await cacheHelper.init();
+    return cacheHelper;
   });
   sl.registerLazySingleton<CrashReporter>(() => FirebaseCrashReporter());
 
@@ -150,11 +194,80 @@ Future<void> init() async {
   sl.registerLazySingleton<SearchRepository>(() => SearchRepositoryImpl(datasource: sl()));
   sl.registerLazySingleton(() => SearchDatasource(api: sl()));
 
+  // Favorites Feature
+  sl.registerFactory(() => FavoritesBloc(
+        getFavoritesUseCase: sl(),
+        toggleFavoriteUseCase: sl(),
+      ));
+  sl.registerLazySingleton(() => GetFavoritesUseCase(repository: sl()));
+  sl.registerLazySingleton(() => ToggleFavoriteUseCase(repository: sl()));
+  sl.registerLazySingleton<FavoritesRepository>(() => FavoritesRepositoryImpl(localDataSource: sl()));
+  sl.registerLazySingleton<FavoritesLocalDataSource>(() => FavoritesLocalDataSourceImpl(sharedPreferences: sl()));
+
   sl.registerFactory(() => BrandProductsBloc(
         getBrandProductsUseCase: sl(),
         searchProductsUseCase: sl(),
       ));
   sl.registerLazySingleton(() => GetBrandProductsUseCase(repository: sl()));
+
+  // Auth Feature
+  sl.registerLazySingleton(() => AuthStatusBloc(cacheHelper: sl()));
+  sl.registerFactory(() => AuthBloc(
+        requestOtpUseCase: sl(),
+        verifyOtpUseCase: sl(),
+        registerUseCase: sl(),
+        cacheHelper: sl(),
+        authStatusBloc: sl(),
+      ));
+  sl.registerLazySingleton(() => RequestOtpUseCase(repository: sl()));
+  sl.registerLazySingleton(() => VerifyOtpUseCase(repository: sl()));
+  sl.registerLazySingleton(() => RegisterUseCase(repository: sl()));
+  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(datasource: sl()));
+  sl.registerLazySingleton(() => AuthDatasource(api: sl()));
+
+  // Account Feature
+  sl.registerFactory(() => AccountBloc(getUserProfileUseCase: sl()));
+  sl.registerLazySingleton(() => GetUserProfileUseCase(repository: sl()));
+  sl.registerLazySingleton<AccountRepository>(() => AccountRepositoryImpl(datasource: sl()));
+  sl.registerLazySingleton(() => AccountDatasource(api: sl()));
+
+  // Addresses Feature
+  sl.registerFactory(() => AddressesBloc(
+        getAddressesUseCase: sl(),
+        addAddressUseCase: sl(),
+      ));
+  sl.registerLazySingleton(() => GetAddressesUseCase(repository: sl()));
+  sl.registerLazySingleton(() => AddAddressUseCase(repository: sl()));
+  sl.registerLazySingleton<AddressesRepository>(() => AddressesRepositoryImpl(datasource: sl()));
+  sl.registerLazySingleton<AddressesDatasource>(() => AddressesDatasourceImpl(api: sl()));
+
+  // Points Market Feature
+  sl.registerFactory(() => PointsMarketBloc(getUserPointsUseCase: sl()));
+  sl.registerLazySingleton(() => GetUserPointsUseCase(repository: sl()));
+  sl.registerLazySingleton<PointsMarketRepository>(() => PointsMarketRepositoryImpl(datasource: sl()));
+  sl.registerLazySingleton(() => PointsMarketDatasource(api: sl()));
+
+  // Orders Feature
+  sl.registerFactory(() => OrdersBloc(createOrderUseCase: sl()));
+  sl.registerLazySingleton(() => CreateOrderUseCase(repository: sl()));
+  sl.registerLazySingleton<OrdersRepository>(() => OrdersRepositoryImpl(datasource: sl()));
+  sl.registerLazySingleton<OrdersDatasource>(() => OrdersDatasourceImpl(api: sl()));
+
+  // Cart Feature
+  sl.registerFactory(() => CartBloc(
+        getCartUseCase: sl(),
+        addToCartUseCase: sl(),
+        updateCartQuantityUseCase: sl(),
+        removeFromCartUseCase: sl(),
+        clearCartUseCase: sl(),
+      ));
+  sl.registerLazySingleton(() => GetCartUseCase(repository: sl()));
+  sl.registerLazySingleton(() => AddToCartUseCase(repository: sl()));
+  sl.registerLazySingleton(() => UpdateCartQuantityUseCase(repository: sl()));
+  sl.registerLazySingleton(() => RemoveFromCartUseCase(repository: sl()));
+  sl.registerLazySingleton(() => ClearCartUseCase(repository: sl()));
+  sl.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(localDataSource: sl()));
+  sl.registerLazySingleton<CartLocalDataSource>(() => CartLocalDataSourceImpl(sharedPreferences: sl()));
 
   // Datasource
   //sl.registerLazySingleton<ThemeLocalDatasource>(() => ThemeLocalDatasource(cacheHelper: sl()));

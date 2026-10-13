@@ -19,14 +19,16 @@ class CodegenLoader extends AssetLoader{
   "categories": "الأصناف",
   "orders": "طلباتي",
   "account": "حسابي",
-  "shopping": "تسوّق"
+  "sections": "الأقسام",
+  "favorites": "المفضلة"
 };
 static const Map<String,dynamic> _en = {
   "home": "Home",
   "categories": "Categories",
   "orders": "Orders",
   "account": "Account",
-  "shopping": "Shopping"
+  "sections": "Sections",
+  "favorites": "Favorites"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ar": _ar, "en": _en};
 }

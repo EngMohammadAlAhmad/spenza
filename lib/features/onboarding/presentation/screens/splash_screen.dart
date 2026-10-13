@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/routes/route_paths.dart';
-import 'package:spenza/core/themes/app_colors.dart';
-import '../bloc/onboarding_bloc.dart';
+import 'package:spenza/features/onboarding/domain/usecases/get_onboarding_status_usecase.dart';
+import 'package:spenza/injection_locator.dart' as di;
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -25,34 +26,26 @@ class _SplashScreenState extends State<SplashScreen> {
     
     if (!mounted) return;
     
-    // Trigger the check event to decide where to go next
-    context.read<OnboardingBloc>().add(CheckOnboardingStatusEvent());
+    final cacheHelper = di.sl<CacheHelper>();
+    final getOnboardingStatus = di.sl<GetOnboardingStatusUseCase>();
+
+    final bool isLoggedIn = cacheHelper.getAuthToken().isNotEmpty;
+    final bool wasOnboardingSeen = await getOnboardingStatus();
+
+    if (!wasOnboardingSeen) {
+      context.go(RoutePaths.onboarding);
+    } else if (isLoggedIn) {
+      context.go(RoutePaths.home);
+    } else {
+      context.go(RoutePaths.login);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<OnboardingBloc, OnboardingState>(
-      listener: (context, state) {
-        if (state is OnboardingCompleted) {
-          context.go(RoutePaths.home);
-        } else if (state is OnboardingRequired) {
-          context.go(RoutePaths.onboarding);
-        }
-      },
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Use your app logo here
-              Image.asset(
-                'assets/images/app_icon.png',
-                width: 150,
-              ),
-            ],
-          ),
-        ),
+    return Scaffold(
+      body: Center(
+        child: SvgPicture.asset('assets/images/splash_screen.svg'),
       ),
     );
   }

@@ -3,5 +3,6 @@
   "categories": "Categories",
   "orders": "Orders",
   "account": "Account",
-  "shopping": "Shopping"
+  "sections": "Sections",
+  "favorites": "Favorites"
 }

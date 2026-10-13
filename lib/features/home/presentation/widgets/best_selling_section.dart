@@ -7,6 +7,7 @@ import 'package:spenza/core/shared/entities/product_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/core/widgets/app_icon_placeholder.dart';
+import 'package:spenza/core/widgets/view_all_button.dart';
 
 class BestSellingSection extends StatelessWidget {
   final List<ProductEntity> products;
@@ -21,30 +22,22 @@ class BestSellingSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      spacing: 15.0,
       crossAxisAlignment: .start,
       mainAxisAlignment: .spaceBetween,
       children: [
         Row(
           mainAxisAlignment: .spaceBetween,
-          spacing: 5.0,
           children: [
-            SvgPicture.asset('assets/icons/best_selling_icon.svg'),
             Text(
-              'الأكثر مبيعاً',
+              'الأكثر طلباً',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: AppColors.primary,
               ),
             ),
             const Spacer(),
-            TextButton(
+            ViewAllButton(
               onPressed: () {},
-              child: Text(
-                'عرض الكل >',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppColors.blue,
-                ),
-              ),
             ),
           ],
         ),

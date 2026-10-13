@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/widgets/view_all_button.dart';
 
 class OrderAgainItem {
   final String imagePath;
@@ -50,30 +50,22 @@ class _OrderAgainSectionState extends State<OrderAgainSection> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      spacing: 10,
       crossAxisAlignment: .start,
       mainAxisAlignment: .spaceBetween,
       children: [
         Row(
           mainAxisAlignment: .spaceBetween,
-          spacing: 5.0,
           children: [
-            SvgPicture.asset('assets/icons/order_again_icon.svg'),
             Text(
-              'اطلبها مجدداً',
+              'اطلبها من جديد',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: .bold,
-                color: AppColors.primary,
               ),
             ),
             const Spacer(),
-            TextButton(
+            ViewAllButton(
               onPressed: () {},
-              child: Text(
-                'عرض الكل >',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppColors.blue,
-                ),
-              ),
             ),
           ],
         ),

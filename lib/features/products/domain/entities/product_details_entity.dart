@@ -63,6 +63,20 @@ class ProductItemEntity extends Equatable {
     required this.storage,
   });
 
+  ProductEntity toProductEntity() {
+    return ProductEntity(
+      id: id,
+      title: title,
+      photo: mainImage,
+      rate: rate,
+      reviewsCount: ratingsCount,
+      brand: brand.name,
+      price: price,
+      discountedPrice: discountedPrice,
+      discountPercentage: discountPercentage,
+    );
+  }
+
   @override
   List<Object?> get props => [
         id,

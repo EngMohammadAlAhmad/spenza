@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/widgets/pattern_background.dart';
 import 'package:spenza/features/auth/presentation/widgets/auth_header.dart';
-import '../widgets/login_step_1.dart';
-import '../widgets/signup_step_3.dart';
+import '../widgets/login_page.dart';
+import '../widgets/verify_otp_page.dart';
+import '../widgets/register_complete_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,11 +16,13 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final PageController _pageController = PageController();
+  final TextEditingController _phoneController = TextEditingController();
   int _currentStep = 0;
   String _phoneNumber = '';
+  String _code = '';
 
   void _nextStep() {
-    if (_currentStep < 1) {
+    if (_currentStep < 2) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
@@ -28,6 +31,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _previousStep() {
+    if (_currentStep == 1) {
+      _phoneController.clear();
+      _phoneNumber = '';
+    }
     if (_currentStep > 0) {
       _pageController.previousPage(
         duration: const Duration(milliseconds: 400),
@@ -41,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void dispose() {
     _pageController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -48,34 +56,44 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
-      body: Column(
+      body: Stack(
         children: [
-          AuthHeaderWidget(
-            showBackButton: true,
-            onBack: _previousStep,
-          ),
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              onPageChanged: (index) => setState(() => _currentStep = index),
-              children: [
-                LoginStep1(
-                  onNext: (phone) {
-                    setState(() => _phoneNumber = phone);
-                    _nextStep();
-                  },
-                  onSignup: () => context.pushReplacement(RoutePaths.signup),
+          PatternBackground(),
+          Column(
+            children: [
+              AuthHeaderWidget(
+                showBackButton: _currentStep != 0,
+                onBack: _previousStep,
+              ),
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  onPageChanged: (index) => setState(() => _currentStep = index),
+                  children: [
+                    LoginPage(
+                      phoneController: _phoneController,
+                      onNext: (phone) {
+                        setState(() => _phoneNumber = phone);
+                        _nextStep();
+                      },
+                    ),
+                    VerifyOtpPage(
+                      phoneNumber: _phoneNumber,
+                      onEditPhone: _previousStep,
+                      onUnregistered: (code) {
+                        setState(() => _code = code);
+                        _nextStep();
+                      },
+                    ),
+                    RegisterCompletePage(
+                      phoneNumber: _phoneNumber,
+                      code: _code,
+                    ),
+                  ],
                 ),
-                SignupStep3(
-                  phoneNumber: _phoneNumber,
-                  onEditPhone: _previousStep,
-                  onComplete: () {
-                    context.go(RoutePaths.home);
-                  },
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
