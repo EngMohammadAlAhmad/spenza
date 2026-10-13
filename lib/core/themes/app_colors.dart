@@ -79,5 +79,7 @@ class AppColors {
   static const Color blue2 = Color(0xFF1447E6);
   static const Color blueAccent = Color(0xFFDBEAFE);
   static const Color grey = Color(0xFFB9B3A9);
+  static const Color neutralBackgroundInverse = Color(0xFF1A1A1A);
+  static const Color neutralBorderDefault = Color(0xFFEEEAE5);
 
 }

@@ -26,7 +26,7 @@ class FavoritesScreen extends StatelessWidget {
         StatefulNavigationShell.of(context).goBranch(0);
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFF9F6F2),
+        backgroundColor: AppColors.neutralBackground,
         body: Column(
           children: [
             const FavoritesHeader(),

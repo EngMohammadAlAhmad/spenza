@@ -136,7 +136,9 @@ class AccountScreen extends StatelessWidget {
                                   iconPath: 'assets/icons/notifications_icon_2.svg',
                                   title: 'الإشعارات',
                                   //badgeText: '2 جديد',
-                                  onTap: () {},
+                                  onTap: () {
+                                    context.push(RoutePaths.notifications);
+                                  },
                                 ),
                               ],
                             ),

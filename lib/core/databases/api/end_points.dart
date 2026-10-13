@@ -12,6 +12,7 @@ class EndPoints {
   static const String getProfile = "/api/auth/me";
   static const String addresses = "/api/addresses";
   static const String createOrder = "/api/orders";
+  static const String getMyOrders = "/api/my-orders";
 
 }
 

@@ -12,6 +12,7 @@ import 'package:spenza/features/addresses/presentation/bloc/addresses_event.dart
 import 'package:spenza/features/addresses/presentation/bloc/addresses_state.dart';
 import 'package:spenza/features/addresses/presentation/widgets/address_card.dart';
 import 'package:spenza/features/addresses/presentation/widgets/addresses_header.dart';
+import 'package:spenza/features/addresses/presentation/widgets/empty_addresses_widget.dart';
 import 'package:spenza/injection_locator.dart' as di;
 
 class AddressesScreen extends StatelessWidget {
@@ -32,7 +33,6 @@ class _AddressesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.neutral200,
       body: Column(
         children: [
           // Top Header matching CartHeader
@@ -76,17 +76,8 @@ class _AddressesView extends StatelessWidget {
                     child: SingleChildScrollView(
                       physics: const AlwaysScrollableScrollPhysics(),
                       child: SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.6,
-                        child: const Center(
-                          child: Text(
-                            'لا توجد عناوين مضافة بعد',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: AppColors.neutral,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
+                        height: MediaQuery.of(context).size.height * 0.7,
+                        child: const EmptyAddressesWidget(),
                       ),
                     ),
                   );

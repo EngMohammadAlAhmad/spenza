@@ -31,10 +31,10 @@ class TodayOffersSection extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const Spacer(),
+            /*const Spacer(),
             ViewAllButton(
               onPressed: () {},
-            ),
+            ),*/
           ],
         ),
         SizedBox(

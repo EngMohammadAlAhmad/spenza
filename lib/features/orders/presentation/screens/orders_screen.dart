@@ -3,11 +3,17 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/auth/presentation/bloc/auth_status_bloc.dart';
+import 'package:spenza/features/orders/presentation/bloc/orders_bloc.dart';
+import 'package:spenza/features/orders/presentation/bloc/orders_event.dart';
+import 'package:spenza/features/orders/presentation/bloc/orders_state.dart';
+import 'package:spenza/features/orders/presentation/widgets/order_card.dart';
 import 'package:spenza/features/orders/presentation/widgets/orders_header.dart';
+import 'package:spenza/injection_locator.dart';
 
 class OrdersScreen extends StatelessWidget {
   const OrdersScreen({super.key});
@@ -21,25 +27,39 @@ class OrdersScreen extends StatelessWidget {
         StatefulNavigationShell.of(context).goBranch(0);
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFF9F6F2),
-        body: Column(
-          children: [
-            const OrdersHeader(),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: BlocBuilder<AuthStatusBloc, AuthStatusState>(
-                  builder: (context, state) {
-                    return state.isLoggedIn ? _buildNoOrdersState(context) : _buildLoginPrompt(context);
-                  },
-                ),
-              ),
-            ),
-          ],
+        backgroundColor: AppColors.neutralBackground,
+        body: BlocBuilder<AuthStatusBloc, AuthStatusState>(
+          builder: (context, authState) {
+            if (!authState.isLoggedIn) {
+              return Column(
+                children: [
+                  const OrdersHeader(
+                    selectedTabIndex: 0,
+                    activeCount: 0,
+                    completedCount: 0,
+                    onTabChanged: _dummyTabChange,
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: _buildLoginPrompt(context),
+                    ),
+                  ),
+                ],
+              );
+            }
+
+            return BlocProvider<OrdersBloc>(
+              create: (context) => sl<OrdersBloc>()..add(const GetMyOrdersEvent()),
+              child: const _OrdersContent(),
+            );
+          },
         ),
       ),
     );
   }
+
+  static void _dummyTabChange(int index) {}
 
   Widget _buildLoginPrompt(BuildContext context) {
     return Column(
@@ -85,70 +105,217 @@ class OrdersScreen extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _buildNoOrdersState(BuildContext context) {
-    return Column(
-      spacing: 15.0,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // Creative Empty State Illustration
-        Stack(
-          alignment: Alignment.center,
+class _OrdersContent extends StatefulWidget {
+  const _OrdersContent();
+
+  @override
+  State<_OrdersContent> createState() => _OrdersContentState();
+}
+
+class _OrdersContentState extends State<_OrdersContent> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    if (maxScroll - currentScroll <= 200) {
+      context.read<OrdersBloc>().add(const LoadMoreOrdersEvent());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<OrdersBloc, OrdersState>(
+      builder: (context, state) {
+        return Column(
           children: [
-            Container(
-              height: 160,
-              width: 160,
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
+            // Header with Tab Switcher
+            OrdersHeader(
+              selectedTabIndex: state.selectedTabIndex,
+              activeCount: state.activeCount,
+              completedCount: state.completedCount,
+              onTabChanged: (index) {
+                context.read<OrdersBloc>().add(ChangeOrdersTabEvent(index));
+              },
+            ),
+
+            // Orders Body View
+            Expanded(
+              child: RefreshIndicator(
+                color: AppColors.primary500,
+                onRefresh: () async {
+                  //context.read<OrdersBloc>().add(const GetMyOrdersEvent(isRefresh: true));
+                },
+                child: _buildOrdersBody(context, state),
               ),
-            ).animate(onPlay: (c) => c.repeat(reverse: true))
-             .scaleXY(begin: 0.9, end: 1.1, duration: 2.seconds, curve: Curves.easeInOut),
-            
-            Icon(
-              Icons.shopping_basket_outlined,
-              size: 80,
-              color: AppColors.primary.withValues(alpha: 0.5),
-            ).animate(onPlay: (c) => c.repeat(reverse: true))
-             .moveY(begin: -5, end: 5, duration: 1.5.seconds, curve: Curves.easeInOut),
-            
-            Positioned(
-              bottom: 20,
-              right: 20,
-              child: const Icon(Icons.search, size: 40, color: AppColors.secondary)
-                  .animate(onPlay: (c) => c.repeat())
-                  .rotate(duration: 3.seconds),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  Widget _buildOrdersBody(BuildContext context, OrdersState state) {
+    if (state.getMyOrdersStatus == RequestStatus.loading && state.orders.isEmpty) {
+      return const Center(
+        child: CircularProgressIndicator(color: AppColors.primary500),
+      );
+    }
+
+    if (state.getMyOrdersStatus == RequestStatus.error && state.orders.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.error_outline_rounded,
+                size: 60.0,
+                color: AppColors.primary500,
+              ),
+              const SizedBox(height: 12.0),
+              const Text(
+                'حدث خطأ أثناء تحميل الطلبات',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.neutral900,
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              CustomButton(
+                text: 'إعادة المحاولة',
+                width: 160.0,
+                onPressed: () {
+                  context.read<OrdersBloc>().add(const GetMyOrdersEvent());
+                },
+              ),
+            ],
+          ),
         ),
+      );
+    }
 
-        const SizedBox(height: 20),
+    final currentOrders = state.currentTabOrders;
 
-        Text(
-          'سلتك عم تستناك!',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+    if (currentOrders.isEmpty) {
+      return _buildEmptyOrdersState(context);
+    }
+
+    return ListView.builder(
+      controller: _scrollController,
+      physics: const AlwaysScrollableScrollPhysics(
+        parent: BouncingScrollPhysics(),
+      ),
+      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 24.0),
+      itemCount: currentOrders.length + (state.isLoadingMore ? 1 : 0),
+      itemBuilder: (context, index) {
+        if (index >= currentOrders.length) {
+          return const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.0),
+            child: Center(
+              child: CircularProgressIndicator(color: AppColors.primary500),
+            ),
+          );
+        }
+
+        final order = currentOrders[index];
+        return OrderCard(
+          order: order,
+          onTap: () => context.push(RoutePaths.orderDetails, extra: order.orderNumber),
+        );
+      },
+    );
+  }
+
+  Widget _buildEmptyOrdersState(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(
+        parent: BouncingScrollPhysics(),
+      ),
+      child: Container(
+        constraints: BoxConstraints(
+          minHeight: MediaQuery.of(context).size.height * 0.6,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Double Soft Circle Icon Background
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 150.0,
+                  height: 150.0,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFFDE8E8),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                SvgPicture.asset(
+                  'assets/icons/no_orders_icon.svg',
+                  fit: BoxFit.contain,
+                ),
+              ],
+            ).animate().scale(duration: 500.ms, curve: Curves.easeOutBack),
+
+            const SizedBox(height: 28.0),
+
+            // Empty Title
+            const Text(
+              'لسا ما عندك طلبات',
+              style: TextStyle(
+                fontSize: 20.0,
                 fontWeight: FontWeight.bold,
                 color: AppColors.neutral900,
               ),
-          textAlign: TextAlign.center,
-        ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2, end: 0),
+              textAlign: TextAlign.center,
+            ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2, end: 0),
 
-        Text(
-          'لسه ما عندك طلبات، شو ناطر؟ بلّش تسوّق واختار أحسن العروض والمنتجات اللي بتحبها.',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            const SizedBox(height: 8.0),
+
+            // Empty Subtitle
+            const Text(
+              'أول ما تطلب، بتلاقي هون حالة طلبك ودفعه وفاتورته.',
+              style: TextStyle(
+                fontSize: 14.0,
                 color: AppColors.textSecondary,
+                height: 1.4,
               ),
-          textAlign: TextAlign.center,
-        ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.2, end: 0.0),
+              textAlign: TextAlign.center,
+            ).animate().fadeIn(delay: 350.ms).slideY(begin: 0.2, end: 0),
 
-        const SizedBox(height: 10),
+            const SizedBox(height: 32.0),
 
-        CustomButton(
-          text: 'ابدأ التسوق الآن',
-          onPressed: () => context.go(RoutePaths.categories),
-          width: 220.0,
-        ).animate().fadeIn(delay: 600.ms).scale(begin: const Offset(0.95, 0.95)),
-      ],
+            // Start Shopping CTA Button
+            CustomButton(
+              text: 'ابدأ التسوق',
+              width: 220.0,
+              height: 48.0,
+              onPressed: () => context.go(RoutePaths.home),
+            ).animate().fadeIn(delay: 500.ms).scale(begin: const Offset(0.95, 0.95)),
+          ],
+        ),
+      ),
     );
   }
 }

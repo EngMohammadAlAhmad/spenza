@@ -18,4 +18,6 @@ abstract class RoutePaths {
   static const addresses = '/addresses';
   static const addAddress = '/add-address';
   static const orderSuccess = '/order-success';
+  static const orderDetails = '/order-details';
+  static const notifications = '/notifications';
 }

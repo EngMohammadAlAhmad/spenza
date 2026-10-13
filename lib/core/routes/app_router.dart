@@ -12,10 +12,12 @@ import 'package:spenza/features/categories/presentation/blocs/category_products_
 import 'package:spenza/features/home/presentation/screens/home_screen.dart';
 import 'package:spenza/features/orders/presentation/screens/orders_screen.dart';
 import 'package:spenza/features/orders/presentation/screens/order_success_screen.dart';
+import 'package:spenza/features/orders/presentation/screens/order_details_screen.dart';
 import 'package:spenza/features/orders/domain/entities/order_response_entity.dart';
 import 'package:spenza/features/account/presentation/screens/account_screen.dart';
 import 'package:spenza/features/addresses/presentation/screens/addresses_screen.dart';
 import 'package:spenza/features/addresses/presentation/screens/add_address_screen.dart';
+import 'package:spenza/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:spenza/features/cart/presentation/screens/cart_screen.dart';
 import 'package:spenza/features/cart/presentation/screens/checkout_screen.dart';
 import 'package:spenza/features/points_market/presentation/screens/points_market_screen.dart';
@@ -103,6 +105,10 @@ class AppRouter {
         builder: (context, state) => const AddAddressScreen(),
       ),
       GoRoute(
+        path: RoutePaths.notifications,
+        builder: (context, state) => const NotificationsScreen(),
+      ),
+      GoRoute(
         path: RoutePaths.orderSuccess,
         builder: (context, state) {
           final order = state.extra as OrderResponseEntity?;
@@ -120,6 +126,14 @@ class AppRouter {
                 expectedDelivery: 'خلال 0 ساعة',
               );
           return OrderSuccessScreen(order: fallbackOrder);
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.orderDetails,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) {
+          final orderNumber = state.extra as String? ?? '';
+          return OrderDetailsScreen(orderNumber: orderNumber);
         },
       ),
       StatefulShellRoute(
@@ -200,6 +214,16 @@ class AppRouter {
               GoRoute(
                 path: RoutePaths.orders,
                 builder: (context, state) => const OrdersScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'details',
+                    parentNavigatorKey: rootNavigatorKey,
+                    builder: (context, state) {
+                      final orderNumber = state.extra as String? ?? '';
+                      return OrderDetailsScreen(orderNumber: orderNumber);
+                    },
+                  ),
+                ],
               ),
             ],
           ),

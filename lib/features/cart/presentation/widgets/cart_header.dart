@@ -32,35 +32,29 @@ class CartHeader extends StatelessWidget {
         left: 16.0,
         right: 16.0,
       ),
-      child: Stack(
-        alignment: Alignment.center,
+      child: Row(
+        spacing: 10.0,
         children: [
-          // Centered Title
+          GestureDetector(
+            onTap: onBackPressed ??
+                    () {
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    context.go(RoutePaths.home);
+                  }
+                },
+            child: SvgPicture.asset(
+              'assets/icons/back_button_2.svg',
+              width: 40,
+              height: 40,
+            ),
+          ),
           Text(
             'السلة',
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-          ),
-
-          // Back Button on the right side in RTL
-          Positioned(
-            right: 0,
-            child: GestureDetector(
-              onTap: onBackPressed ??
-                  () {
-                    if (context.canPop()) {
-                      context.pop();
-                    } else {
-                      context.go(RoutePaths.home);
-                    }
-                  },
-              child: SvgPicture.asset(
-                'assets/icons/back_button_2.svg',
-                width: 40,
-                height: 40,
-              ),
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
             ),
           ),
         ],

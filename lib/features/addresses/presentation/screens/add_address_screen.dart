@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
@@ -106,7 +107,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.neutral200,
+        backgroundColor: AppColors.neutralBackground,
         body: Column(
           children: [
             // Top Header
@@ -386,7 +387,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'منوصل لـ ${_areaController.text.isNotEmpty ? _areaController.text.trim() : _selectedCityName}',
+                                      'منوصل لـ $_selectedCityName',
                                       style: const TextStyle(
                                         fontSize: 15.0,
                                         fontWeight: FontWeight.bold,
@@ -461,31 +462,26 @@ class _TypeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Material(
-        color: isSelected ? AppColors.neutral900 : Colors.white,
-        borderRadius: BorderRadius.circular(20.0),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(20.0),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              border: Border.all(
-                color: isSelected ? AppColors.neutral900 : Colors.transparent,
-                width: 1.0,
-              ),
-            ),
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 14.0,
-                fontWeight: FontWeight.bold,
-                color: isSelected ? Colors.white : AppColors.neutral900,
-              ),
-            ),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: AppRadius.extra4Large,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.neutralBackgroundInverse : Colors.white,
+          borderRadius: AppRadius.extra4Large,
+          border: Border.all(
+            color: isSelected ? Colors.transparent : AppColors.neutralBorderDefault,
+            width: 1.0,
+          ),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.bold,
+            color: isSelected ? Colors.white : AppColors.neutral900,
           ),
         ),
       ),

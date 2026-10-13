@@ -65,6 +65,8 @@ class _HomeShellState extends State<HomeShell> {
   @override
   Widget build(BuildContext context) {
     final inactiveColor = AppColors.neutral;
+    final currentIndex = widget.navigationShell.currentIndex;
+    final isHome = currentIndex == 0;
 
     final items = [
       _NavItem(
@@ -94,49 +96,58 @@ class _HomeShellState extends State<HomeShell> {
       ),
     ];
 
-    return Scaffold(
-      extendBody: true,
-      backgroundColor: AppColors.backgroundLight,
-      body: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onHorizontalDragUpdate: _onHorizontalDragUpdate,
-        onHorizontalDragEnd: _onHorizontalDragEnd,
-        child: widget.navigationShell,
-      ),
-      bottomNavigationBar: Container(
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(30.0)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 20.0,
-              offset: const Offset(0, -5),
-            ),
-          ],
+    return PopScope(
+      canPop: isHome,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (!isHome) {
+          widget.navigationShell.goBranch(0);
+        }
+      },
+      child: Scaffold(
+        extendBody: true,
+        backgroundColor: AppColors.backgroundLight,
+        body: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onHorizontalDragUpdate: _onHorizontalDragUpdate,
+          onHorizontalDragEnd: _onHorizontalDragEnd,
+          child: widget.navigationShell,
         ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: List.generate(items.length, (index) {
-                final isSelected = index == widget.navigationShell.currentIndex;
-                final item = items[index];
+        bottomNavigationBar: Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(30.0)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 20.0,
+                offset: const Offset(0, -5),
+              ),
+            ],
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: List.generate(items.length, (index) {
+                  final isSelected = index == widget.navigationShell.currentIndex;
+                  final item = items[index];
 
-                return Expanded(
-                  child: GestureDetector(
-                    onTap: () => _onTabTapped(index),
-                    behavior: HitTestBehavior.opaque,
-                    child: _NavTabItem(
-                      item: item,
-                      isSelected: isSelected,
-                      inactiveColor: inactiveColor,
+                  return Expanded(
+                    child: GestureDetector(
+                      onTap: () => _onTabTapped(index),
+                      behavior: HitTestBehavior.opaque,
+                      child: _NavTabItem(
+                        item: item,
+                        isSelected: isSelected,
+                        inactiveColor: inactiveColor,
+                      ),
                     ),
-                  ),
-                );
-              }),
+                  );
+                }),
+              ),
             ),
           ),
         ),

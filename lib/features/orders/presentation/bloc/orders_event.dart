@@ -16,3 +16,45 @@ class CreateOrderEvent extends OrdersEvent {
   @override
   List<Object?> get props => [params];
 }
+
+class GetMyOrdersEvent extends OrdersEvent {
+  final int page;
+  final bool isRefresh;
+  final String? type;
+
+  const GetMyOrdersEvent({
+    this.page = 1,
+    this.isRefresh = false,
+    this.type,
+  });
+
+  @override
+  List<Object?> get props => [page, isRefresh, type];
+}
+
+class LoadMoreOrdersEvent extends OrdersEvent {
+  final String? type;
+
+  const LoadMoreOrdersEvent({this.type});
+
+  @override
+  List<Object?> get props => [type];
+}
+
+class ChangeOrdersTabEvent extends OrdersEvent {
+  final int tabIndex;
+
+  const ChangeOrdersTabEvent(this.tabIndex);
+
+  @override
+  List<Object?> get props => [tabIndex];
+}
+
+class GetOrderDetailsEvent extends OrdersEvent {
+  final String orderNumber;
+
+  const GetOrderDetailsEvent(this.orderNumber);
+
+  @override
+  List<Object?> get props => [orderNumber];
+}

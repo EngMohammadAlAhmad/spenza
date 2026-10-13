@@ -1,20 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/utils/animations/circular_reveal_route.dart';
 import 'package:spenza/core/utils/dimens.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
-
-import 'package:spenza/core/utils/animations/circular_reveal_route.dart';
+import 'package:spenza/features/addresses/presentation/bloc/addresses_bloc.dart';
+import 'package:spenza/features/addresses/presentation/bloc/addresses_event.dart';
+import 'package:spenza/features/addresses/presentation/bloc/addresses_state.dart';
 import 'package:spenza/features/search/presentation/screens/search_screen.dart';
+import 'package:spenza/injection_locator.dart' as di;
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isLoggedIn = di.sl<CacheHelper>().getAuthToken().isNotEmpty;
+
+    return BlocProvider(
+      create: (context) {
+        final bloc = di.sl<AddressesBloc>();
+        if (isLoggedIn) {
+          bloc.add(const GetAddressesEvent());
+        }
+        return bloc;
+      },
+      child: const _HomeHeaderContent(),
+    );
+  }
+}
+
+class _HomeHeaderContent extends StatelessWidget {
+  const _HomeHeaderContent();
+
+  @override
+  Widget build(BuildContext context) {
+    final isLoggedIn = di.sl<CacheHelper>().getAuthToken().isNotEmpty;
+
     return Container(
       width: double.infinity,
       height: 186.44,
@@ -31,32 +58,89 @@ class HomeHeader extends StatelessWidget {
         ),
       ),
       child: Column(
-        mainAxisAlignment: .spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Row(
-            spacing: 5.0,
-            mainAxisAlignment: .spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                padding: EdgeInsets.zero,
-                icon: SvgPicture.asset('assets/icons/location_icon.svg'),
-                onPressed: () {},
-              ),
-              Column(
-                crossAxisAlignment: .start,
-                children: [
-                  Text(
-                    'التوصيل لِـ',
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(color: AppColors.neutral),
-                  ),
-                  Text(
-                    'المنزل - دمشق',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w700,
+              BlocBuilder<AddressesBloc, AddressesState>(
+                builder: (context, state) {
+                  String addressText = 'اختر منطقتك';
+
+                  if (isLoggedIn && state.addresses.isNotEmpty) {
+                    final defaultMatches = state.addresses.where((a) => a.isDefault);
+                    final defaultAddr = defaultMatches.isNotEmpty
+                        ? defaultMatches.first
+                        : state.addresses.first;
+                    addressText = defaultAddr.fullTitle;
+                  }
+
+                  return InkWell(
+                    onTap: () async {
+                      if (!isLoggedIn) {
+                        context.push(RoutePaths.login);
+                        return;
+                      }
+
+                      if (state.addresses.isEmpty) {
+                        final result = await context.push(RoutePaths.addAddress);
+                        if (result == true && context.mounted) {
+                          context.read<AddressesBloc>().add(const GetAddressesEvent());
+                        }
+                      } else {
+                        await context.push(RoutePaths.addresses);
+                        if (context.mounted) {
+                          context.read<AddressesBloc>().add(const GetAddressesEvent());
+                        }
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 2.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SvgPicture.asset('assets/icons/location_icon.svg'),
+                          const SizedBox(width: 6.0),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'التوصيل لِـ',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(color: AppColors.neutral),
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    addressText,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          color: AppColors.primary,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                  ),
+                                  const SizedBox(width: 2.0),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    size: 18.0,
+                                    color: AppColors.primary,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
               const Spacer(),
               IconButton(
@@ -70,7 +154,9 @@ class HomeHeader extends StatelessWidget {
               ),
               IconButton(
                 padding: EdgeInsets.zero,
-                onPressed: () {},
+                onPressed: () {
+                  context.push(RoutePaths.notifications);
+                },
                 icon: SvgPicture.asset('assets/icons/notifications_icon.svg'),
               ),
             ],

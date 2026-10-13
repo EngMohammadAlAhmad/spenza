@@ -9,6 +9,7 @@ import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/cart/presentation/blocs/cart_bloc/cart_bloc.dart';
 import 'package:spenza/features/cart/presentation/widgets/cart_header.dart';
 import 'package:spenza/features/cart/presentation/widgets/cart_item_card.dart';
+import 'package:spenza/features/cart/presentation/widgets/empty_cart_widget.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -26,7 +27,7 @@ class CartScreen extends StatelessWidget {
               const CartHeader(),
               Expanded(
                 child: isEmpty
-                    ? _buildEmptyCart(context)
+                    ? const EmptyCartWidget()
                     : _buildNonEmptyCart(context, state),
               ),
             ],
@@ -36,50 +37,6 @@ class CartScreen extends StatelessWidget {
               : _buildCheckoutFooter(context, state),
         );
       },
-    );
-  }
-
-  // ================= Empty Cart View =================
-  Widget _buildEmptyCart(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
-      child: Column(
-        children: [
-          const Spacer(),
-          SvgPicture.asset(
-            'assets/images/cart_empty.svg',
-            width: 220,
-            fit: BoxFit.contain,
-          ),
-          const SizedBox(height: 32.0),
-          const Text(
-            'سلتك لسا فاضية',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 10.0),
-          const Text(
-            'دور على يلي بدك ياه، ومنوصله لعندك.',
-            style: TextStyle(
-              fontSize: 14,
-              color: AppColors.neutral,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const Spacer(),
-          CustomButton(
-            text: 'ابداً التسوق',
-            height: 52.0,
-            onPressed: () {
-              context.go(RoutePaths.home);
-            },
-          ),
-        ],
-      ),
     );
   }
 
