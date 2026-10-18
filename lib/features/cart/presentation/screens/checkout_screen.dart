@@ -30,8 +30,8 @@ class CheckoutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => di.sl<AddressesBloc>()..add(const GetAddressesEvent()),
+        BlocProvider.value(
+          value: di.sl<AddressesBloc>()..add(const GetAddressesEvent()),
         ),
         BlocProvider(
           create: (context) => di.sl<OrdersBloc>(),
@@ -71,7 +71,29 @@ class _CheckoutViewState extends State<_CheckoutView> {
     }
   }
 
-  num get deliveryFee => _selectedDeliveryType == 'express' ? 10000 : 5000;
+  num get deliveryFee {
+    final cartState = context.watch<CartBloc>().state;
+    final options = cartState.checkoutOptions;
+    if (options != null && options.deliveryOptions.isNotEmpty) {
+      final matches = options.deliveryOptions.where((o) => o.method == _selectedDeliveryType);
+      if (matches.isNotEmpty) {
+        return matches.first.fee;
+      }
+      return options.deliveryFee;
+    }
+    return 5000;
+  }
+
+  void _onAddressSelected(int id) {
+    setState(() => _selectedAddressId = id);
+    final addressesState = context.read<AddressesBloc>().state;
+    final matches = addressesState.addresses.where((a) => a.id == id);
+    if (matches.isNotEmpty) {
+      final addr = matches.first;
+      final cityId = addr.cityId > 0 ? addr.cityId : 1;
+      context.read<CartBloc>().add(GetCheckoutOptionsEvent(cityId: cityId));
+    }
+  }
 
   void _submitOrder() {
     final cartState = context.read<CartBloc>().state;
@@ -89,9 +111,14 @@ class _CheckoutViewState extends State<_CheckoutView> {
             ))
         .toList();
 
-    final mappedPaymentMethod = _selectedPaymentMethod == 'cash'
-        ? 'cash_on_delivery'
-        : _selectedPaymentMethod;
+    final String mappedPaymentMethod;
+    if (_selectedPaymentMethod == 'bank' || _selectedPaymentMethod == 'bank_transfer') {
+      mappedPaymentMethod = 'bank_transfer';
+    } else if (_selectedPaymentMethod == 'cash' || _selectedPaymentMethod == 'cash_on_delivery') {
+      mappedPaymentMethod = 'cash_on_delivery';
+    } else {
+      mappedPaymentMethod = _selectedPaymentMethod;
+    }
 
     final params = CreateOrderParams(
       addressId: _selectedAddressId ?? 1,
@@ -123,8 +150,20 @@ class _CheckoutViewState extends State<_CheckoutView> {
             state.createdOrder != null) {
           // Clear Cart
           context.read<CartBloc>().add(const ClearCartEvent());
-          // Navigate to Order Success Screen
-          context.go(RoutePaths.orderSuccess, extra: state.createdOrder);
+          final selected = _selectedPaymentMethod.toLowerCase();
+          final createdMethod = (state.createdOrder?.paymentMethod ?? '').toLowerCase();
+          final isBankTransfer = selected.contains('bank') ||
+              selected.contains('transfer') ||
+              selected.contains('حوالة') ||
+              createdMethod.contains('bank') ||
+              createdMethod.contains('transfer') ||
+              createdMethod.contains('receipt');
+
+          if (isBankTransfer) {
+            context.go(RoutePaths.bankTransferReceipt, extra: state.createdOrder);
+          } else {
+            context.go(RoutePaths.orderSuccess, extra: state.createdOrder);
+          }
         } else if (state.createOrderStatus == RequestStatus.error) {
           SnackbarService.showError(
             context,
@@ -165,9 +204,7 @@ class _CheckoutViewState extends State<_CheckoutView> {
               child: _currentStep == 1
                   ? Step1DeliveryAddressView(
                       selectedAddressId: _selectedAddressId,
-                      onAddressSelected: (id) {
-                        setState(() => _selectedAddressId = id);
-                      },
+                      onAddressSelected: _onAddressSelected,
                     )
                   : (_currentStep == 2
                       ? Step2DeliveryAndPaymentView(

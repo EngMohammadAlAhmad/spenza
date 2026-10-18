@@ -86,7 +86,7 @@ class OrderResponseModel extends OrderResponseEntity {
       orderNumber: json['order_number']?.toString() ??
           json['order_code']?.toString() ??
           json['code']?.toString() ??
-          (parsedId > 0 ? 'SPZ-$parsedId' : 'SPZ-80329'),
+          (parsedId > 0 ? 'SPZ-$parsedId' : ''),
       customerName: json['customer_name']?.toString() ?? '',
       customerPhone: json['customer_phone']?.toString() ?? '',
       cityName: json['city_name']?.toString() ?? '',

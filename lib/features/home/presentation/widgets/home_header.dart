@@ -21,15 +21,13 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isLoggedIn = di.sl<CacheHelper>().getAuthToken().isNotEmpty;
+    final bloc = di.sl<AddressesBloc>();
+    if (isLoggedIn) {
+      bloc.add(const GetAddressesEvent());
+    }
 
-    return BlocProvider(
-      create: (context) {
-        final bloc = di.sl<AddressesBloc>();
-        if (isLoggedIn) {
-          bloc.add(const GetAddressesEvent());
-        }
-        return bloc;
-      },
+    return BlocProvider.value(
+      value: bloc,
       child: const _HomeHeaderContent(),
     );
   }

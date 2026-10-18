@@ -71,10 +71,6 @@ class NotificationsScreen extends StatelessWidget {
                     'assets/icons/notifications_icon.svg',
                     width: 64,
                     height: 64,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.neutral,
-                      BlendMode.srcIn,
-                    ),
                   ),
                   const SizedBox(height: 16.0),
                   const Text(

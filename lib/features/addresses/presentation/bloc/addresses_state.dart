@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
+import 'package:spenza/features/addresses/domain/entities/governorate_entity.dart';
 
 class AddressesState extends Equatable {
   final List<AddressEntity> addresses;
@@ -12,6 +13,10 @@ class AddressesState extends Equatable {
   final Failure addAddressFailure;
   final String? addAddressSuccessMessage;
 
+  final List<GovernorateEntity> governorates;
+  final RequestStatus locationsStatus;
+  final Failure locationsFailure;
+
   const AddressesState({
     this.addresses = const [],
     this.getAddressesStatus = RequestStatus.init,
@@ -19,6 +24,9 @@ class AddressesState extends Equatable {
     this.addAddressStatus = RequestStatus.init,
     this.addAddressFailure = defaultFailure,
     this.addAddressSuccessMessage,
+    this.governorates = const [],
+    this.locationsStatus = RequestStatus.init,
+    this.locationsFailure = defaultFailure,
   });
 
   AddressesState copyWith({
@@ -28,6 +36,9 @@ class AddressesState extends Equatable {
     RequestStatus? addAddressStatus,
     Failure? addAddressFailure,
     String? addAddressSuccessMessage,
+    List<GovernorateEntity>? governorates,
+    RequestStatus? locationsStatus,
+    Failure? locationsFailure,
   }) {
     return AddressesState(
       addresses: addresses ?? this.addresses,
@@ -36,6 +47,9 @@ class AddressesState extends Equatable {
       addAddressStatus: addAddressStatus ?? this.addAddressStatus,
       addAddressFailure: addAddressFailure ?? this.addAddressFailure,
       addAddressSuccessMessage: addAddressSuccessMessage ?? this.addAddressSuccessMessage,
+      governorates: governorates ?? this.governorates,
+      locationsStatus: locationsStatus ?? this.locationsStatus,
+      locationsFailure: locationsFailure ?? this.locationsFailure,
     );
   }
 
@@ -47,5 +61,8 @@ class AddressesState extends Equatable {
         addAddressStatus,
         addAddressFailure,
         addAddressSuccessMessage,
+        governorates,
+        locationsStatus,
+        locationsFailure,
       ];
 }

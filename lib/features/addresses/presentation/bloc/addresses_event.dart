@@ -20,3 +20,7 @@ class AddAddressEvent extends AddressesEvent {
   @override
   List<Object?> get props => [params];
 }
+
+class GetLocationsEvent extends AddressesEvent {
+  const GetLocationsEvent();
+}

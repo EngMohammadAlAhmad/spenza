@@ -10,7 +10,13 @@ class EndPoints {
   static const String register = "/api/auth/register";
   static const String getMyPoints = "/api/my-points";
   static const String getProfile = "/api/auth/me";
+  static const String updateProfile = "/api/auth/profile";
+  static const String requestPhoneChange = "/api/auth/phone-change/request";
+  static const String confirmPhoneChange = "/api/auth/phone-change/confirm";
   static const String addresses = "/api/addresses";
+  static const String locations = "/api/locations";
+  static const String checkoutOptions = "/api/checkout/options";
+  static const String checkoutPreview = "/api/checkout/preview";
   static const String createOrder = "/api/orders";
   static const String getMyOrders = "/api/my-orders";
 

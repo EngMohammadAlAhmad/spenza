@@ -14,4 +14,27 @@ class AccountRepositoryImpl implements AccountRepository {
   Future<Either<Failure, UserEntity>> getUserProfile() async {
     return handleRepositoryCall(() => datasource.getUserProfile());
   }
+
+  @override
+  Future<Either<Failure, UserEntity>> updateProfile({
+    required String name,
+    required String email,
+  }) async {
+    return handleRepositoryCall(() => datasource.updateProfile(name: name, email: email));
+  }
+
+  @override
+  Future<Either<Failure, String>> requestPhoneChange({
+    required String phoneNumber,
+  }) async {
+    return handleRepositoryCall(() => datasource.requestPhoneChange(phoneNumber: phoneNumber));
+  }
+
+  @override
+  Future<Either<Failure, UserEntity>> confirmPhoneChange({
+    required String phoneNumber,
+    required String code,
+  }) async {
+    return handleRepositoryCall(() => datasource.confirmPhoneChange(phoneNumber: phoneNumber, code: code));
+  }
 }

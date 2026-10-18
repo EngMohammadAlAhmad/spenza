@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/routes/route_paths.dart';
-import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/general_error_widget.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
@@ -20,8 +19,8 @@ class AddressesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => di.sl<AddressesBloc>()..add(const GetAddressesEvent()),
+    return BlocProvider.value(
+      value: di.sl<AddressesBloc>()..add(const GetAddressesEvent()),
       child: const _AddressesView(),
     );
   }

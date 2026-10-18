@@ -13,14 +13,21 @@ import 'package:spenza/features/home/presentation/screens/home_screen.dart';
 import 'package:spenza/features/orders/presentation/screens/orders_screen.dart';
 import 'package:spenza/features/orders/presentation/screens/order_success_screen.dart';
 import 'package:spenza/features/orders/presentation/screens/order_details_screen.dart';
+import 'package:spenza/features/orders/presentation/screens/bank_transfer_receipt_screen.dart';
 import 'package:spenza/features/orders/domain/entities/order_response_entity.dart';
 import 'package:spenza/features/account/presentation/screens/account_screen.dart';
+import 'package:spenza/features/account/presentation/screens/settings_screen.dart';
+import 'package:spenza/features/account/presentation/screens/my_info_screen.dart';
+import 'package:spenza/features/account/presentation/screens/business_account_screen.dart';
+import 'package:spenza/features/account/domain/entities/user_entity.dart';
 import 'package:spenza/features/addresses/presentation/screens/addresses_screen.dart';
 import 'package:spenza/features/addresses/presentation/screens/add_address_screen.dart';
 import 'package:spenza/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:spenza/features/cart/presentation/screens/cart_screen.dart';
 import 'package:spenza/features/cart/presentation/screens/checkout_screen.dart';
 import 'package:spenza/features/points_market/presentation/screens/points_market_screen.dart';
+import 'package:spenza/features/points_market/presentation/screens/points_history_screen.dart';
+import 'package:spenza/features/points_market/presentation/screens/my_rewards_screen.dart';
 import 'package:spenza/features/sections/presentation/screens/sections_screen.dart';
 import 'package:spenza/features/categories/presentation/screens/category_products_screen.dart';
 import 'package:spenza/features/products/presentation/blocs/product_details_bloc/product_details_bloc.dart';
@@ -89,6 +96,29 @@ class AppRouter {
         builder: (context, state) => const PointsMarketScreen(),
       ),
       GoRoute(
+        path: RoutePaths.pointsHistory,
+        builder: (context, state) => const PointsHistoryScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.myRewards,
+        builder: (context, state) => const MyRewardsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.settings,
+        builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.myInfo,
+        builder: (context, state) {
+          final user = state.extra as UserEntity?;
+          return MyInfoScreen(user: user);
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.businessAccount,
+        builder: (context, state) => const BusinessAccountScreen(),
+      ),
+      GoRoute(
         path: RoutePaths.cart,
         builder: (context, state) => const CartScreen(),
       ),
@@ -114,12 +144,12 @@ class AppRouter {
           final order = state.extra as OrderResponseEntity?;
           final fallbackOrder = order ??
               const OrderResponseEntity(
-                id: 000,
-                orderNumber: 'SPZ-00000',
+                id: 0,
+                orderNumber: '',
                 status: '--------',
                 statusLabel: '--------',
-                paymentMethod: '---------',
-                paymentMethodLabel: '-----------',
+                paymentMethod: '--------',
+                paymentMethodLabel: '--------',
                 totalAmount: 0,
                 pointsEarned: 0,
                 deliveryAddress: '---- • ----، ---',
@@ -134,6 +164,38 @@ class AppRouter {
         builder: (context, state) {
           final orderNumber = state.extra as String? ?? '';
           return OrderDetailsScreen(orderNumber: orderNumber);
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.bankTransferPayment,
+        parentNavigatorKey: rootNavigatorKey,
+        redirect: (context, state) => RoutePaths.bankTransferReceipt,
+      ),
+      GoRoute(
+        path: RoutePaths.bankTransferReceipt,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) {
+          num? totalAmount;
+          String orderNumber = '';
+
+          if (state.extra is OrderResponseEntity) {
+            final order = state.extra as OrderResponseEntity;
+            orderNumber = order.orderNumber;
+            totalAmount = order.totalAmount;
+          } else if (state.extra is num) {
+            totalAmount = state.extra as num;
+          } else if (state.extra is String) {
+            orderNumber = state.extra as String;
+          } else if (state.extra is Map<String, dynamic>) {
+            final map = state.extra as Map<String, dynamic>;
+            orderNumber = map['orderNumber'] ?? map['order_number'] ?? '';
+            totalAmount = map['totalAmount'];
+          }
+
+          return BankTransferReceiptScreen(
+            orderNumber: orderNumber,
+            totalAmount: totalAmount,
+          );
         },
       ),
       StatefulShellRoute(

@@ -3,6 +3,7 @@ import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/core/utils/handle_repository_call.dart';
 import 'package:spenza/features/orders/data/datasources/orders_datasource.dart';
 import 'package:spenza/features/orders/data/models/create_order_params.dart';
+import 'package:spenza/features/orders/data/models/upload_transfer_receipt_params.dart';
 import 'package:spenza/features/orders/domain/entities/my_orders_response_entity.dart';
 import 'package:spenza/features/orders/domain/entities/order_details_entity.dart';
 import 'package:spenza/features/orders/domain/entities/order_response_entity.dart';
@@ -34,5 +35,10 @@ class OrdersRepositoryImpl implements OrdersRepository {
   @override
   Future<Either<Failure, OrderDetailsEntity>> getOrderByNumber(String orderNumber) async {
     return handleRepositoryCall(() => datasource.getOrderByNumber(orderNumber));
+  }
+
+  @override
+  Future<Either<Failure, void>> uploadTransferReceipt(UploadTransferReceiptParams params) async {
+    return handleRepositoryCall(() => datasource.uploadTransferReceipt(params));
   }
 }

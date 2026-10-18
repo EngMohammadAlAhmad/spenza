@@ -10,6 +10,7 @@ import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_bloc.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_event.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_state.dart';
+import 'package:spenza/features/cart/presentation/blocs/cart_bloc/cart_bloc.dart';
 import 'package:spenza/features/cart/presentation/widgets/checkout_address_card.dart';
 import 'package:spenza/features/cart/presentation/widgets/dashed_add_address_button.dart';
 import 'package:spenza/features/cart/presentation/widgets/delivery_notice_banner.dart';
@@ -36,6 +37,8 @@ class Step1DeliveryAddressView extends StatelessWidget {
                 ? defaultMatches.first
                 : state.addresses.first;
             onAddressSelected(defaultAddr.id);
+            final cityId = defaultAddr.cityId > 0 ? defaultAddr.cityId : 1;
+            context.read<CartBloc>().add(GetCheckoutOptionsEvent(cityId: cityId));
           }
         }
       },
@@ -129,7 +132,13 @@ class Step1DeliveryAddressView extends StatelessWidget {
                       return CheckoutAddressCard(
                         address: address,
                         isSelected: isSelected,
-                        onTap: () => onAddressSelected(address.id),
+                        onTap: () {
+                          onAddressSelected(address.id);
+                          final cityId = address.cityId > 0 ? address.cityId : 1;
+                          context
+                              .read<CartBloc>()
+                              .add(GetCheckoutOptionsEvent(cityId: cityId));
+                        },
                         onEditSuccess: () {
                           context.read<AddressesBloc>().add(const GetAddressesEvent());
                         },

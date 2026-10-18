@@ -1,11 +1,13 @@
 import 'package:spenza/core/databases/api/api_consumer.dart';
 import 'package:spenza/core/databases/api/end_points.dart';
 import 'package:spenza/features/addresses/data/models/address_model.dart';
+import 'package:spenza/features/addresses/data/models/governorate_model.dart';
 import 'package:spenza/features/addresses/domain/entities/add_address_params.dart';
 
 abstract class AddressesDatasource {
   Future<List<AddressModel>> getAddresses();
   Future<AddAddressResult> addAddress(AddAddressParams params);
+  Future<List<GovernorateModel>> getLocations();
 }
 
 class AddressesDatasourceImpl implements AddressesDatasource {
@@ -59,5 +61,24 @@ class AddressesDatasourceImpl implements AddressesDatasource {
 
     final address = AddressModel.fromJson(addressJson);
     return AddAddressResult(message: message, address: address);
+  }
+
+  @override
+  Future<List<GovernorateModel>> getLocations() async {
+    final response = await api.get(EndPoints.locations);
+
+    List governoratesJson = [];
+    if (response is Map<String, dynamic>) {
+      final data = response['data'];
+      if (data is Map<String, dynamic> && data['governorates'] is List) {
+        governoratesJson = data['governorates'] as List;
+      } else if (response['governorates'] is List) {
+        governoratesJson = response['governorates'] as List;
+      }
+    }
+
+    return governoratesJson
+        .map((e) => GovernorateModel.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 }

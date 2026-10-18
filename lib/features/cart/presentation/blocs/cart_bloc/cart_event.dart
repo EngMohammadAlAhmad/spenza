@@ -50,3 +50,21 @@ class RemoveFromCartEvent extends CartEvent {
 class ClearCartEvent extends CartEvent {
   const ClearCartEvent();
 }
+
+class GetCheckoutOptionsEvent extends CartEvent {
+  final int cityId;
+
+  const GetCheckoutOptionsEvent({required this.cityId});
+
+  @override
+  List<Object?> get props => [cityId];
+}
+
+class GetCheckoutPreviewEvent extends CartEvent {
+  final CheckoutPreviewParams params;
+
+  const GetCheckoutPreviewEvent({required this.params});
+
+  @override
+  List<Object?> get props => [params];
+}

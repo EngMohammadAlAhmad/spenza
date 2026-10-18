@@ -38,12 +38,27 @@ class CheckoutHeader extends StatelessWidget {
         left: 16.0,
         right: 16.0,
       ),
-      child: Stack(
-        alignment: Alignment.center,
+      child: Row(
+        spacing: 12.0,
         children: [
-          // Centered Title & Subtitle
+          GestureDetector(
+            onTap: onBackPressed ??
+                    () {
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    Navigator.of(context).pop();
+                  }
+                },
+            child: SvgPicture.asset(
+              'assets/icons/back_button_2.svg',
+              width: 40,
+              height: 40,
+            ),
+          ),
           Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'إتمام الطلب',
@@ -61,26 +76,6 @@ class CheckoutHeader extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-
-          // Back Button on right in RTL
-          Positioned(
-            right: 0,
-            child: GestureDetector(
-              onTap: onBackPressed ??
-                  () {
-                    if (context.canPop()) {
-                      context.pop();
-                    } else {
-                      Navigator.of(context).pop();
-                    }
-                  },
-              child: SvgPicture.asset(
-                'assets/icons/back_button_2.svg',
-                width: 40,
-                height: 40,
-              ),
-            ),
           ),
         ],
       ),

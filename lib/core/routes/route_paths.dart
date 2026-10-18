@@ -18,6 +18,13 @@ abstract class RoutePaths {
   static const addresses = '/addresses';
   static const addAddress = '/add-address';
   static const orderSuccess = '/order-success';
+  static const bankTransferPayment = '/bank-transfer-payment';
+  static const bankTransferReceipt = '/bank-transfer-receipt';
   static const orderDetails = '/order-details';
   static const notifications = '/notifications';
+  static const pointsHistory = '/points-history';
+  static const myRewards = '/my-rewards';
+  static const settings = '/settings';
+  static const myInfo = '/my-info';
+  static const businessAccount = '/business-account';
 }

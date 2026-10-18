@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/base_state.dart';
@@ -79,7 +81,7 @@ class PointsMarketHeader extends StatelessWidget {
                         ),
                         const Spacer(),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () => context.push(RoutePaths.pointsHistory),
                           icon: SvgPicture.asset('assets/icons/activity_icon.svg'),
                         ),
                       ],
@@ -183,47 +185,53 @@ class PointsMarketHeader extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         // My Rewards button
-                        Container(
-                          height: 40.0,
-                          padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 10.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(24.0),
-                          ),
-                          child: const Text(
-                            'مكافآتي',
-                            style: TextStyle(
-                              color: AppColors.primary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
+                        GestureDetector(
+                          onTap: () => context.push(RoutePaths.myRewards),
+                          child: Container(
+                            height: 40.0,
+                            padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 10.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: const Text(
+                              'مكافآتي',
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
                             ),
                           ),
                         ),
                         // Points History button
-                        Container(
-                          height: 40.0,
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(24.0),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.3),
-                            ),
-                          ),
-                          child: Row(
-                            spacing: 6.0,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SvgPicture.asset('assets/icons/activity_icon.svg'),
-                              Text(
-                                'حركة النقاط',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                ),
+                        GestureDetector(
+                          onTap: () => context.push(RoutePaths.pointsHistory),
+                          child: Container(
+                            height: 40.0,
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(24.0),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.3),
                               ),
-                            ],
+                            ),
+                            child: Row(
+                              spacing: 6.0,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SvgPicture.asset('assets/icons/activity_icon.svg'),
+                                const Text(
+                                  'حركة النقاط',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],

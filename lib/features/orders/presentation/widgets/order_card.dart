@@ -55,10 +55,8 @@ class OrderCard extends StatelessWidget {
                       children: [
                         Text(
                           order.orderNumber,
-                          style: const TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.neutral900,
+                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w800,
                           ),
                         ),
                         const SizedBox(height: 4.0),
@@ -118,10 +116,8 @@ class OrderCard extends StatelessWidget {
                       children: [
                         Text(
                           '${formatter.format(order.totalAmount)} ل.س',
-                          style: const TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.neutral900,
+                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w800,
                           ),
                         ),
                         const SizedBox(height: 2.0),

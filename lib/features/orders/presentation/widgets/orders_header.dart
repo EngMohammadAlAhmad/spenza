@@ -39,13 +39,13 @@ class OrdersHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Screen Title
-              Align(
+              const Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 14.0),
+                  padding: EdgeInsets.only(bottom: 14.0),
                   child: Text(
                     'طلباتي',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
                       color: AppColors.neutral900,
@@ -54,7 +54,7 @@ class OrdersHeader extends StatelessWidget {
                 ),
               ),
 
-              // Segmented Tab Selector
+              // Segmented Tab Selector with Sliding Pill
               Container(
                 height: 48.0,
                 padding: const EdgeInsets.all(4.0),
@@ -62,30 +62,65 @@ class OrdersHeader extends StatelessWidget {
                   color: AppColors.neutralBackground,
                   borderRadius: BorderRadius.circular(24.0),
                 ),
-                child: Row(
-                  children: [
-                    // Active Tab (الحالية)
-                    Expanded(
-                      child: _buildTabItem(
-                        context,
-                        title: 'الحالية',
-                        count: activeCount,
-                        isSelected: selectedTabIndex == 0,
-                        onTap: () => onTabChanged(0),
-                      ),
-                    ),
-                    const SizedBox(width: 4.0),
-                    // Completed Tab (السابقة)
-                    Expanded(
-                      child: _buildTabItem(
-                        context,
-                        title: 'السابقة',
-                        count: completedCount,
-                        isSelected: selectedTabIndex == 1,
-                        onTap: () => onTabChanged(1),
-                      ),
-                    ),
-                  ],
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isRtl = Directionality.of(context) == TextDirection.rtl;
+                    final alignment = selectedTabIndex == 0
+                        ? (isRtl ? Alignment.centerRight : Alignment.centerLeft)
+                        : (isRtl ? Alignment.centerLeft : Alignment.centerRight);
+
+                    return Stack(
+                      children: [
+                        // Sliding Indicator Pill
+                        AnimatedAlign(
+                          duration: const Duration(milliseconds: 280),
+                          curve: Curves.fastOutSlowIn,
+                          alignment: alignment,
+                          child: FractionallySizedBox(
+                            widthFactor: 0.5,
+                            heightFactor: 1.0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryTint,
+                                borderRadius: BorderRadius.circular(20.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.04),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // Tab Option Items
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildTabItem(
+                                context,
+                                title: 'الحالية',
+                                count: activeCount,
+                                isSelected: selectedTabIndex == 0,
+                                onTap: () => onTabChanged(0),
+                              ),
+                            ),
+                            Expanded(
+                              child: _buildTabItem(
+                                context,
+                                title: 'السابقة',
+                                count: completedCount,
+                                isSelected: selectedTabIndex == 1,
+                                onTap: () => onTabChanged(1),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ],
@@ -102,50 +137,46 @@ class OrdersHeader extends StatelessWidget {
     required bool isSelected,
     required VoidCallback onTap,
   }) {
-    final activeBgColor = AppColors.primaryTint;
-    final activeTextColor = const Color(0xFF91292B);
-    final inactiveTextColor = const Color(0xFF7D7873);
+    const activeTextColor = Color(0xFF91292B);
+    const inactiveTextColor = Color(0xFF7D7873);
 
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20.0),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: isSelected ? activeBgColor : Colors.transparent,
-          borderRadius: BorderRadius.circular(20.0),
-        ),
+      child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 8.0,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              title,
+            AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 200),
               style: TextStyle(
                 fontSize: 14.0,
+                fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
                 color: isSelected ? activeTextColor : inactiveTextColor,
               ),
+              child: Text(title),
             ),
-            Container(
+            const SizedBox(width: 8.0),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 2.0),
               constraints: const BoxConstraints(minWidth: 20.0, minHeight: 20.0),
               decoration: BoxDecoration(
-                color: isSelected
-                    ? Colors.white
-                    : const Color(0xFFE2DDD7),
+                color: isSelected ? Colors.white : const Color(0xFFE2DDD7),
                 shape: BoxShape.circle,
               ),
               alignment: Alignment.center,
-              child: Text(
-                '$count',
+              child: AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 200),
                 style: TextStyle(
                   fontSize: 11.0,
+                  fontFamily: Theme.of(context).textTheme.bodySmall?.fontFamily,
                   fontWeight: FontWeight.bold,
                   color: isSelected ? activeTextColor : inactiveTextColor,
                 ),
+                child: Text('$count'),
               ),
             ),
           ],

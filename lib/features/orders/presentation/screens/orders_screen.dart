@@ -155,14 +155,42 @@ class _OrdersContentState extends State<_OrdersContent> {
               },
             ),
 
-            // Orders Body View
+            // Orders Body View with Smooth Section Transition
             Expanded(
-              child: RefreshIndicator(
-                color: AppColors.primary500,
-                onRefresh: () async {
-                  //context.read<OrdersBloc>().add(const GetMyOrdersEvent(isRefresh: true));
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 320),
+                switchInCurve: Curves.easeOutCubic,
+                switchOutCurve: Curves.easeInCubic,
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  final isRtl = Directionality.of(context) == TextDirection.rtl;
+                  final isFirstTab = state.selectedTabIndex == 0;
+                  final beginOffset = isFirstTab
+                      ? (isRtl ? const Offset(-0.12, 0.0) : const Offset(0.12, 0.0))
+                      : (isRtl ? const Offset(0.12, 0.0) : const Offset(-0.12, 0.0));
+
+                  return FadeTransition(
+                    opacity: animation,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: beginOffset,
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    ),
+                  );
                 },
-                child: _buildOrdersBody(context, state),
+                child: KeyedSubtree(
+                  key: ValueKey<int>(state.selectedTabIndex),
+                  child: RefreshIndicator(
+                    color: AppColors.primary500,
+                    onRefresh: () async {
+                      context
+                          .read<OrdersBloc>()
+                          .add(const GetMyOrdersEvent(isRefresh: true));
+                    },
+                    child: _buildOrdersBody(context, state),
+                  ),
+                ),
               ),
             ),
           ],
@@ -185,11 +213,7 @@ class _OrdersContentState extends State<_OrdersContent> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.error_outline_rounded,
-                size: 60.0,
-                color: AppColors.primary500,
-              ),
+              SvgPicture.asset('assets/images/error_occurred.svg'),
               const SizedBox(height: 12.0),
               const Text(
                 'حدث خطأ أثناء تحميل الطلبات',
@@ -201,7 +225,11 @@ class _OrdersContentState extends State<_OrdersContent> {
               ),
               const SizedBox(height: 16.0),
               CustomButton(
-                text: 'إعادة المحاولة',
+                text: 'جرّب مرة تانية',
+                icon: SvgPicture.asset(
+                  'assets/icons/refresh_icon.svg',
+                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                ),
                 width: 160.0,
                 onPressed: () {
                   context.read<OrdersBloc>().add(const GetMyOrdersEvent());
@@ -240,7 +268,14 @@ class _OrdersContentState extends State<_OrdersContent> {
         return OrderCard(
           order: order,
           onTap: () => context.push(RoutePaths.orderDetails, extra: order.orderNumber),
-        );
+        ).animate().fadeIn(
+              duration: 250.ms,
+              delay: (index * 40).clamp(0, 240).ms,
+            ).slideY(
+              begin: 0.08,
+              end: 0,
+              curve: Curves.easeOutCubic,
+            );
       },
     );
   }

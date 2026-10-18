@@ -36,60 +36,46 @@ class HowToEarnPointsCard extends StatelessWidget {
 
           // Steps Row
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Step 1: Order
-              _buildStepItem(
-                iconWidget: const Icon(
-                  Icons.shopping_bag_outlined,
-                  color: Colors.black54,
-                  size: 22,
+              Expanded(
+                flex: 3,
+                child: _buildStepItem(
+                  iconPath: 'assets/icons/products_icon_big.svg',
+                  backgroundColor: const Color(0xFFF5F5F5),
+                  label: 'بتطلب',
                 ),
-                backgroundColor: const Color(0xFFF5F5F5),
-                label: 'بتطلب',
               ),
 
               // Divider line
-              Padding(
-                padding: const EdgeInsets.only(top: 22.0),
-                child: Container(
-                  width: 30,
-                  height: 1.5,
-                  color: Colors.grey.shade300,
-                ),
+              Expanded(
+                child: _buildDivider(),
               ),
 
               // Step 2: Delivery
-              _buildStepItem(
-                iconWidget: const Icon(
-                  Icons.inventory_2_outlined,
-                  color: Colors.black54,
-                  size: 22,
+              Expanded(
+                flex: 3,
+                child: _buildStepItem(
+                  iconPath: 'assets/icons/order_arrived_icon.svg',
+                  backgroundColor: const Color(0xFFF5F5F5),
+                  label: 'بيوصلك الطلب',
                 ),
-                backgroundColor: const Color(0xFFF5F5F5),
-                label: 'بيوصلك الطلب',
               ),
 
               // Divider line
-              Padding(
-                padding: const EdgeInsets.only(top: 22.0),
-                child: Container(
-                  width: 30,
-                  height: 1.5,
-                  color: Colors.grey.shade300,
-                ),
+              Expanded(
+                child: _buildDivider(),
               ),
 
               // Step 3: Earn points
-              _buildStepItem(
-                iconWidget: SvgPicture.asset(
-                  'assets/images/rounded_icon.svg',
-                  width: 42,
-                  height: 42,
+              Expanded(
+                flex: 3,
+                child: _buildStepItem(
+                  iconPath: 'assets/images/app_icon_primary.svg',
+                  backgroundColor: Colors.transparent,
+                  label: 'بتنضاف نقاطك',
                 ),
-                backgroundColor: Colors.transparent,
-                label: 'بتنضاف نقاطك',
               ),
             ],
           ),
@@ -113,24 +99,23 @@ class HowToEarnPointsCard extends StatelessWidget {
   }
 
   Widget _buildStepItem({
-    required Widget iconWidget,
+    required String iconPath,
     required Color backgroundColor,
     required String label,
   }) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
-          width: 46,
-          height: 46,
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            shape: BoxShape.circle,
+        Center(
+          child: SvgPicture.asset(
+            iconPath,
           ),
-          child: Center(child: iconWidget),
         ),
         const SizedBox(height: 8.0),
         Text(
           label,
+          textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 12,
             color: Colors.black87,
@@ -140,4 +125,20 @@ class HowToEarnPointsCard extends StatelessWidget {
       ],
     );
   }
+
+  Widget _buildDivider() {
+    return SizedBox(
+      height: 52.0,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Container(
+            height: 3.0,
+            color: AppColors.neutralBorderStrong,
+          ),
+        ),
+      ),
+    );
+  }
 }
+

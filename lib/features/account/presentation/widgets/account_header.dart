@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/features/account/domain/entities/user_entity.dart';
 
@@ -156,13 +157,9 @@ class AccountHeader extends StatelessWidget {
                         child: InkWell(
                           customBorder: const CircleBorder(),
                           onTap: onEditPressed,
-                          child: const Padding(
+                          child: Padding(
                             padding: EdgeInsets.all(10.0),
-                            child: Icon(
-                              Icons.edit_outlined,
-                              size: 20.0,
-                              color: AppColors.neutral700,
-                            ),
+                            child: SvgPicture.asset('assets/icons/edit_icon.svg'),
                           ),
                         ),
                       ),
