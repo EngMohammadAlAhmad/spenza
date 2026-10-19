@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/orders/domain/entities/order_details_entity.dart';
 import 'package:spenza/features/orders/presentation/bloc/orders_bloc.dart';
@@ -61,7 +62,7 @@ class OrderDetailsPaymentCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF3F4F6),
-                  borderRadius: BorderRadius.circular(12.0),
+                  borderRadius: AppRadius.medium,
                 ),
                 child: Text(
                   order.paymentMethodLabel.isNotEmpty
@@ -93,7 +94,7 @@ class OrderDetailsPaymentCard extends StatelessWidget {
             const SizedBox(height: 12.0),
             RippleButtonWrapper(
               child: CustomButton(
-                text: 'إرفاق وصل الحوالة',
+                text: 'ارفعلنا صورة وصل الحوالة',
                 isOutlined: true,
                 height: 48.0,
                 icon: const Icon(

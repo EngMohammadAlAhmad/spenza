@@ -7,7 +7,7 @@ import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/animations/circular_reveal_route.dart';
-import 'package:spenza/core/utils/dimens.dart';
+import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_bloc.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_event.dart';
@@ -40,109 +40,109 @@ class _HomeHeaderContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final isLoggedIn = di.sl<CacheHelper>().getAuthToken().isNotEmpty;
 
-    return Container(
-      width: double.infinity,
-      height: 186.44,
+    return AppHeader(
+      style: AppHeaderStyle.light,
+      backgroundColor: AppColors.backgroundLight,
+      showBackButton: false,
+      borderRadius: const BorderRadius.only(
+        bottomLeft: Radius.circular(34.0),
+        bottomRight: Radius.circular(34.0),
+      ),
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top,
+        top: MediaQuery.of(context).padding.top + 8.0,
         left: 16.0,
         right: 16.0,
+        bottom: 16.0,
       ),
-      decoration: const BoxDecoration(
-        color: AppColors.backgroundLight,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(34.0),
-          bottomRight: Radius.circular(34.0),
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      titleWidget: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              BlocBuilder<AddressesBloc, AddressesState>(
-                builder: (context, state) {
-                  String addressText = 'اختر منطقتك';
+          BlocBuilder<AddressesBloc, AddressesState>(
+            builder: (context, state) {
+              String addressText = 'اختر منطقتك';
 
-                  if (isLoggedIn && state.addresses.isNotEmpty) {
-                    final defaultMatches = state.addresses.where((a) => a.isDefault);
-                    final defaultAddr = defaultMatches.isNotEmpty
-                        ? defaultMatches.first
-                        : state.addresses.first;
-                    addressText = defaultAddr.fullTitle;
+              if (isLoggedIn && state.addresses.isNotEmpty) {
+                final defaultMatches = state.addresses.where((a) => a.isDefault);
+                final defaultAddr = defaultMatches.isNotEmpty
+                    ? defaultMatches.first
+                    : state.addresses.first;
+                addressText = defaultAddr.fullTitle;
+              }
+
+              return InkWell(
+                onTap: () async {
+                  if (!isLoggedIn) {
+                    context.push(RoutePaths.login);
+                    return;
                   }
 
-                  return InkWell(
-                    onTap: () async {
-                      if (!isLoggedIn) {
-                        context.push(RoutePaths.login);
-                        return;
-                      }
-
-                      if (state.addresses.isEmpty) {
-                        final result = await context.push(RoutePaths.addAddress);
-                        if (result == true && context.mounted) {
-                          context.read<AddressesBloc>().add(const GetAddressesEvent());
-                        }
-                      } else {
-                        await context.push(RoutePaths.addresses);
-                        if (context.mounted) {
-                          context.read<AddressesBloc>().add(const GetAddressesEvent());
-                        }
-                      }
-                    },
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 2.0),
-                      child: Row(
+                  if (state.addresses.isEmpty) {
+                    final result = await context.push(RoutePaths.addAddress);
+                    if (result == true && context.mounted) {
+                      context.read<AddressesBloc>().add(const GetAddressesEvent());
+                    }
+                  } else {
+                    await context.push(RoutePaths.addresses);
+                    if (context.mounted) {
+                      context.read<AddressesBloc>().add(const GetAddressesEvent());
+                    }
+                  }
+                },
+                borderRadius: BorderRadius.circular(8.0),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 2.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.asset('assets/icons/location_icon.svg'),
+                      const SizedBox(width: 6.0),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SvgPicture.asset('assets/icons/location_icon.svg'),
-                          const SizedBox(width: 6.0),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Text(
+                            'التوصيل لِـ',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .copyWith(color: AppColors.neutral),
+                          ),
+                          Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'التوصيل لِـ',
+                                addressText,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .bodySmall!
-                                    .copyWith(color: AppColors.neutral),
+                                    .bodyMedium!
+                                    .copyWith(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                               ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    addressText,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                          color: AppColors.primary,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                  ),
-                                  const SizedBox(width: 2.0),
-                                  const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    size: 18.0,
-                                    color: AppColors.primary,
-                                  ),
-                                ],
+                              const SizedBox(width: 2.0),
+                              const Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                size: 18.0,
+                                color: AppColors.primary,
                               ),
                             ],
                           ),
                         ],
                       ),
-                    ),
-                  );
-                },
-              ),
-              const Spacer(),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+          Row(
+            spacing: 5.0,
+            mainAxisSize: MainAxisSize.min,
+            children: [
               IconButton(
-                padding: EdgeInsets.zero,
+                padding: const EdgeInsets.all(6.0),
+                constraints: const BoxConstraints(),
                 onPressed: () {
                   if (GoRouterState.of(context).matchedLocation != RoutePaths.cart) {
                     context.push(RoutePaths.cart);
@@ -151,34 +151,34 @@ class _HomeHeaderContent extends StatelessWidget {
                 icon: SvgPicture.asset('assets/icons/cart_icon.svg'),
               ),
               IconButton(
-                padding: EdgeInsets.zero,
+                padding: const EdgeInsets.all(6.0),
+                constraints: const BoxConstraints(),
                 onPressed: () {
                   context.push(RoutePaths.notifications);
                 },
                 icon: SvgPicture.asset('assets/icons/notifications_icon.svg'),
               ),
             ],
-          ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideX(begin: 0.1, end: 0),
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTapDown: (details) {
-              Navigator.push(
-                context,
-                CircularRevealRoute(
-                  page: const SearchScreen(),
-                  center: details.globalPosition,
-                ),
-              );
-            },
-            child: const AbsorbPointer(
-              child: AppSearchField(
-                readOnly: true,
-              ),
-            ),
-          ).animate().fadeIn(delay: 400.ms, duration: 600.ms).scale(begin: const Offset(0.95, 0.95)),
-          SizedBox(height: AppDimens.spaceS),
+          ),
         ],
-      ),
+      ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideX(begin: 0.1, end: 0),
+      bottomChild: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTapDown: (details) {
+          Navigator.push(
+            context,
+            CircularRevealRoute(
+              page: const SearchScreen(),
+              center: details.globalPosition,
+            ),
+          );
+        },
+        child: const AbsorbPointer(
+          child: AppSearchField(
+            readOnly: true,
+          ),
+        ),
+      ).animate().fadeIn(delay: 400.ms, duration: 600.ms).scale(begin: const Offset(0.95, 0.95)),
     ).animate().fadeIn(duration: 800.ms).slideY(begin: -0.05, end: 0, curve: Curves.easeOutCubic);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
 
 class AddressCard extends StatelessWidget {
@@ -20,7 +21,7 @@ class AddressCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
         boxShadow: const [
           BoxShadow(
             color: Colors.black12,
@@ -60,7 +61,7 @@ class AddressCard extends StatelessWidget {
                           ),
                           decoration: BoxDecoration(
                             color: const Color(0xFFFDE8E8),
-                            borderRadius: BorderRadius.circular(12.0),
+                            borderRadius: AppRadius.medium,
                           ),
                           child: const Text(
                             'افتراضي',

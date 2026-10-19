@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 
 class BusinessAccountCard extends StatelessWidget {
   final VoidCallback? onTap;
@@ -15,7 +16,7 @@ class BusinessAccountCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFFEFF3FF),
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
         border: Border.all(
           color: const Color(0xFFD6E2FB),
           width: 1.0,
@@ -23,7 +24,7 @@ class BusinessAccountCard extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(18.0),
+          borderRadius: AppRadius.upMedium,
           border: .all(
             color: AppColors.blue,
             width: 1.0,
@@ -31,7 +32,7 @@ class BusinessAccountCard extends StatelessWidget {
         ),
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(18.0),
+          borderRadius: AppRadius.upMedium,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
             child: Row(

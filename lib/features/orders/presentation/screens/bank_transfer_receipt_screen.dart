@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
@@ -118,7 +118,7 @@ class _BankTransferReceiptScreenState
                 ),
                 const SizedBox(height: 16.0),
                 const Text(
-                  'إرفاق وصل الحوالة',
+                  'ارفع صورة وصل الحوالة',
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
@@ -283,7 +283,7 @@ class _BankTransferReceiptScreenState
                 ),
                 const SizedBox(height: 12.0),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(12.0),
+                  borderRadius: AppRadius.medium,
                   child: Image.file(
                     capturedFile,
                     height: 250,
@@ -303,7 +303,7 @@ class _BankTransferReceiptScreenState
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: Color(0xFFC74436)),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
+                            borderRadius: AppRadius.medium,
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 12.0),
                         ),
@@ -332,7 +332,7 @@ class _BankTransferReceiptScreenState
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF16A34A),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
+                            borderRadius: AppRadius.medium,
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 12.0),
                           elevation: 0,
@@ -415,66 +415,17 @@ class _BankTransferReceiptScreenState
       body: Column(
         children: [
           // 1. Header
-          Container(
-            height: MediaQuery.of(context).padding.top + 60.0,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius:
-                  const BorderRadius.vertical(bottom: Radius.circular(28.0)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
-                  blurRadius: 10,
-                  offset: const Offset(0.0, 5.0),
-                ),
-              ],
-            ),
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top,
-              left: 16.0,
-              right: 16.0,
-            ),
-            child: Row(
-              spacing: 12.0,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    if (context.canPop()) {
-                      context.pop();
-                    } else {
-                      context.go(RoutePaths.home);
-                    }
-                  },
-                  child: SvgPicture.asset(
-                    'assets/icons/back_button_2.svg',
-                    width: 40,
-                    height: 40,
-                  ),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'وصل الحوالة',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 2.0),
-                    Text(
-                      'طلب ${widget.orderNumber}',
-                      style: const TextStyle(
-                        fontSize: 13.0,
-                        color: AppColors.neutral,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          AppHeader(
+            title: 'وصل الحوالة',
+            subtitle: 'طلب ${widget.orderNumber}',
+            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28.0)),
+            onBackPressed: () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go(RoutePaths.home);
+              }
+            },
           ),
 
           // 2. Scrollable Content

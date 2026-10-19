@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 
 class BusinessAccountScreen extends StatelessWidget {
@@ -131,7 +132,7 @@ class BusinessAccountScreen extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () => context.pop(),
-                borderRadius: BorderRadius.circular(20.0),
+                borderRadius: AppRadius.large,
                 child: Container(
                   width: 40.0,
                   height: 40.0,
@@ -168,7 +169,7 @@ class BusinessAccountScreen extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20.0),
+        borderRadius: AppRadius.large,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -213,7 +214,7 @@ class BusinessAccountScreen extends StatelessWidget {
           height: 40.0,
           decoration: BoxDecoration(
             color: AppColors.thirdAccent,
-            borderRadius: BorderRadius.circular(12.0),
+            borderRadius: AppRadius.medium,
           ),
           alignment: Alignment.center,
           child: SvgPicture.asset(
@@ -259,7 +260,7 @@ class BusinessAccountScreen extends StatelessWidget {
       padding: const EdgeInsets.all(18.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20.0),
+        borderRadius: AppRadius.large,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),

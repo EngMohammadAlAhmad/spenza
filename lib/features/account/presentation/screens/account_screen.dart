@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/account/domain/entities/user_entity.dart';
@@ -27,7 +28,7 @@ class AccountScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18.0),
+          borderRadius: AppRadius.upMedium,
         ),
         title: const Text(
           'تسجيل الخروج',
@@ -46,7 +47,7 @@ class AccountScreen extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary500,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
+                borderRadius: AppRadius.medium,
               ),
             ),
             onPressed: () async {
@@ -114,7 +115,7 @@ class AccountScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(24.0),
+                    borderRadius: AppRadius.extraLarge,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.03),
@@ -164,7 +165,7 @@ class AccountScreen extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(24.0),
+                    borderRadius: AppRadius.extraLarge,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.03),
@@ -174,7 +175,7 @@ class AccountScreen extends StatelessWidget {
                     ],
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(24.0),
+                    borderRadius: AppRadius.extraLarge,
                     child: Column(
                       children: [
                         AccountMenuItem(

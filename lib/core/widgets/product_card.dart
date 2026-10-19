@@ -12,6 +12,8 @@ import 'package:spenza/core/widgets/app_icon_placeholder.dart';
 import 'package:spenza/core/widgets/favorite_button.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 
+import 'package:spenza/core/themes/app_radius.dart';
+
 class ProductCard extends StatefulWidget {
   final ProductEntity product;
   final VoidCallback? onTap;
@@ -44,7 +46,7 @@ class _ProductCardState extends State<ProductCard> {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: AppRadius.overMedium,
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.04),
@@ -86,7 +88,7 @@ class _ProductCardState extends State<ProductCard> {
                           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                           decoration: BoxDecoration(
                             color: AppColors.primary,
-                            borderRadius: BorderRadius.circular(20.0),
+                            borderRadius: AppRadius.large,
                           ),
                           child: Text(
                             '-${product.discountPercentage.toInt()}%',

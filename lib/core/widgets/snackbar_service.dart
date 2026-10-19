@@ -332,7 +332,7 @@ class _SnackbarOverlayState extends State<_SnackbarOverlay>
                           const SizedBox(width: 8.0),
                           InkWell(
                             onTap: _dismiss,
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: AppRadius.large,
                             child: Container(
                               padding: const EdgeInsets.all(4.0),
                               child: Icon(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
+import 'package:spenza/core/widgets/app_header.dart';
 
 class CartHeader extends StatelessWidget {
   final VoidCallback? onBackPressed;
@@ -13,52 +13,17 @@ class CartHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).padding.top + 60.0,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(36.0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0.0, 5.0),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top,
-        left: 16.0,
-        right: 16.0,
-      ),
-      child: Row(
-        spacing: 10.0,
-        children: [
-          GestureDetector(
-            onTap: onBackPressed ??
-                    () {
-                  if (context.canPop()) {
-                    context.pop();
-                  } else {
-                    context.go(RoutePaths.home);
-                  }
-                },
-            child: SvgPicture.asset(
-              'assets/icons/back_button_2.svg',
-              width: 40,
-              height: 40,
-            ),
-          ),
-          Text(
-            'السلة',
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
-        ],
-      ),
+    return AppHeader(
+      title: 'السلة',
+      onBackPressed: onBackPressed ??
+          () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go(RoutePaths.home);
+            }
+          },
+      style: AppHeaderStyle.light,
     );
   }
 }

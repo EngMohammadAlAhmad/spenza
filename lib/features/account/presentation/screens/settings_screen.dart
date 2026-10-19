@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/features/account/presentation/widgets/selection_bottom_sheet.dart';
 import 'package:spenza/features/account/presentation/widgets/settings_tile.dart';
 
@@ -161,7 +162,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(20.0),
+                      borderRadius: AppRadius.large,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.03),
@@ -171,7 +172,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0),
+                      borderRadius: AppRadius.large,
                       child: Column(
                         children: [
                           // Item 1: تحديثات الطلبات والدفع
@@ -242,7 +243,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(20.0),
+                      borderRadius: AppRadius.large,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.03),
@@ -252,7 +253,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0),
+                      borderRadius: AppRadius.large,
                       child: Column(
                         children: [
                           // Item 1: اللغة

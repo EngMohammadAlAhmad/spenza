@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/widgets/app_header.dart';
 
 class OrdersHeader extends StatelessWidget {
   final int selectedTabIndex;
@@ -17,114 +18,95 @@ class OrdersHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28.0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0.0, 4.0),
-          ),
-        ],
+    return AppHeader(
+      style: AppHeaderStyle.light,
+      title: 'طلباتي',
+      showBackButton: false,
+      titleTextStyle: const TextStyle(
+        fontSize: 20.0,
+        fontWeight: FontWeight.bold,
+        color: AppColors.neutral900,
       ),
-      child: SafeArea(
-        bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 18.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Screen Title
-              const Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 14.0),
-                  child: Text(
-                    'طلباتي',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.neutral900,
+      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28.0)),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.04),
+          blurRadius: 10,
+          offset: const Offset(0.0, 4.0),
+        ),
+      ],
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top + 12.0,
+        left: 20.0,
+        right: 20.0,
+        bottom: 18.0,
+      ),
+      bottomChild: Container(
+        height: 48.0,
+        padding: const EdgeInsets.all(4.0),
+        decoration: BoxDecoration(
+          color: AppColors.neutralBackground,
+          borderRadius: BorderRadius.circular(24.0),
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isRtl = Directionality.of(context) == TextDirection.rtl;
+            final alignment = selectedTabIndex == 0
+                ? (isRtl ? Alignment.centerRight : Alignment.centerLeft)
+                : (isRtl ? Alignment.centerLeft : Alignment.centerRight);
+
+            return Stack(
+              children: [
+                // Sliding Indicator Pill
+                AnimatedAlign(
+                  duration: const Duration(milliseconds: 280),
+                  curve: Curves.fastOutSlowIn,
+                  alignment: alignment,
+                  child: FractionallySizedBox(
+                    widthFactor: 0.5,
+                    heightFactor: 1.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryTint,
+                        borderRadius: BorderRadius.circular(20.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.04),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              // Segmented Tab Selector with Sliding Pill
-              Container(
-                height: 48.0,
-                padding: const EdgeInsets.all(4.0),
-                decoration: BoxDecoration(
-                  color: AppColors.neutralBackground,
-                  borderRadius: BorderRadius.circular(24.0),
+                // Tab Option Items
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildTabItem(
+                        context,
+                        title: 'الحالية',
+                        count: activeCount,
+                        isSelected: selectedTabIndex == 0,
+                        onTap: () => onTabChanged(0),
+                      ),
+                    ),
+                    Expanded(
+                      child: _buildTabItem(
+                        context,
+                        title: 'السابقة',
+                        count: completedCount,
+                        isSelected: selectedTabIndex == 1,
+                        onTap: () => onTabChanged(1),
+                      ),
+                    ),
+                  ],
                 ),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    final isRtl = Directionality.of(context) == TextDirection.rtl;
-                    final alignment = selectedTabIndex == 0
-                        ? (isRtl ? Alignment.centerRight : Alignment.centerLeft)
-                        : (isRtl ? Alignment.centerLeft : Alignment.centerRight);
-
-                    return Stack(
-                      children: [
-                        // Sliding Indicator Pill
-                        AnimatedAlign(
-                          duration: const Duration(milliseconds: 280),
-                          curve: Curves.fastOutSlowIn,
-                          alignment: alignment,
-                          child: FractionallySizedBox(
-                            widthFactor: 0.5,
-                            heightFactor: 1.0,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryTint,
-                                borderRadius: BorderRadius.circular(20.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.04),
-                                    blurRadius: 6,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        // Tab Option Items
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildTabItem(
-                                context,
-                                title: 'الحالية',
-                                count: activeCount,
-                                isSelected: selectedTabIndex == 0,
-                                onTap: () => onTabChanged(0),
-                              ),
-                            ),
-                            Expanded(
-                              child: _buildTabItem(
-                                context,
-                                title: 'السابقة',
-                                count: completedCount,
-                                isSelected: selectedTabIndex == 1,
-                                onTap: () => onTabChanged(1),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+              ],
+            );
+          },
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 
 class LogoutButton extends StatelessWidget {
   final VoidCallback onTap;
@@ -15,11 +16,11 @@ class LogoutButton extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
       ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 14.0),
           child: Row(

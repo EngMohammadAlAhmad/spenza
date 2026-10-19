@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 
 class ShimmerPlaceholder extends StatelessWidget {
   final double width;
@@ -24,7 +25,7 @@ class ShimmerPlaceholder extends StatelessWidget {
       decoration: shapeBorder == null
           ? BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.5),
-              borderRadius: borderRadius ?? BorderRadius.circular(8),
+              borderRadius: borderRadius ?? AppRadius.small,
             )
           : ShapeDecoration(
               color: AppColors.primary.withValues(alpha: 0.5),

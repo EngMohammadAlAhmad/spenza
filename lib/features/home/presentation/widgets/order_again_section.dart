@@ -23,7 +23,7 @@ class OrderAgainSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => di.sl<OrdersBloc>()..add(const GetMyOrdersEvent()),
+      create: (context) => di.sl<OrdersBloc>()..add(const GetMyOrdersEvent(page: 1)),
       child: const _OrderAgainContent(),
     );
   }

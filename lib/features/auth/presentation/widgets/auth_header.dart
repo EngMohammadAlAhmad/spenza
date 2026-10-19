@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/widgets/app_header.dart';
 
 class AuthHeaderWidget extends StatelessWidget {
   final bool showBackButton;
@@ -14,27 +15,19 @@ class AuthHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return AppHeader(
+      showBackButton: showBackButton,
+      onBackPressed: onBack,
+      style: AppHeaderStyle.transparent,
+      backButtonIcon: SvgPicture.asset(AppAssets.backButton),
+      titleWidget: Center(
+        child: SvgPicture.asset(AppAssets.slogan),
+      ),
+      trailingWidget: const SizedBox(width: 40.0),
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top + 25.0,
         left: 20.0,
         right: 20.0,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          if (showBackButton)
-            GestureDetector(
-              onTap: onBack ?? () => Navigator.of(context).pop(),
-              child: SvgPicture.asset(AppAssets.backButton),
-            )
-          else
-            const SizedBox(width: 40.0),
-          SvgPicture.asset(
-            AppAssets.slogan,
-          ),
-          const SizedBox(width: 40.0),
-        ],
       ),
     );
   }

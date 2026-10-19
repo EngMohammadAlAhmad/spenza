@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 
 class AppRadius {
+  static final BorderRadius micro = .circular(2.0);
   static final BorderRadius mini = .circular(4.0);
   static final BorderRadius tine = .circular(6.0);
   static final BorderRadius small = .circular(8.0);
   static final BorderRadius ordinary = .circular(10.0);
   static final BorderRadius medium = .circular(12.0);
+  static final BorderRadius mediumPlus = .circular(14.0);
+  static final BorderRadius mediumUp = .circular(15.0);
   static final BorderRadius overMedium = .circular(16.0);
   static final BorderRadius mediumMiddle = .circular(17.0);
   static final BorderRadius upMedium = .circular(18.0);
   static final BorderRadius large = .circular(20.0);
+  static final BorderRadius largePlus = .circular(22.0);
   static final BorderRadius extraLarge = .circular(24.0);
   static final BorderRadius extraLarge2 = .circular(25.0);
   static final BorderRadius extraLarge3 = .circular(28.0);
+  static final BorderRadius extraLarge4 = .circular(30.0);
   static final BorderRadius extra2Large = .circular(32.0);
   static final BorderRadius extra3Large = .circular(32.0);
   static final BorderRadius extra4Large = .circular(72.0);

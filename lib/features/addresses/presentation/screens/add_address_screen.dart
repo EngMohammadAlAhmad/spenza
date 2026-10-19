@@ -199,8 +199,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
                                       height: 48,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(16.0),
+                                        borderRadius: AppRadius.overMedium,
                                       ),
                                       child: isLoadingLocations
                                           ? const Center(
@@ -282,8 +281,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
                                       height: 48,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(16.0),
+                                        borderRadius: AppRadius.overMedium,
                                       ),
                                       child: isLoadingLocations
                                           ? const Center(
@@ -432,7 +430,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
                             ),
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(18.0),
+                              borderRadius: AppRadius.upMedium,
                             ),
                             child: Row(
                               children: [
@@ -468,7 +466,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
                               padding: const EdgeInsets.all(16.0),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFE8F5E9),
-                                borderRadius: BorderRadius.circular(18.0),
+                                borderRadius: AppRadius.upMedium,
                                 border: Border.all(
                                   color: const Color(0xFFC8E6C9),
                                   width: 1.0,

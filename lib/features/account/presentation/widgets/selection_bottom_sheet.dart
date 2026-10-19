@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 
 class SelectionOption<T> {
   final T id;
@@ -47,7 +48,7 @@ class SelectionBottomSheet<T> extends StatelessWidget {
             height: 4.0,
             decoration: BoxDecoration(
               color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(2.0),
+              borderRadius: AppRadius.micro,
             ),
           ),
           const SizedBox(height: 16.0),
@@ -113,7 +114,7 @@ class _SelectionOptionCard<T> extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFFFDE8E8) : Colors.white,
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: AppRadius.large,
           border: isSelected
               ? Border.all(color: const Color(0xFFC74436), width: 1.2)
               : null,

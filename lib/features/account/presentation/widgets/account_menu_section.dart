@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/features/account/presentation/widgets/account_menu_item.dart';
 
 class AccountMenuSection extends StatelessWidget {
@@ -34,17 +35,17 @@ class AccountMenuSection extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(18.0),
+            borderRadius: AppRadius.upMedium,
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.03),
-                blurRadius: 10,
+                blurRadius: 10.0,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(18.0),
+            borderRadius: AppRadius.upMedium,
             child: Column(
               children: [
                 for (int i = 0; i < items.length; i++) ...[

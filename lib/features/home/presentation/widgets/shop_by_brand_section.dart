@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/shared/entities/brand_entity.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/core/widgets/app_icon_placeholder.dart';
 import 'package:spenza/core/widgets/view_all_button.dart';
@@ -50,7 +51,7 @@ class ShopByBrandSection extends StatelessWidget {
                   itemBuilder: (context, index) => ShimmerPlaceholder(
                     width: 96.0,
                     height: 64.0,
-                    borderRadius: BorderRadius.circular(12.0),
+                    borderRadius: AppRadius.medium,
                   ),
                 )
               : ListView.separated(

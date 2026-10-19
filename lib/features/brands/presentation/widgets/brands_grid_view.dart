@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
@@ -110,7 +111,7 @@ class _BrandsGridViewState extends State<BrandsGridView> {
       itemBuilder: (context, index) => ShimmerPlaceholder(
         width: double.infinity,
         height: double.infinity,
-        borderRadius: BorderRadius.circular(24.0),
+        borderRadius: AppRadius.extraLarge,
       ),
     );
   }

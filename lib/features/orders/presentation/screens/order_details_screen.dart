@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -107,7 +108,10 @@ class _OrderDetailsContent extends StatelessWidget {
     return Column(
       children: [
         // Red Curved Header (Fixed)
-        OrderDetailsHeader(order: order),
+        OrderDetailsHeader(order: order)
+            .animate()
+            .fadeIn(duration: 400.ms)
+            .slideY(begin: -0.05, end: 0, curve: Curves.easeOutCubic),
 
         // Cards Content (Scrollable)
         Expanded(
@@ -125,19 +129,41 @@ class _OrderDetailsContent extends StatelessWidget {
                   OrderDetailsPaymentCard(
                     order: order,
                     formatter: formatter,
+                  ).animate(delay: 250.ms).fadeIn(duration: 500.ms).slideY(
+                    begin: 0.08,
+                    end: 0,
+                    curve: Curves.easeOutCubic,
                   ),
 
                   // 3. Delivery Address Card
-                  OrderDetailsDeliveryCard(order: order),
+                  OrderDetailsDeliveryCard(order: order)
+                      .animate(delay: 380.ms)
+                      .fadeIn(duration: 500.ms)
+                      .slideY(
+                        begin: 0.08,
+                        end: 0,
+                        curve: Curves.easeOutCubic,
+                      ),
 
                   // 4. Products & Totals Card
                   OrderDetailsProductsCard(
                     order: order,
                     formatter: formatter,
-                  ),
+                  ).animate(delay: 510.ms).fadeIn(duration: 500.ms).slideY(
+                        begin: 0.08,
+                        end: 0,
+                        curve: Curves.easeOutCubic,
+                      ),
 
                   // 5. Invoice Card
-                  const OrderDetailsInvoiceCard(),
+                  const OrderDetailsInvoiceCard()
+                      .animate(delay: 640.ms)
+                      .fadeIn(duration: 500.ms)
+                      .slideY(
+                        begin: 0.08,
+                        end: 0,
+                        curve: Curves.easeOutCubic,
+                      ),
                 ],
               ),
             ),

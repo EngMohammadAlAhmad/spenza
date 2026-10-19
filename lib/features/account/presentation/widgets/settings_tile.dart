@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 
 class SettingsTile extends StatelessWidget {
   final String iconPath;
@@ -39,7 +40,7 @@ class SettingsTile extends StatelessWidget {
                 height: 36.0,
                 decoration: BoxDecoration(
                   color: AppColors.neutralBackground,
-                  borderRadius: BorderRadius.circular(10.0),
+                  borderRadius: AppRadius.ordinary,
                 ),
                 alignment: Alignment.center,
                 child: SvgPicture.asset(iconPath, width: 20.0, height: 20.0),

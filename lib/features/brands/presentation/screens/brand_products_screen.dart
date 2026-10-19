@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
 import 'package:spenza/core/widgets/product_card.dart';
@@ -292,14 +293,14 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
                       child: Material(
                         elevation: 15.0,
                         shadowColor: Colors.black.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: AppRadius.large,
                         color: Colors.white,
                         child: Container(
                           width: 158.0,
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: AppRadius.large,
                             border: Border.all(color: AppColors.fillColor),
                           ),
                           child: Column(
@@ -361,7 +362,7 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
                   width: 150.0,
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: AppRadius.large,
                     border: Border.all(color: AppColors.fillColor),
                   ),
                   child: Row(

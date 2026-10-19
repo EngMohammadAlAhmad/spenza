@@ -234,7 +234,7 @@ class OrderSuccessScreen extends StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFEEF2FF),
-                                  borderRadius: BorderRadius.circular(12.0),
+                                  borderRadius: AppRadius.medium,
                                 ),
                                 child: Text(
                                   order.statusLabel,
@@ -267,7 +267,7 @@ class OrderSuccessScreen extends StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   color: AppColors.neutral200,
-                                  borderRadius: BorderRadius.circular(12.0),
+                                  borderRadius: AppRadius.medium,
                                 ),
                                 child: Text(
                                   order.paymentMethodLabel,

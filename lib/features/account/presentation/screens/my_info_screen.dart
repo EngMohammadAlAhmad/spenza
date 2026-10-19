@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
@@ -221,7 +222,7 @@ class _MyInfoContentState extends State<_MyInfoContent> {
             children: [
               InkWell(
                 onTap: () => context.pop(),
-                borderRadius: BorderRadius.circular(20.0),
+                borderRadius: AppRadius.large,
                 child: Container(
                   width: 40.0,
                   height: 40.0,
@@ -301,7 +302,7 @@ class _MyInfoContentState extends State<_MyInfoContent> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: AppRadius.overMedium,
             border: Border.all(color: const Color(0xFFF3F4F6)),
           ),
           child: Row(
@@ -351,7 +352,7 @@ class _MyInfoContentState extends State<_MyInfoContent> {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: AppRadius.overMedium,
         border: Border.all(color: const Color(0xFFC74436).withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
@@ -437,7 +438,7 @@ class _MyInfoContentState extends State<_MyInfoContent> {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: AppColors.thirdAccent,
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: AppRadius.overMedium,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

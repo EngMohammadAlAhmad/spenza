@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/features/orders/domain/entities/order_tracking_entity.dart';
@@ -58,7 +59,7 @@ class OrderDetailsStepperCard extends StatelessWidget {
                             final isLineReached =
                                 stages[index + 1].isReached || stages[index + 1].isCurrent;
                             return Expanded(
-                              child: _buildLineSegment(isLineReached),
+                              child: _buildLineSegment(context, isLineReached, index),
                             );
                           }),
                         ),
@@ -67,10 +68,20 @@ class OrderDetailsStepperCard extends StatelessWidget {
 
                     // Foreground Nodes Row
                     Row(
-                      children: stages.map((stage) {
+                      children: stages.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final stage = entry.value;
                         return Expanded(
                           child: Center(
-                            child: _buildStepNode(stage),
+                            child: _buildStepNode(stage)
+                                .animate(delay: (250 + index * 320).ms)
+                                .fadeIn(duration: 400.ms)
+                                .scale(
+                                  begin: const Offset(0.6, 0.6),
+                                  end: const Offset(1.0, 1.0),
+                                  duration: 550.ms,
+                                  curve: Curves.easeOutBack,
+                                ),
                           ),
                         );
                       }).toList(),
@@ -84,7 +95,9 @@ class OrderDetailsStepperCard extends StatelessWidget {
               // Step Titles & Timestamps Row
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: stages.map((stage) {
+                children: stages.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final stage = entry.value;
                   return Expanded(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -120,7 +133,12 @@ class OrderDetailsStepperCard extends StatelessWidget {
                           ),
                         ],
                       ],
-                    ),
+                    ).animate(delay: (250 + index * 320 + 100).ms).fadeIn(duration: 500.ms).slideY(
+                          begin: 0.15,
+                          end: 0,
+                          duration: 500.ms,
+                          curve: Curves.easeOutCubic,
+                        ),
                   );
                 }).toList(),
               ),
@@ -128,11 +146,17 @@ class OrderDetailsStepperCard extends StatelessWidget {
           );
         },
       ),
-    );
+    ).animate().fadeIn(duration: 500.ms, curve: Curves.easeOut).slideY(
+          begin: 0.08,
+          end: 0,
+          duration: 650.ms,
+          curve: Curves.easeOutCubic,
+        );
   }
 
-  Widget _buildLineSegment(bool isReached) {
+  Widget _buildLineSegment(BuildContext context, bool isReached, int index) {
     if (isReached) {
+      final isRtl = Directionality.of(context) == TextDirection.rtl;
       return Container(
         height: 8.0,
         decoration: const BoxDecoration(
@@ -144,7 +168,13 @@ class OrderDetailsStepperCard extends StatelessWidget {
           fit: BoxFit.cover,
           opacity: const AlwaysStoppedAnimation(0.35),
         ),
-      );
+      ).animate(delay: (250 + index * 320 + 140).ms).fadeIn(duration: 250.ms).scaleX(
+            begin: 0.0,
+            end: 1.0,
+            duration: 420.ms,
+            curve: Curves.easeInOutCubic,
+            alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
+          );
     } else {
       return Container(
         height: 8.0,
@@ -155,28 +185,7 @@ class OrderDetailsStepperCard extends StatelessWidget {
 
   Widget _buildStepNode(OrderTrackingStageEntity stage) {
     if (stage.isCurrent) {
-      return Container(
-        width: 52.0,
-        height: 52.0,
-        decoration: BoxDecoration(
-          color: const Color(0xFFC74436).withValues(alpha: 0.22),
-          shape: BoxShape.circle,
-        ),
-        alignment: Alignment.center,
-        child: Container(
-          width: 38.0,
-          height: 38.0,
-          decoration: const BoxDecoration(
-            color: Color(0xFFC74436),
-            shape: BoxShape.circle,
-          ),
-          alignment: Alignment.center,
-          child: SvgPicture.asset(
-            _getStageIcon(stage.key),
-            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-          ),
-        ),
-      );
+      return _ActivePulseNode(stageKey: stage.key);
     } else if (stage.isReached) {
       return Container(
         width: 30.0,
@@ -275,3 +284,135 @@ class OrderDetailsStepperCard extends StatelessWidget {
     }
   }
 }
+
+class _ActivePulseNode extends StatefulWidget {
+  final String stageKey;
+
+  const _ActivePulseNode({required this.stageKey});
+
+  @override
+  State<_ActivePulseNode> createState() => _ActivePulseNodeState();
+}
+
+class _ActivePulseNodeState extends State<_ActivePulseNode>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scale1Animation;
+  late Animation<double> _scale2Animation;
+  late Animation<double> _opacityAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 950),
+    )..repeat(reverse: true);
+
+    _scale1Animation = Tween<double>(begin: 1.0, end: 1.25).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+
+    _scale2Animation = Tween<double>(begin: 1.0, end: 1.42).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+
+    _opacityAnimation = Tween<double>(begin: 0.35, end: 0.05).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 52.0,
+      height: 52.0,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Outer Soft Ambient Glow
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: _scale2Animation.value,
+                child: Container(
+                  width: 52.0,
+                  height: 52.0,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFC74436).withValues(alpha: _opacityAnimation.value * 0.5),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              );
+            },
+          ),
+          // Inner Breathing Ring
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: _scale1Animation.value,
+                child: Container(
+                  width: 52.0,
+                  height: 52.0,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFC74436).withValues(alpha: _opacityAnimation.value),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              );
+            },
+          ),
+          // Center Active Stage Node
+          Container(
+            width: 38.0,
+            height: 38.0,
+            decoration: const BoxDecoration(
+              color: Color(0xFFC74436),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0x40C74436),
+                  blurRadius: 10,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            alignment: Alignment.center,
+            child: SvgPicture.asset(
+              _getStageIcon(widget.stageKey),
+              width: 20.0,
+              height: 20.0,
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _getStageIcon(String key) {
+    switch (key.toLowerCase()) {
+      case 'received':
+        return 'assets/icons/check_icon.svg';
+      case 'preparing':
+      case 'processing':
+        return 'assets/icons/preparing_icon.svg';
+      case 'with_courier':
+      case 'out_for_delivery':
+        return 'assets/icons/truck_icon.svg';
+      case 'delivered':
+        return 'assets/icons/packageCheck_icon.svg';
+      default:
+        return 'assets/icons/packageCheck_icon.svg';
+    }
+  }
+}
+

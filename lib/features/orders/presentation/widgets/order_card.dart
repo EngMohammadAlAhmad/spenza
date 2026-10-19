@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/features/orders/domain/entities/order_response_entity.dart';
 
 class OrderCard extends StatelessWidget {
@@ -81,7 +82,7 @@ class OrderCard extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: statusStyle.backgroundColor,
-                        borderRadius: BorderRadius.circular(12.0),
+                        borderRadius: AppRadius.medium,
                       ),
                       child: Text(
                         order.statusLabel.isNotEmpty
