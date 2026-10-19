@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/features/orders/domain/entities/order_details_entity.dart';
 import 'package:spenza/features/orders/presentation/widgets/animated_three_dots.dart';
@@ -20,9 +22,9 @@ class OrderDetailsHeader extends StatelessWidget {
       style: AppHeaderStyle.gradient,
       titleWidget: InkWell(
         onTap: () => context.pop(),
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: AppRadius.small,
         child: const Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           spacing: 4.0,
           children: [
             Icon(
@@ -34,7 +36,7 @@ class OrderDetailsHeader extends StatelessWidget {
               'تفاصيل الطلب',
               style: TextStyle(
                 fontSize: 16.0,
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
                 color: Colors.white,
               ),
             ),
@@ -42,7 +44,7 @@ class OrderDetailsHeader extends StatelessWidget {
         ),
       ),
       showBackButton: false,
-      padding: EdgeInsets.only(
+      padding: .only(
         top: MediaQuery.of(context).padding.top + 16.0,
         left: 20.0,
         right: 20.0,
@@ -50,30 +52,30 @@ class OrderDetailsHeader extends StatelessWidget {
       ),
       bottomChild: Row(
         spacing: 12.0,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: .start,
         children: [
           Container(
             width: 52.0,
             height: 52.0,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(16.0),
+              borderRadius: AppRadius.overMedium,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  offset: const Offset(0.0, 4.0),
                 ),
               ],
             ),
-            alignment: Alignment.center,
+            alignment: .center,
             child: SvgPicture.asset(
-              'assets/icons/package_icon.svg',
+              AppAssets.packageIcon,
             ),
           ),
           // Order Details Column
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text(
                 '${_formatDate(order.placedAt)} · ${order.orderNumber}',
@@ -84,7 +86,7 @@ class OrderDetailsHeader extends StatelessWidget {
               ),
               const SizedBox(height: 4.0),
               Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   Text(
                     order.statusLabel.isNotEmpty
@@ -92,7 +94,7 @@ class OrderDetailsHeader extends StatelessWidget {
                         : 'قيد الانتظار',
                     style: const TextStyle(
                       fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: .bold,
                       color: Colors.white,
                     ),
                   ),

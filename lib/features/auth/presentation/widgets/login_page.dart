@@ -9,7 +9,6 @@ import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
-import 'package:spenza/core/widgets/pattern_background.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
 import 'package:spenza/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:spenza/features/auth/presentation/bloc/auth_event.dart';

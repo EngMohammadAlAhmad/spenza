@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 
 class HowToEarnPointsCard extends StatelessWidget {
   const HowToEarnPointsCard({super.key});
@@ -12,7 +14,7 @@ class HowToEarnPointsCard extends StatelessWidget {
       padding: const EdgeInsets.all(18.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(22.0),
+        borderRadius: AppRadius.largePlus,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -42,7 +44,7 @@ class HowToEarnPointsCard extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: _buildStepItem(
-                  iconPath: 'assets/icons/products_icon_big.svg',
+                  iconPath: AppAssets.productsIconBig,
                   backgroundColor: const Color(0xFFF5F5F5),
                   label: 'بتطلب',
                 ),
@@ -57,7 +59,7 @@ class HowToEarnPointsCard extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: _buildStepItem(
-                  iconPath: 'assets/icons/order_arrived_icon.svg',
+                  iconPath: AppAssets.orderArrivedIcon,
                   backgroundColor: const Color(0xFFF5F5F5),
                   label: 'بيوصلك الطلب',
                 ),
@@ -72,7 +74,7 @@ class HowToEarnPointsCard extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: _buildStepItem(
-                  iconPath: 'assets/images/app_icon_primary.svg',
+                  iconPath: AppAssets.appIconPrimary,
                   backgroundColor: Colors.transparent,
                   label: 'بتنضاف نقاطك',
                 ),

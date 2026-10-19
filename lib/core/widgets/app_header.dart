@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 
 enum AppHeaderStyle {
   light,
@@ -49,7 +50,7 @@ class AppHeader extends StatelessWidget {
     this.style = AppHeaderStyle.light,
     this.backgroundColor,
     this.gradient,
-    this.patternAsset = 'assets/images/pattern.png',
+    this.patternAsset = AppAssets.pattern,
     this.height,
     this.padding,
     this.borderRadius,
@@ -64,6 +65,7 @@ class AppHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
+    final hasSubtitle = (subtitle != null && subtitle!.isNotEmpty) || subtitleWidget != null;
 
     BoxDecoration decoration;
     switch (style) {
@@ -136,7 +138,7 @@ class AppHeader extends StatelessWidget {
           top: topPadding + (style == AppHeaderStyle.gradient ? 10.0 : 8.0),
           left: 16.0,
           right: 16.0,
-          bottom: bottomChild != null ? 18.0 : 12.0,
+          bottom: bottomChild != null ? 18.0 : (hasSubtitle ? 14.0 : 12.0),
         );
 
     final defaultBackButton = style == AppHeaderStyle.gradient
@@ -165,7 +167,7 @@ class AppHeader extends StatelessWidget {
                   }
                 },
             child: SvgPicture.asset(
-              'assets/icons/back_button_2.svg',
+              AppAssets.backButton2,
               width: 40,
               height: 40,
             ),
@@ -238,11 +240,13 @@ class AppHeader extends StatelessWidget {
       );
     }
 
+    final calculatedHeight = height ??
+        (bottomChild == null && style == AppHeaderStyle.light
+            ? topPadding + (hasSubtitle ? 73.0 : 64.0)
+            : null);
+
     return Container(
-      height: height ??
-          (bottomChild == null && style == AppHeaderStyle.light
-              ? topPadding + 60.0
-              : null),
+      height: calculatedHeight,
       width: double.infinity,
       decoration: decoration,
       child: Stack(

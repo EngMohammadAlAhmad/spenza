@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:spenza/features/cart/presentation/blocs/cart_bloc/cart_bloc.dart';
 
@@ -22,7 +24,7 @@ class CartItemCard extends StatelessWidget {
       padding: const EdgeInsets.all(14.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -39,11 +41,11 @@ class CartItemCard extends StatelessWidget {
             width: 68,
             height: 68,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: AppRadius.mediumPlus,
               color: AppColors.neutral200,
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: AppRadius.mediumPlus,
               child: item.productImage != null && item.productImage!.isNotEmpty
                   ? Image.network(
                       item.productImage!,
@@ -114,7 +116,7 @@ class CartItemCard extends StatelessWidget {
               IconButton(
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
-                icon: SvgPicture.asset('assets/icons/remove_icon.svg'),
+                icon: SvgPicture.asset(AppAssets.removeIcon),
                 onPressed: () {
                   context.read<CartBloc>().add(RemoveFromCartEvent(
                         productId: item.productId,
@@ -139,7 +141,7 @@ class CartItemCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
       decoration: BoxDecoration(
         color: AppColors.neutralBackground,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: AppRadius.large,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -160,7 +162,7 @@ class CartItemCard extends StatelessWidget {
                     ));
               }
             },
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: AppRadius.mediumUp,
             child: Container(
               width: 30,
               height: 30,
@@ -194,7 +196,7 @@ class CartItemCard extends StatelessWidget {
                     quantity: item.quantity + 1,
                   ));
             },
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: AppRadius.mediumUp,
             child: Container(
               width: 30,
               height: 30,

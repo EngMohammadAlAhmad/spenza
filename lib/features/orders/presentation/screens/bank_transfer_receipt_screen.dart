@@ -112,7 +112,7 @@ class _BankTransferReceiptScreenState
                     height: 4,
                     decoration: BoxDecoration(
                       color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: AppRadius.micro,
                     ),
                   ),
                 ),
@@ -139,7 +139,7 @@ class _BankTransferReceiptScreenState
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: AppColors.thirdAccent,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: AppRadius.medium,
                     ),
                     child: const Icon(
                       Icons.camera_alt_rounded,
@@ -164,7 +164,7 @@ class _BankTransferReceiptScreenState
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: AppColors.thirdAccent,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: AppRadius.medium,
                     ),
                     child: const Icon(
                       Icons.photo_library_rounded,
@@ -266,10 +266,9 @@ class _BankTransferReceiptScreenState
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
         return Dialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.large),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const .all(16.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -440,15 +439,15 @@ class _BankTransferReceiptScreenState
                   // Receipt Preview Card Container
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const .all(16.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(20.0),
+                      borderRadius: AppRadius.large,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.03),
                           blurRadius: 10,
-                          offset: const Offset(0, 4),
+                          offset: const Offset(0.0, 4.0),
                         ),
                       ],
                     ),
@@ -460,14 +459,14 @@ class _BankTransferReceiptScreenState
                                 color: Colors.transparent,
                                 child: InkWell(
                                   onTap: _showImageSourcePicker,
-                                  borderRadius: BorderRadius.circular(16.0),
+                                  borderRadius: AppRadius.overMedium,
                                   child: Container(
                                     width: double.infinity,
                                     height: 200.0,
                                     decoration: BoxDecoration(
                                       color: const Color(0xFFF9FAFB),
                                       borderRadius:
-                                          BorderRadius.circular(16.0),
+                                          AppRadius.overMedium,
                                       border: Border.all(
                                         color: const Color(0xFFE5E7EB),
                                         width: 1.5,
@@ -516,7 +515,7 @@ class _BankTransferReceiptScreenState
                             : Stack(
                                 children: [
                                   ClipRRect(
-                                    borderRadius: BorderRadius.circular(16.0),
+                                    borderRadius: AppRadius.overMedium,
                                     child: Image.file(
                                       _receiptFile!,
                                       width: double.infinity,
@@ -530,19 +529,15 @@ class _BankTransferReceiptScreenState
                                     child: GestureDetector(
                                       onTap: _showImageSourcePicker,
                                       child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 6),
+                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                         decoration: BoxDecoration(
-                                          color: Colors.black
-                                              .withValues(alpha: 0.65),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
+                                          color: Colors.black.withValues(alpha: 0.65),
+                                          borderRadius: AppRadius.medium,
                                         ),
                                         child: const Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Icon(Icons.refresh_rounded,
-                                                color: Colors.white, size: 16),
+                                            Icon(Icons.refresh_rounded, color: Colors.white, size: 16),
                                             SizedBox(width: 4),
                                             Text(
                                               'تغيير',
@@ -563,7 +558,7 @@ class _BankTransferReceiptScreenState
 
                         // Bottom Actions Row
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: .spaceBetween,
                           children: [
                             GestureDetector(
                               onTap: _showImageSourcePicker,
@@ -573,7 +568,7 @@ class _BankTransferReceiptScreenState
                                     : 'ارفع الصورة',
                                 style: const TextStyle(
                                   fontSize: 13.5,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: .bold,
                                   color: Color(0xFFC74436),
                                 ),
                               ),
@@ -605,7 +600,7 @@ class _BankTransferReceiptScreenState
 
                   // 1. Transfer Reference Field
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       const Padding(
                         padding: EdgeInsets.only(right: 4.0, bottom: 8.0),
@@ -613,7 +608,7 @@ class _BankTransferReceiptScreenState
                           'رقم الحوالة (اختياري)',
                           style: TextStyle(
                             fontSize: 14.0,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                             color: AppColors.neutral900,
                           ),
                         ),
@@ -639,15 +634,15 @@ class _BankTransferReceiptScreenState
 
                   // 2. Amount Field
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       const Padding(
-                        padding: EdgeInsets.only(right: 4.0, bottom: 8.0),
+                        padding: .only(right: 4.0, bottom: 8.0),
                         child: Text(
                           'المبلغ (اختياري)',
                           style: TextStyle(
                             fontSize: 14.0,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                             color: AppColors.neutral900,
                           ),
                         ),
@@ -666,7 +661,7 @@ class _BankTransferReceiptScreenState
 
                   // 3. Date Field (Picker)
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       const Padding(
                         padding: EdgeInsets.only(right: 4.0, bottom: 8.0),
@@ -674,7 +669,7 @@ class _BankTransferReceiptScreenState
                           'تم التحويل في تاريخ (اختياري)',
                           style: TextStyle(
                             fontSize: 14.0,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                             color: AppColors.neutral900,
                           ),
                         ),
@@ -696,7 +691,7 @@ class _BankTransferReceiptScreenState
 
                   // 4. Note Field
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       const Padding(
                         padding: EdgeInsets.only(right: 4.0, bottom: 8.0),
@@ -704,7 +699,7 @@ class _BankTransferReceiptScreenState
                           'ملاحظة (اختياري)',
                           style: TextStyle(
                             fontSize: 14.0,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                             color: AppColors.neutral900,
                           ),
                         ),
@@ -721,13 +716,13 @@ class _BankTransferReceiptScreenState
                   // Info Notice Banner
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const .all(16.0),
                     decoration: BoxDecoration(
                       color: const Color(0xFFEEF2FF),
-                      borderRadius: BorderRadius.circular(18.0),
+                      borderRadius: AppRadius.upMedium,
                     ),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: .start,
                       children: [
                         Icon(
                           Icons.info_outline_rounded,
@@ -737,13 +732,13 @@ class _BankTransferReceiptScreenState
                         const SizedBox(width: 10.0),
                         Expanded(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: .start,
                             children: const [
                               Text(
                                 'تأكد قبل الإرسال',
                                 style: TextStyle(
                                   fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: .bold,
                                   color: Color(0xFF1E1B4B),
                                 ),
                               ),

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
 import 'package:spenza/features/orders/domain/entities/order_response_entity.dart';
@@ -63,7 +64,7 @@ class OrderSuccessScreen extends StatelessWidget {
                         bottom: Radius.circular(32.0),
                       ),
                       child: Image.asset(
-                        'assets/images/pattern.png',
+                        AppAssets.pattern,
                         fit: BoxFit.cover,
                         opacity: const AlwaysStoppedAnimation(0.08),
                       ),
@@ -135,7 +136,7 @@ class OrderSuccessScreen extends StatelessWidget {
                             child: Row(
                               children: [
                                 SvgPicture.asset(
-                                  'assets/images/rounded_icon_white.svg',
+                                  AppAssets.roundedIconWhite,
                                 ),
                                 const SizedBox(width: 8.0),
                                 Expanded(
@@ -171,7 +172,7 @@ class OrderSuccessScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(18.0),
+                        borderRadius: AppRadius.upMedium,
                         boxShadow: const [
                           BoxShadow(
                             color: Colors.black12,
@@ -207,7 +208,7 @@ class OrderSuccessScreen extends StatelessWidget {
                                       ),
                                     ),
                                     SvgPicture.asset(
-                                      'assets/icons/copy_icon.svg',
+                                      AppAssets.copyIcon,
                                     ),
                                   ],
                                 ),
@@ -365,10 +366,10 @@ class OrderSuccessScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
                         color: AppColors.thirdAccent,
-                        borderRadius: BorderRadius.circular(18.0),
+                        borderRadius: AppRadius.upMedium,
                       ),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: .start,
                         children: [
                           const Icon(
                             Icons.info_outline_rounded,
@@ -378,7 +379,7 @@ class OrderSuccessScreen extends StatelessWidget {
                           const SizedBox(width: 12.0),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: .start,
                               children: const [
                                 Text(
                                   'جهز المبلغ',

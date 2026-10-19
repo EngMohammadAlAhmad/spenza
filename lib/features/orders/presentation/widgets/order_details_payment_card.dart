@@ -28,14 +28,16 @@ class OrderDetailsPaymentCard extends StatelessWidget {
     final isBankTransfer = method.contains('bank') ||
         method.contains('transfer') ||
         method == 'bank_transfer';
-    final isPending = status == 'pending' /*|| order.needsPaymentReview*/;
+    final isPending = status == 'pending';
+    final isRejected = status == 'rejected' || status.contains('reject');
+    final showUploadButton = (isBankTransfer && isPending) || (isRejected && order.canUploadReceipt);
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -88,34 +90,84 @@ class OrderDetailsPaymentCard extends StatelessWidget {
               height: 1.4,
             ),
           ),
-          if (isBankTransfer && isPending) ...[
+          if (isRejected) ...[
+            const SizedBox(height: 12.0),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                color: AppColors.alert.withValues(alpha: 0.1),
+                borderRadius: AppRadius.medium,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.cancel_outlined,
+                        size: 18.0,
+                        color: Color(0xFFDC2626),
+                      ),
+                      const SizedBox(width: 6.0),
+                      Text(
+                        'حالة الدفع: ${order.paymentStatusLabel.isNotEmpty ? order.paymentStatusLabel : "مرفوض"}',
+                        style: const TextStyle(
+                          fontSize: 13.0,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFDC2626),
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (order.rejectionReason != null &&
+                      order.rejectionReason!.trim().isNotEmpty) ...[
+                    const SizedBox(height: 6.0),
+                    Text(
+                      'سبب الرفض: ${order.rejectionReason}',
+                      style: const TextStyle(
+                        fontSize: 12.0,
+                        color: Color(0xFF991B1B),
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+          if (showUploadButton) ...[
             const SizedBox(height: 14.0),
             const Divider(height: 1, color: Color(0xFFF3F4F6)),
             const SizedBox(height: 12.0),
             RippleButtonWrapper(
-              child: CustomButton(
-                text: 'ارفعلنا صورة وصل الحوالة',
-                isOutlined: true,
-                height: 48.0,
-                icon: const Icon(
-                  Icons.file_upload_outlined,
-                  color: AppColors.primary,
-                  size: 20.0,
-                ),
-                onPressed: () {
-                  context.push(
-                    RoutePaths.bankTransferReceipt,
-                    extra: {
-                      'orderNumber': order.orderNumber,
-                      'totalAmount': order.total,
-                    },
-                  ).then((uploaded) {
-                    if (uploaded == true && context.mounted) {
-                      context.read<OrdersBloc>().add(GetOrderDetailsEvent(order.orderNumber));
-                    }
-                  });
-                },
-              ),
+              maxOpacity: 1.0,
+              builder: (context, animatedColor) {
+                return CustomButton(
+                  text: 'ارفعلنا صورة وصل الحوالة',
+                  isOutlined: true,
+                  height: 48.0,
+                  textColor: animatedColor,
+                  icon: Icon(
+                    Icons.file_upload_outlined,
+                    color: animatedColor,
+                    size: 20.0,
+                  ),
+                  onPressed: () {
+                    context.push(
+                      RoutePaths.bankTransferReceipt,
+                      extra: {
+                        'orderNumber': order.orderNumber,
+                        'totalAmount': order.total,
+                      },
+                    ).then((uploaded) {
+                      if (uploaded == true && context.mounted) {
+                        context.read<OrdersBloc>().add(GetOrderDetailsEvent(order.orderNumber));
+                      }
+                    });
+                  },
+                );
+              },
             ),
           ],
         ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 
 class LogoutButton extends StatelessWidget {
   final VoidCallback onTap;
@@ -28,7 +29,7 @@ class LogoutButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SvgPicture.asset(
-                'assets/icons/logout_icon.svg',
+                AppAssets.logoutIcon,
               ),
               // Text
               Text(

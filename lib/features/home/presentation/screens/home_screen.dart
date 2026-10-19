@@ -4,6 +4,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
@@ -164,7 +165,7 @@ class FreeDeliveryCard extends StatelessWidget {
             left: -100.0,
             right: -100.0,
             child: SvgPicture.asset(
-              'assets/images/container_background.svg',
+              AppAssets.containerBackground,
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(Colors.white.withValues(alpha: 0.1), BlendMode.srcIn),
             ).animate(onPlay: (controller) => controller.repeat())
@@ -178,7 +179,7 @@ class FreeDeliveryCard extends StatelessWidget {
               spacing: 25.0,
               children: [
                 // Highway driving bounce animation
-                Image.asset('assets/images/delivery_image.png')
+                Image.asset(AppAssets.deliveryImage)
                     .animate(onPlay: (controller) => controller.repeat(reverse: true))
                     .moveY(begin: -2.5, end: 2.5, duration: 600.ms, curve: Curves.easeInOut),
                 Row(

@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/shared/entities/category_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
@@ -53,7 +54,7 @@ class ShopByCategorySection extends StatelessWidget {
                       ShimmerPlaceholder(
                         width: 80.0,
                         height: 80.0,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: AppRadius.overMedium,
                       ),
                       const SizedBox(height: 8.0),
                       const ShimmerPlaceholder(width: 50, height: 10),
@@ -77,12 +78,12 @@ class ShopByCategorySection extends StatelessWidget {
                             height: 80.0,
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(16.0),
+                              borderRadius: AppRadius.overMedium,
                             ),
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: AppRadius.overMedium,
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const .all(8.0),
                                 child: category.image != null && category.image!.isNotEmpty
                                     ? CachedNetworkImage(
                                         imageUrl: category.image!,

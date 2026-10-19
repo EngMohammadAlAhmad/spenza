@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/features/orders/domain/entities/order_response_entity.dart';
 
 class OrderCard extends StatelessWidget {
@@ -21,13 +22,14 @@ class OrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final formatter = NumberFormat('#,##0');
     final statusStyle = _getStatusStyle(order);
+    final paymentStatusStyle = _getPaymentStatusStyle(order);
     final actionLabel = _getActionLabel(order);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -38,10 +40,10 @@ class OrderCard extends StatelessWidget {
       ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
         child: InkWell(
           onTap: onTap ?? () => context.push(RoutePaths.orderDetails, extra: order.orderNumber),
-          borderRadius: BorderRadius.circular(18.0),
+          borderRadius: AppRadius.upMedium,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -51,30 +53,33 @@ class OrderCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     // Order Number & Date/Items
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          order.orderNumber,
-                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.w800,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            order.orderNumber,
+                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w800,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4.0),
-                        Text(
-                          '${_formatDate(order.placedAt)} · ${order.itemsCount} ${order.itemsCount == 1 ? 'منتج' : 'منتجات'}',
-                          style: const TextStyle(
-                            fontSize: 12.0,
-                            color: AppColors.textSecondary,
+                          const SizedBox(height: 4.0),
+                          Text(
+                            '${_formatDate(order.placedAt)} · ${order.itemsCount} ${order.itemsCount == 1 ? 'منتج' : 'منتجات'}',
+                            style: const TextStyle(
+                              fontSize: 12.0,
+                              color: AppColors.textSecondary,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8.0),
+                          const SizedBox(height: 8.0),
 
-                        // Item Thumbnails
-                        _buildThumbnails(order.itemImages),
-                      ],
+                          // Item Thumbnails
+                          _buildThumbnails(order.itemImages),
+                        ],
+                      ),
                     ),
-                    // Status Badge
+                    const SizedBox(width: 8.0),
+                    // Order Status Badge
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 10.0,
@@ -110,8 +115,9 @@ class OrderCard extends StatelessWidget {
                 // Bottom Row: Action Button (left) & Total + Payment Label (right)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Total Price & Payment Method
+                    // Total Price & Payment Method + Payment Status Badge Row
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -121,15 +127,55 @@ class OrderCard extends StatelessWidget {
                             fontWeight: FontWeight.w800,
                           ),
                         ),
-                        const SizedBox(height: 2.0),
-                        Text(
-                          order.paymentMethodLabel.isNotEmpty
-                              ? order.paymentMethodLabel
-                              : 'كاش عند الاستلام',
-                          style: const TextStyle(
-                            fontSize: 11.0,
-                            color: AppColors.textSecondary,
-                          ),
+                        const SizedBox(height: 3.0),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              order.paymentMethodLabel.isNotEmpty
+                                  ? order.paymentMethodLabel
+                                  : 'كاش عند الاستلام',
+                              style: const TextStyle(
+                                fontSize: 11.0,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                            if (order.paymentStatusLabel.isNotEmpty) ...[
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                                child: Container(
+                                  width: 4.0,
+                                  height: 4.0,
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.textSecondary,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6.0,
+                                  vertical: 2.0,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: paymentStatusStyle.backgroundColor,
+                                  borderRadius: AppRadius.small,
+                                  border: Border.all(
+                                    color: paymentStatusStyle.textColor.withValues(alpha: 0.15),
+                                    width: 1.0,
+                                  ),
+                                ),
+                                child: Text(
+                                  order.paymentStatusLabel,
+                                  style: TextStyle(
+                                    fontSize: 10.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: paymentStatusStyle.textColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
                       ],
                     ),
@@ -171,7 +217,7 @@ class OrderCard extends StatelessWidget {
         spacing: 6.0,
         children: displayImages.map((url) {
           return ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: AppRadius.small,
             child: Image.network(
               url,
               width: 36.0,
@@ -196,7 +242,7 @@ class OrderCard extends StatelessWidget {
   }
 
   Widget _buildPlaceholderSquare() {
-    return SvgPicture.asset('assets/icons/products_icon.svg', height: 44.0, width: 44.0);
+    return SvgPicture.asset(AppAssets.productsIcon, height: 44.0, width: 44.0);
   }
 
   String _formatDate(String dateStr) {
@@ -254,6 +300,49 @@ class OrderCard extends StatelessWidget {
     return _StatusStyle(
       backgroundColor: const Color(0xFFEEF2FF),
       textColor: const Color(0xFF3B82F6),
+    );
+  }
+
+  _StatusStyle _getPaymentStatusStyle(OrderResponseEntity order) {
+    final status = order.paymentStatus.toLowerCase();
+    final label = order.paymentStatusLabel;
+
+    if (status == 'paid' ||
+        status == 'completed' ||
+        label.contains('تم الدفع') ||
+        label.contains('مدفوع') ||
+        label.contains('مكتمل')) {
+      return _StatusStyle(
+        backgroundColor: const Color(0xFFD1FAE5),
+        textColor: const Color(0xFF059669),
+      );
+    } else if (order.needsPaymentReview ||
+        status.contains('review') ||
+        status == 'pending' ||
+        label.contains('مراجعة') ||
+        label.contains('انتظار') ||
+        label.contains('تأكيد')) {
+      return _StatusStyle(
+        backgroundColor: const Color(0xFFFEF3C7),
+        textColor: const Color(0xFFB45309),
+      );
+    } else if (status.contains('fail') ||
+        status.contains('cancel') ||
+        status == 'unpaid' ||
+        label.contains('فشل') ||
+        label.contains('ملغى') ||
+        label.contains('مرفوض') ||
+        label.contains('ملغى') ||
+        label.contains('غير')) {
+      return _StatusStyle(
+        backgroundColor: const Color(0xFFFEE2E2),
+        textColor: const Color(0xFFDC2626),
+      );
+    }
+
+    return _StatusStyle(
+      backgroundColor: const Color(0xFFF3F4F6),
+      textColor: const Color(0xFF6B7280),
     );
   }
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:spenza/core/shared/entities/product_entity.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
-import 'package:spenza/core/widgets/view_all_button.dart';
 import 'package:spenza/features/home/presentation/widgets/offer_card.dart';
 
 class TodayOffersSection extends StatelessWidget {
@@ -48,7 +48,7 @@ class TodayOffersSection extends StatelessWidget {
                   itemBuilder: (context, index) => ShimmerPlaceholder(
                     width: 172,
                     height: 298.2,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: AppRadius.overMedium,
                   ),
                 )
               : ListView.separated(

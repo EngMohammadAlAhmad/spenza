@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 
 class DashedAddAddressButton extends StatelessWidget {
   final VoidCallback onTap;
@@ -21,10 +22,10 @@ class DashedAddAddressButton extends StatelessWidget {
       ),
       child: Material(
         color: const Color(0xFFFDF2F2),
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(18.0),
+          borderRadius: AppRadius.upMedium,
           child: Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 14.0),

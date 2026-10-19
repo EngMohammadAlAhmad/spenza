@@ -87,7 +87,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
                       color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: AppRadius.large,
                     ),
                     child: Text(
                       'وفّر ${(product.price - product.discountedPrice).toStringAsFixed(0)} ل.س',

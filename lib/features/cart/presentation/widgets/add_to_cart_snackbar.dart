@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/features/cart/domain/entities/cart_item_entity.dart';
 
 class AddToCartSnackBar {
@@ -111,7 +112,7 @@ class _AddToCartBannerWidgetState extends State<_AddToCartBannerWidget>
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(30.0),
+              borderRadius: AppRadius.extraLarge4,
               border: Border.all(color: AppColors.neutral200),
               boxShadow: [
                 BoxShadow(
@@ -132,11 +133,11 @@ class _AddToCartBannerWidgetState extends State<_AddToCartBannerWidget>
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14.0),
+                        borderRadius: AppRadius.mediumPlus,
                         color: AppColors.neutral200,
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(14.0),
+                        borderRadius: AppRadius.mediumPlus,
                         child: widget.item.productImage != null && widget.item.productImage!.isNotEmpty
                             ? Image.network(
                           widget.item.productImage!,
@@ -204,7 +205,7 @@ class _AddToCartBannerWidgetState extends State<_AddToCartBannerWidget>
                     padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                     decoration: BoxDecoration(
                       color: AppColors.primaryTint,
-                      borderRadius: BorderRadius.circular(24.0),
+                      borderRadius: AppRadius.extraLarge,
                     ),
                     child: const Text(
                       'عرض السلة',

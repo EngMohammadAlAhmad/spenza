@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 
 class BusinessAccountScreen extends StatelessWidget {
@@ -26,7 +27,7 @@ class BusinessAccountScreen extends StatelessWidget {
                 children: [
                   // Illustration
                   SvgPicture.asset(
-                    'assets/images/enterprise_illustration.svg',
+                    AppAssets.enterpriseIllustration,
                   ),
                   const SizedBox(height: 16.0),
 
@@ -182,17 +183,17 @@ class BusinessAccountScreen extends StatelessWidget {
         spacing: 14.0,
         children: [
           _buildFeatureRow(
-            iconPath: 'assets/icons/offers_and_discounts_icon.svg',
+            iconPath: AppAssets.offersAndDiscountsIcon,
             title: 'أسعار وكميات على قد طلباتكن',
             subtitle: 'حسب نوع نشاطك وقرار الإدارة',
           ),
           _buildFeatureRow(
-            iconPath: 'assets/icons/package_icon.svg',
+            iconPath: AppAssets.packageIcon,
             title: 'وحدات بيع أكبر',
             subtitle: 'طرد وكرتونة للكميات الكبيرة',
           ),
           _buildFeatureRow(
-            iconPath: 'assets/icons/truck_icon.svg',
+            iconPath: AppAssets.truckIcon,
             title: 'نفس الطلب والتوصيل',
             subtitle: 'وبتضل تشوف طلباتك ونقاطك مثل ما هي',
           ),

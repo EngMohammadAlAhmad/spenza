@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
 
 class AppSearchField extends StatelessWidget {
@@ -35,7 +36,7 @@ class AppSearchField extends StatelessWidget {
       prefixIcon: Padding(
         padding: const EdgeInsetsDirectional.only(start: 16.0, end: 8.0),
         child: SvgPicture.asset(
-          'assets/icons/search_icon.svg',
+          AppAssets.searchIcon,
           colorFilter: const ColorFilter.mode(AppColors.neutral, BlendMode.srcIn),
         ),
       ),

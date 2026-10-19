@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
 import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
 import 'package:spenza/features/cart/presentation/blocs/cart_bloc/cart_bloc.dart';
@@ -118,7 +120,7 @@ class _Step3ReviewAndConfirmViewState
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: AppColors.primary500, width: 1.5),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14.0),
+                      borderRadius: AppRadius.mediumPlus,
                     ),
                     backgroundColor: const Color(0xFFFDF2F2),
                     padding: EdgeInsets.zero,
@@ -159,7 +161,7 @@ class _Step3ReviewAndConfirmViewState
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(18.0),
+              borderRadius: AppRadius.upMedium,
               boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
@@ -230,7 +232,7 @@ class _Step3ReviewAndConfirmViewState
                       ),
                     ),
                     SvgPicture.asset(
-                      'assets/images/icon_small.svg',
+                      AppAssets.iconSmall,
                       width: 20.0,
                       height: 20.0,
                     ),

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:spenza/features/cart/presentation/blocs/cart_bloc/cart_bloc.dart';
@@ -93,7 +94,7 @@ class ProductDetailsBottomBar extends StatelessWidget {
                   text: isOutOfStock ? 'نفذت الكمية' : 'أضف للسلة',
                   height: 52.0,
                   icon: SvgPicture.asset(
-                    'assets/icons/cart_icon_2.svg',
+                    AppAssets.cartIcon2,
                     width: 20,
                     height: 20,
                   ),

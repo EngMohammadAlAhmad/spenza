@@ -116,7 +116,9 @@ class _OrderDetailsContent extends StatelessWidget {
         // Cards Content (Scrollable)
         Expanded(
           child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
+            ),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 32.0),
               child: Column(
@@ -131,7 +133,7 @@ class _OrderDetailsContent extends StatelessWidget {
                     formatter: formatter,
                   ).animate(delay: 250.ms).fadeIn(duration: 500.ms).slideY(
                     begin: 0.08,
-                    end: 0,
+                    end: 0.0,
                     curve: Curves.easeOutCubic,
                   ),
 
@@ -141,7 +143,7 @@ class _OrderDetailsContent extends StatelessWidget {
                       .fadeIn(duration: 500.ms)
                       .slideY(
                         begin: 0.08,
-                        end: 0,
+                        end: 0.0,
                         curve: Curves.easeOutCubic,
                       ),
 
@@ -151,7 +153,7 @@ class _OrderDetailsContent extends StatelessWidget {
                     formatter: formatter,
                   ).animate(delay: 510.ms).fadeIn(duration: 500.ms).slideY(
                         begin: 0.08,
-                        end: 0,
+                        end: 0.0,
                         curve: Curves.easeOutCubic,
                       ),
 
@@ -161,7 +163,7 @@ class _OrderDetailsContent extends StatelessWidget {
                       .fadeIn(duration: 500.ms)
                       .slideY(
                         begin: 0.08,
-                        end: 0,
+                        end: 0.0,
                         curve: Curves.easeOutCubic,
                       ),
                 ],

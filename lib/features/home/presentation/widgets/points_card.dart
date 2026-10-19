@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/features/points_market/domain/entities/points_summary_entity.dart';
 import 'package:spenza/features/points_market/presentation/blocs/points_market_bloc/points_market_bloc.dart';
@@ -44,7 +45,7 @@ class PointsCard extends StatelessWidget {
                   children: [
                     // Right side: Rounded points icon
                     SvgPicture.asset(
-                      'assets/images/rounded_icon.svg',
+                      AppAssets.roundedIcon,
                     ),
                     const SizedBox(width: 12.0),
 

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/features/account/presentation/widgets/selection_bottom_sheet.dart';
 import 'package:spenza/features/account/presentation/widgets/settings_tile.dart';
 
@@ -31,13 +32,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               id: 'ar',
               title: 'العربية',
               subtitle: 'من اليمين لليسار',
-              iconPath: 'assets/icons/languages_icon.svg',
+              iconPath: AppAssets.languagesIcon,
             ),
             SelectionOption(
               id: 'en',
               title: 'English',
               subtitle: 'Left to right',
-              iconPath: 'assets/icons/globe_icon.svg',
+              iconPath: AppAssets.globeIcon,
             ),
           ],
           onOptionSelected: (lang) {
@@ -62,19 +63,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
               id: 'light',
               title: 'فاتح',
               subtitle: 'خلفية فاتحة مثل البراند',
-              iconPath: 'assets/icons/sun_icon.svg',
+              iconPath: AppAssets.sunIcon,
             ),
             SelectionOption(
               id: 'dark',
               title: 'داكن',
               subtitle: 'مريح بالليل',
-              iconPath: 'assets/icons/moon_icon.svg',
+              iconPath: AppAssets.moonIcon,
             ),
             SelectionOption(
               id: 'system',
               title: 'حسب الجهاز',
               subtitle: 'بيتغير مع إعداد موبايلك',
-              iconPath: 'assets/icons/phoneDevice_icon.svg',
+              iconPath: AppAssets.phoneDeviceIcon,
             ),
           ],
           onOptionSelected: (theme) {
@@ -122,7 +123,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     }
                   },
                   child: SvgPicture.asset(
-                    'assets/icons/back_button_2.svg',
+                    AppAssets.backButton2,
                     width: 40,
                     height: 40,
                   ),
@@ -177,7 +178,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         children: [
                           // Item 1: تحديثات الطلبات والدفع
                           SettingsTile(
-                            iconPath: 'assets/icons/document_icon.svg',
+                            iconPath: AppAssets.documentIcon,
                             title: 'تحديثات الطلبات والدفع',
                             trailing: Switch.adaptive(
                               value: _orderUpdatesEnabled,
@@ -200,7 +201,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                           // Item 2: العروض والخصومات
                           SettingsTile(
-                            iconPath: 'assets/icons/offers_and_discounts_icon.svg',
+                            iconPath: AppAssets.offersAndDiscountsIcon,
                             title: 'العروض والخصومات',
                             trailing: Switch.adaptive(
                               value: _offersEnabled,
@@ -258,7 +259,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         children: [
                           // Item 1: اللغة
                           SettingsTile(
-                            iconPath: 'assets/icons/globe_icon.svg',
+                            iconPath: AppAssets.globeIcon,
                             title: 'اللغة',
                             value: 'العربية',
                             showChevron: true,
@@ -275,7 +276,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                           // Item 2: المظهر
                           SettingsTile(
-                            iconPath: 'assets/icons/moon_icon.svg',
+                            iconPath: AppAssets.moonIcon,
                             title: 'المظهر',
                             value: 'حسب الجهاز',
                             showChevron: true,
@@ -292,7 +293,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                           // Item 3: عن سبينزا
                           SettingsTile(
-                            iconPath: 'assets/icons/info_icon.svg',
+                            iconPath: AppAssets.infoIcon,
                             title: 'عن سبينزا',
                             value: 'الإصدار 1.0',
                             showChevron: true,
@@ -309,7 +310,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                           // Item 4: قيم التطبيق
                           SettingsTile(
-                            iconPath: 'assets/icons/rate_icon.svg',
+                            iconPath: AppAssets.rateIcon,
                             title: 'قيم التطبيق',
                             showChevron: true,
                             onTap: () {},

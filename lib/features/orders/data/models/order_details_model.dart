@@ -26,6 +26,8 @@ class OrderDetailsModel extends OrderDetailsEntity {
     super.tracking,
     required super.isCompleted,
     required super.canBeCancelled,
+    super.canUploadReceipt = false,
+    super.rejectionReason,
     required super.placedAt,
     super.createdAt,
     required super.address,
@@ -69,6 +71,24 @@ class OrderDetailsModel extends OrderDetailsEntity {
           .toList();
     }
 
+    String? rejectionReason;
+    if (data['rejection_reason'] != null && data['rejection_reason'].toString().isNotEmpty) {
+      rejectionReason = data['rejection_reason'].toString();
+    } else if (data['receipts'] is List && (data['receipts'] as List).isNotEmpty) {
+      final receiptsList = data['receipts'] as List;
+      for (var r in receiptsList.reversed) {
+        if (r is Map<String, dynamic>) {
+          if (r['rejection_reason'] != null && r['rejection_reason'].toString().isNotEmpty) {
+            rejectionReason = r['rejection_reason'].toString();
+            break;
+          } else if (r['note'] != null && r['note'].toString().isNotEmpty && r['status'] == 'rejected') {
+            rejectionReason = r['note'].toString();
+            break;
+          }
+        }
+      }
+    }
+
     return OrderDetailsModel(
       id: _parseInt(data['id']),
       orderNumber: data['order_number']?.toString() ?? '',
@@ -89,6 +109,8 @@ class OrderDetailsModel extends OrderDetailsEntity {
       tracking: trackingModel,
       isCompleted: data['is_completed'] == true,
       canBeCancelled: data['can_be_cancelled'] == true,
+      canUploadReceipt: data['can_upload_receipt'] == true,
+      rejectionReason: rejectionReason,
       placedAt: data['placed_at']?.toString() ?? '',
       createdAt: data['created_at']?.toString(),
       address: data['address']?.toString() ?? '',

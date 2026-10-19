@@ -10,6 +10,7 @@ import 'package:spenza/app.dart';
 import 'package:spenza/core/observers/app_bloc_observer.dart';
 import 'package:spenza/core/services/crash_reporter.dart';
 import 'package:spenza/core/translations/codegen_loader.g.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/firebase_options.dart';
 //import 'package:spenza/core/translations/codegen_loader.g.dart';
 import 'package:spenza/injection_locator.dart' as di;
@@ -38,7 +39,7 @@ Future<void> main() async {
     runApp(
       EasyLocalization(
         supportedLocales: const [Locale('en'), Locale('ar')],
-        path: 'assets/translations',
+        path: AppAssets.translations,
         fallbackLocale: const Locale('ar'),
         startLocale: const Locale('ar'),
         assetLoader: const CodegenLoader(),

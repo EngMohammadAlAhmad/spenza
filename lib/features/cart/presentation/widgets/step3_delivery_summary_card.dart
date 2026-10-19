@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
 
 class Step3DeliverySummaryCard extends StatelessWidget {
@@ -32,7 +34,7 @@ class Step3DeliverySummaryCard extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
         boxShadow: const [
           BoxShadow(
             color: Colors.black12,
@@ -51,7 +53,7 @@ class Step3DeliverySummaryCard extends StatelessWidget {
               Row(
                 children: [
                   SvgPicture.asset(
-                    'assets/icons/delivery_location_icon.svg',
+                    AppAssets.deliveryLocationIcon,
                   ),
                   const SizedBox(width: 6.0),
                   const Text(
@@ -69,7 +71,7 @@ class Step3DeliverySummaryCard extends StatelessWidget {
                 child: Row(
                   children: [
                     SvgPicture.asset(
-                      'assets/icons/edit_icon.svg',
+                      AppAssets.editIcon,
                       colorFilter: .mode(AppColors.primary, .srcIn),
                     ),
                     const SizedBox(width: 4.0),

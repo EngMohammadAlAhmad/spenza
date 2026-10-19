@@ -7,6 +7,7 @@ import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/features/categories/presentation/blocs/categories_bloc/categories_bloc.dart';
 import '../widgets/category_card.dart';
 
@@ -110,7 +111,7 @@ class _CategoriesGridViewState extends State<CategoriesGridView> {
       itemBuilder: (context, index) => ShimmerPlaceholder(
         width: double.infinity,
         height: double.infinity,
-        borderRadius: BorderRadius.circular(24.0),
+        borderRadius: AppRadius.extraLarge,
       ),
     );
   }

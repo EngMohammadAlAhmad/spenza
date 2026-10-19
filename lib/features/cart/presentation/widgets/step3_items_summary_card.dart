@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/features/cart/domain/entities/cart_item_entity.dart';
 
 class Step3ItemsSummaryCard extends StatelessWidget {
@@ -23,7 +25,7 @@ class Step3ItemsSummaryCard extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
         boxShadow: const [
           BoxShadow(
             color: Colors.black12,
@@ -42,7 +44,7 @@ class Step3ItemsSummaryCard extends StatelessWidget {
               Row(
                 children: [
                   SvgPicture.asset(
-                    'assets/icons/products_icon.svg',
+                    AppAssets.productsIcon,
                   ),
                   const SizedBox(width: 8.0),
                   Text(
@@ -60,7 +62,7 @@ class Step3ItemsSummaryCard extends StatelessWidget {
                 child: Row(
                   children: [
                     SvgPicture.asset(
-                      'assets/icons/edit_icon.svg',
+                      AppAssets.editIcon,
                       colorFilter: .mode(AppColors.primary, .srcIn),
                     ),
                     const SizedBox(width: 4.0),
@@ -91,7 +93,7 @@ class Step3ItemsSummaryCard extends StatelessWidget {
                 children: [
                   // Product Image
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: AppRadius.ordinary,
                     child: Container(
                       width: 48.0,
                       height: 48.0,

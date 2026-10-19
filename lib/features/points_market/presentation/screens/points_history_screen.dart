@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/features/points_market/domain/entities/points_summary_entity.dart';
 import 'package:spenza/features/points_market/presentation/blocs/points_market_bloc/points_market_bloc.dart';
@@ -39,7 +41,7 @@ class PointsHistoryScreen extends StatelessWidget {
                 return Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
+                    borderRadius: AppRadius.large,
                     gradient: const LinearGradient(
                       colors: [
                         Color(0xFF91292B),
@@ -54,9 +56,9 @@ class PointsHistoryScreen extends StatelessWidget {
                     children: [
                       Positioned.fill(
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20.0),
+                          borderRadius: AppRadius.large,
                           child: Image.asset(
-                            'assets/images/pattern.png',
+                            AppAssets.pattern,
                             fit: BoxFit.cover,
                             opacity: const AlwaysStoppedAnimation(0.08),
                           ),

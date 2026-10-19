@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 
 class OrderDetailsInvoiceCard extends StatelessWidget {
   const OrderDetailsInvoiceCard({super.key});
@@ -8,10 +11,10 @@ class OrderDetailsInvoiceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+      padding: const .symmetric(horizontal: 16.0, vertical: 14.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -21,30 +24,27 @@ class OrderDetailsInvoiceCard extends StatelessWidget {
         ],
       ),
       child: Column(
+        spacing: 15.0,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
               Row(
                 spacing: 10.0,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const .all(8.0),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF3F4F6),
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: AppRadius.ordinary,
                     ),
-                    child: const Icon(
-                      Icons.receipt_long_outlined,
-                      size: 20.0,
-                      color: AppColors.neutral900,
-                    ),
+                    child: SvgPicture.asset(AppAssets.bellIcon),
                   ),
                   const Text(
                     'الفاتورة',
                     style: TextStyle(
                       fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: .bold,
                       color: AppColors.neutral900,
                     ),
                   ),
@@ -70,28 +70,24 @@ class OrderDetailsInvoiceCard extends StatelessWidget {
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
               Row(
                 spacing: 10.0,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const .all(8.0),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF3F4F6),
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: AppRadius.ordinary,
                     ),
-                    child: const Icon(
-                      Icons.help_outline_rounded,
-                      size: 20.0,
-                      color: AppColors.neutral900,
-                    ),
+                    child: SvgPicture.asset(AppAssets.questionIcon),
                   ),
                   const Text(
                     'مساعدة بهالطلب',
                     style: TextStyle(
                       fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: .bold,
                       color: AppColors.neutral900,
                     ),
                   ),

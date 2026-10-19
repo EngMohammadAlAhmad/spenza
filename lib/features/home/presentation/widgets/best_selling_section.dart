@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/shared/entities/product_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/core/widgets/app_icon_placeholder.dart';
-import 'package:spenza/core/widgets/view_all_button.dart';
 
 class BestSellingSection extends StatelessWidget {
   final List<ProductEntity> products;
@@ -52,7 +51,7 @@ class BestSellingSection extends StatelessWidget {
                   itemBuilder: (context, index) => ShimmerPlaceholder(
                     width: 172,
                     height: 284.0,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: AppRadius.overMedium,
                   ),
                 )
               : ListView.separated(
@@ -105,7 +104,7 @@ class _BestSellingCardState extends State<BestSellingCard> {
           height: 284.0,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: AppRadius.overMedium,
           ),
           child: Column(
             crossAxisAlignment: .start,
@@ -136,7 +135,7 @@ class _BestSellingCardState extends State<BestSellingCard> {
                         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                         decoration: BoxDecoration(
                           color: AppColors.secondary,
-                          borderRadius: BorderRadius.circular(20.0),
+                          borderRadius: AppRadius.large,
                         ),
                         child: Text(
                           '-${product.discountPercentage.toInt()}%',

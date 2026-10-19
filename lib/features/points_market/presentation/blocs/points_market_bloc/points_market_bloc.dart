@@ -1,8 +1,6 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:spenza/core/enums/request_state.dart';
-import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/features/points_market/domain/entities/points_summary_entity.dart';
 import 'package:spenza/features/points_market/domain/usecases/get_user_points_use_case.dart';

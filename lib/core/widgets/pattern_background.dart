@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 
 class PatternBackground extends StatelessWidget {
   const PatternBackground({super.key});
@@ -16,7 +17,7 @@ class PatternBackground extends StatelessWidget {
             child: Opacity(
               opacity: 0.03,
               child: Image.asset(
-                'assets/images/pattern.png',
+                AppAssets.pattern,
                 fit: BoxFit.fitHeight,
               ),
             ),
@@ -29,7 +30,7 @@ class PatternBackground extends StatelessWidget {
             child: Opacity(
               opacity: 0.1,
               child: Image.asset(
-                'assets/images/pattern_radial.png',
+                AppAssets.patternRadial,
                 fit: BoxFit.contain,
               ),
             ),

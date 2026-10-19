@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_bloc.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_event.dart';
@@ -153,7 +155,7 @@ class _CartViewState extends State<_CartView> {
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(18.0),
+                borderRadius: AppRadius.upMedium,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.03),
@@ -181,12 +183,12 @@ class _CartViewState extends State<_CartView> {
                           ),
                         ),
                         const SizedBox(width: 10.0),
-                        SvgPicture.asset('assets/icons/truck_icon.svg'),
+                        SvgPicture.asset(AppAssets.truckIcon),
                       ],
                     ),
                   ),
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: AppRadius.ordinary,
                     child: LinearProgressIndicator(
                       value: progress,
                       minHeight: 8.0,
@@ -228,7 +230,7 @@ class _CartViewState extends State<_CartView> {
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(18.0),
+                borderRadius: AppRadius.upMedium,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.03),
@@ -288,17 +290,17 @@ class _CartViewState extends State<_CartView> {
                               filled: true,
                               fillColor: Colors.white,
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: AppRadius.medium,
                                 borderSide:
                                     BorderSide(color: Colors.grey.shade300),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: AppRadius.medium,
                                 borderSide:
                                     BorderSide(color: Colors.grey.shade300),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: AppRadius.medium,
                                 borderSide:
                                     const BorderSide(color: AppColors.primary),
                               ),
@@ -318,7 +320,7 @@ class _CartViewState extends State<_CartView> {
                             side: const BorderSide(
                                 color: AppColors.primary, width: 1.5),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: AppRadius.medium,
                             ),
                             padding: EdgeInsets.zero,
                           ),
@@ -344,7 +346,7 @@ class _CartViewState extends State<_CartView> {
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(18.0),
+                borderRadius: AppRadius.upMedium,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.03),

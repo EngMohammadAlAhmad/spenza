@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/features/orders/domain/entities/order_details_entity.dart';
 
 class OrderDetailsProductsCard extends StatelessWidget {
@@ -22,7 +23,7 @@ class OrderDetailsProductsCard extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -58,7 +59,7 @@ class OrderDetailsProductsCard extends StatelessWidget {
                   children: [
                     // Product Image Thumbnail
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: AppRadius.small,
                       child: item.productImage != null && item.productImage!.isNotEmpty
                           ? Image.network(
                               item.productImage!,
@@ -175,7 +176,7 @@ class OrderDetailsProductsCard extends StatelessWidget {
       height: 44.0,
       decoration: BoxDecoration(
         color: const Color(0xFFF3F4F6),
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: AppRadius.small,
       ),
       child: const Icon(
         Icons.shopping_bag_outlined,

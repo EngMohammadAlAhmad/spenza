@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
 import 'package:spenza/core/widgets/product_card.dart';
@@ -188,7 +189,7 @@ class _SearchScreenState extends State<SearchScreen> {
       children: [
         const SizedBox(height: 8),
         // Recent Searches
-        _buildSectionHeader('عمليات بحث سابقة', 'assets/icons/clock_icon.svg'),
+        _buildSectionHeader('عمليات بحث سابقة', AppAssets.clockIcon),
         const SizedBox(height: 12),
         Wrap(
           spacing: 10,
@@ -203,7 +204,7 @@ class _SearchScreenState extends State<SearchScreen> {
         const SizedBox(height: 32),
 
         // Popular Searches
-        _buildSectionHeader('الأكثر بحثاً', 'assets/icons/trand_icon.svg'),
+        _buildSectionHeader('الأكثر بحثاً', AppAssets.trendIcon),
         const SizedBox(height: 12),
         Wrap(
           spacing: 10,

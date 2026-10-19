@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
 
 class CheckoutAddressCard extends StatelessWidget {
@@ -26,12 +27,12 @@ class CheckoutAddressCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
         child: Container(
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             color: isSelected ? const Color(0xFFFDF2F2) : Colors.white,
-            borderRadius: BorderRadius.circular(18.0),
+            borderRadius: AppRadius.upMedium,
             border: Border.all(
               color: isSelected ? AppColors.primary500 : Colors.transparent,
               width: 1.5,
@@ -136,7 +137,7 @@ class CheckoutAddressCard extends StatelessWidget {
                     onEditSuccess();
                   }
                 },
-                child: SvgPicture.asset('assets/icons/edit_icon.svg'),
+                child: SvgPicture.asset(AppAssets.editIcon),
               ),
             ],
           ),

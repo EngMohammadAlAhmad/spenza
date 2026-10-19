@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 
 class OrdersHeader extends StatelessWidget {
@@ -46,7 +47,7 @@ class OrdersHeader extends StatelessWidget {
         padding: const EdgeInsets.all(4.0),
         decoration: BoxDecoration(
           color: AppColors.neutralBackground,
-          borderRadius: BorderRadius.circular(24.0),
+          borderRadius: AppRadius.extraLarge,
         ),
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -68,7 +69,7 @@ class OrdersHeader extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         color: AppColors.primaryTint,
-                        borderRadius: BorderRadius.circular(20.0),
+                        borderRadius: AppRadius.large,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withValues(alpha: 0.04),
@@ -124,7 +125,7 @@ class OrdersHeader extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20.0),
+      borderRadius: AppRadius.large,
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

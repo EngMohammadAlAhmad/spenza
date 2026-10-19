@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/auth/presentation/bloc/auth_status_bloc.dart';
 import 'package:spenza/features/orders/presentation/bloc/orders_bloc.dart';
@@ -67,7 +68,7 @@ class OrdersScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SvgPicture.asset(
-          'assets/icons/orders_screen_icon.svg',
+          AppAssets.ordersScreenIcon,
           height: 96.0,
           width: 96.0,
         ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
@@ -89,7 +90,7 @@ class OrdersScreen extends StatelessWidget {
         CustomButton(
           text: 'تسجيل الدخول',
           onPressed: () => context.push(RoutePaths.login),
-          icon: SvgPicture.asset('assets/icons/login_icon.svg'),
+          icon: SvgPicture.asset(AppAssets.loginIcon),
           width: 200.0,
         ).animate().fadeIn(delay: 600.ms).scale(begin: const Offset(0.95, 0.95)),
         TextButton(
@@ -213,7 +214,7 @@ class _OrdersContentState extends State<_OrdersContent> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset('assets/images/error_occurred.svg'),
+              SvgPicture.asset(AppAssets.errorOccurred),
               const SizedBox(height: 12.0),
               const Text(
                 'حدث خطأ أثناء تحميل الطلبات',
@@ -227,7 +228,7 @@ class _OrdersContentState extends State<_OrdersContent> {
               CustomButton(
                 text: 'جرّب مرة تانية',
                 icon: SvgPicture.asset(
-                  'assets/icons/refresh_icon.svg',
+                  AppAssets.refreshIcon,
                   colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                 ),
                 width: 160.0,
@@ -252,7 +253,12 @@ class _OrdersContentState extends State<_OrdersContent> {
       physics: const AlwaysScrollableScrollPhysics(
         parent: BouncingScrollPhysics(),
       ),
-      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 24.0),
+      padding: EdgeInsets.only(
+        left: 16.0,
+        top: 16.0,
+        right: 16.0,
+        bottom: MediaQuery.of(context).padding.bottom + 10.0,
+      ),
       itemCount: currentOrders.length + (state.isLoadingMore ? 1 : 0),
       itemBuilder: (context, index) {
         if (index >= currentOrders.length) {
@@ -307,7 +313,7 @@ class _OrdersContentState extends State<_OrdersContent> {
                   ),
                 ),
                 SvgPicture.asset(
-                  'assets/icons/no_orders_icon.svg',
+                  AppAssets.noOrdersIcon,
                   fit: BoxFit.contain,
                 ),
               ],

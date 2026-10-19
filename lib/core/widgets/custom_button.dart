@@ -14,6 +14,8 @@ class CustomButton extends StatelessWidget {
   final Color? underlayerColor;
   final bool isLoading;
   final BorderRadius? borderRadius;
+  final Color? textColor;
+  final Color? borderColor;
 
   static const double _underlayerOffset = 2.0;
 
@@ -30,6 +32,8 @@ class CustomButton extends StatelessWidget {
     this.underlayerColor,
     this.isLoading = false,
     this.borderRadius,
+    this.textColor,
+    this.borderColor,
   });
 
   @override
@@ -63,6 +67,8 @@ class CustomButton extends StatelessWidget {
 
   Widget _buildButton(BuildContext context, BorderRadius effectiveRadius) {
     final bool isEnabled = onPressed != null;
+    final effectiveTextColor = textColor ?? (isOutlined ? AppColors.primary : Colors.white);
+    final effectiveBorderColor = borderColor ?? textColor ?? AppColors.primary;
 
     final child = isLoading
         ? Center(
@@ -70,7 +76,7 @@ class CustomButton extends StatelessWidget {
               height: 24.0,
               width: 24.0,
               child: CircularProgressIndicator(
-                color: isOutlined ? AppColors.primary : Colors.white,
+                color: effectiveTextColor,
                 strokeWidth: 2.0,
               ),
             ),
@@ -85,14 +91,14 @@ class CustomButton extends StatelessWidget {
               Text(
                 text,
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: isOutlined ? AppColors.primary : Colors.white,
+                      color: effectiveTextColor,
                       fontWeight: FontWeight.bold,
                       fontSize: fontSize,
                     ),
               ),
               if (showArrow) ...[
                 const SizedBox(width: 8.0),
-                const Icon(Icons.arrow_forward_ios, size: 16),
+                Icon(Icons.arrow_forward_ios, size: 16, color: effectiveTextColor),
               ],
             ],
           );
@@ -103,8 +109,8 @@ class CustomButton extends StatelessWidget {
         child: OutlinedButton(
           onPressed: isLoading ? null : onPressed,
           style: OutlinedButton.styleFrom(
-            side: const BorderSide(color: AppColors.primary, width: 1.5),
-            foregroundColor: AppColors.primary,
+            side: BorderSide(color: effectiveBorderColor, width: 1.5),
+            foregroundColor: effectiveTextColor,
             shape: RoundedRectangleBorder(
               borderRadius: effectiveRadius,
             ),

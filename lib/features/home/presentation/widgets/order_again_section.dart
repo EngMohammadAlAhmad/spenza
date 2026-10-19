@@ -8,6 +8,7 @@ import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
 import 'package:spenza/core/widgets/view_all_button.dart';
@@ -143,7 +144,7 @@ class _EmptyOrderAgainCard extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: SvgPicture.asset(
-              'assets/icons/order_again_icon.svg',
+              AppAssets.orderAgainIcon,
               width: 28.0,
               height: 28.0,
               colorFilter: const ColorFilter.mode(
@@ -199,7 +200,7 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
 
     final String imagePath = order.itemImages.isNotEmpty
         ? order.itemImages.first
-        : 'assets/images/temp/order_again_1.png';
+        : AppAssets.tempOrderAgain1;
 
     final String title = order.orderNumber.isNotEmpty
         ? 'طلب #${order.orderNumber}'
@@ -227,7 +228,7 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
           height: 214.0,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: AppRadius.large,
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.06),
@@ -253,7 +254,7 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
                           height: 110.0,
                           fit: BoxFit.cover,
                           errorBuilder: (_, _, _) => Image.asset(
-                            'assets/images/temp/order_again_1.png',
+                            AppAssets.tempOrderAgain1,
                             width: 156.0,
                             height: 110.0,
                             fit: BoxFit.cover,
@@ -265,7 +266,7 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
                           height: 110.0,
                           fit: BoxFit.cover,
                           errorBuilder: (_, _, _) => Image.asset(
-                            'assets/images/temp/order_again_1.png',
+                            AppAssets.tempOrderAgain1,
                             width: 156.0,
                             height: 110.0,
                             fit: BoxFit.cover,
@@ -332,7 +333,7 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
                                 message: 'تمت إضافة طلبك لإعادة الطلب',
                               );
                             },
-                            borderRadius: BorderRadius.circular(20.0),
+                            borderRadius: AppRadius.large,
                             child: Container(
                               width: 36.0,
                               height: 36.0,

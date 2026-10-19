@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({
@@ -70,28 +71,28 @@ class _HomeShellState extends State<HomeShell> {
 
     final items = [
       _NavItem(
-        icon: 'assets/icons/home_icon.svg',
-        selectedIcon: 'assets/icons/home_selected.svg',
+        icon: AppAssets.homeIcon,
+        selectedIcon: AppAssets.homeSelected,
         label: 'home'.tr(),
       ),
       _NavItem(
-        icon: 'assets/icons/sections_icon.svg',
-        selectedIcon: 'assets/icons/sections_selected.svg',
+        icon: AppAssets.sectionsIcon,
+        selectedIcon: AppAssets.sectionsSelected,
         label: 'sections'.tr(),
       ),
       _NavItem(
-        icon: 'assets/icons/favorites_icon.svg',
-        selectedIcon: 'assets/icons/favorites_selected.svg',
+        icon: AppAssets.favoritesIcon,
+        selectedIcon: AppAssets.favoritesSelected,
         label: 'favorites'.tr(),
       ),
       _NavItem(
-        icon: 'assets/icons/orders_icon.svg',
-        selectedIcon: 'assets/icons/orders_selected.svg',
+        icon: AppAssets.ordersIcon,
+        selectedIcon: AppAssets.ordersSelected,
         label: 'orders'.tr(),
       ),
       _NavItem(
-        icon: 'assets/icons/account_icon.svg',
-        selectedIcon: 'assets/icons/account_selected.svg',
+        icon: AppAssets.accountIcon,
+        selectedIcon: AppAssets.accountSelected,
         label: 'account'.tr(),
       ),
     ];

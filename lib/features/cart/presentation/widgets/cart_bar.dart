@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/features/cart/presentation/blocs/cart_bloc/cart_bloc.dart';
 
 class CartBar extends StatelessWidget {
@@ -40,7 +41,7 @@ class CartBar extends StatelessWidget {
                   context.push(RoutePaths.cart);
                 }
               },
-              borderRadius: BorderRadius.circular(24.0),
+              borderRadius: AppRadius.extraLarge,
               child: Container(
                 height: 60.0,
                 padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
@@ -79,7 +80,7 @@ class CartBar extends StatelessWidget {
                           ),
                           alignment: Alignment.center,
                           child: SvgPicture.asset(
-                            'assets/icons/cart_icon.svg',
+                            AppAssets.cartIcon,
                             colorFilter: const ColorFilter.mode(
                               AppColors.primary,
                               BlendMode.overlay,
@@ -152,7 +153,7 @@ class CartBar extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(20.0),
+                        borderRadius: AppRadius.large,
                       ),
                       child: Row(
                         spacing: 2.0,

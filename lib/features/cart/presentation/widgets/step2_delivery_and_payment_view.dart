@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/general_error_widget.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
@@ -135,8 +136,8 @@ class Step2DeliveryAndPaymentView extends StatelessWidget {
                     final opt = deliveryOptions[index];
                     final isSelected = selectedDeliveryType == opt.method;
                     final icon = opt.method == 'express'
-                        ? 'assets/icons/instant_icon.svg'
-                        : 'assets/icons/truck_icon.svg';
+                        ? AppAssets.instantIcon
+                        : AppAssets.truckIcon;
 
                     final subtitle = opt.isAvailable
                         ? opt.description
@@ -196,19 +197,19 @@ class Step2DeliveryAndPaymentView extends StatelessWidget {
                         (selectedPaymentMethod == 'bank' &&
                             method.key == 'bank_transfer');
 
-                    String icon = 'assets/icons/cash_icon.svg';
+                    String icon = AppAssets.cashIcon;
                     String subtitle = 'دفع عند الاستلام';
 
                     if (method.key == 'bank_transfer' || method.key == 'bank') {
-                      icon = 'assets/icons/bank_icon.svg';
+                      icon = AppAssets.bankIcon;
                       subtitle =
                           'بتحول وبترفع صورة الوصل، ومنتأكد الدفع بعد المراجعة';
                     } else if (method.key == 'cash_on_delivery' ||
                         method.key == 'cash') {
-                      icon = 'assets/icons/cash_icon.svg';
+                      icon = AppAssets.cashIcon;
                       subtitle = 'بتدفع للمندوب وقت يوصلك الطلب';
                     } else {
-                      icon = 'assets/icons/card_icon.svg';
+                      icon = AppAssets.cardIcon;
                       subtitle = 'دفع إلكتروني مباشر';
                     }
 

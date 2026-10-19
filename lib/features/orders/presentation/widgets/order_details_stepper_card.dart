@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/features/orders/domain/entities/order_tracking_entity.dart';
 import 'package:spenza/features/orders/domain/entities/order_tracking_stage_entity.dart';
 
@@ -22,7 +24,7 @@ class OrderDetailsStepperCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -53,11 +55,10 @@ class OrderDetailsStepperCard extends StatelessWidget {
                       right: halfSlotWidth,
                       height: 8.0,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(4.0),
+                        borderRadius: AppRadius.mini,
                         child: Row(
                           children: List.generate(stepCount - 1, (index) {
-                            final isLineReached =
-                                stages[index + 1].isReached || stages[index + 1].isCurrent;
+                            final isLineReached = stages[index + 1].isReached || stages[index + 1].isCurrent;
                             return Expanded(
                               child: _buildLineSegment(context, isLineReached, index),
                             );
@@ -163,7 +164,7 @@ class OrderDetailsStepperCard extends StatelessWidget {
           color: Color(0xFFC74436),
         ),
         child: Image.asset(
-          'assets/images/stripes.png',
+          AppAssets.stripes,
           repeat: ImageRepeat.repeat,
           fit: BoxFit.cover,
           opacity: const AlwaysStoppedAnimation(0.35),
@@ -270,17 +271,17 @@ class OrderDetailsStepperCard extends StatelessWidget {
   String _getStageIcon(String key) {
     switch (key.toLowerCase()) {
       case 'received':
-        return 'assets/icons/check_icon.svg';
+        return AppAssets.checkIcon;
       case 'preparing':
       case 'processing':
-        return 'assets/icons/preparing_icon.svg';
+        return AppAssets.preparingIcon;
       case 'with_courier':
       case 'out_for_delivery':
-        return 'assets/icons/truck_icon.svg';
+        return AppAssets.truckIcon;
       case 'delivered':
-        return 'assets/icons/packageCheck_icon.svg';
+        return AppAssets.packageCheckIcon;
       default:
-        return 'assets/icons/packageCheck_icon.svg';
+        return AppAssets.packageCheckIcon;
     }
   }
 }
@@ -386,33 +387,115 @@ class _ActivePulseNodeState extends State<_ActivePulseNode>
               ],
             ),
             alignment: Alignment.center,
-            child: SvgPicture.asset(
-              _getStageIcon(widget.stageKey),
-              width: 20.0,
-              height: 20.0,
-              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-            ),
+            child: _buildStageIcon(widget.stageKey),
           ),
         ],
       ),
     );
   }
 
+  Widget _buildStageIcon(String key) {
+    final lowerKey = key.toLowerCase();
+    final iconPath = _getStageIcon(lowerKey);
+
+    if (lowerKey == 'preparing' || lowerKey == 'processing') {
+      return _RotatingPreparingIcon(
+        iconPath: iconPath,
+        width: 20.0,
+        height: 20.0,
+        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+      );
+    }
+
+    return SvgPicture.asset(
+      iconPath,
+      width: 20.0,
+      height: 20.0,
+      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+    );
+  }
+
   String _getStageIcon(String key) {
     switch (key.toLowerCase()) {
       case 'received':
-        return 'assets/icons/check_icon.svg';
+        return AppAssets.checkIcon;
       case 'preparing':
       case 'processing':
-        return 'assets/icons/preparing_icon.svg';
+        return AppAssets.preparingIcon;
       case 'with_courier':
       case 'out_for_delivery':
-        return 'assets/icons/truck_icon.svg';
+        return AppAssets.truckIcon;
       case 'delivered':
-        return 'assets/icons/packageCheck_icon.svg';
+        return AppAssets.packageCheckIcon;
       default:
-        return 'assets/icons/packageCheck_icon.svg';
+        return AppAssets.packageCheckIcon;
     }
+  }
+}
+
+class _RotatingPreparingIcon extends StatefulWidget {
+  final String iconPath;
+  final double width;
+  final double height;
+  final ColorFilter? colorFilter;
+
+  const _RotatingPreparingIcon({
+    required this.iconPath,
+    required this.width,
+    required this.height,
+    this.colorFilter,
+  });
+
+  @override
+  State<_RotatingPreparingIcon> createState() => _RotatingPreparingIconState();
+}
+
+class _RotatingPreparingIconState extends State<_RotatingPreparingIcon>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _rotationController;
+  late Animation<double> _rotationAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _rotationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2400),
+    );
+
+    _rotationAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.0, end: 2.0).chain(
+          CurveTween(curve: Curves.easeInOutCubic),
+        ),
+        weight: 14,
+      ),
+      TweenSequenceItem(
+        tween: ConstantTween<double>(2.0),
+        weight: 10,
+      ),
+    ]).animate(_rotationController);
+
+    _rotationController.repeat();
+  }
+
+  @override
+  void dispose() {
+    _rotationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RotationTransition(
+      turns: _rotationAnimation,
+      child: SvgPicture.asset(
+        widget.iconPath,
+        width: widget.width,
+        height: widget.height,
+        colorFilter: widget.colorFilter,
+      ),
+    );
   }
 }
 

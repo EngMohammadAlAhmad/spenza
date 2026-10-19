@@ -312,7 +312,7 @@ class _MyInfoContentState extends State<_MyInfoContent> {
               Row(
                 spacing: 8.0,
                 children: [
-                  SvgPicture.asset('assets/icons/shield_icon.svg'),
+                  SvgPicture.asset(AppAssets.shieldIcon),
                   Text(
                     phoneText,
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(

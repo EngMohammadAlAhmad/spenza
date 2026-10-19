@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
 
 class AddressCard extends StatelessWidget {
@@ -102,7 +103,7 @@ class AddressCard extends StatelessWidget {
             ),
             InkWell(
               onTap: onEditPressed,
-              child: SvgPicture.asset('assets/icons/edit_icon.svg'),
+              child: SvgPicture.asset(AppAssets.editIcon),
             ),
           ],
         ),

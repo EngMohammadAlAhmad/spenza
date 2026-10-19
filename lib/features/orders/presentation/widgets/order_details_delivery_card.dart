@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/features/orders/domain/entities/order_details_entity.dart';
 
 class OrderDetailsDeliveryCard extends StatelessWidget {
@@ -32,7 +33,7 @@ class OrderDetailsDeliveryCard extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),

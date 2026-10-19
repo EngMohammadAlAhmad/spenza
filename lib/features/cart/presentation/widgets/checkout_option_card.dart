@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 
 class CheckoutOptionCard extends StatelessWidget {
   final String title;
@@ -36,12 +37,12 @@ class CheckoutOptionCard extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: isEnabled ? onTap : null,
-          borderRadius: BorderRadius.circular(18.0),
+          borderRadius: AppRadius.upMedium,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
             decoration: BoxDecoration(
               color: isSelected ? const Color(0xFFFDF2F2) : Colors.white,
-              borderRadius: BorderRadius.circular(18.0),
+              borderRadius: AppRadius.upMedium,
               border: Border.all(
                 color: isSelected ? AppColors.primary500 : Colors.transparent,
                 width: 1.5,

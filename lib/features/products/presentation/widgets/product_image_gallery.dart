@@ -7,6 +7,7 @@ import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favorites_bloc.dart';
 import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favorites_event.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/widgets/app_icon_placeholder.dart';
 import 'package:spenza/core/widgets/circle_action_button.dart';
 import 'package:spenza/core/widgets/favorite_button.dart';
@@ -170,7 +171,7 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                   width: 64.0,
                   decoration: BoxDecoration(
                     color: isSelected ? AppColors.secondary.withValues(alpha: 0.1) : Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: AppRadius.large,
                     border: Border.all(
                       color: isSelected ? AppColors.secondary : AppColors.fillColor,
                       width: 2,
@@ -190,7 +191,7 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                     children: [
                       if (item.type == GalleryItemType.image && item.url != null)
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(18),
+                          borderRadius: AppRadius.upMedium,
                           child: CachedNetworkImage(
                             imageUrl: item.url!,
                             fit: BoxFit.cover,

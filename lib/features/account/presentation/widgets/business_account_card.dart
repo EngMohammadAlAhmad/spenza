@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 
 class BusinessAccountCard extends StatelessWidget {
   final VoidCallback? onTap;
@@ -37,7 +38,7 @@ class BusinessAccountCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
             child: Row(
               children: [
-                SvgPicture.asset('assets/icons/enterprise_icon.svg'),
+                SvgPicture.asset(AppAssets.enterpriseIcon),
                 const SizedBox(width: 12.0),
 
                 // Middle: Description

@@ -25,6 +25,8 @@ class OrderDetailsEntity extends Equatable {
   final OrderTrackingEntity? tracking;
   final bool isCompleted;
   final bool canBeCancelled;
+  final bool canUploadReceipt;
+  final String? rejectionReason;
   final String placedAt;
   final String? createdAt;
   final String address;
@@ -53,6 +55,8 @@ class OrderDetailsEntity extends Equatable {
     this.tracking,
     required this.isCompleted,
     required this.canBeCancelled,
+    this.canUploadReceipt = false,
+    this.rejectionReason,
     required this.placedAt,
     this.createdAt,
     required this.address,
@@ -83,6 +87,8 @@ class OrderDetailsEntity extends Equatable {
         tracking,
         isCompleted,
         canBeCancelled,
+        canUploadReceipt,
+        rejectionReason,
         placedAt,
         createdAt,
         address,

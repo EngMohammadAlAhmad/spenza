@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/widgets/app_icon_placeholder.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 
@@ -25,7 +26,7 @@ class CategoryCard extends StatelessWidget {
       child: Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24.0),
+        borderRadius: AppRadius.extraLarge,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),

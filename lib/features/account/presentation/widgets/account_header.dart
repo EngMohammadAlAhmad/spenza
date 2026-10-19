@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/features/account/domain/entities/user_entity.dart';
 import 'package:spenza/features/orders/presentation/widgets/animated_three_dots.dart';
@@ -134,7 +135,7 @@ class AccountHeader extends StatelessWidget {
               onTap: onEditPressed,
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: SvgPicture.asset('assets/icons/edit_icon.svg'),
+                child: SvgPicture.asset(AppAssets.editIcon),
               ),
             ),
           ),

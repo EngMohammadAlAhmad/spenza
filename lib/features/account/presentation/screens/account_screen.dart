@@ -6,6 +6,7 @@ import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/account/domain/entities/user_entity.dart';
@@ -128,7 +129,7 @@ class AccountScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SvgPicture.asset(
-                        'assets/images/personal_data.svg',
+                        AppAssets.personalData,
                       ),
                       const SizedBox(height: 20.0),
                       const Text(
@@ -179,7 +180,7 @@ class AccountScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         AccountMenuItem(
-                          iconPath: 'assets/icons/settings_icon.svg',
+                          iconPath: AppAssets.settingsIcon,
                           title: 'الإعدادات',
                           onTap: () => context.push(RoutePaths.settings),
                         ),
@@ -192,7 +193,7 @@ class AccountScreen extends StatelessWidget {
                           ),
                         ),
                         AccountMenuItem(
-                          iconPath: 'assets/icons/support_icon.svg',
+                          iconPath: AppAssets.supportIcon,
                           title: 'المساعدة والدعم',
                           onTap: () {},
                         ),
@@ -205,7 +206,7 @@ class AccountScreen extends StatelessWidget {
                           ),
                         ),
                         AccountMenuItem(
-                          iconPath: 'assets/icons/terms_icon.svg',
+                          iconPath: AppAssets.termsIcon,
                           title: 'الشروط والخصوصية',
                           onTap: () {},
                         ),
@@ -290,19 +291,19 @@ class AccountScreen extends StatelessWidget {
                                   title: 'الحساب',
                                   items: [
                                     AccountMenuItem(
-                                      iconPath: 'assets/icons/my_info_icon.svg',
+                                      iconPath: AppAssets.myInfoIcon,
                                       title: 'معلوماتي',
                                       onTap: () => _navigateToMyInfo(context, user),
                                     ),
                                     AccountMenuItem(
-                                      iconPath: 'assets/icons/my_addresses_icon.svg',
+                                      iconPath: AppAssets.myAddressesIcon,
                                       title: 'عناويني',
                                       onTap: () {
                                         context.push(RoutePaths.addresses);
                                       },
                                     ),
                                     AccountMenuItem(
-                                      iconPath: 'assets/icons/notifications_icon_2.svg',
+                                      iconPath: AppAssets.notificationsIcon2,
                                       title: 'الإشعارات',
                                       //badgeText: '2 جديد',
                                       onTap: () {
@@ -318,17 +319,17 @@ class AccountScreen extends StatelessWidget {
                                   title: 'التطبيق',
                                   items: [
                                     AccountMenuItem(
-                                      iconPath: 'assets/icons/settings_icon.svg',
+                                      iconPath: AppAssets.settingsIcon,
                                       title: 'الإعدادات',
                                       onTap: () => context.push(RoutePaths.settings),
                                     ),
                                     AccountMenuItem(
-                                      iconPath: 'assets/icons/support_icon.svg',
+                                      iconPath: AppAssets.supportIcon,
                                       title: 'المساعدة والدعم',
                                       onTap: () {},
                                     ),
                                     AccountMenuItem(
-                                      iconPath: 'assets/icons/terms_icon.svg',
+                                      iconPath: AppAssets.termsIcon,
                                       title: 'الشروط والخصوصية',
                                       onTap: () {},
                                     ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 
 class NoInternetWidget extends StatelessWidget {
@@ -16,7 +17,7 @@ class NoInternetWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset('assets/icons/no_wifi_icon.svg'),
+            SvgPicture.asset(AppAssets.noWifiIcon),
             const SizedBox(height: 24),
             Text(
               'النت قاطع عندك',
@@ -37,7 +38,7 @@ class NoInternetWidget extends StatelessWidget {
             CustomButton(
               text: 'جرب مرة تانية',
               isOutlined: true,
-              icon: SvgPicture.asset('assets/icons/refresh_icon.svg'),
+              icon: SvgPicture.asset(AppAssets.refreshIcon),
               width: 146.0,
               height: 40.0,
               underlayerColor: Colors.white,

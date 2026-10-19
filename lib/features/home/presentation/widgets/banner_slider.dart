@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/features/home/domain/entities/banner_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spenza/core/widgets/app_icon_placeholder.dart';
@@ -29,7 +30,7 @@ class _BannerSliderState extends State<BannerSlider> {
         child: ShimmerPlaceholder(
           width: double.infinity,
           height: 152.0,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: AppRadius.overMedium,
         ),
       );
     }
@@ -46,7 +47,7 @@ class _BannerSliderState extends State<BannerSlider> {
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 10.0),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: AppRadius.overMedium,
                 child: CachedNetworkImage(
                   imageUrl: banner.image,
                   fit: BoxFit.cover,

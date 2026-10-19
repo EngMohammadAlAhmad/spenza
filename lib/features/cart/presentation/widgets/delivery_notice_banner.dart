@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
 
 class DeliveryNoticeBanner extends StatelessWidget {
@@ -20,10 +21,10 @@ class DeliveryNoticeBanner extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: const Color(0xFFEEF2FF),
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: AppRadius.upMedium,
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           const Icon(
             Icons.info_outline_rounded,
@@ -33,7 +34,7 @@ class DeliveryNoticeBanner extends StatelessWidget {
           const SizedBox(width: 12.0),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Text(
                   'التوصيل لـ $cityName',

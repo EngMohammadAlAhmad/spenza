@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
@@ -434,7 +435,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
                             ),
                             child: Row(
                               children: [
-                                SvgPicture.asset('assets/icons/home_icon_2.svg'),
+                                SvgPicture.asset(AppAssets.homeIcon2),
                                 const SizedBox(width: 10.0),
                                 Expanded(
                                   child: Text(

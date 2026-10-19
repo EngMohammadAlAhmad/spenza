@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/routes/route_paths.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/features/onboarding/domain/usecases/get_onboarding_status_usecase.dart';
 import 'package:spenza/injection_locator.dart' as di;
 
@@ -45,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SvgPicture.asset('assets/images/splash_screen.svg'),
+        child: SvgPicture.asset(AppAssets.splashScreen),
       ),
     );
   }

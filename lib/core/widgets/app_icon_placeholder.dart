@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 
 class AppIconPlaceholder extends StatelessWidget {
   final double size;
@@ -18,7 +19,7 @@ class AppIconPlaceholder extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(padding),
         child: Image.asset(
-          'assets/images/logo_watermark.png',
+          AppAssets.logoWatermark,
           width: size,
           height: size,
           color: color ?? Colors.grey[300],

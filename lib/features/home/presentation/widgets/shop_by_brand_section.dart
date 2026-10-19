@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
-import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/shared/entities/brand_entity.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
@@ -69,10 +68,10 @@ class ShopByBrandSection extends StatelessWidget {
                         margin: EdgeInsets.zero,
                         elevation: 0.0,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: AppRadius.medium,
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: AppRadius.medium,
                           child: brand.name.isNotEmpty
                               ? Center(child: Text(brand.name, style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             fontSize: 15.0,

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/features/points_market/domain/entities/points_summary_entity.dart';
@@ -26,7 +27,7 @@ class PointsMarketHeader extends StatelessWidget {
           trailingActions: [
             IconButton(
               onPressed: () => context.push(RoutePaths.pointsHistory),
-              icon: SvgPicture.asset('assets/icons/activity_icon.svg'),
+              icon: SvgPicture.asset(AppAssets.activityIcon),
             ),
           ],
           padding: EdgeInsets.only(
@@ -52,7 +53,7 @@ class PointsMarketHeader extends StatelessWidget {
                       borderRadius: AppRadius.upMedium,
                       color: Colors.white,
                     ),
-                    child: SvgPicture.asset('assets/images/icon_small.svg'),
+                    child: SvgPicture.asset(AppAssets.iconSmall),
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,7 +98,7 @@ class PointsMarketHeader extends StatelessWidget {
                 padding: const EdgeInsets.all(14.0),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.18),
-                  borderRadius: BorderRadius.circular(18.0),
+                  borderRadius: AppRadius.upMedium,
                   border: Border.all(
                     color: Colors.white.withValues(alpha: 0.25),
                     width: 1.0,
@@ -117,7 +118,7 @@ class PointsMarketHeader extends StatelessWidget {
                     ),
                     const SizedBox(height: 10.0),
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: AppRadius.ordinary,
                       child: LinearProgressIndicator(
                         value: 0.92,
                         minHeight: 6,
@@ -145,7 +146,7 @@ class PointsMarketHeader extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 10.0),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(24.0),
+                        borderRadius: AppRadius.extraLarge,
                       ),
                       child: const Text(
                         'مكافآتي',
@@ -165,7 +166,7 @@ class PointsMarketHeader extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(24.0),
+                        borderRadius: AppRadius.extraLarge,
                         border: Border.all(
                           color: Colors.white.withValues(alpha: 0.3),
                         ),
@@ -174,12 +175,12 @@ class PointsMarketHeader extends StatelessWidget {
                         spacing: 6.0,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SvgPicture.asset('assets/icons/activity_icon.svg'),
+                          SvgPicture.asset(AppAssets.activityIcon),
                           const Text(
                             'حركة النقاط',
                             style: TextStyle(
                               color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: .bold,
                               fontSize: 13,
                             ),
                           ),

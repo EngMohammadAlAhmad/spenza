@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 
 class EmptyAddressesWidget extends StatelessWidget {
@@ -19,8 +20,8 @@ class EmptyAddressesWidget extends StatelessWidget {
         children: [
           const Spacer(),
           SvgPicture.asset(
-            'assets/images/no_addresses.svg',
-            width: 220,
+            AppAssets.noAddresses,
+            width: 220.0,
             fit: BoxFit.contain,
           ),
           const SizedBox(height: 32.0),

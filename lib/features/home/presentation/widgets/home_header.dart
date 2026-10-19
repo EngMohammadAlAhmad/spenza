@@ -6,7 +6,9 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/animations/circular_reveal_route.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_bloc.dart';
@@ -88,13 +90,13 @@ class _HomeHeaderContent extends StatelessWidget {
                     }
                   }
                 },
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: AppRadius.small,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 2.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SvgPicture.asset('assets/icons/location_icon.svg'),
+                      SvgPicture.asset(AppAssets.locationIcon),
                       const SizedBox(width: 6.0),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +150,7 @@ class _HomeHeaderContent extends StatelessWidget {
                     context.push(RoutePaths.cart);
                   }
                 },
-                icon: SvgPicture.asset('assets/icons/cart_icon.svg'),
+                icon: SvgPicture.asset(AppAssets.cartIcon),
               ),
               IconButton(
                 padding: const EdgeInsets.all(6.0),
@@ -156,7 +158,7 @@ class _HomeHeaderContent extends StatelessWidget {
                 onPressed: () {
                   context.push(RoutePaths.notifications);
                 },
-                icon: SvgPicture.asset('assets/icons/notifications_icon.svg'),
+                icon: SvgPicture.asset(AppAssets.notificationsIcon),
               ),
             ],
           ),

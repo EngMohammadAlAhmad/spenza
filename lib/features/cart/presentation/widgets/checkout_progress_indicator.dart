@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/themes/app_radius.dart';
 
 class CheckoutProgressIndicator extends StatelessWidget {
   final int currentStep;
@@ -28,7 +29,7 @@ class CheckoutProgressIndicator extends StatelessWidget {
               height: 6.0,
               decoration: BoxDecoration(
                 color: isActive ? AppColors.primary : AppColors.neutralBorderStrong,
-                borderRadius: BorderRadius.circular(4.0),
+                borderRadius: AppRadius.mini,
               ),
             ),
           );

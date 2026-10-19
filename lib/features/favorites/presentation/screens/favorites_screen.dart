@@ -11,6 +11,7 @@ import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favo
 import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favorites_event.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/favorites/presentation/widgets/favorites_header.dart';
 
@@ -117,7 +118,7 @@ class FavoritesScreen extends StatelessWidget {
         CustomButton(
           text: 'تسجيل الدخول',
           onPressed: () => context.push(RoutePaths.login),
-          icon: SvgPicture.asset('assets/icons/login_icon.svg'),
+          icon: SvgPicture.asset(AppAssets.loginIcon),
           width: 200.0,
         ).animate().fadeIn(delay: 600.ms).scale(begin: const Offset(0.95, 0.95)),
         

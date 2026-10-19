@@ -50,6 +50,7 @@ flutter:
     - assets/icons/
     - assets/fonts/
     - assets/images/
+    - assets/images/png/
     - assets/images/temp/
 
   fonts:
@@ -71,11 +72,11 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/app_icon.png"
+  image_path: "assets/images/png/app_icon.png"
 
   # Android Adaptive Icon (for Android 8.0+)
   adaptive_icon_background: "#D46B60"
-  adaptive_icon_foreground: "assets/images/app_icon.png"
+  adaptive_icon_foreground: "assets/images/png/app_icon.png"
 
   # iOS specific settings
   remove_alpha_ios: true
