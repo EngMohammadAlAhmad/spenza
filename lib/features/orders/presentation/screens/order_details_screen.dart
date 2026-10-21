@@ -125,7 +125,12 @@ class _OrderDetailsContent extends StatelessWidget {
                 spacing: 14.0,
                 children: [
                   // 1. Stepper Card
-                  OrderDetailsStepperCard(tracking: order.tracking),
+                  OrderDetailsStepperCard(
+                    tracking: order.tracking,
+                    orderStatus: order.status,
+                    statusLabel: order.statusLabel,
+                    rejectionReason: order.rejectionReason,
+                  ),
 
                   // 2. Payment Card
                   OrderDetailsPaymentCard(
@@ -158,7 +163,10 @@ class _OrderDetailsContent extends StatelessWidget {
                       ),
 
                   // 5. Invoice Card
-                  const OrderDetailsInvoiceCard()
+                  OrderDetailsInvoiceCard(
+                    orderNumber: order.orderNumber,
+                    orderStatus: order.statusLabel,
+                  )
                       .animate(delay: 640.ms)
                       .fadeIn(duration: 500.ms)
                       .slideY(

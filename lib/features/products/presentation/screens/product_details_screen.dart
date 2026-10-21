@@ -88,15 +88,25 @@ class ProductDetailsScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: AppColors.primary,
                       borderRadius: AppRadius.large,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0.0, 4.0),
+                        ),
+                      ],
                     ),
                     child: Text(
                       'وفّر ${(product.price - product.discountedPrice).toStringAsFixed(0)} ل.س',
                       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
                     ),
-                  ).animate().scale(delay: 400.ms, duration: 400.ms, curve: Curves.easeInOut),
+                  )
+                      .animate()
+                      .fadeIn(delay: 500.ms, duration: 650.ms)
+                      .scale(begin: const Offset(0.4, 0.4), duration: 750.ms, curve: Curves.easeOutBack),
                 ),
             ],
-          ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.1, end: 0),
+          ),
           
           Padding(
             padding: const EdgeInsets.all(24.0),
@@ -114,13 +124,13 @@ class ProductDetailsScreen extends StatelessWidget {
                     product.category.name,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
                   ),
-                ).animate().fadeIn(delay: 200.ms).slideX(begin: 0.1, end: 0),
+                ).animate().fadeIn(delay: 300.ms, duration: 600.ms).slideX(begin: 0.08, end: 0, duration: 600.ms, curve: Curves.easeOutCubic),
                 const SizedBox(height: 10.0),
                 Text(
                   product.title,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w800),
                   textAlign: TextAlign.right,
-                ).animate().fadeIn(delay: 300.ms).slideX(begin: 0.1, end: 0),
+                ).animate().fadeIn(delay: 400.ms, duration: 600.ms).slideX(begin: 0.08, end: 0, duration: 600.ms, curve: Curves.easeOutCubic),
                 
                 // Rating
                 const SizedBox(height: 16.0),
@@ -142,7 +152,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       style: TextStyle(color: AppColors.neutral, fontSize: 14.0),
                     ),
                   ],
-                ).animate().fadeIn(delay: 400.ms),
+                ).animate().fadeIn(delay: 500.ms, duration: 600.ms),
                 const SizedBox(height: 16.0),
                 Text.rich(
                   TextSpan(
@@ -171,7 +181,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                ).animate().fadeIn(delay: 500.ms).slideX(begin: 0.1, end: 0),
+                ).animate().fadeIn(delay: 600.ms, duration: 650.ms).slideX(begin: 0.08, end: 0, duration: 650.ms, curve: Curves.easeOutCubic),
                 const SizedBox(height: 16.0),
                 Row(
                   children: [
@@ -182,30 +192,30 @@ class ProductDetailsScreen extends StatelessWidget {
                       style: TextStyle(color: isOutOfStock ? Colors.red : Colors.green, fontWeight: FontWeight.bold, fontSize: 12.0),
                     ),
                   ],
-                ).animate().fadeIn(delay: 600.ms),
+                ).animate().fadeIn(delay: 700.ms, duration: 600.ms),
                 const SizedBox(height: 20.0),
                 // Units
-                Text('الوحدة', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold)).animate().fadeIn(delay: 700.ms),
+                Text('الوحدة', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold)).animate().fadeIn(delay: 800.ms, duration: 600.ms),
                 const SizedBox(height: 12),
                 _buildOptionsRow(
                   context,
                   options: product.units.map((u) => _SelectionItem(id: u.id, label: u.title)).toList(),
                   selectedId: state.selectedUnitId,
                   onSelected: (id) => context.read<ProductDetailsBloc>().add(SelectUnitEvent(id)),
-                ).animate().fadeIn(delay: 750.ms).slideY(begin: 0.1, end: 0),
+                ).animate().fadeIn(delay: 870.ms, duration: 650.ms).slideY(begin: 0.08, end: 0, duration: 650.ms, curve: Curves.easeOutCubic),
                 
                 const SizedBox(height: 24),
                 
                 // Variants
                 for (var option in product.variantOptions) ...[
-                  Text(option.name, style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold)).animate().fadeIn(delay: 800.ms),
+                  Text(option.name, style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold)).animate().fadeIn(delay: 950.ms, duration: 600.ms),
                   const SizedBox(height: 12),
                   _buildOptionsRow(
                     context,
                     options: option.values.map((v) => _SelectionItem(id: v.valueId, label: v.name)).toList(),
                     selectedId: state.selectedOptions[option.attributeId] ?? 0,
                     onSelected: (valId) => context.read<ProductDetailsBloc>().add(SelectVariantOptionEvent(attributeId: option.attributeId, valueId: valId)),
-                  ).animate().fadeIn(delay: 850.ms).slideY(begin: 0.1, end: 0),
+                  ).animate().fadeIn(delay: 1020.ms, duration: 650.ms).slideY(begin: 0.08, end: 0, duration: 650.ms, curve: Curves.easeOutCubic),
                   const SizedBox(height: 24),
                 ],
                 
@@ -228,21 +238,21 @@ class ProductDetailsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                ).animate(delay: 900.ms).fadeIn().scale(begin: const Offset(0.95, 0.95)),
+                ).animate().fadeIn(delay: 1100.ms, duration: 700.ms).scale(begin: const Offset(0.95, 0.95), duration: 700.ms, curve: Curves.easeOutCubic),
                 
                 const SizedBox(height: 30.0),
                 // Description
-                Text('الوصف', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold, color: AppColors.primary)).animate().fadeIn(delay: 1000.ms),
+                Text('الوصف', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold, color: AppColors.primary)).animate().fadeIn(delay: 1200.ms, duration: 600.ms),
                 const SizedBox(height: 12.0),
                 Text(
                   product.description,
                   style: Theme.of(context).textTheme.bodyMedium,
-                ).animate().fadeIn(delay: 1100.ms),
+                ).animate().fadeIn(delay: 1280.ms, duration: 650.ms),
                 
                 const SizedBox(height: 48),
                 
                 // Related
-                Text('قد يعجبك أيضاً', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold, color: AppColors.primary)).animate().fadeIn(delay: 1200.ms),
+                Text('قد يعجبك أيضاً', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold, color: AppColors.primary)).animate().fadeIn(delay: 1380.ms, duration: 600.ms),
                 const SizedBox(height: 20),
                 SizedBox(
                   height: 300,
@@ -256,7 +266,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       child: ProductCard(product: data.relatedProducts[index]),
                     ),
                   ),
-                ).animate().fadeIn(delay: 1300.ms).slideY(begin: 0.1, end: 0),
+                ).animate().fadeIn(delay: 1450.ms, duration: 750.ms).slideY(begin: 0.08, end: 0, duration: 750.ms, curve: Curves.easeOutCubic),
                 const SizedBox(height: 20.0),
               ],
             ),

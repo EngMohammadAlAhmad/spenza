@@ -30,7 +30,15 @@ class OrderDetailsPaymentCard extends StatelessWidget {
         method == 'bank_transfer';
     final isPending = status == 'pending';
     final isRejected = status == 'rejected' || status.contains('reject');
-    final showUploadButton = (isBankTransfer && isPending) || (isRejected && order.canUploadReceipt);
+    final orderStatus = order.status.toLowerCase();
+    final isOrderCancelled = orderStatus.contains('cancel') ||
+        orderStatus.contains('fail') ||
+        orderStatus.contains('reject') ||
+        order.statusLabel.contains('ملغ') ||
+        order.statusLabel.contains('إلغاء');
+    final showUploadButton = !isOrderCancelled &&
+        order.canUploadReceipt &&
+        ((isBankTransfer && isPending) || isRejected);
     final paymentStatusStyle = _getPaymentStatusStyle(order);
 
     return Container(

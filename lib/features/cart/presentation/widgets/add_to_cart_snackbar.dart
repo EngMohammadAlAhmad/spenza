@@ -101,7 +101,7 @@ class _AddToCartBannerWidgetState extends State<_AddToCartBannerWidget>
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: 90.0,
+      bottom: 120.0,
       left: 16.0,
       right: 16.0,
       child: SlideTransition(

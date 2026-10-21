@@ -9,11 +9,29 @@ import 'package:spenza/features/orders/domain/entities/order_tracking_stage_enti
 
 class OrderDetailsStepperCard extends StatelessWidget {
   final OrderTrackingEntity? tracking;
+  final String? orderStatus;
+  final String? statusLabel;
+  final String? rejectionReason;
 
   const OrderDetailsStepperCard({
     super.key,
     required this.tracking,
+    this.orderStatus,
+    this.statusLabel,
+    this.rejectionReason,
   });
+
+  bool get _isCancelled {
+    if (tracking?.isCancelled == true) return true;
+    final status = orderStatus?.toLowerCase() ?? '';
+    final label = statusLabel ?? '';
+    return status.contains('cancel') ||
+        status.contains('fail') ||
+        status.contains('reject') ||
+        label.contains('ملغ') ||
+        label.contains('إلغاء') ||
+        label.contains('مرفوض');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +39,7 @@ class OrderDetailsStepperCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 20.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: AppRadius.upMedium,
@@ -42,7 +60,32 @@ class OrderDetailsStepperCard extends StatelessWidget {
 
           return Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Top Title & Subtitle Header (When Cancelled)
+              if (_isCancelled) ...[
+                Text(
+                  'انلغى طلبك',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.neutral900,
+                        fontSize: 20.0,
+                      ),
+                ),
+                const SizedBox(height: 4.0),
+                Text(
+                  tracking?.message.isNotEmpty == true
+                      ? tracking!.message
+                      : 'لغينا الطلب مثل ما طلبت، وما انطلب منك أي مبلغ.',
+                  style: const TextStyle(
+                    fontSize: 13.0,
+                    color: AppColors.textSecondary,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+              ],
+
               // Stepper Nodes & Lines Stack
               SizedBox(
                 height: 52.0,
@@ -58,7 +101,8 @@ class OrderDetailsStepperCard extends StatelessWidget {
                         borderRadius: AppRadius.mini,
                         child: Row(
                           children: List.generate(stepCount - 1, (index) {
-                            final isLineReached = stages[index + 1].isReached || stages[index + 1].isCurrent;
+                            final isLineReached = stages[index + 1].isReached ||
+                                stages[index + 1].isCurrent;
                             return Expanded(
                               child: _buildLineSegment(context, isLineReached, index),
                             );
@@ -99,6 +143,19 @@ class OrderDetailsStepperCard extends StatelessWidget {
                 children: stages.asMap().entries.map((entry) {
                   final index = entry.key;
                   final stage = entry.value;
+                  final isCancelledStage = stage.key == 'cancelled';
+
+                  Color titleColor;
+                  if (isCancelledStage) {
+                    titleColor = const Color(0xFFDC2626);
+                  } else if (stage.isCurrent) {
+                    titleColor = const Color(0xFFC74436);
+                  } else if (stage.isReached) {
+                    titleColor = AppColors.neutral900;
+                  } else {
+                    titleColor = AppColors.textSecondary;
+                  }
+
                   return Expanded(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -107,14 +164,10 @@ class OrderDetailsStepperCard extends StatelessWidget {
                           stage.title,
                           style: TextStyle(
                             fontSize: 13.0,
-                            fontWeight: stage.isCurrent || stage.isReached
+                            fontWeight: stage.isCurrent || stage.isReached || isCancelledStage
                                 ? FontWeight.bold
                                 : FontWeight.w600,
-                            color: stage.isCurrent
-                                ? const Color(0xFFC74436)
-                                : (stage.isReached
-                                    ? AppColors.neutral900
-                                    : AppColors.textSecondary),
+                            color: titleColor,
                           ),
                           textAlign: TextAlign.center,
                           maxLines: 2,
@@ -143,6 +196,75 @@ class OrderDetailsStepperCard extends StatelessWidget {
                   );
                 }).toList(),
               ),
+
+              // Bottom Red Cancellation Banner Box
+              if (_isCancelled) ...[
+                const SizedBox(height: 18.0),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF0F0),
+                    borderRadius: BorderRadius.circular(16.0),
+                    border: Border.all(
+                      color: const Color(0xFFFEE2E2),
+                      width: 1.0,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 22.0,
+                            height: 22.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: const Color(0xFFDC2626),
+                                width: 1.5,
+                              ),
+                            ),
+                            alignment: Alignment.center,
+                            child: const Icon(
+                              Icons.close_rounded,
+                              size: 14.0,
+                              color: Color(0xFFDC2626),
+                            ),
+                          ),
+                          const SizedBox(width: 8.0),
+                          Expanded(
+                            child: Text(
+                              _getRejectionReasonTitle(),
+                              style: const TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFDC2626),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (_getRejectionReasonDetail().isNotEmpty) ...[
+                        const SizedBox(height: 6.0),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 30.0),
+                          child: Text(
+                            _getRejectionReasonDetail(),
+                            style: const TextStyle(
+                              fontSize: 13.0,
+                              color: Color(0xFF4B5563),
+                              height: 1.45,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
             ],
           );
         },
@@ -185,8 +307,12 @@ class OrderDetailsStepperCard extends StatelessWidget {
   }
 
   Widget _buildStepNode(OrderTrackingStageEntity stage) {
-    if (stage.isCurrent) {
-      return _ActivePulseNode(stageKey: stage.key);
+    if (stage.key == 'cancelled' || stage.isCurrent) {
+      final isCancelledNode = stage.key == 'cancelled';
+      return _ActivePulseNode(
+        stageKey: stage.key,
+        color: isCancelledNode ? const Color(0xFFDC2626) : const Color(0xFFC74436),
+      );
     } else if (stage.isReached) {
       return Container(
         width: 30.0,
@@ -226,6 +352,50 @@ class OrderDetailsStepperCard extends StatelessWidget {
   }
 
   List<OrderTrackingStageEntity> _getTrackingStages(OrderTrackingEntity? tracking) {
+    if (_isCancelled) {
+      String receivedTime = '';
+      String cancelledTime = '';
+      if (tracking != null && tracking.stages.isNotEmpty) {
+        if (tracking.stages.isNotEmpty) receivedTime = tracking.stages[0].description;
+        if (tracking.stages.length > 1) cancelledTime = tracking.stages[1].description;
+      }
+
+      return [
+        OrderTrackingStageEntity(
+          key: 'received',
+          step: 1,
+          title: 'استلمنا طلبك',
+          description: receivedTime,
+          isReached: true,
+          isCurrent: false,
+        ),
+        OrderTrackingStageEntity(
+          key: 'cancelled',
+          step: 2,
+          title: 'انلغى',
+          description: cancelledTime,
+          isReached: true,
+          isCurrent: true,
+        ),
+        OrderTrackingStageEntity(
+          key: 'with_courier',
+          step: 3,
+          title: 'مع المندوب',
+          description: '',
+          isReached: false,
+          isCurrent: false,
+        ),
+        OrderTrackingStageEntity(
+          key: 'delivered',
+          step: 4,
+          title: 'وصل',
+          description: '',
+          isReached: false,
+          isCurrent: false,
+        ),
+      ];
+    }
+
     if (tracking != null && tracking.stages.isNotEmpty) {
       return tracking.stages;
     }
@@ -260,7 +430,7 @@ class OrderDetailsStepperCard extends StatelessWidget {
       OrderTrackingStageEntity(
         key: 'delivered',
         step: 4,
-        title: 'وصل لسا',
+        title: 'وصل',
         description: 'تم التسليم',
         isReached: currentStep >= 4,
         isCurrent: currentStep == 4,
@@ -284,12 +454,34 @@ class OrderDetailsStepperCard extends StatelessWidget {
         return AppAssets.packageCheckIcon;
     }
   }
+
+  String _getRejectionReasonTitle() {
+    if (rejectionReason != null && rejectionReason!.trim().isNotEmpty) {
+      final reason = rejectionReason!.trim();
+      if (reason.startsWith('السبب:') || reason.startsWith('سبب:')) {
+        return reason;
+      }
+      return 'السبب: $reason';
+    }
+    return 'السبب: الرجاء التواصل مع الدعم';
+  }
+
+  String _getRejectionReasonDetail() {
+    if (rejectionReason != null && rejectionReason!.trim().isNotEmpty) {
+      return '';
+    }
+    return 'السبب: الرجاء التواصل مع الدعم';
+  }
 }
 
 class _ActivePulseNode extends StatefulWidget {
   final String stageKey;
+  final Color color;
 
-  const _ActivePulseNode({required this.stageKey});
+  const _ActivePulseNode({
+    required this.stageKey,
+    this.color = const Color(0xFFC74436),
+  });
 
   @override
   State<_ActivePulseNode> createState() => _ActivePulseNodeState();
@@ -347,7 +539,7 @@ class _ActivePulseNodeState extends State<_ActivePulseNode>
                   width: 52.0,
                   height: 52.0,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFC74436).withValues(alpha: _opacityAnimation.value * 0.5),
+                    color: widget.color.withValues(alpha: _opacityAnimation.value * 0.5),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -364,7 +556,7 @@ class _ActivePulseNodeState extends State<_ActivePulseNode>
                   width: 52.0,
                   height: 52.0,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFC74436).withValues(alpha: _opacityAnimation.value),
+                    color: widget.color.withValues(alpha: _opacityAnimation.value),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -375,14 +567,14 @@ class _ActivePulseNodeState extends State<_ActivePulseNode>
           Container(
             width: 38.0,
             height: 38.0,
-            decoration: const BoxDecoration(
-              color: Color(0xFFC74436),
+            decoration: BoxDecoration(
+              color: widget.color,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Color(0x40C74436),
+                  color: widget.color.withValues(alpha: 0.35),
                   blurRadius: 10,
-                  offset: Offset(0, 3),
+                  offset: const Offset(0, 3),
                 ),
               ],
             ),
@@ -396,6 +588,14 @@ class _ActivePulseNodeState extends State<_ActivePulseNode>
 
   Widget _buildStageIcon(String key) {
     final lowerKey = key.toLowerCase();
+    if (lowerKey == 'cancelled') {
+      return const Icon(
+        Icons.close_rounded,
+        size: 22.0,
+        color: Colors.white,
+      );
+    }
+
     final iconPath = _getStageIcon(lowerKey);
 
     if (lowerKey == 'preparing' || lowerKey == 'processing') {
@@ -498,4 +698,3 @@ class _RotatingPreparingIconState extends State<_RotatingPreparingIcon>
     );
   }
 }
-

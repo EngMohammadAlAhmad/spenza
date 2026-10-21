@@ -72,11 +72,15 @@ class _MyInfoContentState extends State<_MyInfoContent> {
     return Scaffold(
       backgroundColor: AppColors.neutralBackground,
       body: BlocConsumer<MyInfoBloc, MyInfoState>(
+        listenWhen: (previous, current) =>
+            previous.updateProfileStatus != current.updateProfileStatus ||
+            previous.requestPhoneStatus != current.requestPhoneStatus,
         listener: (context, myInfoState) {
           // 1. Profile Update Listener
           if (myInfoState.updateProfileStatus == RequestStatus.success) {
             SnackbarService.showSuccess(context, message: 'تم حفظ التغييرات بنجاح');
             context.pop(myInfoState.user);
+            context.read<MyInfoBloc>().add(const ResetMyInfoStatusEvent());
           } else if (myInfoState.updateProfileStatus == RequestStatus.error) {
             SnackbarService.showError(
               context,
@@ -93,6 +97,8 @@ class _MyInfoContentState extends State<_MyInfoContent> {
 
             final rawPhone = _newPhoneController.text.replaceAll(' ', '');
             final formattedPhone = rawPhone.startsWith('0') ? rawPhone.substring(1) : rawPhone;
+
+            context.read<MyInfoBloc>().add(const ResetMyInfoStatusEvent());
 
             Navigator.push(
               context,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 
 enum SnackbarType {
@@ -58,6 +60,8 @@ class SnackbarService {
         Color? foregroundColor,
         IconData? icon,
         VoidCallback? onTap,
+        String? actionLabel,
+        VoidCallback? onActionPressed,
       }) {
     final config = _configs[type]!;
     final effectiveBackgroundColor = backgroundColor ?? config.backgroundColor;
@@ -82,6 +86,8 @@ class SnackbarService {
         duration: duration,
         showCloseButton: showCloseButton,
         onTap: onTap,
+        actionLabel: actionLabel,
+        onActionPressed: onActionPressed,
         onDismiss: () {
           if (_currentOverlayEntry == overlayEntry) {
             overlayEntry.remove();
@@ -101,6 +107,23 @@ class SnackbarService {
         _currentOverlayEntry = null;
       }
     });
+  }
+
+  /// Convenience method for login required snackbar
+  static void showAuthRequired(
+    BuildContext context, {
+    String message = 'سجّل دخولك أولاً لإضافة المنتجات إلى السلة',
+  }) {
+    show(
+      context,
+      message: message,
+      type: SnackbarType.warning,
+      duration: const Duration(seconds: 4),
+      actionLabel: 'تسجيل الدخول',
+      onActionPressed: () {
+        context.push(RoutePaths.login);
+      },
+    );
   }
 
   /// Convenience method for success snackbar
@@ -177,6 +200,8 @@ class _SnackbarOverlay extends StatefulWidget {
   final Duration duration;
   final bool showCloseButton;
   final VoidCallback? onTap;
+  final String? actionLabel;
+  final VoidCallback? onActionPressed;
   final VoidCallback onDismiss;
 
   const _SnackbarOverlay({
@@ -188,6 +213,8 @@ class _SnackbarOverlay extends StatefulWidget {
     required this.duration,
     required this.showCloseButton,
     this.onTap,
+    this.actionLabel,
+    this.onActionPressed,
     required this.onDismiss,
   });
 
@@ -326,6 +353,36 @@ class _SnackbarOverlayState extends State<_SnackbarOverlay>
                             ],
                           ),
                         ),
+
+                        // Action Button (e.g., "تسجيل الدخول")
+                        if (widget.actionLabel != null && widget.onActionPressed != null) ...[
+                          const SizedBox(width: 8.0),
+                          InkWell(
+                            onTap: () {
+                              _dismiss();
+                              widget.onActionPressed!();
+                            },
+                            borderRadius: AppRadius.medium,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 6.0,
+                              ),
+                              decoration: BoxDecoration(
+                                color: widget.foregroundColor,
+                                borderRadius: AppRadius.medium,
+                              ),
+                              child: Text(
+                                widget.actionLabel!,
+                                style: TextStyle(
+                                  color: widget.backgroundColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
 
                         // Close Button
                         if (widget.showCloseButton) ...[

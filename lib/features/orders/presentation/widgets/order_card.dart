@@ -20,6 +20,7 @@ class OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('HHHH ${order.status}');
     final formatter = NumberFormat('#,##0');
     final statusStyle = _getStatusStyle(order);
     final paymentStatusStyle = _getPaymentStatusStyle(order);
@@ -270,30 +271,60 @@ class OrderCard extends StatelessWidget {
     final status = order.status.toLowerCase();
     final label = order.statusLabel;
 
-    if (status.contains('prep') || label.contains('تجهيز') || status == 'processing') {
-      return _StatusStyle(
-        backgroundColor: const Color(0xFFEEF2FF),
-        textColor: const Color(0xFF4F46E5),
-      );
-    } else if (status.contains('transfer') || label.contains('حوالة') || label.contains('تأكيد')) {
-      return _StatusStyle(
-        backgroundColor: const Color(0xFFFEF3C7),
-        textColor: const Color(0xFFB45309),
-      );
-    } else if (status.contains('courier') || label.contains('مندوب') || label.contains('توصيل')) {
+    // 1. Cancelled / Failed / Rejected MUST be checked FIRST
+    if (status.contains('cancel') ||
+        status.contains('fail') ||
+        status.contains('reject') ||
+        label.contains('ملغ') || // matches ملغى, ملغي, ملغاة
+        label.contains('إلغاء') ||
+        label.contains('مرفوض')) {
       return _StatusStyle(
         backgroundColor: const Color(0xFFFEE2E2),
         textColor: const Color(0xFFDC2626),
       );
-    } else if (order.isCompleted || status.contains('deliver') || label.contains('مكتمل') || label.contains('استلام')) {
+    }
+
+    // 2. Completed / Delivered
+    if (order.isCompleted ||
+        status == 'completed' ||
+        status == 'delivered' ||
+        status.contains('deliver') ||
+        label.contains('مكتمل') ||
+        label.contains('استلام')) {
       return _StatusStyle(
         backgroundColor: const Color(0xFFD1FAE5),
         textColor: const Color(0xFF059669),
       );
-    } else if (status.contains('cancel') || label.contains('ملغى')) {
+    }
+
+    // 3. Courier / Out for Delivery
+    if (status.contains('courier') ||
+        label.contains('مندوب') ||
+        label.contains('توصيل')) {
       return _StatusStyle(
-        backgroundColor: const Color(0xFFF3F4F6),
-        textColor: const Color(0xFF6B7280),
+        backgroundColor: const Color(0xFFFEF3C7),
+        textColor: const Color(0xFFB45309),
+      );
+    }
+
+    // 4. Processing / Preparing
+    if (status.contains('prep') ||
+        status == 'processing' ||
+        label.contains('تجهيز')) {
+      return _StatusStyle(
+        backgroundColor: const Color(0xFFEEF2FF),
+        textColor: const Color(0xFF4F46E5),
+      );
+    }
+
+    // 5. Transfer / Review / Pending
+    if (status.contains('transfer') ||
+        status.contains('pending') ||
+        label.contains('حوالة') ||
+        label.contains('تأكيد')) {
+      return _StatusStyle(
+        backgroundColor: const Color(0xFFFEF3C7),
+        textColor: const Color(0xFFB45309),
       );
     }
 
@@ -307,7 +338,21 @@ class OrderCard extends StatelessWidget {
     final status = order.paymentStatus.toLowerCase();
     final label = order.paymentStatusLabel;
 
-    if (status == 'paid' ||
+    if (status.contains('fail') ||
+        status.contains('cancel') ||
+        status == 'unpaid' ||
+        status == 'rejected' ||
+        status.contains('reject') ||
+        label.contains('فشل') ||
+        label.contains('ملغ') ||
+        label.contains('إلغاء') ||
+        label.contains('مرفوض') ||
+        label.contains('غير')) {
+      return _StatusStyle(
+        backgroundColor: const Color(0xFFFEE2E2),
+        textColor: const Color(0xFFDC2626),
+      );
+    } else if (status == 'paid' ||
         status == 'completed' ||
         label.contains('تم الدفع') ||
         label.contains('مدفوع') ||
@@ -326,18 +371,6 @@ class OrderCard extends StatelessWidget {
         backgroundColor: const Color(0xFFFEF3C7),
         textColor: const Color(0xFFB45309),
       );
-    } else if (status.contains('fail') ||
-        status.contains('cancel') ||
-        status == 'unpaid' ||
-        label.contains('فشل') ||
-        label.contains('ملغى') ||
-        label.contains('مرفوض') ||
-        label.contains('ملغى') ||
-        label.contains('غير')) {
-      return _StatusStyle(
-        backgroundColor: const Color(0xFFFEE2E2),
-        textColor: const Color(0xFFDC2626),
-      );
     }
 
     return _StatusStyle(
@@ -348,7 +381,11 @@ class OrderCard extends StatelessWidget {
 
   String _getActionLabel(OrderResponseEntity order) {
     final label = order.statusLabel;
-    if (label.contains('حوالة') || order.needsPaymentReview || label.contains('دفعه')) {
+    final status = order.status.toLowerCase();
+
+    if (status.contains('cancel') || label.contains('ملغ') || label.contains('إلغاء')) {
+      return 'تفاصيل الطلب';
+    } else if (label.contains('حوالة') || order.needsPaymentReview || label.contains('دفعه')) {
       return 'حالة الدفع';
     } else if (label.contains('مندوب') || label.contains('توصيل')) {
       return 'تتبع الطلب';

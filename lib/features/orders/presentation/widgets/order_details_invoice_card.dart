@@ -7,10 +7,14 @@ import 'package:spenza/features/orders/presentation/widgets/order_help_bottom_sh
 
 class OrderDetailsInvoiceCard extends StatelessWidget {
   final ValueChanged<OrderHelpType>? onHelpOptionSelected;
+  final String? orderNumber;
+  final String? orderStatus;
 
   const OrderDetailsInvoiceCard({
     super.key,
     this.onHelpOptionSelected,
+    this.orderNumber,
+    this.orderStatus,
   });
 
   @override
@@ -32,7 +36,7 @@ class OrderDetailsInvoiceCard extends StatelessWidget {
       child: Column(
         spacing: 15.0,
         children: [
-          Row(
+          /*Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
@@ -74,12 +78,14 @@ class OrderDetailsInvoiceCard extends StatelessWidget {
                 ],
               ),
             ],
-          ),
+          ),*/
           InkWell(
             onTap: () {
               OrderHelpBottomSheet.show(
                 context,
                 onOptionSelected: onHelpOptionSelected,
+                orderNumber: orderNumber,
+                orderStatus: orderStatus,
               );
             },
             borderRadius: AppRadius.ordinary,

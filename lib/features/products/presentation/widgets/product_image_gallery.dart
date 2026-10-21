@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:spenza/core/shared/entities/product_entity.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favorites_bloc.dart';
@@ -108,7 +109,24 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                   bottomLeft: Radius.circular(28),
                   bottomRight: Radius.circular(28),
                 ),
-                child: _buildMainContent(currentItem),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  switchInCurve: Curves.easeOutCubic,
+                  switchOutCurve: Curves.easeInCubic,
+                  transitionBuilder: (child, animation) {
+                    return FadeTransition(
+                      opacity: animation,
+                      child: ScaleTransition(
+                        scale: Tween<double>(begin: 0.94, end: 1.0).animate(animation),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: KeyedSubtree(
+                    key: ValueKey<int>(_currentIndex),
+                    child: _buildMainContent(currentItem),
+                  ),
+                ),
               ),
 
               // Controls (Back, Share, Favorite)
@@ -122,14 +140,28 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                     CircleActionButton(
                       icon: Icons.arrow_back_ios_rounded,
                       onTap: () => context.pop(),
-                    ),
+                    )
+                        .animate()
+                        .fadeIn(duration: 650.ms, delay: 200.ms)
+                        .scale(
+                          begin: const Offset(0.4, 0.4),
+                          duration: 750.ms,
+                          curve: Curves.easeOutBack,
+                        ),
                     Row(
                       children: [
                         CircleActionButton(
                           icon: Icons.share_outlined,
                           onTap: () {},
                           shareButton: true,
-                        ),
+                        )
+                            .animate()
+                            .fadeIn(duration: 650.ms, delay: 350.ms)
+                            .scale(
+                              begin: const Offset(0.4, 0.4),
+                              duration: 750.ms,
+                              curve: Curves.easeOutBack,
+                            ),
                         const SizedBox(width: 12),
                         BlocBuilder<FavoritesBloc, BaseState<List<ProductEntity>>>(
                           builder: (context, state) {
@@ -141,7 +173,14 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                               },
                             );
                           },
-                        ),
+                        )
+                            .animate()
+                            .fadeIn(duration: 650.ms, delay: 500.ms)
+                            .scale(
+                              begin: const Offset(0.4, 0.4),
+                              duration: 750.ms,
+                              curve: Curves.easeOutBack,
+                            ),
                       ],
                     ),
                   ],
@@ -149,7 +188,14 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
               ),
             ],
           ),
-        ),
+        )
+            .animate()
+            .fadeIn(duration: 800.ms)
+            .scale(
+              begin: const Offset(0.95, 0.95),
+              duration: 800.ms,
+              curve: Curves.easeOutCubic,
+            ),
 
         const SizedBox(height: 20),
 
@@ -164,51 +210,67 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
             itemBuilder: (context, index) {
               final item = _allMedia[index];
               final isSelected = _currentIndex == index;
-              return GestureDetector(
-                onTap: () => setState(() => _currentIndex = index),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  width: 64.0,
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppColors.secondary.withValues(alpha: 0.1) : Colors.white,
-                    borderRadius: AppRadius.large,
-                    border: Border.all(
-                      color: isSelected ? AppColors.secondary : AppColors.fillColor,
-                      width: 2,
+              return AnimatedScale(
+                scale: isSelected ? 1.08 : 1.0,
+                duration: const Duration(milliseconds: 350),
+                curve: Curves.easeOutBack,
+                child: GestureDetector(
+                  onTap: () => setState(() => _currentIndex = index),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 350),
+                    width: 64.0,
+                    decoration: BoxDecoration(
+                      color: isSelected ? AppColors.secondary.withValues(alpha: 0.1) : Colors.white,
+                      borderRadius: AppRadius.large,
+                      border: Border.all(
+                        color: isSelected ? AppColors.secondary : AppColors.fillColor,
+                        width: isSelected ? 2.5 : 1.5,
+                      ),
+                      boxShadow: isSelected
+                          ? [
+                              BoxShadow(
+                                color: AppColors.secondary.withValues(alpha: 0.25),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              )
+                            ]
+                          : [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.03),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                     ),
-                    boxShadow: isSelected
-                        ? [
-                            BoxShadow(
-                              color: AppColors.secondary.withValues(alpha: 0.1),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            )
-                          ]
-                        : [],
-                  ),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      if (item.type == GalleryItemType.image && item.url != null)
-                        ClipRRect(
-                          borderRadius: AppRadius.upMedium,
-                          child: CachedNetworkImage(
-                            imageUrl: item.url!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
-                        )
-                      else
-                        _buildThumbnailIcon(item.type, isSelected),
-                      /*if (item.type == GalleryItemType.video)
-                        const Icon(Icons.play_circle_fill, color: AppColors.grey, size: 24),*/
-                      if (item.type == GalleryItemType.model3d)
-                        const Icon(Icons.view_in_ar_rounded, color: Colors.white, size: 24),
-                    ],
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        if (item.type == GalleryItemType.image && item.url != null)
+                          ClipRRect(
+                            borderRadius: AppRadius.upMedium,
+                            child: CachedNetworkImage(
+                              imageUrl: item.url!,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                            ),
+                          )
+                        else
+                          _buildThumbnailIcon(item.type, isSelected),
+                        if (item.type == GalleryItemType.model3d)
+                          const Icon(Icons.view_in_ar_rounded, color: Colors.white, size: 24),
+                      ],
+                    ),
                   ),
                 ),
-              );
+              )
+                  .animate()
+                  .fadeIn(delay: (350 + index * 120).ms, duration: 700.ms)
+                  .scale(
+                    begin: const Offset(0.5, 0.5),
+                    duration: 700.ms,
+                    curve: Curves.easeOutBack,
+                  );
             },
           ),
         ),
@@ -234,13 +296,15 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
     } else if (item.type == GalleryItemType.video) {
       return Container(
         color: AppColors.neutral200,
-        child: const Center(
+        child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.play_circle_outline_rounded, size: 80, color: AppColors.secondary),
-              SizedBox(height: 12),
-              Text('تشغيل الفيديو', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.secondary)),
+              const Icon(Icons.play_circle_outline_rounded, size: 80, color: AppColors.secondary)
+                  .animate(onPlay: (controller) => controller.repeat(reverse: true))
+                  .scaleXY(begin: 1.0, end: 1.1, duration: 1500.ms, curve: Curves.easeInOut),
+              const SizedBox(height: 12),
+              const Text('تشغيل الفيديو', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.secondary)),
             ],
           ),
         ),
@@ -248,13 +312,16 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
     } else {
       return Container(
         color: AppColors.neutral200,
-        child: const Center(
+        child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.view_in_ar_rounded, size: 80, color: AppColors.secondary),
-              SizedBox(height: 12),
-              Text('عرض 3D', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.secondary)),
+              const Icon(Icons.view_in_ar_rounded, size: 80, color: AppColors.secondary)
+                  .animate(onPlay: (controller) => controller.repeat(reverse: true))
+                  .scaleXY(begin: 1.0, end: 1.1, duration: 1500.ms, curve: Curves.easeInOut)
+                  .shimmer(delay: 1000.ms, duration: 2000.ms),
+              const SizedBox(height: 12),
+              const Text('عرض 3D', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.secondary)),
             ],
           ),
         ),
@@ -279,6 +346,6 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
       iconData,
       color: isSelected ? AppColors.secondary : AppColors.neutral,
       size: 32,
-    );
+    ).animate(target: isSelected ? 1 : 0).scaleXY(begin: 1.0, end: 1.15, duration: 300.ms, curve: Curves.easeOutBack);
   }
 }

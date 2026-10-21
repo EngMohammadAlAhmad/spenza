@@ -73,7 +73,11 @@ class MyInfoBloc extends Bloc<MyInfoEvent, MyInfoState> {
     ConfirmPhoneChangeEvent event,
     Emitter<MyInfoState> emit,
   ) async {
-    emit(state.copyWith(confirmPhoneStatus: RequestStatus.loading));
+    emit(state.copyWith(
+      confirmPhoneStatus: RequestStatus.loading,
+      requestPhoneStatus: RequestStatus.init,
+      phoneChangeMessage: null,
+    ));
 
     final result = await confirmPhoneChangeUseCase(
       phoneNumber: event.phoneNumber,

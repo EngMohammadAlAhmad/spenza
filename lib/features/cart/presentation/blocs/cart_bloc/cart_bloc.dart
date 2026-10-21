@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/features/cart/data/models/cart_preview_model.dart';
@@ -13,6 +14,7 @@ import 'package:spenza/features/cart/domain/usecases/get_checkout_options_use_ca
 import 'package:spenza/features/cart/domain/usecases/get_checkout_preview_use_case.dart';
 import 'package:spenza/features/cart/domain/usecases/remove_from_cart_use_case.dart';
 import 'package:spenza/features/cart/domain/usecases/update_cart_quantity_use_case.dart';
+import 'package:spenza/injection_locator.dart' as di;
 
 part 'cart_event.dart';
 part 'cart_state.dart';
@@ -60,6 +62,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   Future<void> _onAddToCart(AddToCartEvent event, Emitter<CartState> emit) async {
+    final isLoggedIn = di.sl<CacheHelper>().getAuthToken().isNotEmpty;
+    if (!isLoggedIn) {
+      return;
+    }
     emit(state.copyWith(status: RequestStatus.loading));
     final result = await addToCartUseCase(event.item);
     result.fold(

@@ -27,6 +27,7 @@ dependencies:
   intl:
   easy_localization:
   image_picker:
+  url_launcher:
   flutter_secure_storage:
   carousel_slider:
   smooth_page_indicator:

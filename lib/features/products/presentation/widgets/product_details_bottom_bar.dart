@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
+import 'package:spenza/core/widgets/snackbar_service.dart';
 import 'package:spenza/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:spenza/features/cart/presentation/blocs/cart_bloc/cart_bloc.dart';
 import 'package:spenza/features/cart/presentation/widgets/add_to_cart_snackbar.dart';
 import 'package:spenza/features/products/domain/entities/product_details_entity.dart';
 import 'package:spenza/features/products/presentation/blocs/product_details_bloc/product_details_bloc.dart';
+import 'package:spenza/injection_locator.dart' as di;
 
 class ProductDetailsBottomBar extends StatelessWidget {
   final ProductDetailsState state;
@@ -101,6 +104,12 @@ class ProductDetailsBottomBar extends StatelessWidget {
                   onPressed: isOutOfStock
                       ? null
                       : () {
+                          final isLoggedIn = di.sl<CacheHelper>().getAuthToken().isNotEmpty;
+                          if (!isLoggedIn) {
+                            SnackbarService.showAuthRequired(context);
+                            return;
+                          }
+
                           final int? variantId = selectedVariant?.id ??
                               (product.defaultVariantId > 0
                                   ? product.defaultVariantId

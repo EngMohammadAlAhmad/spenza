@@ -72,8 +72,20 @@ class OrderDetailsModel extends OrderDetailsEntity {
     }
 
     String? rejectionReason;
-    if (data['rejection_reason'] != null && data['rejection_reason'].toString().isNotEmpty) {
+    if (data['cancellation_reason'] != null && data['cancellation_reason'].toString().isNotEmpty) {
+      rejectionReason = data['cancellation_reason'].toString();
+    } else if (data['rejection_reason'] != null && data['rejection_reason'].toString().isNotEmpty) {
       rejectionReason = data['rejection_reason'].toString();
+    } else if (data['status_history'] is List && (data['status_history'] as List).isNotEmpty) {
+      final historyList = data['status_history'] as List;
+      for (var h in historyList.reversed) {
+        if (h is Map<String, dynamic> && h['to_status'] == 'cancelled') {
+          if (h['note'] != null && h['note'].toString().isNotEmpty) {
+            rejectionReason = h['note'].toString();
+            break;
+          }
+        }
+      }
     } else if (data['receipts'] is List && (data['receipts'] as List).isNotEmpty) {
       final receiptsList = data['receipts'] as List;
       for (var r in receiptsList.reversed) {
@@ -102,14 +114,14 @@ class OrderDetailsModel extends OrderDetailsEntity {
       paymentMethodLabel: data['payment_method_label']?.toString() ?? '',
       paymentStatus: data['payment_status']?.toString() ?? '',
       paymentStatusLabel: data['payment_status_label']?.toString() ?? '',
-      needsPaymentReview: data['needs_payment_review'] == true,
+      needsPaymentReview: data['needs_payment_review'] ?? true,
       status: data['status']?.toString() ?? '',
       statusLabel: data['status_label']?.toString() ?? '',
       deliveryMethodLabel: data['delivery_method_label']?.toString() ?? '',
       tracking: trackingModel,
-      isCompleted: data['is_completed'] == true,
-      canBeCancelled: data['can_be_cancelled'] == true,
-      canUploadReceipt: data['can_upload_receipt'] == true,
+      isCompleted: data['is_completed'] ?? true,
+      canBeCancelled: data['can_be_cancelled'] ?? true,
+      canUploadReceipt: data['can_upload_receipt'] ?? true,
       rejectionReason: rejectionReason,
       placedAt: data['placed_at']?.toString() ?? '',
       createdAt: data['created_at']?.toString(),

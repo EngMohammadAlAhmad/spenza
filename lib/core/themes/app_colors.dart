@@ -48,6 +48,7 @@ class AppColors {
   // Success
   static const Color successLight = Color(0xFF10B981);
   static const Color successDark = Color(0xFF34D399);
+  static const Color successForeground = Color(0xFF0F5C3B);
 
   // Warning
   static const Color warningLight = Color(0xFFF59E0B);

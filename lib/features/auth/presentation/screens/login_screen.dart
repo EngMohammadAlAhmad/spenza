@@ -54,46 +54,49 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
-      body: Stack(
+    return ColoredBox(
+      color: AppColors.backgroundLight,
+      child: Stack(
         children: [
-          PatternBackground(),
-          Column(
-            children: [
-              AuthHeaderWidget(
-                showBackButton: _currentStep != 0,
-                onBack: _previousStep,
-              ),
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  onPageChanged: (index) => setState(() => _currentStep = index),
-                  children: [
-                    LoginPage(
-                      phoneController: _phoneController,
-                      onNext: (phone) {
-                        setState(() => _phoneNumber = phone);
-                        _nextStep();
-                      },
-                    ),
-                    VerifyOtpPage(
-                      phoneNumber: _phoneNumber,
-                      onEditPhone: _previousStep,
-                      onUnregistered: (code) {
-                        setState(() => _code = code);
-                        _nextStep();
-                      },
-                    ),
-                    RegisterCompletePage(
-                      phoneNumber: _phoneNumber,
-                      code: _code,
-                    ),
-                  ],
+          const PatternBackground(), // full screen, not affected by the keyboard
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Column(
+              children: [
+                AuthHeaderWidget(
+                  showBackButton: _currentStep != 0,
+                  onBack: _previousStep,
                 ),
-              ),
-            ],
+                Expanded(
+                  child: PageView(
+                    controller: _pageController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    onPageChanged: (index) => setState(() => _currentStep = index),
+                    children: [
+                      LoginPage(
+                        phoneController: _phoneController,
+                        onNext: (phone) {
+                          setState(() => _phoneNumber = phone);
+                          _nextStep();
+                        },
+                      ),
+                      VerifyOtpPage(
+                        phoneNumber: _phoneNumber,
+                        onEditPhone: _previousStep,
+                        onUnregistered: (code) {
+                          setState(() => _code = code);
+                          _nextStep();
+                        },
+                      ),
+                      RegisterCompletePage(
+                        phoneNumber: _phoneNumber,
+                        code: _code,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

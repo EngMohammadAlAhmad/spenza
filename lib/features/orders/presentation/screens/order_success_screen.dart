@@ -433,7 +433,7 @@ class OrderSuccessScreen extends StatelessWidget {
                           text: 'تابع طلبك',
                           height: 48.0,
                           onPressed: () {
-                            // Order tracking action
+                            context.push(RoutePaths.orderDetails, extra: order.orderNumber);
                           },
                         ),
                       ),

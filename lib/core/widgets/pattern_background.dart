@@ -6,12 +6,11 @@ class PatternBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final radialSize = screenSize.width * 0.85;
+    final radialSize = MediaQuery.sizeOf(context).width * 0.85;
 
     return IgnorePointer(
       child: Stack(
-        clipBehavior: Clip.hardEdge,
+        clipBehavior: Clip.none,
         children: [
           Positioned.fill(
             child: Opacity(
