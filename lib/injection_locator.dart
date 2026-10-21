@@ -21,6 +21,7 @@ import 'package:spenza/features/orders/domain/repositories/orders_repository.dar
 import 'package:spenza/features/orders/domain/usecases/create_order_use_case.dart';
 import 'package:spenza/features/orders/domain/usecases/get_my_orders_use_case.dart';
 import 'package:spenza/features/orders/domain/usecases/get_order_details_use_case.dart';
+import 'package:spenza/features/orders/domain/usecases/reorder_use_case.dart';
 import 'package:spenza/features/orders/domain/usecases/upload_transfer_receipt_use_case.dart';
 import 'package:spenza/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:spenza/features/language/data/repositories/language_repo_impl.dart';
@@ -273,10 +274,12 @@ Future<void> init() async {
         createOrderUseCase: sl(),
         getMyOrdersUseCase: sl(),
         getOrderDetailsUseCase: sl(),
+        reorderUseCase: sl(),
       ));
   sl.registerLazySingleton(() => CreateOrderUseCase(repository: sl()));
   sl.registerLazySingleton(() => GetMyOrdersUseCase(repository: sl()));
   sl.registerLazySingleton(() => GetOrderDetailsUseCase(repository: sl()));
+  sl.registerLazySingleton(() => ReorderUseCase(repository: sl()));
   sl.registerLazySingleton(() => UploadTransferReceiptUseCase(repository: sl()));
   sl.registerLazySingleton<OrdersRepository>(() => OrdersRepositoryImpl(datasource: sl()));
   sl.registerLazySingleton<OrdersDatasource>(() => OrdersDatasourceImpl(api: sl()));

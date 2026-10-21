@@ -15,4 +15,5 @@ abstract class OrdersRepository {
   });
   Future<Either<Failure, OrderDetailsEntity>> getOrderByNumber(String orderNumber);
   Future<Either<Failure, void>> uploadTransferReceipt(UploadTransferReceiptParams params);
+  Future<Either<Failure, OrderResponseEntity>> reorder(String orderNumber);
 }

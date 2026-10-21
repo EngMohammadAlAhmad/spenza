@@ -58,3 +58,12 @@ class GetOrderDetailsEvent extends OrdersEvent {
   @override
   List<Object?> get props => [orderNumber];
 }
+
+class ReorderOrderEvent extends OrdersEvent {
+  final String orderNumber;
+
+  const ReorderOrderEvent(this.orderNumber);
+
+  @override
+  List<Object?> get props => [orderNumber];
+}

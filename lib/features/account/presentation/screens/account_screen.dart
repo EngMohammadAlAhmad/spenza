@@ -17,6 +17,7 @@ import 'package:spenza/features/account/presentation/widgets/account_menu_item.d
 import 'package:spenza/features/account/presentation/widgets/account_menu_section.dart';
 import 'package:spenza/features/account/presentation/widgets/business_account_card.dart';
 import 'package:spenza/features/account/presentation/widgets/logout_button.dart';
+import 'package:spenza/core/widgets/custom_dialog.dart';
 import 'package:spenza/features/auth/presentation/bloc/auth_status_bloc.dart';
 import 'package:spenza/features/home/presentation/widgets/points_card.dart';
 import 'package:spenza/injection_locator.dart' as di;
@@ -25,47 +26,23 @@ class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
   void _showLogoutDialog(BuildContext context) {
-    showDialog(
+    AppCustomDialog.show(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: AppRadius.upMedium,
-        ),
-        title: const Text(
-          'تسجيل الخروج',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        content: const Text('هل أنت تأكد من أنك تريد تسجيل الخروج؟'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text(
-              'إلغاء',
-              style: TextStyle(color: AppColors.neutral),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary500,
-              shape: RoundedRectangleBorder(
-                borderRadius: AppRadius.medium,
-              ),
-            ),
-            onPressed: () async {
-              Navigator.of(dialogContext).pop();
-              await di.sl<CacheHelper>().deleteAuthToken();
-              if (context.mounted) {
-                context.read<AuthStatusBloc>().add(UpdateAuthStatus(false));
-                context.go(RoutePaths.home);
-              }
-            },
-            child: const Text(
-              'تأكيد',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
+      iconData: Icons.logout_rounded,
+      iconColor: AppColors.primary500,
+      title: 'تسجيل الخروج',
+      description: 'هل أنت تأكد من أنك تريد تسجيل الخروج؟',
+      primaryButtonText: 'تأكيد الخروج',
+      primaryButtonColor: AppColors.primary500,
+      secondaryButtonText: 'إلغاء',
+      onPrimaryPressed: () async {
+        Navigator.of(context).pop();
+        await di.sl<CacheHelper>().deleteAuthToken();
+        if (context.mounted) {
+          context.read<AuthStatusBloc>().add(UpdateAuthStatus(false));
+          context.go(RoutePaths.home);
+        }
+      },
     );
   }
 

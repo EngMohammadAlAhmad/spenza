@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/widgets/custom_dialog.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
 import 'package:spenza/core/widgets/view_all_button.dart';
@@ -193,6 +195,61 @@ class OrderAgainCard extends StatefulWidget {
 class _OrderAgainCardState extends State<OrderAgainCard> {
   bool _pressed = false;
 
+  void _showReorderDialog(BuildContext context, OrderResponseEntity order) {
+    final ordersBloc = context.read<OrdersBloc>();
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black.withValues(alpha: 0.5),
+      transitionDuration: const Duration(milliseconds: 380),
+      pageBuilder: (dialogContext, animation, secondaryAnimation) {
+        return BlocProvider.value(
+          value: ordersBloc,
+          child: _ReorderDialogContent(
+            order: order,
+            parentContext: context,
+          ),
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedAnimation = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutBack,
+          reverseCurve: Curves.easeInCubic,
+        );
+
+        final slideAnimation = Tween<Offset>(
+          begin: const Offset(0, 0.08),
+          end: Offset.zero,
+        ).animate(CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+        ));
+
+        return BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: 3.0 * animation.value,
+            sigmaY: 3.0 * animation.value,
+          ),
+          child: SlideTransition(
+            position: slideAnimation,
+            child: ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(curvedAnimation),
+              child: FadeTransition(
+                opacity: CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.easeOut,
+                ),
+                child: child,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final order = widget.order;
@@ -327,12 +384,7 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
                             ),
                           ),
                           InkWell(
-                            onTap: () {
-                              SnackbarService.showSuccess(
-                                context,
-                                message: 'تمت إضافة طلبك لإعادة الطلب',
-                              );
-                            },
+                            onTap: () => _showReorderDialog(context, order),
                             borderRadius: AppRadius.large,
                             child: Container(
                               width: 36.0,
@@ -358,6 +410,70 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ReorderDialogContent extends StatelessWidget {
+  final OrderResponseEntity order;
+  final BuildContext parentContext;
+
+  const _ReorderDialogContent({
+    required this.order,
+    required this.parentContext,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final formatter = NumberFormat('#,##0');
+    final String orderNumStr =
+        order.orderNumber.isNotEmpty ? "#${order.orderNumber}" : "الطلب السابق";
+    final String priceStr = formatter.format(order.totalAmount);
+
+    return BlocConsumer<OrdersBloc, OrdersState>(
+      listenWhen: (previous, current) =>
+          previous.reorderStatus != current.reorderStatus,
+      listener: (dialogContext, state) {
+        if (state.reorderStatus == RequestStatus.success) {
+          Navigator.of(dialogContext).pop();
+          if (parentContext.mounted) {
+            SnackbarService.showSuccess(
+              parentContext,
+              message: 'تمت إعادة الطلب بنجاح',
+            );
+          }
+        } else if (state.reorderStatus == RequestStatus.error) {
+          Navigator.of(dialogContext).pop();
+          if (parentContext.mounted) {
+            SnackbarService.showError(
+              parentContext,
+              message: state.reorderFailure.errMessage.isNotEmpty
+                  ? state.reorderFailure.errMessage
+                  : 'تعذر إعادة الطلب، يرجى المحاولة لاحقاً',
+            );
+          }
+        }
+      },
+      builder: (dialogContext, state) {
+        final isLoading = state.reorderStatus == RequestStatus.loading;
+
+        return AppCustomDialog(
+          iconData: Icons.refresh_rounded,
+          iconColor: AppColors.primary,
+          title: 'إعادة الطلب',
+          description:
+              'هل أنت تأكد من أنك تريد إعادة طلب هذا الطلب ($orderNumStr) بقيمة $priceStr ل.س؟',
+          primaryButtonText: 'تأكيد الطلب',
+          primaryButtonColor: AppColors.primary,
+          secondaryButtonText: 'إلغاء',
+          isLoading: isLoading,
+          onPrimaryPressed: () {
+            dialogContext
+                .read<OrdersBloc>()
+                .add(ReorderOrderEvent(order.orderNumber));
+          },
+        );
+      },
     );
   }
 }

@@ -58,11 +58,13 @@ class AppAssets {
   static const String backButton2 = '$_icons/back_button_2.svg';
   static const String bankIcon = '$_icons/bank_icon.svg';
   static const String bestSellingIcon = '$_icons/best_selling_icon.svg';
+  static const String cancelIcon = '$_icons/cancel_icon.svg';
   static const String cardIcon = '$_icons/card_icon.svg';
   static const String cartIcon = '$_icons/cart_icon.svg';
   static const String cartIcon2 = '$_icons/cart_icon_2.svg';
   static const String cashIcon = '$_icons/cash_icon.svg';
   static const String categoriesIcon = '$_icons/categories_icon.svg';
+  static const String chatIcon = '$_icons/chat_icon.svg';
   static const String checkIcon = '$_icons/check_icon.svg';
   static const String clockIcon = '$_icons/clock_icon.svg';
   static const String copyIcon = '$_icons/copy_icon.svg';
@@ -97,9 +99,11 @@ class AppAssets {
   static const String ordersSelected = '$_icons/orders_selected.svg';
   static const String packageCheckIcon = '$_icons/packageCheck_icon.svg';
   static const String packageIcon = '$_icons/package_icon.svg';
+  static const String payIcon = '$_icons/pay_icon.svg';
   static const String paymentIcon = '$_icons/payment_icon.svg';
   static const String phoneDeviceIcon = '$_icons/phoneDevice_icon.svg';
   static const String preparingIcon = '$_icons/preparing_icon.svg';
+  static const String productIcon = '$_icons/product_icon.svg';
   static const String productsIcon = '$_icons/products_icon.svg';
   static const String productsIconBig = '$_icons/products_icon_big.svg';
   static const String rateIcon = '$_icons/rate_icon.svg';

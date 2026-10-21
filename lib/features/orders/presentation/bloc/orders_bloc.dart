@@ -3,6 +3,7 @@ import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/features/orders/domain/usecases/create_order_use_case.dart';
 import 'package:spenza/features/orders/domain/usecases/get_my_orders_use_case.dart';
 import 'package:spenza/features/orders/domain/usecases/get_order_details_use_case.dart';
+import 'package:spenza/features/orders/domain/usecases/reorder_use_case.dart';
 import 'package:spenza/features/orders/presentation/bloc/orders_event.dart';
 import 'package:spenza/features/orders/presentation/bloc/orders_state.dart';
 
@@ -10,17 +11,20 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   final CreateOrderUseCase createOrderUseCase;
   final GetMyOrdersUseCase getMyOrdersUseCase;
   final GetOrderDetailsUseCase getOrderDetailsUseCase;
+  final ReorderUseCase reorderUseCase;
 
   OrdersBloc({
     required this.createOrderUseCase,
     required this.getMyOrdersUseCase,
     required this.getOrderDetailsUseCase,
+    required this.reorderUseCase,
   }) : super(const OrdersState()) {
     on<CreateOrderEvent>(_onCreateOrder);
     on<GetMyOrdersEvent>(_onGetMyOrders);
     on<LoadMoreOrdersEvent>(_onLoadMoreOrders);
     on<ChangeOrdersTabEvent>(_onChangeOrdersTab);
     on<GetOrderDetailsEvent>(_onGetOrderDetails);
+    on<ReorderOrderEvent>(_onReorderOrder);
   }
 
   Future<void> _onCreateOrder(
@@ -135,6 +139,28 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         getOrderDetailsStatus: RequestStatus.success,
         orderDetails: data,
       )),
+    );
+  }
+
+  Future<void> _onReorderOrder(
+    ReorderOrderEvent event,
+    Emitter<OrdersState> emit,
+  ) async {
+    emit(state.copyWith(reorderStatus: RequestStatus.loading));
+
+    final result = await reorderUseCase(event.orderNumber);
+
+    await result.fold(
+      (failure) async {
+        emit(state.copyWith(
+          reorderStatus: RequestStatus.error,
+          reorderFailure: failure,
+        ));
+      },
+      (data) async {
+        emit(state.copyWith(reorderStatus: RequestStatus.success));
+        add(const GetMyOrdersEvent(page: 1, isRefresh: true));
+      },
     );
   }
 }

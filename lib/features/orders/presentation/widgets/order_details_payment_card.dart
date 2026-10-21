@@ -31,6 +31,7 @@ class OrderDetailsPaymentCard extends StatelessWidget {
     final isPending = status == 'pending';
     final isRejected = status == 'rejected' || status.contains('reject');
     final showUploadButton = (isBankTransfer && isPending) || (isRejected && order.canUploadReceipt);
+    final paymentStatusStyle = _getPaymentStatusStyle(order);
 
     return Container(
       width: double.infinity,
@@ -51,6 +52,7 @@ class OrderDetailsPaymentCard extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
                 'الدفع',
@@ -60,22 +62,62 @@ class OrderDetailsPaymentCard extends StatelessWidget {
                   color: AppColors.neutral900,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF3F4F6),
-                  borderRadius: AppRadius.medium,
-                ),
-                child: Text(
-                  order.paymentMethodLabel.isNotEmpty
-                      ? order.paymentMethodLabel
-                      : 'بتدفع عند الاستلام',
-                  style: const TextStyle(
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondary,
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF3F4F6),
+                      borderRadius: AppRadius.medium,
+                    ),
+                    child: Text(
+                      order.paymentMethodLabel.isNotEmpty
+                          ? order.paymentMethodLabel
+                          : 'بتدفع عند الاستلام',
+                      style: const TextStyle(
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
                   ),
-                ),
+                  if (order.paymentStatusLabel.isNotEmpty) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                      child: Container(
+                        width: 4.0,
+                        height: 4.0,
+                        decoration: const BoxDecoration(
+                          color: AppColors.textSecondary,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0,
+                        vertical: 4.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: paymentStatusStyle.backgroundColor,
+                        borderRadius: AppRadius.medium,
+                        border: Border.all(
+                          color: paymentStatusStyle.textColor.withValues(alpha: 0.15),
+                          width: 1.0,
+                        ),
+                      ),
+                      child: Text(
+                        order.paymentStatusLabel,
+                        style: TextStyle(
+                          fontSize: 11.0,
+                          fontWeight: FontWeight.bold,
+                          color: paymentStatusStyle.textColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ],
           ),
@@ -174,4 +216,58 @@ class OrderDetailsPaymentCard extends StatelessWidget {
       ),
     );
   }
+
+  _StatusStyle _getPaymentStatusStyle(OrderDetailsEntity order) {
+    final status = order.paymentStatus.toLowerCase();
+    final label = order.paymentStatusLabel;
+
+    if (status == 'paid' ||
+        status == 'completed' ||
+        label.contains('تم الدفع') ||
+        label.contains('مدفوع') ||
+        label.contains('مكتمل')) {
+      return _StatusStyle(
+        backgroundColor: const Color(0xFFD1FAE5),
+        textColor: const Color(0xFF059669),
+      );
+    } else if (order.needsPaymentReview ||
+        status.contains('review') ||
+        status == 'pending' ||
+        label.contains('مراجعة') ||
+        label.contains('انتظار') ||
+        label.contains('تأكيد')) {
+      return _StatusStyle(
+        backgroundColor: const Color(0xFFFEF3C7),
+        textColor: const Color(0xFFB45309),
+      );
+    } else if (status.contains('fail') ||
+        status.contains('cancel') ||
+        status == 'unpaid' ||
+        status == 'rejected' ||
+        status.contains('reject') ||
+        label.contains('فشل') ||
+        label.contains('ملغى') ||
+        label.contains('مرفوض') ||
+        label.contains('غير')) {
+      return _StatusStyle(
+        backgroundColor: const Color(0xFFFEE2E2),
+        textColor: const Color(0xFFDC2626),
+      );
+    }
+
+    return _StatusStyle(
+      backgroundColor: const Color(0xFFF3F4F6),
+      textColor: const Color(0xFF6B7280),
+    );
+  }
+}
+
+class _StatusStyle {
+  final Color backgroundColor;
+  final Color textColor;
+
+  _StatusStyle({
+    required this.backgroundColor,
+    required this.textColor,
+  });
 }

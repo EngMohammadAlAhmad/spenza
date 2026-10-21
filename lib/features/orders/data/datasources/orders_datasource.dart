@@ -16,6 +16,7 @@ abstract class OrdersDatasource {
   });
   Future<OrderDetailsModel> getOrderByNumber(String orderNumber);
   Future<void> uploadTransferReceipt(UploadTransferReceiptParams params);
+  Future<OrderResponseModel> reorder(String orderNumber);
 }
 
 class OrdersDatasourceImpl implements OrdersDatasource {
@@ -99,5 +100,24 @@ class OrdersDatasourceImpl implements OrdersDatasource {
       data: mapData,
       isFormData: true,
     );
+  }
+
+  @override
+  Future<OrderResponseModel> reorder(String orderNumber) async {
+    final response = await api.post(
+      '${EndPoints.createOrder}/$orderNumber/reorder',
+    );
+
+    Map<String, dynamic> orderJson = {};
+    if (response is Map<String, dynamic>) {
+      final data = response['data'];
+      if (data is Map<String, dynamic>) {
+        orderJson = data;
+      } else {
+        orderJson = response;
+      }
+    }
+
+    return OrderResponseModel.fromJson(orderJson);
   }
 }

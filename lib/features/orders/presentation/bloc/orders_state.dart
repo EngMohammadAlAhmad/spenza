@@ -24,6 +24,9 @@ class OrdersState extends Equatable {
   final Failure getOrderDetailsFailure;
   final OrderDetailsEntity? orderDetails;
 
+  final RequestStatus reorderStatus;
+  final Failure reorderFailure;
+
   const OrdersState({
     this.createOrderStatus = RequestStatus.init,
     this.createOrderFailure = defaultFailure,
@@ -39,6 +42,8 @@ class OrdersState extends Equatable {
     this.getOrderDetailsStatus = RequestStatus.init,
     this.getOrderDetailsFailure = defaultFailure,
     this.orderDetails,
+    this.reorderStatus = RequestStatus.init,
+    this.reorderFailure = defaultFailure,
   });
 
   List<OrderResponseEntity> get activeOrders =>
@@ -71,6 +76,8 @@ class OrdersState extends Equatable {
     RequestStatus? getOrderDetailsStatus,
     Failure? getOrderDetailsFailure,
     OrderDetailsEntity? orderDetails,
+    RequestStatus? reorderStatus,
+    Failure? reorderFailure,
   }) {
     return OrdersState(
       createOrderStatus: createOrderStatus ?? this.createOrderStatus,
@@ -87,6 +94,8 @@ class OrdersState extends Equatable {
       getOrderDetailsStatus: getOrderDetailsStatus ?? this.getOrderDetailsStatus,
       getOrderDetailsFailure: getOrderDetailsFailure ?? this.getOrderDetailsFailure,
       orderDetails: orderDetails ?? this.orderDetails,
+      reorderStatus: reorderStatus ?? this.reorderStatus,
+      reorderFailure: reorderFailure ?? this.reorderFailure,
     );
   }
 
@@ -106,5 +115,7 @@ class OrdersState extends Equatable {
         getOrderDetailsStatus,
         getOrderDetailsFailure,
         orderDetails,
+        reorderStatus,
+        reorderFailure,
       ];
 }

@@ -41,4 +41,9 @@ class OrdersRepositoryImpl implements OrdersRepository {
   Future<Either<Failure, void>> uploadTransferReceipt(UploadTransferReceiptParams params) async {
     return handleRepositoryCall(() => datasource.uploadTransferReceipt(params));
   }
+
+  @override
+  Future<Either<Failure, OrderResponseEntity>> reorder(String orderNumber) async {
+    return handleRepositoryCall(() => datasource.reorder(orderNumber));
+  }
 }
