@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spenza/core/widgets/app_header.dart';
@@ -20,7 +21,7 @@ class PointsHistoryScreen extends StatelessWidget {
         children: [
           // Header
           AppHeader(
-            title: 'حركة النقاط',
+            title: 'points_history'.tr(),
             onBackPressed: () {
               if (context.canPop()) {
                 context.pop();
@@ -73,7 +74,7 @@ class PointsHistoryScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'رصيدك',
+                              'your_balance'.tr(),
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.85),
                                 fontSize: 13.0,
@@ -91,9 +92,9 @@ class PointsHistoryScreen extends StatelessWidget {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const TextSpan(
-                                    text: 'نقطة',
-                                    style: TextStyle(
+                                  TextSpan(
+                                    text: 'points_unit'.tr(),
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 16.0,
                                       fontWeight: FontWeight.bold,
@@ -104,7 +105,7 @@ class PointsHistoryScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 6.0),
                             Text(
-                              'النقاط بتنضاف بعد تسليم كل طلب',
+                              'points_added_after_delivery'.tr(),
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.90),
                                 fontSize: 12.0,

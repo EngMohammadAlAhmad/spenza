@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:spenza/core/shared/entities/product_entity.dart';
@@ -26,7 +27,7 @@ class TodayOffersSection extends StatelessWidget {
           mainAxisAlignment: .spaceBetween,
           children: [
             Text(
-              'عروض اليوم',
+              'today_offers'.tr(),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),

@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/features/orders/presentation/utils/order_localization_helper.dart';
 
 enum OrderHelpType {
   cancel,
@@ -14,14 +16,14 @@ enum OrderHelpType {
 
 class OrderHelpOption {
   final OrderHelpType type;
-  final String title;
-  final String subtitle;
+  final String titleKey;
+  final String subtitleKey;
   final String iconPath;
 
   const OrderHelpOption({
     required this.type,
-    required this.title,
-    required this.subtitle,
+    required this.titleKey,
+    required this.subtitleKey,
     required this.iconPath,
   });
 }
@@ -68,41 +70,37 @@ class _OrderHelpBottomSheetState extends State<OrderHelpBottomSheet> {
   final List<OrderHelpOption> _options = const [
     OrderHelpOption(
       type: OrderHelpType.cancel,
-      title: 'بدي ألغي الطلب',
-      subtitle: 'فريق الدعم بيشوف حالة الطلب ويرد عليك',
+      titleKey: 'help_cancel_title',
+      subtitleKey: 'help_cancel_sub',
       iconPath: AppAssets.cancelIcon,
     ),
     OrderHelpOption(
       type: OrderHelpType.products,
-      title: 'مشكلة بمنتج أو إرجاع',
-      subtitle: 'منتج تالف، ناقص، أو مو مثل الوصف',
+      titleKey: 'help_products_title',
+      subtitleKey: 'help_products_sub',
       iconPath: AppAssets.productIcon,
     ),
     OrderHelpOption(
       type: OrderHelpType.payment,
-      title: 'سؤال عن الدفع',
-      subtitle: 'حوالة، بيميرا، أو استرداد',
+      titleKey: 'help_payment_title',
+      subtitleKey: 'help_payment_sub',
       iconPath: AppAssets.payIcon,
     ),
     OrderHelpOption(
       type: OrderHelpType.chat,
-      title: 'شي تاني',
-      subtitle: 'احكيلنا شو صار',
+      titleKey: 'help_other_title',
+      subtitleKey: 'help_other_sub',
       iconPath: AppAssets.chatIcon,
     ),
   ];
 
   Future<void> _launchWhatsApp(OrderHelpType type, String orderNumber) async {
-    final String message = switch (type) {
-      OrderHelpType.cancel =>
-        'مرحبا سبينزا 🌷\nبدي ألغي طلبي رقم $orderNumber، بتشوفولي إذا لسا بيتلغى؟ يعطيكن العافية.\nسبب الإلغاء: ',
-      OrderHelpType.products =>
-        'مرحبا سبينزا 🌷\nعندي مشكلة بطلبي رقم $orderNumber، وبقدر أبعتلكن صورة إذا بدكن. يعطيكن العافية.\nالمنتج والمشكلة: ',
-      OrderHelpType.payment =>
-        'مرحبا سبينزا 🌷\nبدي أسأل عن الدفع بطلبي رقم $orderNumber. يعطيكن العافية.\nسؤالي: ',
-      OrderHelpType.chat =>
-        'مرحبا سبينزا 🌷\nبخصوص طلبي رقم $orderNumber. يعطيكن العافية.\nبدي احكيلكن عن: ',
-    };
+    final isArabic = context.locale.languageCode == 'ar';
+    final String message = OrderLocalizationHelper.getWhatsAppHelpMessage(
+      type,
+      orderNumber,
+      isArabic: isArabic,
+    );
 
     const String phoneNumber = '963934351075';
     final Uri whatsappUri = Uri.parse(
@@ -119,111 +117,108 @@ class _OrderHelpBottomSheetState extends State<OrderHelpBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final String displayOrderNumber = widget.orderNumber ?? 'SPZ-80329';
-    final String displayOrderStatus = widget.orderStatus ?? 'مع المندوب';
+    final String displayOrderStatus = widget.orderStatus ?? 'stage_with_courier'.tr();
 
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.neutralBackground,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28.0)),
-        ),
-        padding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 24.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Top Drag Handle
-            Container(
-              width: 40.0,
-              height: 4.0,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: AppRadius.micro,
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.neutralBackground,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28.0)),
+      ),
+      padding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 24.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Top Drag Handle
+          Container(
+            width: 40.0,
+            height: 4.0,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: AppRadius.micro,
+            ),
+          ),
+          const SizedBox(height: 16.0),
+
+          // Header Title Row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'how_can_we_help_you'.tr(),
+                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
               ),
-            ),
-            const SizedBox(height: 16.0),
-
-            // Header Title Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'كيف فينا نساعدك؟',
-                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                    fontWeight: .w800,
-                  ),
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: const Icon(
+                  Icons.close_rounded,
+                  size: 22.0,
+                  color: Colors.black87,
                 ),
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: const Icon(
-                    Icons.close_rounded,
-                    size: 22.0,
-                    color: Colors.black87,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12.0),
-
-            // Order Number & Status Row
-            Row(
-              spacing: 6.0,
-              mainAxisAlignment: .start,
-              children: [
-                Text(
-                  'الطلب $displayOrderNumber · $displayOrderStatus',
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    fontWeight: .bold,
-                  ),
-                ),
-                SvgPicture.asset(AppAssets.documentIcon),
-              ],
-            ),
-            const SizedBox(height: 20.0),
-
-            // Options List
-            for (int i = 0; i < _options.length; i++) ...[
-              _OrderHelpOptionCard(
-                option: _options[i],
-                onTap: () {
-                  final selectedType = _options[i].type;
-                  widget.onOptionSelected?.call(selectedType);
-                  _launchWhatsApp(selectedType, displayOrderNumber);
-                  Navigator.pop(context, selectedType);
-                },
               ),
-              if (i < _options.length - 1) const SizedBox(height: 10.0),
             ],
-            const SizedBox(height: 14.0),
+          ),
+          const SizedBox(height: 12.0),
 
-            // Bottom WhatsApp Notice Banner
-            Container(
-              padding: const EdgeInsets.all(14.0),
-              decoration: BoxDecoration(
-                color: AppColors.successDark.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(16.0),
+          // Order Number & Status Row
+          Row(
+            spacing: 6.0,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                '${'order_number'.tr()} $displayOrderNumber · $displayOrderStatus',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              child: Row(
-                spacing: 10.0,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SvgPicture.asset(
-                    AppAssets.chatIcon,
-                    colorFilter: .mode(AppColors.successForeground, .srcIn),
-                  ),
-                  Expanded(
-                    child: Text(
-                      'كل خيار بيفتحلك واتساب، ورقم الطلب جاهز بالرسالة. المرتجعات والإلغاء بيرتبهن فريق الدعم معك.',
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: AppColors.successForeground,
-                      ),
+              SvgPicture.asset(AppAssets.documentIcon),
+            ],
+          ),
+          const SizedBox(height: 20.0),
+
+          // Options List
+          for (int i = 0; i < _options.length; i++) ...[
+            _OrderHelpOptionCard(
+              option: _options[i],
+              onTap: () {
+                final selectedType = _options[i].type;
+                widget.onOptionSelected?.call(selectedType);
+                _launchWhatsApp(selectedType, displayOrderNumber);
+                Navigator.pop(context, selectedType);
+              },
+            ),
+            if (i < _options.length - 1) const SizedBox(height: 10.0),
+          ],
+          const SizedBox(height: 14.0),
+
+          // Bottom WhatsApp Notice Banner
+          Container(
+            padding: const EdgeInsets.all(14.0),
+            decoration: BoxDecoration(
+              color: AppColors.successDark.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: Row(
+              spacing: 10.0,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SvgPicture.asset(
+                  AppAssets.chatIcon,
+                  colorFilter: const ColorFilter.mode(AppColors.successForeground, BlendMode.srcIn),
+                ),
+                Expanded(
+                  child: Text(
+                    'whatsapp_help_notice'.tr(),
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: AppColors.successForeground,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -260,7 +255,7 @@ class _OrderHelpOptionCard extends StatelessWidget {
         child: Row(
           spacing: 12.0,
           children: [
-            // Icon Container (Right side in RTL)
+            // Icon Container
             Container(
               width: 40.0,
               height: 40.0,
@@ -278,13 +273,13 @@ class _OrderHelpOptionCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    option.title,
+                    option.titleKey.tr(),
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontWeight: .bold,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    option.subtitle,
+                    option.subtitleKey.tr(),
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: AppColors.tertiary,
                     ),

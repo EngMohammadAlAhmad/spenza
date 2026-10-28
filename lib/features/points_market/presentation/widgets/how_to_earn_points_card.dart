@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -30,7 +31,7 @@ class HowToEarnPointsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'كيف بتجمع نقاط',
+            'how_to_earn_points'.tr(),
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -51,7 +52,7 @@ class HowToEarnPointsCard extends StatelessWidget {
                 flex: 3,
                 child: _buildStepItem(
                   iconPath: AppAssets.productsIconBig,
-                  label: 'بتطلب',
+                  label: 'step_place_order'.tr(),
                 )
                     .animate()
                     .fadeIn(delay: 200.ms, duration: 450.ms)
@@ -75,7 +76,7 @@ class HowToEarnPointsCard extends StatelessWidget {
                 flex: 3,
                 child: _buildStepItem(
                   iconPath: AppAssets.orderArrivedIcon,
-                  label: 'بيوصلك الطلب',
+                  label: 'step_order_arrives'.tr(),
                 )
                     .animate()
                     .fadeIn(delay: 900.ms, duration: 450.ms)
@@ -99,7 +100,7 @@ class HowToEarnPointsCard extends StatelessWidget {
                 flex: 3,
                 child: _buildStep3Item(
                   iconPath: AppAssets.appIconPrimary,
-                  label: 'بتنضاف نقاطك',
+                  label: 'step_points_added'.tr(),
                 )
                     .animate()
                     .fadeIn(delay: 1600.ms, duration: 500.ms)
@@ -114,10 +115,10 @@ class HowToEarnPointsCard extends StatelessWidget {
           const SizedBox(height: 18.0),
 
           // Explanation Text
-          const Center(
+          Center(
             child: Text(
-              'نقطة لكل 1,000 ل.س من قيمة طلبك، وبتنضاف بعد ما يتسلم الطلب.',
-              style: TextStyle(
+              'points_explain_text'.tr(),
+              style: const TextStyle(
                 fontSize: 12,
                 color: AppColors.neutral,
                 height: 1.3,
@@ -228,4 +229,3 @@ class HowToEarnPointsCard extends StatelessWidget {
     );
   }
 }
-

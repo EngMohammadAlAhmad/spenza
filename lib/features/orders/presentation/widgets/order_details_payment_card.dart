@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
@@ -62,9 +62,9 @@ class OrderDetailsPaymentCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                'الدفع',
-                style: TextStyle(
+              Text(
+                'payment_title'.tr(),
+                style: const TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
                   color: AppColors.neutral900,
@@ -82,7 +82,7 @@ class OrderDetailsPaymentCard extends StatelessWidget {
                     child: Text(
                       order.paymentMethodLabel.isNotEmpty
                           ? order.paymentMethodLabel
-                          : 'بتدفع عند الاستلام',
+                          : 'pay_on_delivery'.tr(),
                       style: const TextStyle(
                         fontSize: 12.0,
                         fontWeight: FontWeight.w600,
@@ -104,16 +104,12 @@ class OrderDetailsPaymentCard extends StatelessWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0,
-                        vertical: 4.0,
+                        horizontal: 10.0,
+                        vertical: 5.0,
                       ),
                       decoration: BoxDecoration(
                         color: paymentStatusStyle.backgroundColor,
                         borderRadius: AppRadius.medium,
-                        border: Border.all(
-                          color: paymentStatusStyle.textColor.withValues(alpha: 0.15),
-                          width: 1.0,
-                        ),
                       ),
                       child: Text(
                         order.paymentStatusLabel,
@@ -132,7 +128,7 @@ class OrderDetailsPaymentCard extends StatelessWidget {
           const SizedBox(height: 10.0),
           Text(
             order.paymentMethod == 'cash_on_delivery'
-                ? '${order.paymentMethodLabel} · جهّز ${formatter.format(order.total)} ل.س للمندوب'
+                ? '${order.paymentMethodLabel} · ${'prepare_amount_for_courier'.tr(args: ['${formatter.format(order.total)} ${'sp_currency'.tr()}'])}'
                 : order.paymentMethodLabel,
             style: const TextStyle(
               fontSize: 13.0,
@@ -161,7 +157,7 @@ class OrderDetailsPaymentCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 6.0),
                       Text(
-                        'حالة الدفع: ${order.paymentStatusLabel.isNotEmpty ? order.paymentStatusLabel : "مرفوض"}',
+                        '${'payment_status_prefix'.tr()}${order.paymentStatusLabel.isNotEmpty ? order.paymentStatusLabel : "rejection_reason_prefix".tr()}',
                         style: const TextStyle(
                           fontSize: 13.0,
                           fontWeight: FontWeight.bold,
@@ -174,7 +170,7 @@ class OrderDetailsPaymentCard extends StatelessWidget {
                       order.rejectionReason!.trim().isNotEmpty) ...[
                     const SizedBox(height: 6.0),
                     Text(
-                      'سبب الرفض: ${order.rejectionReason}',
+                      '${'rejection_reason_prefix'.tr()}${order.rejectionReason}',
                       style: const TextStyle(
                         fontSize: 12.0,
                         color: Color(0xFF991B1B),
@@ -194,7 +190,7 @@ class OrderDetailsPaymentCard extends StatelessWidget {
               maxOpacity: 1.0,
               builder: (context, animatedColor) {
                 return CustomButton(
-                  text: 'ارفعلنا صورة وصل الحوالة',
+                  text: 'upload_receipt_button'.tr(),
                   isOutlined: true,
                   height: 48.0,
                   textColor: animatedColor,
@@ -246,7 +242,7 @@ class OrderDetailsPaymentCard extends StatelessWidget {
         label.contains('تأكيد')) {
       return _StatusStyle(
         backgroundColor: const Color(0xFFFEF3C7),
-        textColor: const Color(0xFFB45309),
+        textColor: AppColors.warningAlert,
       );
     } else if (status.contains('fail') ||
         status.contains('cancel') ||

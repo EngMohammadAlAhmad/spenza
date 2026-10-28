@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -7,6 +8,7 @@ import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/base_state.dart';
+import 'package:spenza/core/widgets/app_back_button.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
 import 'package:spenza/core/widgets/product_card.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
@@ -94,17 +96,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
-                      GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: const BoxDecoration(
-                            color: AppColors.backgroundLight,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.arrow_back_ios_new, size: 20),
-                        ),
-                      ),
+                      const AppBackButton(),
                       const SizedBox(width: 12),
                       Expanded(
                         child: AppSearchField(
@@ -144,7 +136,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       }
 
                       if (products.isEmpty) {
-                        return const Center(child: Text('لا توجد نتائج لبحثك'));
+                        return Center(child: Text('no_search_results'.tr()));
                       }
 
                       return GridView.builder(
@@ -189,34 +181,34 @@ class _SearchScreenState extends State<SearchScreen> {
       children: [
         const SizedBox(height: 8),
         // Recent Searches
-        _buildSectionHeader('عمليات بحث سابقة', AppAssets.clockIcon),
+        _buildSectionHeader('recent_searches'.tr(), AppAssets.clockIcon),
         const SizedBox(height: 12),
         Wrap(
           spacing: 10,
           runSpacing: 10,
           alignment: WrapAlignment.start,
           children: [
-            _buildSearchTag('أقلام رصاص'),
-            _buildSearchTag('كلاسور'),
+            _buildSearchTag('search_tag_pencils'.tr()),
+            _buildSearchTag('search_tag_binders'.tr()),
           ],
         ),
 
         const SizedBox(height: 32),
 
         // Popular Searches
-        _buildSectionHeader('الأكثر بحثاً', AppAssets.trendIcon),
+        _buildSectionHeader('trending_searches'.tr(), AppAssets.trendIcon),
         const SizedBox(height: 12),
         Wrap(
           spacing: 10,
           runSpacing: 10,
           alignment: WrapAlignment.start,
           children: [
-            _buildSearchTag('دفاتر'),
-            _buildSearchTag('أقلام جل'),
-            _buildSearchTag('حقيبة مدرسية'),
-            _buildSearchTag('ألوان خشبية'),
-            _buildSearchTag('ورق A4'),
-            _buildSearchTag('آلة حاسبة'),
+            _buildSearchTag('search_tag_notebooks'.tr()),
+            _buildSearchTag('search_tag_gel_pens'.tr()),
+            _buildSearchTag('search_tag_school_bag'.tr()),
+            _buildSearchTag('search_tag_colored_pencils'.tr()),
+            _buildSearchTag('search_tag_a4_paper'.tr()),
+            _buildSearchTag('search_tag_calculator'.tr()),
           ],
         ),
       ],

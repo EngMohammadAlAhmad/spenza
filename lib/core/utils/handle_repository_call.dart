@@ -13,7 +13,7 @@ Future<Either<Failure, T>> handleRepositoryCall<T>(
       Failure Function(dynamic exception)? onError,
     }) async {
   if (networkInfo != null && !await networkInfo.isConnected) {
-    return const Left(OfflineFailure());
+    return Left(OfflineFailure());
   }
 
   try {
@@ -27,7 +27,7 @@ Future<Either<Failure, T>> handleRepositoryCall<T>(
 
     // 2. Handle OfflineException specifically.
     if (e is OfflineException) {
-      return const Left(OfflineFailure());
+      return Left(OfflineFailure());
     }
 
     // 3. Handle ServerException specifically.

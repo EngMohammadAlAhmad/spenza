@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
@@ -12,7 +13,7 @@ class AppCustomDialog extends StatefulWidget {
   final String title;
   final String? description;
   final Widget? content;
-  final String primaryButtonText;
+  final String? primaryButtonText;
   final VoidCallback? onPrimaryPressed;
   final Color primaryButtonColor;
   final Color primaryTextColor;
@@ -31,11 +32,11 @@ class AppCustomDialog extends StatefulWidget {
     required this.title,
     this.description,
     this.content,
-    this.primaryButtonText = 'تأكيد',
+    this.primaryButtonText,
     this.onPrimaryPressed,
     this.primaryButtonColor = AppColors.primary500,
     this.primaryTextColor = Colors.white,
-    this.secondaryButtonText = 'إلغاء',
+    this.secondaryButtonText,
     this.onSecondaryPressed,
     this.secondaryButtonColor = const Color(0xFFF3F4F6),
     this.secondaryTextColor = AppColors.neutral900,
@@ -51,11 +52,11 @@ class AppCustomDialog extends StatefulWidget {
     required String title,
     String? description,
     Widget? content,
-    String primaryButtonText = 'تأكيد',
+    String? primaryButtonText,
     VoidCallback? onPrimaryPressed,
     Color primaryButtonColor = AppColors.primary500,
     Color primaryTextColor = Colors.white,
-    String? secondaryButtonText = 'إلغاء',
+    String? secondaryButtonText,
     VoidCallback? onSecondaryPressed,
     Color secondaryButtonColor = const Color(0xFFF3F4F6),
     Color secondaryTextColor = AppColors.neutral900,
@@ -260,7 +261,7 @@ class _AppCustomDialogState extends State<AppCustomDialog>
                     // Primary Button
                     Expanded(
                       child: CustomButton(
-                        text: widget.primaryButtonText,
+                        text: widget.primaryButtonText ?? 'confirm'.tr(),
                         onPressed: widget.isLoading
                             ? null
                             : (widget.onPrimaryPressed ??
@@ -343,8 +344,8 @@ class ConfirmationDialog extends StatelessWidget {
     super.key,
     required this.title,
     required this.message,
-    this.confirmText = 'تأكيد',
-    this.cancelText = 'إلغاء',
+    this.confirmText = 'confirm',
+    this.cancelText = 'cancel',
     this.confirmColor,
     this.icon,
   });

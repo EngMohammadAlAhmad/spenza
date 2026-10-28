@@ -1,7 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
+
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
@@ -102,7 +103,7 @@ class _Step3ReviewAndConfirmViewState
               Expanded(
                 child: CustomTextField(
                   controller: _couponController,
-                  hintText: 'اكتب كود الخصم',
+                  hintText: 'write_discount_code'.tr(),
                   fillColor: Colors.white,
                   verticalContentPadding: 12.0,
                 ),
@@ -125,9 +126,9 @@ class _Step3ReviewAndConfirmViewState
                     backgroundColor: const Color(0xFFFDF2F2),
                     padding: EdgeInsets.zero,
                   ),
-                  child: const Text(
-                    'طبق',
-                    style: TextStyle(
+                  child: Text(
+                    'apply'.tr(),
+                    style: const TextStyle(
                       color: AppColors.primary500,
                       fontWeight: FontWeight.bold,
                       fontSize: 14.0,
@@ -140,9 +141,9 @@ class _Step3ReviewAndConfirmViewState
           const SizedBox(height: 16.0),
 
           // 5. Driver Note Field
-          const Text(
-            'ملاحظة للمندوب (اختياري)',
-            style: TextStyle(
+          Text(
+            'driver_note_optional'.tr(),
+            style: const TextStyle(
               fontSize: 14.0,
               fontWeight: FontWeight.bold,
               color: AppColors.neutral900,
@@ -151,7 +152,7 @@ class _Step3ReviewAndConfirmViewState
           const SizedBox(height: 8.0),
           CustomTextField(
             controller: _driverNoteController,
-            hintText: 'مثلا: اتصل قبل ما توصل',
+            hintText: 'driver_note_example'.tr(),
             fillColor: Colors.white,
           ),
           const SizedBox(height: 16.0),
@@ -177,14 +178,14 @@ class _Step3ReviewAndConfirmViewState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'المنتجات ($totalItemsCount)',
+                      'products_count_title'.tr(args: ['$totalItemsCount']),
                       style: const TextStyle(
                         fontSize: 14.0,
                         color: AppColors.neutral900,
                       ),
                     ),
                     Text(
-                      '${formatter.format(totalCartPrice)} ل.س',
+                      '${formatter.format(totalCartPrice)} ${'sp_currency'.tr()}',
                       style: const TextStyle(
                         fontSize: 15.0,
                         fontWeight: FontWeight.bold,
@@ -201,15 +202,15 @@ class _Step3ReviewAndConfirmViewState
                   children: [
                     Text(
                       widget.selectedDeliveryType == 'express'
-                          ? 'التوصيل المستعجل'
-                          : 'التوصيل العادي',
+                          ? 'express_delivery_title'.tr()
+                          : 'standard_delivery_title'.tr(),
                       style: const TextStyle(
                         fontSize: 14.0,
                         color: AppColors.neutral900,
                       ),
                     ),
                     Text(
-                      '${formatter.format(deliveryFee)} ل.س',
+                      '${formatter.format(deliveryFee)} ${'sp_currency'.tr()}',
                       style: const TextStyle(
                         fontSize: 15.0,
                         fontWeight: FontWeight.bold,
@@ -225,9 +226,9 @@ class _Step3ReviewAndConfirmViewState
                   spacing: 5.0,
                   children: [
                     Text(
-                      'بتكسب نقاط على هالطلب بعد التسليم',
+                      'earn_points_notice'.tr(),
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontWeight: .bold,
+                        fontWeight: FontWeight.bold,
                         color: AppColors.warningAlert,
                       ),
                     ),
@@ -246,7 +247,7 @@ class _Step3ReviewAndConfirmViewState
           // 7. Terms & Conditions Notice
           Center(
             child: Text(
-              'بتأكيدك للطلب بتوافق على شروط الاستخدام وسياسة الإرجاع.',
+              'agree_terms_confirm_order'.tr(),
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                 color: AppColors.tertiary,
               ),

@@ -1,8 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
@@ -101,7 +101,11 @@ class _CartViewState extends State<_CartView> {
                 const CartHeader(),
                 Expanded(
                   child: isEmpty
-                      ? const EmptyCartWidget()
+                      ? EmptyCartWidget(
+                          title: 'empty_cart_title'.tr(),
+                          subtitle: 'empty_cart_subtitle'.tr(),
+                          showShoppingButton: true,
+                        )
                       : _buildNonEmptyCart(context, state),
                 ),
               ],
@@ -174,8 +178,8 @@ class _CartViewState extends State<_CartView> {
                         Expanded(
                           child: Text(
                             isFreeDelivery
-                                ? 'مبروك! حصلت على توصيل عادي مجاني'
-                                : 'ضيف بـ ${formatter.format(remainingForFree)} $currency وبيصير التوصيل العادي مجاني',
+                                ? 'congrats_free_delivery'.tr()
+                                : 'add_more_for_free_delivery'.tr(args: [formatter.format(remainingForFree), currency]),
                             style:
                                 Theme.of(context).textTheme.bodyMedium!.copyWith(
                                       fontWeight: FontWeight.bold,
@@ -244,9 +248,9 @@ class _CartViewState extends State<_CartView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'كود خصم أو مكافأة',
-                        style: TextStyle(
+                      Text(
+                        'discount_code_or_reward'.tr(),
+                        style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
@@ -254,17 +258,17 @@ class _CartViewState extends State<_CartView> {
                       ),
                       GestureDetector(
                         onTap: () {},
-                        child: const Row(
+                        child: Row(
                           children: [
                             Text(
-                              'اختار من مكافآتي',
-                              style: TextStyle(
+                              'choose_from_my_rewards'.tr(),
+                              style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primary,
                               ),
                             ),
-                            Icon(Icons.chevron_right_rounded,
+                            const Icon(Icons.chevron_right_rounded,
                                 color: AppColors.primary),
                           ],
                         ),
@@ -280,7 +284,7 @@ class _CartViewState extends State<_CartView> {
                           height: 48,
                           child: TextField(
                             decoration: InputDecoration(
-                              hintText: 'اكتب كود الخصم',
+                              hintText: 'write_discount_code'.tr(),
                               hintStyle: const TextStyle(
                                 color: AppColors.neutral,
                                 fontSize: 13,
@@ -324,9 +328,9 @@ class _CartViewState extends State<_CartView> {
                             ),
                             padding: EdgeInsets.zero,
                           ),
-                          child: const Text(
-                            'طبق',
-                            style: TextStyle(
+                          child: Text(
+                            'apply'.tr(),
+                            style: const TextStyle(
                               color: AppColors.primary,
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
@@ -361,7 +365,7 @@ class _CartViewState extends State<_CartView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'المنتجات (${state.totalItemsCount})',
+                        'products_count_title'.tr(args: ['${state.totalItemsCount}']),
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.black87,
@@ -380,17 +384,17 @@ class _CartViewState extends State<_CartView> {
                   const SizedBox(height: 10.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
+                    children: [
                       Text(
-                        'التوصيل',
-                        style: TextStyle(
+                        'delivery_title'.tr(),
+                        style: const TextStyle(
                           fontSize: 14,
                           color: Colors.black87,
                         ),
                       ),
                       Text(
-                        'بعد اختيار العنوان',
-                        style: TextStyle(
+                        'after_selecting_address'.tr(),
+                        style: const TextStyle(
                           fontSize: 13,
                           color: AppColors.neutral,
                         ),
@@ -398,11 +402,11 @@ class _CartViewState extends State<_CartView> {
                     ],
                   ),
                   const SizedBox(height: 12.0),
-                  const Align(
+                  Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                      'الأسعار شاملة الضريبة.',
-                      style: TextStyle(
+                      'prices_include_tax'.tr(),
+                      style: const TextStyle(
                         fontSize: 12,
                         color: AppColors.neutral,
                       ),
@@ -437,7 +441,7 @@ class _CartViewState extends State<_CartView> {
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 14.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -446,9 +450,9 @@ class _CartViewState extends State<_CartView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    'المجموع قبل التوصيل',
-                    style: TextStyle(
+                  Text(
+                    'total_before_delivery'.tr(),
+                    style: const TextStyle(
                       fontSize: 13.0,
                       color: AppColors.neutral,
                       fontWeight: FontWeight.w500,
@@ -469,12 +473,18 @@ class _CartViewState extends State<_CartView> {
               // "كمل الطلب" Button
               SizedBox(
                 width: 150.0,
-                child: CustomButton(
-                  text: 'كمل الطلب',
-                  height: 48.0,
-                  onPressed: () {
-                    context.push(RoutePaths.checkout);
-                  },
+                child: Hero(
+                  tag: 'checkout_bottom_button_hero',
+                  child: Material(
+                    color: Colors.transparent,
+                    child: CustomButton(
+                      text: 'كمّل الطلب',
+                      height: 52.0,
+                      onPressed: () {
+                        context.push(RoutePaths.checkout);
+                      },
+                    ),
+                  ),
                 ),
               ),
             ],

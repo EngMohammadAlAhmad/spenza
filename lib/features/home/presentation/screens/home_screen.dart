@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -6,6 +7,7 @@ import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
 import 'package:spenza/core/errors/failure.dart';
@@ -33,7 +35,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).padding.bottom;
+    final bottomInset = context.screenPadding.bottom;
 
     return BlocProvider(
       create: (context) => di.sl<HomeBloc>()..add(const GetHomeDataEvent()),
@@ -152,7 +154,7 @@ class FreeDeliveryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 76.5,
-      width: MediaQuery.sizeOf(context).width,
+      width: context.width,
       decoration: BoxDecoration(
         color: AppColors.secondary,
         borderRadius: AppRadius.brandRadius,
@@ -191,8 +193,8 @@ class FreeDeliveryCard extends StatelessWidget {
                       child: AnimatedTextKit(
                         animatedTexts: [
                           RichTyperAnimatedText(
-                            boldText: 'توصيل مجاني داخل دمشق\n',
-                            normalText: ' للطلبات فوق 1,500 ل.س',
+                            boldText: 'free_delivery_damascus'.tr(),
+                            normalText: 'for_orders_above_1500'.tr(),
                             speed: const Duration(milliseconds: 60),
                           ),
                         ],
@@ -200,19 +202,6 @@ class FreeDeliveryCard extends StatelessWidget {
                         pause: const Duration(seconds: 3),
                       ),
                     ),
-
-                    // Pulsing and Shimmering Price Text
-                    /*Text(
-                      '1,500 ل.س',
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: AppColors.primary500, fontWeight: FontWeight.bold),
-                    )
-                        .animate(onPlay: (controller) => controller.repeat())
-                        .shimmer(delay: 2.seconds, duration: 1500.ms, color: Colors.white.withValues(alpha: 0.5))
-                        .animate(onPlay: (controller) => controller.repeat(reverse: true))
-                        .scale(begin: const Offset(1.0, 1.0), end: const Offset(1.08, 1.08), duration: 1.seconds, curve: Curves.easeInOut)
-                        .animate() // Entrance
-                        .fadeIn(delay: 300.ms, duration: 600.ms)
-                        .slideX(begin: 0.3, end: 0.0),*/
                   ],
                 ),
               ],

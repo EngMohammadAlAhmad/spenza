@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -99,7 +100,7 @@ class FavoritesScreen extends StatelessWidget {
         ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
         
         Text(
-          'احفظ منتجاتك المفضلة',
+          'save_your_favorite_products'.tr(),
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: AppColors.neutral900,
@@ -108,7 +109,7 @@ class FavoritesScreen extends StatelessWidget {
         ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2, end: 0),
         
         Text(
-          'سجّل دخول حتى تقدر تحفظ المنتجات اللي بتحبها وترجع تلاقيها هون بكل سهولة.',
+          'save_favorites_login_desc'.tr(),
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -116,7 +117,7 @@ class FavoritesScreen extends StatelessWidget {
         ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.2, end: 0.0),
         
         CustomButton(
-          text: 'تسجيل الدخول',
+          text: 'login'.tr(),
           onPressed: () => context.push(RoutePaths.login),
           icon: SvgPicture.asset(AppAssets.loginIcon),
           width: 200.0,
@@ -125,7 +126,7 @@ class FavoritesScreen extends StatelessWidget {
         TextButton(
           onPressed: () => context.go(RoutePaths.home),
           child: Text(
-            'تصفّح المتجر أولاً',
+            'browse_store_first'.tr(),
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: AppColors.textSecondary,
                   fontWeight: FontWeight.bold,
@@ -183,7 +184,7 @@ class FavoritesScreen extends StatelessWidget {
         const SizedBox(height: 20),
 
         Text(
-          'مفضلتك عم تستناك!',
+          'your_favorites_waiting'.tr(),
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: AppColors.neutral900,
@@ -192,7 +193,7 @@ class FavoritesScreen extends StatelessWidget {
         ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2, end: 0),
 
         Text(
-          'لسه ما ضفت أي منتج لمفضلتك، بلّش تصفّح واضغط على أيقونة القلب لأي منتج بيعجبك حتى تلاقيه هون.',
+          'empty_favorites_desc'.tr(),
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -202,7 +203,7 @@ class FavoritesScreen extends StatelessWidget {
         const SizedBox(height: 10),
 
         CustomButton(
-          text: 'اكتشف المنتجات',
+          text: 'discover_products'.tr(),
           onPressed: () => context.go(RoutePaths.categories),
           width: 220.0,
         ).animate().fadeIn(delay: 600.ms).scale(begin: const Offset(0.95, 0.95)),

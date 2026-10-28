@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
@@ -20,7 +21,7 @@ class NoInternetWidget extends StatelessWidget {
             SvgPicture.asset(AppAssets.noWifiIcon),
             const SizedBox(height: 24),
             Text(
-              'النت قاطع عندك',
+              'no_internet_title'.tr(),
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: AppColors.neutral900,
@@ -28,7 +29,7 @@ class NoInternetWidget extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'سلتك محفوظة. أول ما يرجع النت منكمل من وين وقفت.',
+              'cart_saved_internet_note'.tr(),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AppColors.neutral,
@@ -36,7 +37,7 @@ class NoInternetWidget extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             CustomButton(
-              text: 'جرب مرة تانية',
+              text: 'try_again'.tr(),
               isOutlined: true,
               icon: SvgPicture.asset(AppAssets.refreshIcon),
               width: 146.0,

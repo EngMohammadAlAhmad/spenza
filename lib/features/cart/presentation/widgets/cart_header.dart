@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
@@ -14,7 +15,7 @@ class CartHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppHeader(
-      title: 'السلة',
+      title: 'shopping_cart'.tr(),
       onBackPressed: onBackPressed ??
           () {
             if (context.canPop()) {

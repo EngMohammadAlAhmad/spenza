@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 
@@ -9,7 +10,7 @@ class FavoritesHeader extends StatelessWidget {
     return AppHeader(
       titleWidget: Center(
         child: Text(
-          'المفضلة',
+          'favorites'.tr(),
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 18.0,

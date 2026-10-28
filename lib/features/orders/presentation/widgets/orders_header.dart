@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 
 class OrdersHeader extends StatelessWidget {
@@ -21,7 +23,7 @@ class OrdersHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppHeader(
       style: AppHeaderStyle.light,
-      title: 'طلباتي',
+      title: 'my_orders'.tr(),
       showBackButton: false,
       titleTextStyle: const TextStyle(
         fontSize: 20.0,
@@ -37,7 +39,7 @@ class OrdersHeader extends StatelessWidget {
         ),
       ],
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 12.0,
+        top: context.screenPadding.top + 12.0,
         left: 20.0,
         right: 20.0,
         bottom: 18.0,
@@ -88,7 +90,7 @@ class OrdersHeader extends StatelessWidget {
                     Expanded(
                       child: _buildTabItem(
                         context,
-                        title: 'الحالية',
+                        title: 'active_orders'.tr(),
                         count: activeCount,
                         isSelected: selectedTabIndex == 0,
                         onTap: () => onTabChanged(0),
@@ -97,7 +99,7 @@ class OrdersHeader extends StatelessWidget {
                     Expanded(
                       child: _buildTabItem(
                         context,
-                        title: 'السابقة',
+                        title: 'previous_orders'.tr(),
                         count: completedCount,
                         isSelected: selectedTabIndex == 1,
                         onTap: () => onTabChanged(1),

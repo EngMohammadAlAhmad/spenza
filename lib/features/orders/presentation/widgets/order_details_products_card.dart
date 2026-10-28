@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/features/orders/domain/entities/order_details_entity.dart';
@@ -37,7 +37,7 @@ class OrderDetailsProductsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'المنتجات (${order.items.isNotEmpty ? order.items.length : order.itemsCount})',
+            'products_count_title'.tr(args: ['${order.items.isNotEmpty ? order.items.length : order.itemsCount}']),
             style: const TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
@@ -105,7 +105,7 @@ class OrderDetailsProductsCard extends StatelessWidget {
 
                     // Price
                     Text(
-                      '${formatter.format(item.lineTotal)} ل.س',
+                      '${formatter.format(item.lineTotal)} ${'sp_currency'.tr()}',
                       style: const TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.bold,
@@ -126,15 +126,15 @@ class OrderDetailsProductsCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'التوصيل',
-                style: TextStyle(
+              Text(
+                'delivery_title'.tr(),
+                style: const TextStyle(
                   fontSize: 13.0,
                   color: AppColors.textSecondary,
                 ),
               ),
               Text(
-                '${formatter.format(deliveryFee)} ل.س',
+                '${formatter.format(deliveryFee)} ${'sp_currency'.tr()}',
                 style: const TextStyle(
                   fontSize: 13.0,
                   fontWeight: FontWeight.bold,
@@ -147,16 +147,16 @@ class OrderDetailsProductsCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'الإجمالي',
-                style: TextStyle(
+              Text(
+                'total'.tr(),
+                style: const TextStyle(
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold,
                   color: AppColors.neutral900,
                 ),
               ),
               Text(
-                '${formatter.format(order.total)} ل.س',
+                '${formatter.format(order.total)} ${'sp_currency'.tr()}',
                 style: const TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,

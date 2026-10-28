@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:intl/intl.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/widgets/product_card.dart';
@@ -97,7 +97,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       ],
                     ),
                     child: Text(
-                      'وفّر ${(product.price - product.discountedPrice).toStringAsFixed(0)} ل.س',
+                      'save_amount'.tr(args: [(product.price - product.discountedPrice).toStringAsFixed(0), 'sp_currency'.tr()]),
                       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
                     ),
                   )
@@ -144,12 +144,8 @@ class ProductDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 5.0),
                     Text(
-                      ' (${product.ratingsCount} تقييم)',
+                      'ratings_count'.tr(args: ['${product.ratingsCount}']),
                       style: const TextStyle(color: AppColors.neutral, fontSize: 14.0),
-                    ),
-                    const Text(
-                      '   .    N/A عملية بيع',
-                      style: TextStyle(color: AppColors.neutral, fontSize: 14.0),
                     ),
                   ],
                 ).animate().fadeIn(delay: 500.ms, duration: 600.ms),
@@ -166,7 +162,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       ),
                       const TextSpan(text: ' '),
                       TextSpan(
-                        text: 'ل.س ',
+                        text: '${'sp_currency'.tr()} ',
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: AppColors.neutral,
                         ),
@@ -185,17 +181,17 @@ class ProductDetailsScreen extends StatelessWidget {
                 const SizedBox(height: 16.0),
                 Row(
                   children: [
-                    const CircleAvatar(backgroundColor: Colors.green, radius: 4.0),
+                    CircleAvatar(backgroundColor: isOutOfStock ? Colors.red : Colors.green, radius: 4.0),
                     const SizedBox(width: 5.0),
                     Text(
-                      isOutOfStock ? 'نفذت الكمية' : 'متوفر في المخزون',
+                      isOutOfStock ? 'out_of_stock'.tr() : 'in_stock'.tr(),
                       style: TextStyle(color: isOutOfStock ? Colors.red : Colors.green, fontWeight: FontWeight.bold, fontSize: 12.0),
                     ),
                   ],
                 ).animate().fadeIn(delay: 700.ms, duration: 600.ms),
                 const SizedBox(height: 20.0),
                 // Units
-                Text('الوحدة', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold)).animate().fadeIn(delay: 800.ms, duration: 600.ms),
+                Text('unit'.tr(), style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold)).animate().fadeIn(delay: 800.ms, duration: 600.ms),
                 const SizedBox(height: 12),
                 _buildOptionsRow(
                   context,
@@ -232,7 +228,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('الكمية', style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold)),
+                        Text('quantity'.tr(), style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold)),
                         const Spacer(),
                         _buildQuantitySelector(context, state.quantity),
                       ],
@@ -242,7 +238,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 
                 const SizedBox(height: 30.0),
                 // Description
-                Text('الوصف', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold, color: AppColors.primary)).animate().fadeIn(delay: 1200.ms, duration: 600.ms),
+                Text('description'.tr(), style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold, color: AppColors.primary)).animate().fadeIn(delay: 1200.ms, duration: 600.ms),
                 const SizedBox(height: 12.0),
                 Text(
                   product.description,
@@ -252,7 +248,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 const SizedBox(height: 48),
                 
                 // Related
-                Text('قد يعجبك أيضاً', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold, color: AppColors.primary)).animate().fadeIn(delay: 1380.ms, duration: 600.ms),
+                Text('you_may_also_like'.tr(), style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold, color: AppColors.primary)).animate().fadeIn(delay: 1380.ms, duration: 600.ms),
                 const SizedBox(height: 20),
                 SizedBox(
                   height: 300,

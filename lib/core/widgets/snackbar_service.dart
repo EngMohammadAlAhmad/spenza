@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_size.dart';
 
 enum SnackbarType {
   success,
@@ -112,14 +114,14 @@ class SnackbarService {
   /// Convenience method for login required snackbar
   static void showAuthRequired(
     BuildContext context, {
-    String message = 'سجّل دخولك أولاً لإضافة المنتجات إلى السلة',
+    String? message,
   }) {
     show(
       context,
-      message: message,
+      message: message ?? 'login_first_to_add_cart'.tr(),
       type: SnackbarType.warning,
       duration: const Duration(seconds: 4),
-      actionLabel: 'تسجيل الدخول',
+      actionLabel: 'login'.tr(),
       onActionPressed: () {
         context.push(RoutePaths.login);
       },
@@ -287,8 +289,8 @@ class _SnackbarOverlayState extends State<_SnackbarOverlay>
                   child: Container(
                     constraints: const BoxConstraints(maxWidth: 600),
                     margin: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width > 600
-                          ? (MediaQuery.of(context).size.width - 600) / 2
+                      horizontal: context.width > 600
+                          ? (context.width - 600) / 2
                           : 0,
                     ),
                     padding: const EdgeInsets.symmetric(

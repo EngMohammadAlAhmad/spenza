@@ -1,6 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
+
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
@@ -48,7 +49,7 @@ class Step3ItemsSummaryCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 8.0),
                   Text(
-                    'المنتجات ($totalCount)',
+                    'products_count_title'.tr(args: ['$totalCount']),
                     style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -63,12 +64,12 @@ class Step3ItemsSummaryCard extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       AppAssets.editIcon,
-                      colorFilter: .mode(AppColors.primary, .srcIn),
+                      colorFilter: const ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
                     ),
                     const SizedBox(width: 4.0),
-                    const Text(
-                      'تعديل السلة',
-                      style: TextStyle(
+                    Text(
+                      'edit_cart'.tr(),
+                      style: const TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary500,
@@ -89,6 +90,8 @@ class Step3ItemsSummaryCard extends StatelessWidget {
             separatorBuilder: (_, _) => const SizedBox(height: 12.0),
             itemBuilder: (context, index) {
               final item = items[index];
+              final unitStr = item.unitTitle.isNotEmpty ? item.unitTitle : 'unit_default'.tr();
+
               return Row(
                 children: [
                   // Product Image
@@ -132,7 +135,7 @@ class Step3ItemsSummaryCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 2.0),
                         Text(
-                          '${item.unitTitle.isNotEmpty ? item.unitTitle : "وحدة"} × ${item.quantity}',
+                          '$unitStr × ${item.quantity}',
                           style: const TextStyle(
                             fontSize: 12.0,
                             color: AppColors.neutral,
@@ -145,7 +148,7 @@ class Step3ItemsSummaryCard extends StatelessWidget {
 
                   // Price
                   Text(
-                    '${formatter.format(item.totalPrice)} ل.س',
+                    '${formatter.format(item.totalPrice)} ${'sp_currency'.tr()}',
                     style: const TextStyle(
                       fontSize: 14.0,
                       fontWeight: FontWeight.bold,

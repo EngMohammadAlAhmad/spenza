@@ -8,7 +8,8 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
-import 'package:spenza/core/widgets/circle_action_button.dart';
+import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/widgets/app_back_button.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/onboarding/domain/usecases/set_onboarding_status_usecase.dart';
 import 'package:spenza/injection_locator.dart' as di;
@@ -192,7 +193,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Padding(
               padding: EdgeInsets.fromLTRB(
                 24.0,
-                MediaQuery.sizeOf(context).height * 0.11,
+                context.height * 0.11,
                 24.0,
                 0.0,
               ),
@@ -250,7 +251,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             dotColor: AppColors.primary.withValues(alpha: 0.3),
                           ),
                         ),
-                        SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
+                        SizedBox(height: context.height * 0.03),
                         if (_currentIndex < onboardingData.length - 1) ...[
                           _buildPrimaryButton(text: 'التالي', onPressed: _onNext),
                           const SizedBox(height: 10.0),
@@ -266,7 +267,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           /*_buildSecondaryButton('عندي حساب — تسجيل الدخول', () {
                             context.push(RoutePaths.login);
                           }),*/
-                          SizedBox(height: MediaQuery.sizeOf(context).height * 0.015),
+                          SizedBox(height: context.height * 0.015),
                           _buildFooterText(),
                         ],
                       ],
@@ -356,24 +357,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
 
             Positioned(
-              right: MediaQuery.sizeOf(context).width * 0.05,
-              top: MediaQuery.sizeOf(context).height * 0.055,
+              right: context.width * 0.05,
+              top: context.height * 0.055,
               child: _currentIndex != 0
-                  ? CircleActionButton(
-                icon: Icons.arrow_back_ios_rounded,
-                shareButton: true,
-                withShadow: false,
-                backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                onTap: () => _pageController.previousPage(
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeInOut,
-                ),
-              )
+                  ? AppBackButton(
+                      backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                      iconColor: AppColors.primary,
+                      onTap: () => _pageController.previousPage(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                      ),
+                    )
                   : const SizedBox(),
             ),
             Positioned(
-              top: MediaQuery.sizeOf(context).height * 0.06,
-              left: MediaQuery.sizeOf(context).width * 0.06,
+              top: context.height * 0.06,
+              left: context.width * 0.06,
               child: Text(
                 '${_currentIndex + 1}/${onboardingData.length}',
                 style: Theme.of(context).textTheme.headlineSmall!.copyWith(

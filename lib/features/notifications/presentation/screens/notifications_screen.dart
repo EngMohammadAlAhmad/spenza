@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
@@ -15,7 +16,7 @@ class NotificationsScreen extends StatelessWidget {
         children: [
           // Header
           AppHeader(
-            title: 'الإشعارات',
+            title: 'notifications'.tr(),
             onBackPressed: () {
               if (context.canPop()) {
                 context.pop();
@@ -24,9 +25,9 @@ class NotificationsScreen extends StatelessWidget {
               }
             },
           ),
-          const Expanded(
+          Expanded(
             child: Center(
-              child: Text('لا يوجد إشعارات حالياً'),
+              child: Text('no_notifications_yet'.tr()),
             ),
           ),
         ],

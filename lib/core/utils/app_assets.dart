@@ -88,6 +88,7 @@ class AppAssets {
   static const String myAddressesIcon = '$_icons/my_addresses_icon.svg';
   static const String myInfoIcon = '$_icons/my_info_icon.svg';
   static const String noOrdersIcon = '$_icons/no_orders_icon.svg';
+  static const String newestIcon = '$_icons/newest_icon.svg';
   static const String noWifiIcon = '$_icons/no_wifi_icon.svg';
   static const String notificationsIcon = '$_icons/notifications_icon.svg';
   static const String notificationsIcon2 = '$_icons/notifications_icon_2.svg';
@@ -102,6 +103,8 @@ class AppAssets {
   static const String payIcon = '$_icons/pay_icon.svg';
   static const String paymentIcon = '$_icons/payment_icon.svg';
   static const String phoneDeviceIcon = '$_icons/phoneDevice_icon.svg';
+  static const String priceFromDownIcon = '$_icons/price_from_down_icon.svg';
+  static const String priceFromTopIcon = '$_icons/price_from_top_icon.svg';
   static const String preparingIcon = '$_icons/preparing_icon.svg';
   static const String productIcon = '$_icons/product_icon.svg';
   static const String productsIcon = '$_icons/products_icon.svg';

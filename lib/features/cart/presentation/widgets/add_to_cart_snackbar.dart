@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -176,7 +177,7 @@ class _AddToCartBannerWidgetState extends State<_AddToCartBannerWidget>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'انضافت ${widget.item.quantity} ${widget.item.unitTitle} لسلتك',
+                        'added_qty_unit_to_cart'.tr(args: ['${widget.item.quantity}', widget.item.unitTitle]),
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -188,7 +189,7 @@ class _AddToCartBannerWidgetState extends State<_AddToCartBannerWidget>
                       ),
                       const SizedBox(height: 2.0),
                       Text(
-                        'المجموع ${widget.formatter.format(widget.item.totalPrice)} ل.س',
+                        'total_amount_currency'.tr(args: [widget.formatter.format(widget.item.totalPrice)]),
                         style: const TextStyle(
                           fontSize: 13,
                           color: AppColors.neutral,
@@ -207,9 +208,9 @@ class _AddToCartBannerWidgetState extends State<_AddToCartBannerWidget>
                       color: AppColors.primaryTint,
                       borderRadius: AppRadius.extraLarge,
                     ),
-                    child: const Text(
-                      'عرض السلة',
-                      style: TextStyle(
+                    child: Text(
+                      'view_cart'.tr(),
+                      style: const TextStyle(
                         color: AppColors.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 14,

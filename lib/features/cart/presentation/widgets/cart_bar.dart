@@ -1,8 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
@@ -26,10 +27,10 @@ class CartBar extends StatelessWidget {
         final totalPrice = state.totalCartPrice;
 
         final itemText = itemCount == 1
-            ? 'منتج واحد بسلتك'
+            ? 'one_item_in_cart'.tr()
             : (itemCount == 2
-                ? 'منتجان بسلتك'
-                : '$itemCount منتجات بسلتك');
+                ? 'two_items_in_cart'.tr()
+                : 'n_items_in_cart'.tr(args: ['$itemCount']));
 
         return Material(
           color: Colors.transparent,
@@ -134,7 +135,7 @@ class CartBar extends StatelessWidget {
                           ),
                           const SizedBox(height: 1.0),
                           Text(
-                            '${formatter.format(totalPrice)} ل.س',
+                            '${formatter.format(totalPrice)} ${'sp_currency'.tr()}',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16.0,
@@ -158,16 +159,16 @@ class CartBar extends StatelessWidget {
                       child: Row(
                         spacing: 2.0,
                         mainAxisSize: MainAxisSize.min,
-                        children: const [
+                        children: [
                           Text(
-                            'عرض السلة',
-                            style: TextStyle(
+                            'view_cart'.tr(),
+                            style: const TextStyle(
                               color: AppColors.primary,
                               fontSize: 13.0,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Icon(
+                          const Icon(
                             Icons.chevron_right_rounded,
                             size: 18.0,
                             color: AppColors.primary,

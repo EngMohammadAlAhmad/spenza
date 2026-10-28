@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
@@ -48,14 +49,14 @@ class BusinessAccountCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'بتشتري لشركة أو مؤسسة أو مكتبة؟',
+                        'buying_for_business_question'.tr(),
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           fontWeight: .bold,
                         ),
                       ),
-                      SizedBox(height: 3.0),
+                      const SizedBox(height: 3.0),
                       Text(
-                        'افتح حساب أعمال واشتري بالجملة وبالكرتونة.',
+                        'business_account_benefits'.tr(),
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: AppColors.textBody,
                         ),

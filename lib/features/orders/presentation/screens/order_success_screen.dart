@@ -1,8 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
@@ -21,7 +22,7 @@ class OrderSuccessScreen extends StatelessWidget {
 
   void _copyOrderNumber(BuildContext context) {
     Clipboard.setData(ClipboardData(text: order.orderNumber));
-    SnackbarService.showSuccess(context, message: 'تم نسخ رقم الطلب');
+    SnackbarService.showSuccess(context, message: 'copied_order_number'.tr());
   }
 
   @override
@@ -99,19 +100,19 @@ class OrderSuccessScreen extends StatelessWidget {
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
+                                children: [
                                   Text(
-                                    'وصلنا طلبك',
-                                    style: TextStyle(
+                                    'order_received'.tr(),
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 22.0,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(height: 6.0),
+                                  const SizedBox(height: 6.0),
                                   Text(
-                                    'عم نجهزه، وبنخبرك بكل خطوة.',
-                                    style: TextStyle(
+                                    'preparing_order'.tr(),
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 14.0,
                                     ),
@@ -141,7 +142,7 @@ class OrderSuccessScreen extends StatelessWidget {
                                 const SizedBox(width: 8.0),
                                 Expanded(
                                   child: Text(
-                                    'بتكسب ${order.pointsEarned} نقطة لما يوصلك الطلب',
+                                    'earn_points_on_delivery'.tr(args: ['${order.pointsEarned}']),
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 13.0,
@@ -187,9 +188,9 @@ class OrderSuccessScreen extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                'رقم الطلب',
-                                style: TextStyle(
+                              Text(
+                                'order_number'.tr(),
+                                style: const TextStyle(
                                   fontSize: 14.0,
                                   color: AppColors.neutral,
                                 ),
@@ -221,9 +222,9 @@ class OrderSuccessScreen extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                'حالة الطلب',
-                                style: TextStyle(
+                              Text(
+                                'order_status'.tr(),
+                                style: const TextStyle(
                                   fontSize: 14.0,
                                   color: AppColors.neutral,
                                 ),
@@ -239,7 +240,7 @@ class OrderSuccessScreen extends StatelessWidget {
                                 ),
                                 child: Text(
                                   order.statusLabel,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 12.0,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.blue,
@@ -254,9 +255,9 @@ class OrderSuccessScreen extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                'بتدفع',
-                                style: TextStyle(
+                              Text(
+                                'paying'.tr(),
+                                style: const TextStyle(
                                   fontSize: 14.0,
                                   color: AppColors.neutral,
                                 ),
@@ -290,15 +291,15 @@ class OrderSuccessScreen extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                'الإجمالي',
-                                style: TextStyle(
+                              Text(
+                                'total'.tr(),
+                                style: const TextStyle(
                                   fontSize: 14.0,
                                   color: AppColors.neutral,
                                 ),
                               ),
                               Text(
-                                '${formatter.format(order.totalAmount)} ل.س',
+                                '${formatter.format(order.totalAmount)} ${'sp_currency'.tr()}',
                                 style: const TextStyle(
                                   fontSize: 16.0,
                                   fontWeight: FontWeight.bold,
@@ -313,9 +314,9 @@ class OrderSuccessScreen extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                'التوصيل لـ',
-                                style: TextStyle(
+                              Text(
+                                'deliver_to'.tr(),
+                                style: const TextStyle(
                                   fontSize: 14.0,
                                   color: AppColors.neutral,
                                 ),
@@ -323,7 +324,7 @@ class OrderSuccessScreen extends StatelessWidget {
                               Text(
                                 order.deliveryAddress.isNotEmpty
                                     ? order.deliveryAddress
-                                    : 'المنزل • المزة، دمشق',
+                                    : '',
                                 style: const TextStyle(
                                   fontSize: 14.0,
                                   fontWeight: FontWeight.bold,
@@ -338,9 +339,9 @@ class OrderSuccessScreen extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                'الموعد المتوقع',
-                                style: TextStyle(
+                              Text(
+                                'expected_time'.tr(),
+                                style: const TextStyle(
                                   fontSize: 14.0,
                                   color: AppColors.neutral,
                                 ),
@@ -369,7 +370,7 @@ class OrderSuccessScreen extends StatelessWidget {
                         borderRadius: AppRadius.upMedium,
                       ),
                       child: Row(
-                        crossAxisAlignment: .start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Icon(
                             Icons.info_outline_rounded,
@@ -379,20 +380,20 @@ class OrderSuccessScreen extends StatelessWidget {
                           const SizedBox(width: 12.0),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment: .start,
-                              children: const [
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
                                 Text(
-                                  'جهز المبلغ',
-                                  style: TextStyle(
+                                  'prepare_cash'.tr(),
+                                  style: const TextStyle(
                                     fontSize: 15.0,
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF1E3A8A),
                                   ),
                                 ),
-                                SizedBox(height: 4.0),
+                                const SizedBox(height: 4.0),
                                 Text(
-                                  'المندوب بيتصل فيك قبل ما يوصل. الفاتورة بتظهر بطلباتي بعد ما تصدر.',
-                                  style: TextStyle(
+                                  'prepare_cash_desc'.tr(),
+                                  style: const TextStyle(
                                     fontSize: 13.0,
                                     color: AppColors.textBody,
                                     height: 1.3,
@@ -430,7 +431,7 @@ class OrderSuccessScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: CustomButton(
-                          text: 'تابع طلبك',
+                          text: 'track_your_order'.tr(),
                           height: 48.0,
                           onPressed: () {
                             context.push(RoutePaths.orderDetails, extra: order.orderNumber);
@@ -439,7 +440,7 @@ class OrderSuccessScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: CustomButton(
-                          text: 'كمل تسوق',
+                          text: 'continue_shopping'.tr(),
                           isOutlined: true,
                           height: 48.0,
                           onPressed: () {

@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
@@ -85,7 +87,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'شو الرمز يلي وصلك؟',
+                            'what_code_did_you_get'.tr(),
                             style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                                   color: AppColors.primary,
                                   fontWeight: FontWeight.w700,
@@ -95,7 +97,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                             TextSpan(
                               children: [
                                 TextSpan(
-                                  text: 'بعتنالك رمز من 6 أرقام على ',
+                                  text: 'sent_code_to'.tr(),
                                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                         color: AppColors.neutral,
                                       ),
@@ -117,14 +119,14 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                             TextSpan(
                               children: [
                                 TextSpan(
-                                  text: 'الرقم غلط؟ ',
+                                  text: 'wrong_number_question'.tr(),
                                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                         color: AppColors.neutral,
                                         fontSize: 13.0,
                                       ),
                                 ),
                                 TextSpan(
-                                  text: 'غيّر الرقم',
+                                  text: 'change_number'.tr(),
                                   style: const TextStyle(
                                     color: AppColors.primary,
                                     fontWeight: FontWeight.bold,
@@ -147,10 +149,10 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                             child: Text.rich(
                               TextSpan(
                                 children: [
-                                  const TextSpan(text: 'ما وصل الرمز؟ ابعتلي ياه مرة تانية بعد '),
-                                  TextSpan(
+                                  TextSpan(text: 'resend_code_timer'.tr()),
+                                  const TextSpan(
                                     text: '00:58',
-                                    style: const TextStyle(color: AppColors.blue, fontWeight: FontWeight.bold),
+                                    style: TextStyle(color: AppColors.blue, fontWeight: FontWeight.bold),
                                   ),
                                 ],
                               ),
@@ -159,7 +161,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                           ),
                           const SizedBox(height: 10.0),
                           CustomButton(
-                            text: 'تحقّق',
+                            text: 'verify_btn'.tr(),
                             height: 52.0,
                             isLoading: state.isLoading,
                             onPressed: _isOtpComplete && !state.isLoading
@@ -196,6 +198,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
         controller: _controllers[index],
         focusNode: _focusNodes[index],
         keyboardType: TextInputType.number,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         textAlign: TextAlign.center,
         textAlignVertical: TextAlignVertical.center,
         maxLength: 1,

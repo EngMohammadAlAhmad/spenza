@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -90,7 +91,7 @@ class CartItemCard extends StatelessWidget {
                 ],
                 const SizedBox(height: 8.0),
                 Text(
-                  '${formatter.format(item.totalPrice)} ل.س',
+                  '${formatter.format(item.totalPrice)} ${'sp_currency'.tr()}',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
@@ -98,7 +99,7 @@ class CartItemCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '${formatter.format(item.unitPrice)} ل.س للـ${item.unitTitle}',
+                  '${formatter.format(item.unitPrice)} ${'sp_currency'.tr()}/${item.unitTitle}',
                   style: const TextStyle(
                     fontSize: 11,
                     color: AppColors.neutral,

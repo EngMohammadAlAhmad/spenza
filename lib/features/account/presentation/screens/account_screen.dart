@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,6 +8,7 @@ import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/account/domain/entities/user_entity.dart';
@@ -30,11 +32,11 @@ class AccountScreen extends StatelessWidget {
       context: context,
       iconData: Icons.logout_rounded,
       iconColor: AppColors.primary500,
-      title: 'تسجيل الخروج',
-      description: 'هل أنت تأكد من أنك تريد تسجيل الخروج؟',
-      primaryButtonText: 'تأكيد الخروج',
+      title: 'logout_confirmation_title'.tr(),
+      description: 'logout_confirmation_message'.tr(),
+      primaryButtonText: 'logout'.tr(),
       primaryButtonColor: AppColors.primary500,
-      secondaryButtonText: 'إلغاء',
+      secondaryButtonText: 'cancel'.tr(),
       onPrimaryPressed: () async {
         Navigator.of(context).pop();
         await di.sl<CacheHelper>().deleteAuthToken();
@@ -51,7 +53,7 @@ class AccountScreen extends StatelessWidget {
       children: [
         // Top Header for Guest
         Container(
-          height: MediaQuery.of(context).padding.top + 60.0,
+          height: context.screenPadding.top + 60.0,
           width: double.infinity,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -65,14 +67,14 @@ class AccountScreen extends StatelessWidget {
             ],
           ),
           padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top,
+            top: context.screenPadding.top,
             left: 20.0,
             right: 20.0,
           ),
           alignment: Alignment.centerRight,
-          child: const Text(
-            'حسابي',
-            style: TextStyle(
+          child: Text(
+            'account'.tr(),
+            style: const TextStyle(
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
               color: Colors.black,
@@ -109,9 +111,9 @@ class AccountScreen extends StatelessWidget {
                         AppAssets.personalData,
                       ),
                       const SizedBox(height: 20.0),
-                      const Text(
-                        'سجل دخولك برقم موبايلك',
-                        style: TextStyle(
+                      Text(
+                        'welcome_title'.tr(),
+                        style: const TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -120,7 +122,7 @@ class AccountScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 8.0),
                       Text(
-                        'لتتابع طلباتك، تحفظ المفضلة، وتجمع\nنقاط مع كل طلب.',
+                        'welcome_subtitle'.tr(),
                         style: TextStyle(
                           fontSize: 16.0,
                           color: Colors.black.withValues(alpha: 0.6),
@@ -130,7 +132,7 @@ class AccountScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20.0),
                       CustomButton(
-                        text: 'سجل دخولك',
+                        text: 'login'.tr(),
                         onPressed: () => context.push(RoutePaths.login),
                         height: 50.0,
                       ),
@@ -158,7 +160,7 @@ class AccountScreen extends StatelessWidget {
                       children: [
                         AccountMenuItem(
                           iconPath: AppAssets.settingsIcon,
-                          title: 'الإعدادات',
+                          title: 'settings'.tr(),
                           onTap: () => context.push(RoutePaths.settings),
                         ),
                         const Padding(
@@ -171,7 +173,7 @@ class AccountScreen extends StatelessWidget {
                         ),
                         AccountMenuItem(
                           iconPath: AppAssets.supportIcon,
-                          title: 'المساعدة والدعم',
+                          title: 'help_and_support'.tr(),
                           onTap: () {},
                         ),
                         const Padding(
@@ -184,7 +186,7 @@ class AccountScreen extends StatelessWidget {
                         ),
                         AccountMenuItem(
                           iconPath: AppAssets.termsIcon,
-                          title: 'الشروط والخصوصية',
+                          title: 'terms_and_privacy'.tr(),
                           onTap: () {},
                         ),
                       ],
@@ -265,23 +267,23 @@ class AccountScreen extends StatelessWidget {
 
                                 // 3. Account Section ("الحساب")
                                 AccountMenuSection(
-                                  title: 'الحساب',
+                                  title: 'account'.tr(),
                                   items: [
                                     AccountMenuItem(
                                       iconPath: AppAssets.myInfoIcon,
-                                      title: 'معلوماتي',
+                                      title: 'my_info'.tr(),
                                       onTap: () => _navigateToMyInfo(context, user),
                                     ),
                                     AccountMenuItem(
                                       iconPath: AppAssets.myAddressesIcon,
-                                      title: 'عناويني',
+                                      title: 'my_addresses'.tr(),
                                       onTap: () {
                                         context.push(RoutePaths.addresses);
                                       },
                                     ),
                                     AccountMenuItem(
                                       iconPath: AppAssets.notificationsIcon2,
-                                      title: 'الإشعارات',
+                                      title: 'notifications'.tr(),
                                       //badgeText: '2 جديد',
                                       onTap: () {
                                         context.push(RoutePaths.notifications);
@@ -293,21 +295,21 @@ class AccountScreen extends StatelessWidget {
 
                                 // 4. App Section ("التطبيق")
                                 AccountMenuSection(
-                                  title: 'التطبيق',
+                                  title: 'app'.tr(),
                                   items: [
                                     AccountMenuItem(
                                       iconPath: AppAssets.settingsIcon,
-                                      title: 'الإعدادات',
+                                      title: 'settings'.tr(),
                                       onTap: () => context.push(RoutePaths.settings),
                                     ),
                                     AccountMenuItem(
                                       iconPath: AppAssets.supportIcon,
-                                      title: 'المساعدة والدعم',
+                                      title: 'help_and_support'.tr(),
                                       onTap: () {},
                                     ),
                                     AccountMenuItem(
                                       iconPath: AppAssets.termsIcon,
-                                      title: 'الشروط والخصوصية',
+                                      title: 'terms_and_privacy'.tr(),
                                       onTap: () {},
                                     ),
                                   ],

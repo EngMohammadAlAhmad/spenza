@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -163,13 +164,13 @@ class _ProductCardState extends State<ProductCard> {
                           Text(
                             product.discountedPrice.toString(),
                             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.primary,
-                                ),
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.primary,
+                            ),
                           ),
                           const SizedBox(width: 4.0),
                           Text(
-                            'ل.س',
+                            'sp_currency'.tr(),
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.neutral),
                           ),
                         ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 
 class AuthHeaderWidget extends StatelessWidget {
@@ -25,7 +26,7 @@ class AuthHeaderWidget extends StatelessWidget {
       ),
       trailingWidget: const SizedBox(width: 40.0),
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 25.0,
+        top: context.screenPadding.top + 25.0,
         left: 20.0,
         right: 20.0,
       ),

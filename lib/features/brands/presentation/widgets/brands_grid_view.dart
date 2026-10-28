@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,7 +88,7 @@ class _BrandsGridViewState extends State<BrandsGridView> {
             final brand = brands[index];
             return CategoryCard(
               title: brand.name,
-              subtitle: '${brand.productsCount ?? 0} منتج',
+              subtitle: 'n_products'.tr(args: ['${brand.productsCount ?? 0}']),
               imageUrl: brand.image,
               onTap: () => context.go('${RoutePaths.categories}/brand/${brand.id}'),
             ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0);

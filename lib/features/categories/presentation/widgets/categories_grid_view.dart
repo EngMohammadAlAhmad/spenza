@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -87,7 +88,7 @@ class _CategoriesGridViewState extends State<CategoriesGridView> {
             final category = categories[index];
             return CategoryCard(
               title: category.name,
-              subtitle: '${category.productsCount ?? 0} منتج',
+              subtitle: 'n_products'.tr(args: ['${category.productsCount ?? 0}']),
               imageUrl: category.image,
               onTap: () => context.go('${RoutePaths.categories}/${category.id}'),
             ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0);

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -117,18 +118,18 @@ class _BankTransferReceiptScreenState
                   ),
                 ),
                 const SizedBox(height: 16.0),
-                const Text(
-                  'ارفع صورة وصل الحوالة',
-                  style: TextStyle(
+                Text(
+                  'upload_transfer_receipt'.tr(),
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                     color: AppColors.neutral900,
                   ),
                 ),
                 const SizedBox(height: 6.0),
-                const Text(
-                  'يرجى منح الإذن للوصول للكاميرا أو الصور لإرفاق صورة الوصل (PNG, JPG, JPEG)',
-                  style: TextStyle(
+                Text(
+                  'grant_camera_gallery_permission'.tr(),
+                  style: const TextStyle(
                     fontSize: 13.0,
                     color: AppColors.neutral,
                   ),
@@ -146,13 +147,13 @@ class _BankTransferReceiptScreenState
                       color: AppColors.blue,
                     ),
                   ),
-                  title: const Text(
-                    'التقاط صورة بالكاميرا',
+                  title: Text(
+                    'take_photo_camera'.tr(),
                     style:
-                        TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+                        const TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
                   ),
-                  subtitle: const Text('التقاط صورة للوصل مباشرة',
-                      style: TextStyle(fontSize: 12.0)),
+                  subtitle: Text('take_photo_directly'.tr(),
+                      style: const TextStyle(fontSize: 12.0)),
                   onTap: () {
                     Navigator.pop(ctx);
                     _pickFromCamera();
@@ -171,13 +172,13 @@ class _BankTransferReceiptScreenState
                       color: AppColors.blue,
                     ),
                   ),
-                  title: const Text(
-                    'اختيار من المعرض',
+                  title: Text(
+                    'choose_from_gallery'.tr(),
                     style:
-                        TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+                        const TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
                   ),
-                  subtitle: const Text('اختيار ملف صورة (PNG, JPG, JPEG)',
-                      style: TextStyle(fontSize: 12.0)),
+                  subtitle: Text('choose_image_file'.tr(),
+                      style: const TextStyle(fontSize: 12.0)),
                   onTap: () {
                     Navigator.pop(ctx);
                     _pickFromGallery();
@@ -200,7 +201,7 @@ class _BankTransferReceiptScreenState
         if (mounted) {
           SnackbarService.showError(
             context,
-            message: 'حجم الصورة يتجاوز 5 ميغابايت. يرجى اختيار صورة بحجم أصغر.',
+            message: 'image_size_exceeds_5mb'.tr(),
           );
         }
         return false;
@@ -226,7 +227,7 @@ class _BankTransferReceiptScreenState
       if (mounted) {
         SnackbarService.showError(
           context,
-          message: 'يرجى السماح بإذن الوصول للكاميرا من إعدادات الجهاز',
+          message: 'allow_camera_permission'.tr(),
         );
       }
     }
@@ -247,14 +248,14 @@ class _BankTransferReceiptScreenState
         });
         SnackbarService.showSuccess(
           context,
-          message: 'تم إرفاق صورة الوصل بنجاح',
+          message: 'receipt_attached_success'.tr(),
         );
       }
     } catch (_) {
       if (mounted) {
         SnackbarService.showError(
           context,
-          message: 'يرجى السماح بإذن الوصول للمعرض من إعدادات الجهاز',
+          message: 'allow_gallery_permission'.tr(),
         );
       }
     }
@@ -272,9 +273,9 @@ class _BankTransferReceiptScreenState
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'معاينة صورة الوصل الملتقطة',
-                  style: TextStyle(
+                Text(
+                  'preview_captured_receipt'.tr(),
+                  style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                     color: AppColors.neutral900,
@@ -306,9 +307,9 @@ class _BankTransferReceiptScreenState
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 12.0),
                         ),
-                        child: const Text(
-                          'إعادة المحاولة',
-                          style: TextStyle(
+                        child: Text(
+                          'retry'.tr(),
+                          style: const TextStyle(
                             color: Color(0xFFC74436),
                             fontWeight: FontWeight.bold,
                           ),
@@ -325,7 +326,7 @@ class _BankTransferReceiptScreenState
                           });
                           SnackbarService.showSuccess(
                             context,
-                            message: 'تم اعتماد صورة الوصل بنجاح',
+                            message: 'receipt_accepted_success'.tr(),
                           );
                         },
                         style: ElevatedButton.styleFrom(
@@ -336,9 +337,9 @@ class _BankTransferReceiptScreenState
                           padding: const EdgeInsets.symmetric(vertical: 12.0),
                           elevation: 0,
                         ),
-                        child: const Text(
-                          'تم',
-                          style: TextStyle(
+                        child: Text(
+                          'done'.tr(),
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -360,7 +361,7 @@ class _BankTransferReceiptScreenState
     if (_receiptFile == null) {
       SnackbarService.showWarning(
         context,
-        message: 'يرجى إرفاق صورة وصل الحوالة أولاً',
+        message: 'please_attach_receipt_first'.tr(),
       );
       return;
     }
@@ -395,7 +396,7 @@ class _BankTransferReceiptScreenState
         (_) {
           SnackbarService.showSuccess(
             context,
-            message: 'تم إرسال وصل الحوالة بنجاح',
+            message: 'receipt_submitted_success'.tr(),
           );
           if (context.canPop()) {
             context.pop(true);
@@ -415,8 +416,8 @@ class _BankTransferReceiptScreenState
         children: [
           // 1. Header
           AppHeader(
-            title: 'وصل الحوالة',
-            subtitle: 'طلب ${widget.orderNumber}',
+            title: 'transfer_receipt'.tr(),
+            subtitle: 'order_hash'.tr(args: [widget.orderNumber]),
             borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28.0)),
             onBackPressed: () {
               if (context.canPop()) {
@@ -489,18 +490,18 @@ class _BankTransferReceiptScreenState
                                           ),
                                         ),
                                         const SizedBox(height: 12.0),
-                                        const Text(
-                                          'ارفع صورة وصل الحوالة',
-                                          style: TextStyle(
+                                        Text(
+                                          'upload_transfer_receipt'.tr(),
+                                          style: const TextStyle(
                                             fontSize: 15.0,
                                             fontWeight: FontWeight.bold,
                                             color: AppColors.neutral900,
                                           ),
                                         ),
                                         const SizedBox(height: 4.0),
-                                        const Text(
-                                          'اضغط هنا لرفع أو التقاط صورة الوصل\n(PNG, JPG, JPEG - بحجم أقصاه 5 ميغابايت)',
-                                          style: TextStyle(
+                                        Text(
+                                          'tap_to_upload_receipt_desc'.tr(),
+                                          style: const TextStyle(
                                             fontSize: 12.0,
                                             color: AppColors.neutral,
                                             height: 1.3,
@@ -534,14 +535,14 @@ class _BankTransferReceiptScreenState
                                           color: Colors.black.withValues(alpha: 0.65),
                                           borderRadius: AppRadius.medium,
                                         ),
-                                        child: const Row(
+                                        child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Icon(Icons.refresh_rounded, color: Colors.white, size: 16),
-                                            SizedBox(width: 4),
+                                            const Icon(Icons.refresh_rounded, color: Colors.white, size: 16),
+                                            const SizedBox(width: 4),
                                             Text(
-                                              'تغيير',
-                                              style: TextStyle(
+                                              'change'.tr(),
+                                              style: const TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.bold,
@@ -564,8 +565,8 @@ class _BankTransferReceiptScreenState
                               onTap: _showImageSourcePicker,
                               child: Text(
                                 _receiptFile != null
-                                    ? 'بدل الصورة'
-                                    : 'ارفع الصورة',
+                                    ? 'replace_image'.tr()
+                                    : 'upload_image'.tr(),
                                 style: const TextStyle(
                                   fontSize: 13.5,
                                   fontWeight: .bold,
@@ -575,17 +576,17 @@ class _BankTransferReceiptScreenState
                             ),
                             if (_receiptFile != null)
                               Row(
-                                children: const [
+                                children: [
                                   Text(
-                                    'صورة الوصل جاهزة',
-                                    style: TextStyle(
+                                    'receipt_ready'.tr(),
+                                    style: const TextStyle(
                                       fontSize: 13.5,
                                       color: AppColors.neutral700,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  SizedBox(width: 6.0),
-                                  Icon(
+                                  const SizedBox(width: 6.0),
+                                  const Icon(
                                     Icons.check_circle_rounded,
                                     size: 20.0,
                                     color: Color(0xFF16A34A),
@@ -602,11 +603,11 @@ class _BankTransferReceiptScreenState
                   Column(
                     crossAxisAlignment: .start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(right: 4.0, bottom: 8.0),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
                         child: Text(
-                          'رقم الحوالة (اختياري)',
-                          style: TextStyle(
+                          'transfer_number_optional'.tr(),
+                          style: const TextStyle(
                             fontSize: 14.0,
                             fontWeight: .bold,
                             color: AppColors.neutral900,
@@ -615,15 +616,15 @@ class _BankTransferReceiptScreenState
                       ),
                       CustomTextField(
                         controller: _referenceController,
-                        hintText: 'أدخل رقم الحوالة',
+                        hintText: 'enter_transfer_number'.tr(),
                         fillColor: Colors.white,
                         keyboardType: TextInputType.text,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 6.0, right: 4.0),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6.0, right: 4.0),
                         child: Text(
-                          'بيسرع المراجعة إذا كان واضح على الوصل',
-                          style: TextStyle(
+                          'speeds_up_review'.tr(),
+                          style: const TextStyle(
                             fontSize: 12.0,
                             color: AppColors.neutral,
                           ),
@@ -636,11 +637,11 @@ class _BankTransferReceiptScreenState
                   Column(
                     crossAxisAlignment: .start,
                     children: [
-                      const Padding(
-                        padding: .only(right: 4.0, bottom: 8.0),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
                         child: Text(
-                          'المبلغ (اختياري)',
-                          style: TextStyle(
+                          'amount_optional'.tr(),
+                          style: const TextStyle(
                             fontSize: 14.0,
                             fontWeight: .bold,
                             color: AppColors.neutral900,
@@ -649,7 +650,7 @@ class _BankTransferReceiptScreenState
                       ),
                       CustomTextField(
                         controller: _amountController,
-                        hintText: 'أدخل المبلغ المحول',
+                        hintText: 'enter_transferred_amount'.tr(),
                         fillColor: Colors.white,
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: [
@@ -663,11 +664,11 @@ class _BankTransferReceiptScreenState
                   Column(
                     crossAxisAlignment: .start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(right: 4.0, bottom: 8.0),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
                         child: Text(
-                          'تم التحويل في تاريخ (اختياري)',
-                          style: TextStyle(
+                          'transferred_date_optional'.tr(),
+                          style: const TextStyle(
                             fontSize: 14.0,
                             fontWeight: .bold,
                             color: AppColors.neutral900,
@@ -676,7 +677,7 @@ class _BankTransferReceiptScreenState
                       ),
                       CustomTextField(
                         controller: _transferredAtController,
-                        hintText: 'اختيار تاريخ التحويل',
+                        hintText: 'select_transfer_date'.tr(),
                         fillColor: Colors.white,
                         readOnly: true,
                         onTap: _selectTransferredDate,
@@ -693,11 +694,11 @@ class _BankTransferReceiptScreenState
                   Column(
                     crossAxisAlignment: .start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(right: 4.0, bottom: 8.0),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
                         child: Text(
-                          'ملاحظة (اختياري)',
-                          style: TextStyle(
+                          'note_optional'.tr(),
+                          style: const TextStyle(
                             fontSize: 14.0,
                             fontWeight: .bold,
                             color: AppColors.neutral900,
@@ -706,7 +707,7 @@ class _BankTransferReceiptScreenState
                       ),
                       CustomTextField(
                         controller: _noteController,
-                        hintText: 'أضف أي ملاحظة حول الحوالة',
+                        hintText: 'add_note_about_transfer'.tr(),
                         fillColor: Colors.white,
                         maxLines: 3,
                       ),
@@ -724,7 +725,7 @@ class _BankTransferReceiptScreenState
                     child: Row(
                       crossAxisAlignment: .start,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.info_outline_rounded,
                           color: AppColors.blue,
                           size: 22.0,
@@ -733,19 +734,19 @@ class _BankTransferReceiptScreenState
                         Expanded(
                           child: Column(
                             crossAxisAlignment: .start,
-                            children: const [
+                            children: [
                               Text(
-                                'تأكد قبل الإرسال',
-                                style: TextStyle(
+                                'confirm_before_sending'.tr(),
+                                style: const TextStyle(
                                   fontSize: 16.0,
                                   fontWeight: .bold,
                                   color: Color(0xFF1E1B4B),
                                 ),
                               ),
-                              SizedBox(height: 4.0),
+                              const SizedBox(height: 4.0),
                               Text(
-                                'لازم يبين المبلغ والتاريخ واسم المستفيد. الصيغ: JPG أو PNG أو Webp (الحد الأقصى للحجم 5 ميغابايت).',
-                                style: TextStyle(
+                                'receipt_requirements_notice'.tr(),
+                                style: const TextStyle(
                                   fontSize: 14.0,
                                   color: AppColors.textBody,
                                   height: 1.3,
@@ -782,7 +783,7 @@ class _BankTransferReceiptScreenState
             padding:
                 const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             child: CustomButton(
-              text: 'أرسل الوصل',
+              text: 'send_receipt'.tr(),
               height: 52.0,
               isLoading: _isUploading,
               onPressed: _isUploading ? null : _submitTransferReceipt,

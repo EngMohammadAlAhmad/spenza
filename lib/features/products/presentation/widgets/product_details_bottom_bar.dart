@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
 import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
@@ -40,7 +40,7 @@ class ProductDetailsBottomBar extends StatelessWidget {
     }
     selectedUnit ??= product.units.isNotEmpty ? product.units.first : null;
 
-    final unitTitle = selectedUnit?.title ?? 'قطعة';
+    final unitTitle = selectedUnit?.title ?? 'piece_unit'.tr();
     final num unitPrice = selectedUnit != null
         ? (selectedUnit.discountedPrice > 0
             ? selectedUnit.discountedPrice
@@ -94,7 +94,7 @@ class ProductDetailsBottomBar extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: CustomButton(
-                  text: isOutOfStock ? 'نفذت الكمية' : 'أضف للسلة',
+                  text: isOutOfStock ? 'out_of_stock'.tr() : 'add_to_cart'.tr(),
                   height: 52.0,
                   icon: SvgPicture.asset(
                     AppAssets.cartIcon2,
@@ -180,7 +180,7 @@ class _AnimatedTotalWidget extends StatelessWidget {
             );
           },
           child: Text(
-            'الإجمالي · $quantity $unitTitle',
+            'total_unit_format'.tr(args: ['$quantity', unitTitle]),
             key: ValueKey('$quantity-$unitTitle'),
             style: const TextStyle(
               fontSize: 13.0,
@@ -211,7 +211,7 @@ class _AnimatedTotalWidget extends StatelessWidget {
             );
           },
           child: Text(
-            '${formatter.format(totalPrice)} ل.س',
+            '${formatter.format(totalPrice)} ${'sp_currency'.tr()}',
             key: ValueKey(totalPrice),
             style: const TextStyle(
               fontSize: 22.0,

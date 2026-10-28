@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
@@ -6,7 +7,7 @@ import 'package:spenza/core/widgets/custom_text_field.dart';
 
 class AppSearchField extends StatelessWidget {
   final TextEditingController? controller;
-  final String hintText;
+  final String? hintText;
   final void Function(String)? onChanged;
   final void Function(String)? onSubmitted;
   final FocusNode? focusNode;
@@ -16,7 +17,7 @@ class AppSearchField extends StatelessWidget {
   const AppSearchField({
     super.key,
     this.controller,
-    this.hintText = 'ابحث عن قلم، دفتر، حقيبة...',
+    this.hintText,
     this.onChanged,
     this.onSubmitted,
     this.focusNode,
@@ -48,7 +49,7 @@ class AppSearchField extends StatelessWidget {
               },
             )
           : null,
-      hintText: hintText,
+      hintText: hintText ?? 'search_placeholder'.tr(),
       onChanged: onChanged,
       horizontalContentPadding: 16.0,
       verticalContentPadding: 12.0,

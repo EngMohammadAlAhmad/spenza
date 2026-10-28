@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/widgets/app_scaffold.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
@@ -16,7 +18,6 @@ import 'package:spenza/features/addresses/domain/entities/governorate_entity.dar
 import 'package:spenza/features/addresses/presentation/bloc/addresses_bloc.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_event.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_state.dart';
-import 'package:spenza/features/addresses/presentation/widgets/addresses_header.dart';
 import 'package:spenza/injection_locator.dart' as di;
 
 class AddAddressScreen extends StatelessWidget {
@@ -74,7 +75,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
     if (!_formKey.currentState!.validate()) return;
 
     if (_selectedCity == null) {
-      SnackbarService.showError(context, message: 'الرجاء اختيار المحافظة والمنطقة');
+      SnackbarService.showError(context, message: 'select_governorate_and_area_error'.tr());
       return;
     }
 
@@ -100,7 +101,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
           previous.addAddressStatus != current.addAddressStatus,
       listener: (context, state) {
         if (state.addAddressStatus == RequestStatus.success) {
-          final msg = state.addAddressSuccessMessage ?? 'تم حفظ العنوان بنجاح';
+          final msg = state.addAddressSuccessMessage ?? 'address_saved_success'.tr();
           SnackbarService.showSuccess(context, message: msg);
           context.pop(true);
         } else if (state.addAddressStatus == RequestStatus.error) {
@@ -110,12 +111,10 @@ class _AddAddressViewState extends State<_AddAddressView> {
           );
         }
       },
-      child: Scaffold(
-        backgroundColor: AppColors.neutralBackground,
+      child: AppScaffold(
+        title: 'new_address'.tr(),
         body: Column(
           children: [
-            // Top Header
-            const AddressesHeader(title: 'عنوان جديد'),
 
             // Form Scrollable Body
             Expanded(
@@ -144,9 +143,9 @@ class _AddAddressViewState extends State<_AddAddressView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // 1. Address Type Selector
-                          const Text(
-                            'نوع العنوان',
-                            style: TextStyle(
+                          Text(
+                            'address_type'.tr(),
+                            style: const TextStyle(
                               fontSize: 15.0,
                               fontWeight: FontWeight.bold,
                               color: AppColors.neutral900,
@@ -156,19 +155,19 @@ class _AddAddressViewState extends State<_AddAddressView> {
                           Row(
                             children: [
                               _TypeChip(
-                                title: 'المنزل',
+                                title: 'home_label'.tr(),
                                 isSelected: _selectedType == 'home',
                                 onTap: () => _onTypeSelected('home', 'Home'),
                               ),
                               const SizedBox(width: 10.0),
                               _TypeChip(
-                                title: 'العمل',
+                                title: 'work_label'.tr(),
                                 isSelected: _selectedType == 'work',
                                 onTap: () => _onTypeSelected('work', 'Work'),
                               ),
                               const SizedBox(width: 10.0),
                               _TypeChip(
-                                title: 'غير هيك',
+                                title: 'other_label'.tr(),
                                 isSelected: _selectedType == 'other',
                                 onTap: () => _onTypeSelected('other', 'Other'),
                               ),
@@ -185,9 +184,9 @@ class _AddAddressViewState extends State<_AddAddressView> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'المحافظة',
-                                      style: TextStyle(
+                                    Text(
+                                      'governorate'.tr(),
+                                      style: const TextStyle(
                                         fontSize: 15.0,
                                         fontWeight: FontWeight.bold,
                                         color: AppColors.neutral900,
@@ -204,58 +203,58 @@ class _AddAddressViewState extends State<_AddAddressView> {
                                       ),
                                       child: isLoadingLocations
                                           ? const Center(
-                                              child: CupertinoActivityIndicator(),
-                                            )
+                                        child: CupertinoActivityIndicator(),
+                                      )
                                           : DropdownButtonHideUnderline(
-                                              child: DropdownButton<
-                                                  GovernorateEntity>(
-                                                value: state.governorates
-                                                        .contains(_selectedGovernorate)
-                                                    ? _selectedGovernorate
-                                                    : null,
-                                                isExpanded: true,
-                                                hint: const Text(
-                                                  'اختر المحافظة',
-                                                  style: TextStyle(
-                                                    fontSize: 14.0,
-                                                    color: AppColors.neutral,
-                                                  ),
-                                                ),
-                                                icon: const Icon(
-                                                  Icons
-                                                      .keyboard_arrow_down_rounded,
-                                                  color: AppColors.neutral,
-                                                ),
-                                                items: state.governorates
-                                                    .map((gov) {
-                                                  return DropdownMenuItem<
-                                                      GovernorateEntity>(
-                                                    value: gov,
-                                                    child: Text(
-                                                      gov.name,
-                                                      style: const TextStyle(
-                                                        fontSize: 14.0,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color:
-                                                            AppColors.neutral900,
-                                                      ),
-                                                    ),
-                                                  );
-                                                }).toList(),
-                                                onChanged: (val) {
-                                                  if (val != null) {
-                                                    setState(() {
-                                                      _selectedGovernorate = val;
-                                                      _selectedCity = val
-                                                              .cities.isNotEmpty
-                                                          ? val.cities.first
-                                                          : null;
-                                                    });
-                                                  }
-                                                },
-                                              ),
+                                        child: DropdownButton<
+                                            GovernorateEntity>(
+                                          value: state.governorates
+                                              .contains(_selectedGovernorate)
+                                              ? _selectedGovernorate
+                                              : null,
+                                          isExpanded: true,
+                                          hint: Text(
+                                            'select_governorate'.tr(),
+                                            style: const TextStyle(
+                                              fontSize: 14.0,
+                                              color: AppColors.neutral,
                                             ),
+                                          ),
+                                          icon: const Icon(
+                                            Icons
+                                                .keyboard_arrow_down_rounded,
+                                            color: AppColors.neutral,
+                                          ),
+                                          items: state.governorates
+                                              .map((gov) {
+                                            return DropdownMenuItem<
+                                                GovernorateEntity>(
+                                              value: gov,
+                                              child: Text(
+                                                gov.name,
+                                                style: const TextStyle(
+                                                  fontSize: 14.0,
+                                                  fontWeight:
+                                                  FontWeight.w500,
+                                                  color:
+                                                  AppColors.neutral900,
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                          onChanged: (val) {
+                                            if (val != null) {
+                                              setState(() {
+                                                _selectedGovernorate = val;
+                                                _selectedCity = val
+                                                    .cities.isNotEmpty
+                                                    ? val.cities.first
+                                                    : null;
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -267,9 +266,9 @@ class _AddAddressViewState extends State<_AddAddressView> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'المنطقة',
-                                      style: TextStyle(
+                                    Text(
+                                      'area'.tr(),
+                                      style: const TextStyle(
                                         fontSize: 15.0,
                                         fontWeight: FontWeight.bold,
                                         color: AppColors.neutral900,
@@ -286,59 +285,59 @@ class _AddAddressViewState extends State<_AddAddressView> {
                                       ),
                                       child: isLoadingLocations
                                           ? const Center(
-                                              child: CupertinoActivityIndicator(),
-                                            )
+                                        child: CupertinoActivityIndicator(),
+                                      )
                                           : DropdownButtonHideUnderline(
-                                              child: DropdownButton<
-                                                  CityEntity>(
-                                                value: (_selectedGovernorate
-                                                            ?.cities
-                                                            .contains(
-                                                                _selectedCity) ??
-                                                        false)
-                                                    ? _selectedCity
-                                                    : null,
-                                                isExpanded: true,
-                                                hint: const Text(
-                                                  'اختر المنطقة',
-                                                  style: TextStyle(
-                                                    fontSize: 14.0,
-                                                    color: AppColors.neutral,
-                                                  ),
-                                                ),
-                                                icon: const Icon(
-                                                  Icons
-                                                      .keyboard_arrow_down_rounded,
-                                                  color: AppColors.neutral,
-                                                ),
-                                                items: (_selectedGovernorate
-                                                            ?.cities ??
-                                                        [])
-                                                    .map((city) {
-                                                  return DropdownMenuItem<
-                                                      CityEntity>(
-                                                    value: city,
-                                                    child: Text(
-                                                      city.name,
-                                                      style: const TextStyle(
-                                                        fontSize: 14.0,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color:
-                                                            AppColors.neutral900,
-                                                      ),
-                                                    ),
-                                                  );
-                                                }).toList(),
-                                                onChanged: (val) {
-                                                  if (val != null) {
-                                                    setState(() {
-                                                      _selectedCity = val;
-                                                    });
-                                                  }
-                                                },
-                                              ),
+                                        child: DropdownButton<
+                                            CityEntity>(
+                                          value: (_selectedGovernorate
+                                              ?.cities
+                                              .contains(
+                                              _selectedCity) ??
+                                              false)
+                                              ? _selectedCity
+                                              : null,
+                                          isExpanded: true,
+                                          hint: Text(
+                                            'select_area'.tr(),
+                                            style: const TextStyle(
+                                              fontSize: 14.0,
+                                              color: AppColors.neutral,
                                             ),
+                                          ),
+                                          icon: const Icon(
+                                            Icons
+                                                .keyboard_arrow_down_rounded,
+                                            color: AppColors.neutral,
+                                          ),
+                                          items: (_selectedGovernorate
+                                              ?.cities ??
+                                              [])
+                                              .map((city) {
+                                            return DropdownMenuItem<
+                                                CityEntity>(
+                                              value: city,
+                                              child: Text(
+                                                city.name,
+                                                style: const TextStyle(
+                                                  fontSize: 14.0,
+                                                  fontWeight:
+                                                  FontWeight.w500,
+                                                  color:
+                                                  AppColors.neutral900,
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                          onChanged: (val) {
+                                            if (val != null) {
+                                              setState(() {
+                                                _selectedCity = val;
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -348,9 +347,9 @@ class _AddAddressViewState extends State<_AddAddressView> {
                           const SizedBox(height: 20.0),
 
                           // 3. Address Details Fields (Street, Building, Floor)
-                          const Text(
-                            'تفاصيل العنوان',
-                            style: TextStyle(
+                          Text(
+                            'address_details'.tr(),
+                            style: const TextStyle(
                               fontSize: 15.0,
                               fontWeight: FontWeight.bold,
                               color: AppColors.neutral900,
@@ -359,11 +358,11 @@ class _AddAddressViewState extends State<_AddAddressView> {
                           const SizedBox(height: 8.0),
                           CustomTextField(
                             controller: _streetController,
-                            hintText: 'مثال: شارع الجلاء',
+                            hintText: 'street_example'.tr(),
                             fillColor: Colors.white,
                             validator: (val) {
                               if (val == null || val.trim().isEmpty) {
-                                return 'الرجاء إدخال الشارع';
+                                return 'street_validation'.tr();
                               }
                               return null;
                             },
@@ -374,7 +373,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
                               Expanded(
                                 child: CustomTextField(
                                   controller: _buildingController,
-                                  hintText: 'مثال: بناء 12',
+                                  hintText: 'building_example'.tr(),
                                   fillColor: Colors.white,
                                 ),
                               ),
@@ -382,16 +381,16 @@ class _AddAddressViewState extends State<_AddAddressView> {
                               Expanded(
                                 child: CustomTextField(
                                   controller: _floorController,
-                                  hintText: 'مثال: طابق 3',
+                                  hintText: 'floor_example'.tr(),
                                   fillColor: Colors.white,
                                 ),
                               ),
                             ],
                           ),
                           const SizedBox(height: 4.0),
-                          const Text(
-                            'الشارع، البناء، الطابق، وأي علامة بتساعد المندوب',
-                            style: TextStyle(
+                          Text(
+                            'address_helper_text'.tr(),
+                            style: const TextStyle(
                               fontSize: 12.0,
                               color: AppColors.neutral,
                             ),
@@ -399,9 +398,9 @@ class _AddAddressViewState extends State<_AddAddressView> {
                           const SizedBox(height: 20.0),
 
                           // 4. Delivery Phone Field
-                          const Text(
-                            'رقم الموبايل للتوصيل',
-                            style: TextStyle(
+                          Text(
+                            'delivery_phone_number'.tr(),
+                            style: const TextStyle(
                               fontSize: 15.0,
                               fontWeight: FontWeight.bold,
                               color: AppColors.neutral900,
@@ -416,7 +415,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
                             forPhone: true,
                             validator: (val) {
                               if (val == null || val.trim().isEmpty) {
-                                return 'الرجاء إدخال رقم الموبايل';
+                                return 'phone_validation'.tr();
                               }
                               return null;
                             },
@@ -439,13 +438,13 @@ class _AddAddressViewState extends State<_AddAddressView> {
                                 const SizedBox(width: 10.0),
                                 Expanded(
                                   child: Text(
-                                    'خليه عنواني الافتراضي',
+                                    'set_as_default_checkbox'.tr(),
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyLarge!
                                         .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                                 CupertinoSwitch(
@@ -485,10 +484,10 @@ class _AddAddressViewState extends State<_AddAddressView> {
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'منوصل لـ ${_selectedGovernorate!.name} - ${_selectedCity!.name}',
+                                          'we_deliver_to'.tr(args: [_selectedGovernorate!.name, _selectedCity!.name]),
                                           style: const TextStyle(
                                             fontSize: 15.0,
                                             fontWeight: FontWeight.bold,
@@ -497,7 +496,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
                                         ),
                                         const SizedBox(height: 4.0),
                                         Text(
-                                          'توصيل عادي خلال 48 ساعة بـ ${_selectedCity!.deliveryPrice}، والكاش عند الاستلام متاح.',
+                                          'delivery_info_text'.tr(args: ['${_selectedCity!.deliveryPrice}']),
                                           style: const TextStyle(
                                             fontSize: 13.0,
                                             color: Color(0xFF2E7D32),
@@ -539,7 +538,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
                     ],
                   ),
                   child: CustomButton(
-                    text: 'احفظ العنوان',
+                    text: 'save_address'.tr(),
                     isLoading: isLoading,
                     onPressed: isLoading ? null : () => _submitAddress(context),
                   ),

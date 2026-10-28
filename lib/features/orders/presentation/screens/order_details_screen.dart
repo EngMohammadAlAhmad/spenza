@@ -1,10 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/widgets/app_back_button.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/orders/domain/entities/order_details_entity.dart';
 import 'package:spenza/features/orders/presentation/bloc/orders_bloc.dart';
@@ -50,10 +51,7 @@ class OrderDetailsScreen extends StatelessWidget {
                 appBar: AppBar(
                   backgroundColor: Colors.transparent,
                   elevation: 0,
-                  leading: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.neutral900),
-                    onPressed: () => context.pop(),
-                  ),
+                  leading: const Center(child: AppBackButton()),
                 ),
                 body: Center(
                   child: Column(
@@ -65,9 +63,9 @@ class OrderDetailsScreen extends StatelessWidget {
                         color: AppColors.primary500,
                       ),
                       const SizedBox(height: 12.0),
-                      const Text(
-                        'تعذر تحميل تفاصيل الطلب',
-                        style: TextStyle(
+                      Text(
+                        'failed_to_load_order_details'.tr(),
+                        style: const TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.bold,
                           color: AppColors.neutral900,
@@ -75,7 +73,7 @@ class OrderDetailsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 16.0),
                       CustomButton(
-                        text: 'إعادة المحاولة',
+                        text: 'retry'.tr(),
                         width: 160.0,
                         onPressed: () {
                           context.read<OrdersBloc>().add(GetOrderDetailsEvent(orderNumber));
@@ -113,14 +111,14 @@ class _OrderDetailsContent extends StatelessWidget {
             .fadeIn(duration: 400.ms)
             .slideY(begin: -0.05, end: 0, curve: Curves.easeOutCubic),
 
-        // Cards Content (Scrollable)
+        // appCards Content (Scrollable)
         Expanded(
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(
               parent: BouncingScrollPhysics(),
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 32.0),
+              padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, context.height * 0.1),
               child: Column(
                 spacing: 14.0,
                 children: [

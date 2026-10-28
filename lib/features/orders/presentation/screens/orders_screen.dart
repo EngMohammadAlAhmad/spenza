@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/auth/presentation/bloc/auth_status_bloc.dart';
 import 'package:spenza/features/orders/presentation/bloc/orders_bloc.dart';
@@ -73,7 +75,7 @@ class OrdersScreen extends StatelessWidget {
           width: 96.0,
         ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
         Text(
-          'تابع طلباتك بسهولة',
+          'track_orders_easily'.tr(),
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: AppColors.neutral900,
@@ -81,14 +83,14 @@ class OrdersScreen extends StatelessWidget {
           textAlign: TextAlign.center,
         ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2, end: 0),
         Text(
-          'سجّل دخول حتى تشوف طلباتك الحالية والسابقة وتعيد الطلب بضغطة.',
+          'login_orders_desc'.tr(),
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: AppColors.textSecondary,
               ),
           textAlign: TextAlign.center,
         ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.2, end: 0.0),
         CustomButton(
-          text: 'تسجيل الدخول',
+          text: 'login'.tr(),
           onPressed: () => context.push(RoutePaths.login),
           icon: SvgPicture.asset(AppAssets.loginIcon),
           width: 200.0,
@@ -96,7 +98,7 @@ class OrdersScreen extends StatelessWidget {
         TextButton(
           onPressed: () => context.go(RoutePaths.home),
           child: Text(
-            'تصفّح المتجر أولاً',
+            'browse_store_first'.tr(),
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: AppColors.textSecondary,
                   fontWeight: FontWeight.bold,
@@ -216,9 +218,9 @@ class _OrdersContentState extends State<_OrdersContent> {
             children: [
               SvgPicture.asset(AppAssets.errorOccurred),
               const SizedBox(height: 12.0),
-              const Text(
-                'حدث خطأ أثناء تحميل الطلبات',
-                style: TextStyle(
+              Text(
+                'orders_load_error'.tr(),
+                style: const TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
                   color: AppColors.neutral900,
@@ -226,7 +228,7 @@ class _OrdersContentState extends State<_OrdersContent> {
               ),
               const SizedBox(height: 16.0),
               CustomButton(
-                text: 'جرّب مرة تانية',
+                text: 'try_again'.tr(),
                 icon: SvgPicture.asset(
                   AppAssets.refreshIcon,
                   colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
@@ -257,7 +259,7 @@ class _OrdersContentState extends State<_OrdersContent> {
         left: 16.0,
         top: 16.0,
         right: 16.0,
-        bottom: MediaQuery.of(context).padding.bottom + 10.0,
+        bottom: context.screenPadding.bottom + 10.0,
       ),
       itemCount: currentOrders.length + (state.isLoadingMore ? 1 : 0),
       itemBuilder: (context, index) {
@@ -293,7 +295,7 @@ class _OrdersContentState extends State<_OrdersContent> {
       ),
       child: Container(
         constraints: BoxConstraints(
-          minHeight: MediaQuery.of(context).size.height * 0.6,
+          minHeight: context.height * 0.6,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
         alignment: Alignment.center,
@@ -322,9 +324,9 @@ class _OrdersContentState extends State<_OrdersContent> {
             const SizedBox(height: 28.0),
 
             // Empty Title
-            const Text(
-              'لسا ما عندك طلبات',
-              style: TextStyle(
+            Text(
+              'no_orders_yet'.tr(),
+              style: const TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
                 color: AppColors.neutral900,
@@ -335,9 +337,9 @@ class _OrdersContentState extends State<_OrdersContent> {
             const SizedBox(height: 8.0),
 
             // Empty Subtitle
-            const Text(
-              'أول ما تطلب، بتلاقي هون حالة طلبك ودفعه وفاتورته.',
-              style: TextStyle(
+            Text(
+              'orders_empty_desc'.tr(),
+              style: const TextStyle(
                 fontSize: 14.0,
                 color: AppColors.textSecondary,
                 height: 1.4,
@@ -349,7 +351,7 @@ class _OrdersContentState extends State<_OrdersContent> {
 
             // Start Shopping CTA Button
             CustomButton(
-              text: 'ابدأ التسوق',
+              text: 'start_shopping'.tr(),
               width: 220.0,
               height: 48.0,
               onPressed: () => context.go(RoutePaths.home),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
@@ -25,9 +26,9 @@ class EmptyAddressesWidget extends StatelessWidget {
             fit: BoxFit.contain,
           ),
           const SizedBox(height: 32.0),
-          const Text(
-            'ما في عناوين مضافة',
-            style: TextStyle(
+          Text(
+            'no_addresses_yet'.tr(),
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
@@ -35,9 +36,9 @@ class EmptyAddressesWidget extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 10.0),
-          const Text(
-            'أضف عنوانك لحتى تصلك طلباتك بسرعة وسهولة.',
-            style: TextStyle(
+          Text(
+            'add_address_desc'.tr(),
+            style: const TextStyle(
               fontSize: 14,
               color: AppColors.neutral,
             ),
@@ -46,7 +47,7 @@ class EmptyAddressesWidget extends StatelessWidget {
           const Spacer(),
           if (onAddAddressPressed != null) ...[
             CustomButton(
-              text: 'ضيف عنوان جديد',
+              text: 'add_new_address'.tr(),
               height: 52.0,
               onPressed: onAddAddressPressed,
             ),

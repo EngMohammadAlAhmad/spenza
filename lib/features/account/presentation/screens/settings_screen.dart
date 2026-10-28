@@ -1,11 +1,16 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:spenza/core/databases/api/language_interpretation.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/features/account/presentation/widgets/selection_bottom_sheet.dart';
 import 'package:spenza/features/account/presentation/widgets/settings_tile.dart';
+import 'package:spenza/features/language/presentation/blocs/language_bloc.dart';
+import 'package:spenza/injection_locator.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -23,26 +28,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) {
+      builder: (bottomSheetContext) {
         return SelectionBottomSheet<String>(
-          title: 'اللغة',
-          selectedValue: 'ar',
-          options: const [
+          title: 'language'.tr(),
+          selectedValue: context.locale.languageCode,
+          options: [
             SelectionOption(
               id: 'ar',
-              title: 'العربية',
-              subtitle: 'من اليمين لليسار',
+              title: 'arabic'.tr(),
+              subtitle: 'rtl_subtitle'.tr(),
               iconPath: AppAssets.languagesIcon,
             ),
             SelectionOption(
               id: 'en',
-              title: 'English',
-              subtitle: 'Left to right',
+              title: 'english'.tr(),
+              subtitle: 'ltr_subtitle'.tr(),
               iconPath: AppAssets.globeIcon,
             ),
           ],
           onOptionSelected: (lang) {
-            Navigator.pop(context);
+            Navigator.pop(bottomSheetContext);
+            if (lang != context.locale.languageCode) {
+              final newLocale = Locale(lang);
+              context.setLocale(newLocale);
+              context.read<LanguageBloc>().add(ChangeLanguageEvent(languageCode: lang));
+              if (sl.isRegistered<LanguageInterceptor>()) {
+                sl<LanguageInterceptor>().setLanguage(lang);
+              }
+            }
           },
         );
       },
@@ -54,32 +67,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) {
+      builder: (bottomSheetContext) {
         return SelectionBottomSheet<String>(
-          title: 'المظهر',
+          title: 'theme'.tr(),
           selectedValue: 'system',
-          options: const [
+          options: [
             SelectionOption(
               id: 'light',
-              title: 'فاتح',
-              subtitle: 'خلفية فاتحة مثل البراند',
+              title: 'light_theme'.tr(),
+              subtitle: 'light_theme_subtitle'.tr(),
               iconPath: AppAssets.sunIcon,
             ),
             SelectionOption(
               id: 'dark',
-              title: 'داكن',
-              subtitle: 'مريح بالليل',
+              title: 'dark_theme'.tr(),
+              subtitle: 'dark_theme_subtitle'.tr(),
               iconPath: AppAssets.moonIcon,
             ),
             SelectionOption(
               id: 'system',
-              title: 'حسب الجهاز',
-              subtitle: 'بيتغير مع إعداد موبايلك',
+              title: 'system_theme'.tr(),
+              subtitle: 'system_theme_subtitle'.tr(),
               iconPath: AppAssets.phoneDeviceIcon,
             ),
           ],
           onOptionSelected: (theme) {
-            Navigator.pop(context);
+            Navigator.pop(bottomSheetContext);
           },
         );
       },
@@ -92,52 +105,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
       backgroundColor: AppColors.neutralBackground,
       body: Column(
         children: [
-          // Top Header
-          Container(
-            height: MediaQuery.of(context).padding.top + 60.0,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(36.0)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
-                  blurRadius: 10,
-                  offset: const Offset(0.0, 5.0),
-                ),
-              ],
-            ),
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top,
-              left: 16.0,
-              right: 16.0,
-            ),
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    if (context.canPop()) {
-                      context.pop();
-                    } else {
-                      Navigator.of(context).maybePop();
-                    }
-                  },
-                  child: SvgPicture.asset(
-                    AppAssets.backButton2,
-                    width: 40,
-                    height: 40,
-                  ),
-                ),
-                const SizedBox(width: 12.0),
-                Text(
-                  'الإعدادات',
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                ),
-              ],
-            ),
+          AppHeader(
+            title: 'settings'.tr(),
+            style: AppHeaderStyle.light,
+            showBackButton: true,
+            onBackPressed: () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                Navigator.of(context).maybePop();
+              }
+            },
           ),
 
           // Scrollable Settings Content
@@ -148,12 +126,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Section 1: التنبيهات
-                  const Padding(
-                    padding: EdgeInsets.only(right: 4.0, bottom: 8.0),
+                  // Section 1: الإشعارات
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
                     child: Text(
-                      'التنبيهات',
-                      style: TextStyle(
+                      'notifications'.tr(),
+                      style: const TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.w600,
                         color: AppColors.neutral700,
@@ -179,11 +157,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           // Item 1: تحديثات الطلبات والدفع
                           SettingsTile(
                             iconPath: AppAssets.documentIcon,
-                            title: 'تحديثات الطلبات والدفع',
+                            title: 'order_and_payment_updates'.tr(),
                             trailing: Switch.adaptive(
                               value: _orderUpdatesEnabled,
-                              activeThumbColor: const Color(0xFFC74436),
-                              activeTrackColor: const Color(0xFFFDE8E8),
+                              activeThumbColor: Colors.white,
+                              activeTrackColor: AppColors.primary,
+                              inactiveThumbColor: Colors.white,
+                              inactiveTrackColor: AppColors.neutralBorderStrong,
+                              trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
+                              trackOutlineWidth: WidgetStateProperty.all(0),
                               onChanged: (val) {
                                 setState(() {
                                   _orderUpdatesEnabled = val;
@@ -202,11 +184,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           // Item 2: العروض والخصومات
                           SettingsTile(
                             iconPath: AppAssets.offersAndDiscountsIcon,
-                            title: 'العروض والخصومات',
+                            title: 'offers_and_discounts'.tr(),
                             trailing: Switch.adaptive(
                               value: _offersEnabled,
-                              activeThumbColor: const Color(0xFFC74436),
-                              activeTrackColor: const Color(0xFFFDE8E8),
+                              activeThumbColor: Colors.white,
+                              activeTrackColor: AppColors.primary,
+                              inactiveThumbColor: Colors.white,
+                              inactiveTrackColor: AppColors.neutralBorderStrong,
+                              trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
+                              trackOutlineWidth: WidgetStateProperty.all(0),
                               onChanged: (val) {
                                 setState(() {
                                   _offersEnabled = val;
@@ -218,11 +204,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8.0, right: 4.0, bottom: 20.0),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, right: 4.0, bottom: 20.0),
                     child: Text(
-                      'تنبيهات الطلبات بتوصلك لأنها بتخص طلب عم تستناه.',
-                      style: TextStyle(
+                      'order_notifications_info'.tr(),
+                      style: const TextStyle(
                         fontSize: 12.5,
                         color: AppColors.textSecondary,
                       ),
@@ -230,11 +216,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
 
                   // Section 2: التطبيق
-                  const Padding(
-                    padding: EdgeInsets.only(right: 4.0, bottom: 8.0),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
                     child: Text(
-                      'التطبيق',
-                      style: TextStyle(
+                      'app'.tr(),
+                      style: const TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.w600,
                         color: AppColors.neutral700,
@@ -260,8 +246,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           // Item 1: اللغة
                           SettingsTile(
                             iconPath: AppAssets.globeIcon,
-                            title: 'اللغة',
-                            value: 'العربية',
+                            title: 'language'.tr(),
+                            value: context.locale.languageCode == 'ar'
+                                ? 'arabic'.tr()
+                                : 'english'.tr(),
                             showChevron: true,
                             onTap: () => _showLanguageBottomSheet(context),
                           ),
@@ -277,8 +265,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           // Item 2: المظهر
                           SettingsTile(
                             iconPath: AppAssets.moonIcon,
-                            title: 'المظهر',
-                            value: 'حسب الجهاز',
+                            title: 'theme'.tr(),
+                            value: 'system_theme'.tr(),
                             showChevron: true,
                             onTap: () => _showThemeBottomSheet(context),
                           ),
@@ -294,8 +282,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           // Item 3: عن سبينزا
                           SettingsTile(
                             iconPath: AppAssets.infoIcon,
-                            title: 'عن سبينزا',
-                            value: 'الإصدار 1.0',
+                            title: 'about_spenza'.tr(),
+                            value: 'version'.tr(),
                             showChevron: true,
                             onTap: () {},
                           ),
@@ -311,7 +299,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           // Item 4: قيم التطبيق
                           SettingsTile(
                             iconPath: AppAssets.rateIcon,
-                            title: 'قيم التطبيق',
+                            title: 'rate_app'.tr(),
                             showChevron: true,
                             onTap: () {},
                           ),

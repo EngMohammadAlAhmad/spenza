@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 class Failure {
   final String errMessage;
   const Failure({required this.errMessage});
@@ -8,7 +10,7 @@ class ServerFailure extends Failure {
 }
 
 class OfflineFailure extends Failure {
-  const OfflineFailure() : super(errMessage: 'لا يوجد اتصال بالإنترنت. يرجى التحقق من الشبكة وإعادة المحاولة.');
+  OfflineFailure() : super(errMessage: 'offline_failure'.tr());
 }
 
 const Failure defaultFailure = Failure(errMessage: 'init Failure');

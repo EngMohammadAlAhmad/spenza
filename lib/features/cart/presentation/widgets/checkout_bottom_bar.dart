@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 
@@ -14,23 +15,30 @@ class CheckoutBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8,
-            offset: Offset(0, -2),
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 16.0,
+            offset: const Offset(0, -4),
           ),
         ],
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 20.0),
-          child: CustomButton(
-            text: 'كمل للتوصيل والدفع',
-            onPressed: isEnabled ? onNextPressed : null,
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          child: Hero(
+            tag: 'checkout_bottom_button_hero',
+            child: Material(
+              color: Colors.transparent,
+              child: CustomButton(
+                text: 'continue_delivery_and_payment'.tr(),
+                height: 52.0,
+                onPressed: isEnabled ? onNextPressed : null,
+              ),
+            ),
           ),
         ),
       ),

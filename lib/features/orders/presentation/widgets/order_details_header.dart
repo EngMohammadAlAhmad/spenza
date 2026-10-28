@@ -1,9 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/features/orders/domain/entities/order_details_entity.dart';
 import 'package:spenza/features/orders/presentation/widgets/animated_three_dots.dart';
@@ -23,20 +24,20 @@ class OrderDetailsHeader extends StatelessWidget {
       titleWidget: InkWell(
         onTap: () => context.pop(),
         borderRadius: AppRadius.small,
-        child: const Row(
-          mainAxisSize: .min,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
           spacing: 4.0,
           children: [
-            Icon(
+            const Icon(
               Icons.chevron_left_rounded,
               color: Colors.white,
               size: 24.0,
             ),
             Text(
-              'تفاصيل الطلب',
-              style: TextStyle(
+              'order_details'.tr(),
+              style: const TextStyle(
                 fontSize: 16.0,
-                fontWeight: .bold,
+                fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             ),
@@ -44,15 +45,15 @@ class OrderDetailsHeader extends StatelessWidget {
         ),
       ),
       showBackButton: false,
-      padding: .only(
-        top: MediaQuery.of(context).padding.top + 16.0,
+      padding: EdgeInsets.only(
+        top: context.screenPadding.top + 16.0,
         left: 20.0,
         right: 20.0,
         bottom: 24.0,
       ),
       bottomChild: Row(
         spacing: 12.0,
-        mainAxisAlignment: .start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
             width: 52.0,
@@ -68,17 +69,17 @@ class OrderDetailsHeader extends StatelessWidget {
                 ),
               ],
             ),
-            alignment: .center,
+            alignment: Alignment.center,
             child: SvgPicture.asset(
               AppAssets.packageIcon,
             ),
           ),
           // Order Details Column
           Column(
-            crossAxisAlignment: .start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${_formatDate(order.placedAt)} · ${order.orderNumber}',
+                '${_formatDate(context, order.placedAt)} · ${order.orderNumber}',
                 style: TextStyle(
                   fontSize: 13.0,
                   color: Colors.white.withValues(alpha: 0.85),
@@ -86,15 +87,15 @@ class OrderDetailsHeader extends StatelessWidget {
               ),
               const SizedBox(height: 4.0),
               Row(
-                mainAxisSize: .min,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     order.statusLabel.isNotEmpty
                         ? order.statusLabel
-                        : 'قيد الانتظار',
+                        : 'pending'.tr(),
                     style: const TextStyle(
                       fontSize: 24.0,
-                      fontWeight: .bold,
+                      fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
@@ -113,8 +114,8 @@ class OrderDetailsHeader extends StatelessWidget {
     );
   }
 
-  String _formatDate(String dateStr) {
-    if (dateStr.isEmpty) return 'اليوم';
+  String _formatDate(BuildContext context, String dateStr) {
+    if (dateStr.isEmpty) return 'today'.tr();
     try {
       final dt = DateTime.parse(dateStr).toLocal();
       final now = DateTime.now();
@@ -122,17 +123,21 @@ class OrderDetailsHeader extends StatelessWidget {
       final yesterday = today.subtract(const Duration(days: 1));
       final itemDate = DateTime(dt.year, dt.month, dt.day);
 
-      final timeStr = DateFormat('h:mm a').format(dt).replaceAll('AM', 'ص').replaceAll('PM', 'م');
+      final isAr = context.locale.languageCode == 'ar';
+      final formattedTime = DateFormat('h:mm a').format(dt);
+      final timeStr = isAr
+          ? formattedTime.replaceAll('AM', 'ص').replaceAll('PM', 'م')
+          : formattedTime;
 
       if (itemDate == today) {
-        return 'اليوم $timeStr';
+        return '${'today'.tr()} $timeStr';
       } else if (itemDate == yesterday) {
-        return 'أمس $timeStr';
+        return '${'yesterday'.tr()} $timeStr';
       } else {
         return '${DateFormat('yyyy/MM/dd').format(dt)} $timeStr';
       }
     } catch (_) {
-      return 'اليوم';
+      return 'today'.tr();
     }
   }
 }

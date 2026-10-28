@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -59,7 +60,7 @@ class PointsCard extends StatelessWidget {
                             TextSpan(
                               children: [
                                 TextSpan(
-                                  text: 'رصيدك ',
+                                  text: '${'your_balance'.tr()} ',
                                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -71,7 +72,7 @@ class PointsCard extends StatelessWidget {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: 'نقطة',
+                                  text: 'points_unit'.tr(),
                                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -81,7 +82,7 @@ class PointsCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 2.0),
                           Text(
-                            'استبدلها بتوصيل مجاني\nأو خصم',
+                            'points_card_subtitle'.tr(),
                             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                               color: AppColors.tertiary,
                             ),
@@ -95,14 +96,14 @@ class PointsCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'سوق النقاط',
+                          'points_market'.tr(),
                           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: AppColors.primary,
                             fontWeight: .bold,
                           ),
                         ),
-                        SizedBox(width: 2.0),
-                        Icon(
+                        const SizedBox(width: 2.0),
+                        const Icon(
                           Icons.chevron_right,
                           color: AppColors.primary,
                           size: 20,

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
@@ -78,13 +80,13 @@ class _MyInfoContentState extends State<_MyInfoContent> {
         listener: (context, myInfoState) {
           // 1. Profile Update Listener
           if (myInfoState.updateProfileStatus == RequestStatus.success) {
-            SnackbarService.showSuccess(context, message: 'تم حفظ التغييرات بنجاح');
+            SnackbarService.showSuccess(context, message: 'profile_updated_success'.tr());
             context.pop(myInfoState.user);
             context.read<MyInfoBloc>().add(const ResetMyInfoStatusEvent());
           } else if (myInfoState.updateProfileStatus == RequestStatus.error) {
             SnackbarService.showError(
               context,
-              message: myInfoState.errorMessage ?? 'تعذر تحديث البيانات',
+              message: myInfoState.errorMessage ?? 'profile_update_error'.tr(),
             );
           }
 
@@ -92,7 +94,7 @@ class _MyInfoContentState extends State<_MyInfoContent> {
           if (myInfoState.requestPhoneStatus == RequestStatus.success) {
             SnackbarService.showSuccess(
               context,
-              message: myInfoState.phoneChangeMessage ?? 'رمز التحقق في طريقه إلى هاتفك.',
+              message: myInfoState.phoneChangeMessage ?? 'otp_sent_success'.tr(),
             );
 
             final rawPhone = _newPhoneController.text.replaceAll(' ', '');
@@ -118,7 +120,7 @@ class _MyInfoContentState extends State<_MyInfoContent> {
           } else if (myInfoState.requestPhoneStatus == RequestStatus.error) {
             SnackbarService.showError(
               context,
-              message: myInfoState.errorMessage ?? 'حدث خطأ أثناء طلب تغيير الرقم',
+              message: myInfoState.errorMessage ?? 'phone_change_error'.tr(),
             );
           }
         },
@@ -142,14 +144,14 @@ class _MyInfoContentState extends State<_MyInfoContent> {
                     children: [
                       // 1. Full Name Field
                       _buildTextFieldSection(
-                        label: 'الاسم الكامل',
+                        label: 'full_name'.tr(),
                         controller: _nameController,
-                        hintText: 'أدخل اسمك الكامل',
+                        hintText: 'enter_full_name'.tr(),
                       ),
 
                       // 2. Email Field (Optional)
                       _buildTextFieldSection(
-                        label: 'البريد الإلكتروني (اختياري)',
+                        label: 'email_optional'.tr(),
                         controller: _emailController,
                         hintText: 'example@domain.com',
                         keyboardType: TextInputType.emailAddress,
@@ -169,7 +171,7 @@ class _MyInfoContentState extends State<_MyInfoContent> {
 
                       // 6. Save Button
                       CustomButton(
-                        text: 'احفظ التغييرات',
+                        text: 'save_changes'.tr(),
                         height: 52.0,
                         isLoading: isSaving,
                         onPressed: () {
@@ -178,7 +180,7 @@ class _MyInfoContentState extends State<_MyInfoContent> {
                           final email = _emailController.text.trim();
 
                           if (name.isEmpty) {
-                            SnackbarService.showError(context, message: 'يرجى إدخال الاسم الكامل');
+                            SnackbarService.showError(context, message: 'enter_name_validation'.tr());
                             return;
                           }
 
@@ -200,62 +202,17 @@ class _MyInfoContentState extends State<_MyInfoContent> {
   }
 
   Widget _buildHeader(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32.0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0.0, 5.0),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 12.0,
-        bottom: 20.0,
-        left: 20.0,
-        right: 20.0,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 12.0,
-            children: [
-              InkWell(
-                onTap: () => context.pop(),
-                borderRadius: AppRadius.large,
-                child: Container(
-                  width: 40.0,
-                  height: 40.0,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF3F4F6),
-                    shape: BoxShape.circle,
-                  ),
-                  alignment: Alignment.center,
-                  child: const Icon(
-                    Icons.chevron_left_rounded,
-                    color: AppColors.neutral900,
-                    size: 24.0,
-                  ),
-                ),
-              ),
-              const Text(
-                'معلوماتي',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.neutral900,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+    return AppHeader(
+      title: 'my_info'.tr(),
+      style: AppHeaderStyle.light,
+      showBackButton: true,
+      onBackPressed: () {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          Navigator.of(context).maybePop();
+        }
+      },
     );
   }
 
@@ -296,9 +253,9 @@ class _MyInfoContentState extends State<_MyInfoContent> {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8.0,
       children: [
-        const Text(
-          'رقم الموبايل',
-          style: TextStyle(
+        Text(
+          'phone_number'.tr(),
+          style: const TextStyle(
             fontSize: 13.0,
             fontWeight: FontWeight.bold,
             color: AppColors.neutral900,
@@ -337,7 +294,7 @@ class _MyInfoContentState extends State<_MyInfoContent> {
                   });
                 },
                 child: Text(
-                  _isPhoneChangeExpanded ? 'إلغاء' : 'غيّر الرقم',
+                  _isPhoneChangeExpanded ? 'cancel'.tr() : 'change_phone'.tr(),
                   style: const TextStyle(
                     fontSize: 13.0,
                     fontWeight: FontWeight.bold,
@@ -372,9 +329,9 @@ class _MyInfoContentState extends State<_MyInfoContent> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 12.0,
         children: [
-          const Text(
-            'أدخل رقم الموبايل الجديد',
-            style: TextStyle(
+          Text(
+            'enter_new_phone'.tr(),
+            style: const TextStyle(
               fontSize: 13.0,
               fontWeight: FontWeight.bold,
               color: AppColors.neutral900,
@@ -417,14 +374,14 @@ class _MyInfoContentState extends State<_MyInfoContent> {
             ),
           ),
           CustomButton(
-            text: 'إرسال رمز التحقق',
+            text: 'send_otp'.tr(),
             height: 46.0,
             isLoading: isLoading,
             onPressed: () {
               FocusScope.of(context).unfocus();
               final raw = _newPhoneController.text.replaceAll(' ', '');
               if (raw.length < 9) {
-                SnackbarService.showError(context, message: 'يرجى إدخال رقم موبايل صحيح من 9 أرقام');
+                SnackbarService.showError(context, message: 'valid_phone_error'.tr());
                 return;
               }
               final fullPhone = raw.startsWith('0') ? raw : '0$raw';
@@ -437,7 +394,7 @@ class _MyInfoContentState extends State<_MyInfoContent> {
   }
 
   Widget _buildAccountTypeBanner(UserEntity? user) {
-    final roleLabel = user != null && user.roleLabel.isNotEmpty ? user.roleLabel : 'شخصي';
+    final roleLabel = user != null && user.roleLabel.isNotEmpty ? user.roleLabel : 'personal_account'.tr();
 
     return Container(
       width: double.infinity,
@@ -461,16 +418,16 @@ class _MyInfoContentState extends State<_MyInfoContent> {
               spacing: 4.0,
               children: [
                 Text(
-                  'نوع الحساب: $roleLabel',
+                  '${'account_type'.tr()}: $roleLabel',
                   style: const TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1E1B4B),
                   ),
                 ),
-                const Text(
-                  'حساب شخصي. لتحويله لحساب أعمال، قدم طلب من صفحة حسابي.',
-                  style: TextStyle(
+                Text(
+                  'personal_account_note'.tr(),
+                  style: const TextStyle(
                     fontSize: 12.0,
                     color: Color(0xFF475569),
                     height: 1.4,

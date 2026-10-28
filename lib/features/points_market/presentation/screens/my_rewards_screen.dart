@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
@@ -14,7 +15,7 @@ class MyRewardsScreen extends StatelessWidget {
         children: [
           // Header
           AppHeader(
-            title: 'مكافآتي',
+            title: 'my_rewards'.tr(),
             onBackPressed: () {
               if (context.canPop()) {
                 context.pop();

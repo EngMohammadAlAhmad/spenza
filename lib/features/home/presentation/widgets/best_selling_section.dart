@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
@@ -29,7 +30,7 @@ class BestSellingSection extends StatelessWidget {
           mainAxisAlignment: .spaceBetween,
           children: [
             Text(
-              'الأكثر طلباً',
+              'best_selling'.tr(),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -209,7 +210,7 @@ class _BestSellingCardState extends State<BestSellingCard> {
                             ),
                           ),
                           Text(
-                            'ل.س',
+                            'sp_currency'.tr(),
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: AppColors.neutral,
                             ),

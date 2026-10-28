@@ -1,9 +1,12 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 
 class BusinessAccountScreen extends StatelessWidget {
@@ -32,9 +35,9 @@ class BusinessAccountScreen extends StatelessWidget {
                   const SizedBox(height: 16.0),
 
                   // Title & Subtitle
-                  const Text(
-                    'حساب على قد شغلك',
-                    style: TextStyle(
+                  Text(
+                    'business_account_hero_title'.tr(),
+                    style: const TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                       color: AppColors.neutral900,
@@ -42,9 +45,9 @@ class BusinessAccountScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 6.0),
-                  const Text(
-                    'للمكتبات والشركات والمؤسسات الخاصة أو\nالحكومية والجمعيات. قدم طلب ومنراجعه\nمعك.',
-                    style: TextStyle(
+                  Text(
+                    'business_account_hero_subtitle'.tr(),
+                    style: const TextStyle(
                       fontSize: 13.0,
                       color: AppColors.textSecondary,
                       height: 1.4,
@@ -65,7 +68,7 @@ class BusinessAccountScreen extends StatelessWidget {
             ),
           ),
 
-          // Fixed Bottom White Container with "ابدأ الطلب" Button
+          // Fixed Bottom White Container with Button
           _buildBottomBar(context),
         ],
       ),
@@ -90,12 +93,12 @@ class BusinessAccountScreen extends StatelessWidget {
         20.0,
         16.0,
         20.0,
-        MediaQuery.of(context).padding.bottom > 0
-            ? MediaQuery.of(context).padding.bottom + 8.0
+        context.screenPadding.bottom > 0
+            ? context.screenPadding.bottom + 8.0
             : 20.0,
       ),
       child: CustomButton(
-        text: 'ابدأ الطلب',
+        text: 'start_request'.tr(),
         height: 52.0,
         onPressed: () {
           // Business account request start action
@@ -105,62 +108,17 @@ class BusinessAccountScreen extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32.0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0.0, 5.0),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 12.0,
-        bottom: 20.0,
-        left: 20.0,
-        right: 20.0,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 12.0,
-            children: [
-              InkWell(
-                onTap: () => context.pop(),
-                borderRadius: AppRadius.large,
-                child: Container(
-                  width: 40.0,
-                  height: 40.0,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF3F4F6),
-                    shape: BoxShape.circle,
-                  ),
-                  alignment: Alignment.center,
-                  child: const Icon(
-                    Icons.chevron_left_rounded,
-                    color: AppColors.neutral900,
-                    size: 24.0,
-                  ),
-                ),
-              ),
-              const Text(
-                'حساب أعمال',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.neutral900,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+    return AppHeader(
+      title: 'business_account'.tr(),
+      style: AppHeaderStyle.light,
+      showBackButton: true,
+      onBackPressed: () {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          Navigator.of(context).maybePop();
+        }
+      },
     );
   }
 
@@ -184,18 +142,18 @@ class BusinessAccountScreen extends StatelessWidget {
         children: [
           _buildFeatureRow(
             iconPath: AppAssets.offersAndDiscountsIcon,
-            title: 'أسعار وكميات على قد طلباتكن',
-            subtitle: 'حسب نوع نشاطك وقرار الإدارة',
+            title: 'business_feature_1_title'.tr(),
+            subtitle: 'business_feature_1_sub'.tr(),
           ),
           _buildFeatureRow(
             iconPath: AppAssets.packageIcon,
-            title: 'وحدات بيع أكبر',
-            subtitle: 'طرد وكرتونة للكميات الكبيرة',
+            title: 'business_feature_2_title'.tr(),
+            subtitle: 'business_feature_2_sub'.tr(),
           ),
           _buildFeatureRow(
             iconPath: AppAssets.truckIcon,
-            title: 'نفس الطلب والتوصيل',
-            subtitle: 'وبتضل تشوف طلباتك ونقاطك مثل ما هي',
+            title: 'business_feature_3_title'.tr(),
+            subtitle: 'business_feature_3_sub'.tr(),
           ),
         ],
       ),
@@ -274,18 +232,18 @@ class BusinessAccountScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 12.0,
         children: [
-          const Text(
-            'كيف بتمشي',
-            style: TextStyle(
+          Text(
+            'how_it_works'.tr(),
+            style: const TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
               color: AppColors.neutral900,
             ),
           ),
-          _buildStepRow('1', 'بتعبي بيانات الجهة'),
-          _buildStepRow('2', 'بترفع صورة لمحلك أو مشروعك'),
-          _buildStepRow('3', 'منتصل فيك ومنراجع الطلب'),
-          _buildStepRow('4', 'منبلغك بالنتيجة'),
+          _buildStepRow('1', 'business_step_1'.tr()),
+          _buildStepRow('2', 'business_step_2'.tr()),
+          _buildStepRow('3', 'business_step_3'.tr()),
+          _buildStepRow('4', 'business_step_4'.tr()),
         ],
       ),
     );

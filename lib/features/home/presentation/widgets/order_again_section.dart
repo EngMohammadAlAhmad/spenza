@@ -1,10 +1,11 @@
 import 'dart:ui';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
@@ -59,7 +60,7 @@ class _OrderAgainContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'اطلبها من جديد',
+                  'order_again'.tr(),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -67,7 +68,7 @@ class _OrderAgainContent extends StatelessWidget {
                 const Spacer(),
                 ViewAllButton(
                   onPressed: () => _goToOrdersTab(context),
-                  text: 'طلباتي',
+                  text: 'orders',
                 ),
               ],
             ),
@@ -161,7 +162,7 @@ class _EmptyOrderAgainCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'لا توجد طلبات سابقة لإعادة طلبها',
+                  'no_previous_orders_again'.tr(),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.neutral900,
@@ -169,7 +170,7 @@ class _EmptyOrderAgainCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 2.0),
                 Text(
-                  'اطلب منتجاتك الأولى وستظهر هنا لإعادة طلبها بضغطة زر.',
+                  'no_previous_orders_desc'.tr(),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColors.neutral,
                       ),
@@ -260,14 +261,14 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
         : AppAssets.tempOrderAgain1;
 
     final String title = order.orderNumber.isNotEmpty
-        ? 'طلب #${order.orderNumber}'
-        : 'طلب سابق';
+        ? 'order_hash'.tr(args: [order.orderNumber])
+        : 'previous_order'.tr();
 
     final String dateStr = order.placedAt.isNotEmpty
-        ? 'طلبته ${order.placedAt}'
+        ? 'ordered_at'.tr(args: [order.placedAt])
         : (order.createdAt != null && order.createdAt!.isNotEmpty
-            ? 'طلبته ${order.createdAt}'
-            : 'طلب سابق');
+            ? 'ordered_at'.tr(args: [order.createdAt!])
+            : 'previous_order'.tr());
 
     return GestureDetector(
       onTapDown: (_) => setState(() => _pressed = true),
@@ -374,7 +375,7 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
-                                '${formatter.format(order.totalAmount)} ل.س',
+                                '${formatter.format(order.totalAmount)} ${'sp_currency'.tr()}',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w900,
                                   fontSize: 14.0,
@@ -427,7 +428,7 @@ class _ReorderDialogContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final formatter = NumberFormat('#,##0');
     final String orderNumStr =
-        order.orderNumber.isNotEmpty ? "#${order.orderNumber}" : "الطلب السابق";
+        order.orderNumber.isNotEmpty ? "#${order.orderNumber}" : "previous_order".tr();
     final String priceStr = formatter.format(order.totalAmount);
 
     return BlocConsumer<OrdersBloc, OrdersState>(
@@ -439,7 +440,7 @@ class _ReorderDialogContent extends StatelessWidget {
           if (parentContext.mounted) {
             SnackbarService.showSuccess(
               parentContext,
-              message: 'تمت إعادة الطلب بنجاح',
+              message: 'reorder_success'.tr(),
             );
           }
         } else if (state.reorderStatus == RequestStatus.error) {
@@ -449,7 +450,7 @@ class _ReorderDialogContent extends StatelessWidget {
               parentContext,
               message: state.reorderFailure.errMessage.isNotEmpty
                   ? state.reorderFailure.errMessage
-                  : 'تعذر إعادة الطلب، يرجى المحاولة لاحقاً',
+                  : 'reorder_error'.tr(),
             );
           }
         }
@@ -460,12 +461,11 @@ class _ReorderDialogContent extends StatelessWidget {
         return AppCustomDialog(
           iconData: Icons.refresh_rounded,
           iconColor: AppColors.primary,
-          title: 'إعادة الطلب',
-          description:
-              'هل أنت تأكد من أنك تريد إعادة طلب هذا الطلب ($orderNumStr) بقيمة $priceStr ل.س؟',
-          primaryButtonText: 'تأكيد الطلب',
+          title: 'reorder'.tr(),
+          description: 'reorder_confirm_msg'.tr(args: [orderNumStr, priceStr]),
+          primaryButtonText: 'confirm_order'.tr(),
           primaryButtonColor: AppColors.primary,
-          secondaryButtonText: 'إلغاء',
+          secondaryButtonText: 'cancel'.tr(),
           isLoading: isLoading,
           onPrimaryPressed: () {
             dialogContext

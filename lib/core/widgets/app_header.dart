@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/widgets/app_back_button.dart';
 
 enum AppHeaderStyle {
   light,
@@ -64,7 +64,7 @@ class AppHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final topPadding = MediaQuery.of(context).padding.top;
+    final topPadding = context.screenPadding.top;
     final hasSubtitle = (subtitle != null && subtitle!.isNotEmpty) || subtitleWidget != null;
 
     BoxDecoration decoration;
@@ -141,37 +141,13 @@ class AppHeader extends StatelessWidget {
           bottom: bottomChild != null ? 18.0 : (hasSubtitle ? 14.0 : 12.0),
         );
 
-    final defaultBackButton = style == AppHeaderStyle.gradient
-        ? IconButton(
-            onPressed: onBackPressed ??
-                () {
-                  if (context.canPop()) {
-                    context.pop();
-                  } else {
-                    Navigator.of(context).pop();
-                  }
-                },
-            icon: const Icon(
-              Icons.chevron_left_rounded,
-              color: Colors.white,
-              size: 28.0,
-            ),
-          )
-        : GestureDetector(
-            onTap: onBackPressed ??
-                () {
-                  if (context.canPop()) {
-                    context.pop();
-                  } else {
-                    Navigator.of(context).pop();
-                  }
-                },
-            child: SvgPicture.asset(
-              AppAssets.backButton2,
-              width: 40,
-              height: 40,
-            ),
-          );
+    final defaultBackButton = AppBackButton(
+      onTap: onBackPressed,
+      backgroundColor: style == AppHeaderStyle.gradient
+          ? Colors.white.withValues(alpha: 0.2)
+          : null,
+      iconColor: style == AppHeaderStyle.gradient ? Colors.white : null,
+    );
 
     Widget headerContent = Column(
       mainAxisSize: MainAxisSize.min,

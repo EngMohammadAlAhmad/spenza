@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -57,7 +58,7 @@ class _RegisterCompletePageState extends State<RegisterCompletePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'يلا نساوي حساب سوا',
+                  'create_account_title'.tr(),
                   style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                         color: AppColors.primary,
                         fontWeight: FontWeight.w700,
@@ -65,7 +66,7 @@ class _RegisterCompletePageState extends State<RegisterCompletePage> {
                 ),
                 const SizedBox(height: 12.0),
                 Text(
-                  'اسمك بكفّي لنجهّز حسابك ونوصّل\nطلباتك بسرعة.',
+                  'create_account_subtitle'.tr(),
                   textAlign: TextAlign.right,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: AppColors.neutral,
@@ -75,7 +76,7 @@ class _RegisterCompletePageState extends State<RegisterCompletePage> {
 
                 // Full Name
                 Text(
-                  'اسمك الكامل',
+                  'full_name'.tr(),
                   style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -85,8 +86,7 @@ class _RegisterCompletePageState extends State<RegisterCompletePage> {
                 const SizedBox(height: 12.0),
                 CustomTextField(
                   controller: _nameController,
-                  hintText: 'مثلاً: عبدالله القبّاني',
-                  textDirection: TextDirection.rtl,
+                  hintText: 'full_name_example'.tr(),
                   fillColor: Colors.white,
                   borderColor: AppColors.primaryLight.withValues(alpha: 0.5),
                   onChanged: (_) => setState(() {}),
@@ -120,23 +120,23 @@ class _RegisterCompletePageState extends State<RegisterCompletePage> {
                             : null,
                       ),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text.rich(
                         TextSpan(
                           children: [
-                            TextSpan(text: 'قريت وبوافق على '),
+                            TextSpan(text: 'read_and_agree'.tr()),
                             TextSpan(
-                              text: 'شروط الاستخدام',
-                              style: TextStyle(
+                              text: 'terms_of_use'.tr(),
+                              style: const TextStyle(
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.bold,
                                 decoration: TextDecoration.underline,
                               ),
                             ),
-                            TextSpan(text: ' و '),
+                            TextSpan(text: 'and'.tr()),
                             TextSpan(
-                              text: 'سياسة الخصوصية',
-                              style: TextStyle(
+                              text: 'privacy_policy'.tr(),
+                              style: const TextStyle(
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.bold,
                                 decoration: TextDecoration.underline,
@@ -145,7 +145,7 @@ class _RegisterCompletePageState extends State<RegisterCompletePage> {
                           ],
                         ),
                         textAlign: TextAlign.right,
-                        style: TextStyle(fontSize: 13.0, color: AppColors.neutral),
+                        style: const TextStyle(fontSize: 13.0, color: AppColors.neutral),
                       ),
                     ),
                   ],
@@ -155,7 +155,7 @@ class _RegisterCompletePageState extends State<RegisterCompletePage> {
 
                 // Continue Button
                 CustomButton(
-                  text: 'كمّل',
+                  text: 'continue_btn'.tr(),
                   height: 52.0,
                   isLoading: state.isLoading,
                   onPressed: (_agreedToTerms && _nameController.text.trim().isNotEmpty && !state.isLoading)
@@ -178,7 +178,7 @@ class _RegisterCompletePageState extends State<RegisterCompletePage> {
                     children: [
                       Image.asset(AppAssets.dottedLine),
                       Text(
-                        'أو',
+                        'or'.tr(),
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
                               fontSize: 11.0,
                             ),
@@ -194,7 +194,7 @@ class _RegisterCompletePageState extends State<RegisterCompletePage> {
                   child: TextButton(
                     onPressed: () => context.go(RoutePaths.home),
                     child: Text(
-                      'بلّش تصفّح كضيف بدون حساب',
+                      'browse_as_guest'.tr(),
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
                             color: AppColors.primary,
                           ),

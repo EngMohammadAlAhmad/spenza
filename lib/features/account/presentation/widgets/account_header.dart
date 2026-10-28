@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/features/account/domain/entities/user_entity.dart';
 import 'package:spenza/features/orders/presentation/widgets/animated_three_dots.dart';
@@ -24,11 +26,11 @@ class AccountHeader extends StatelessWidget {
     final initials = user?.initials ?? '';
     final name = user?.name ?? '';
     final phone = user?.formattedPhoneNumber ?? '';
-    final roleLabel = user?.roleLabel.isNotEmpty == true ? user!.roleLabel : 'حساب شخصي';
+    final roleLabel = user?.roleLabel.isNotEmpty == true ? user!.roleLabel : 'personal_account'.tr();
 
     return AppHeader(
       style: AppHeaderStyle.gradient,
-      title: 'حسابي',
+      title: 'account'.tr(),
       showBackButton: false,
       titleTextStyle: const TextStyle(
         color: Colors.white,
@@ -36,7 +38,7 @@ class AccountHeader extends StatelessWidget {
         fontWeight: FontWeight.bold,
       ),
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 16.0,
+        top: context.screenPadding.top + 16.0,
         left: 20.0,
         right: 20.0,
         bottom: 24.0,
@@ -82,7 +84,7 @@ class AccountHeader extends StatelessWidget {
                         child: AnimatedThreeDots(color: Colors.white),
                       )
                     : Text(
-                        name.isNotEmpty ? name : 'أهلاً بك',
+                        name.isNotEmpty ? name : 'welcome_user'.tr(),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18.0,

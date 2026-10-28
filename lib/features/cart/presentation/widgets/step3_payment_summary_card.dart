@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
@@ -16,15 +17,15 @@ class Step3PaymentSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String title = 'كاش عند الاستلام';
-    String subtitle = 'جهز المبلغ للمندوب، وبتوصلك الفاتورة بعد التسليم.';
+    String title = 'cash_on_delivery_title'.tr();
+    String subtitle = 'cash_on_delivery_summary_desc'.tr();
 
     if (paymentMethod == 'bank') {
-      title = 'حوالة بنكية';
-      subtitle = 'بتحول وبترفع صورة الوصل، ومنتأكد الدفع بعد المراجعة.';
+      title = 'bank_transfer_title'.tr();
+      subtitle = 'bank_transfer_desc'.tr();
     } else if (paymentMethod == 'paymera') {
-      title = 'بيميرا';
-      subtitle = 'دفع إلكتروني مباشر.';
+      title = 'paymera_title'.tr();
+      subtitle = 'electronic_payment_desc'.tr();
     }
 
     return Container(
@@ -53,9 +54,9 @@ class Step3PaymentSummaryCard extends StatelessWidget {
                     AppAssets.paymentIcon,
                   ),
                   const SizedBox(width: 8.0),
-                  const Text(
-                    'الدفع',
-                    style: TextStyle(
+                  Text(
+                    'payment_title'.tr(),
+                    style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       color: AppColors.neutral900,
@@ -69,12 +70,12 @@ class Step3PaymentSummaryCard extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       AppAssets.editIcon,
-                      colorFilter: .mode(AppColors.primary, .srcIn),
+                      colorFilter: const ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
                     ),
                     const SizedBox(width: 4.0),
-                    const Text(
-                      'تعديل',
-                      style: TextStyle(
+                    Text(
+                      'edit'.tr(),
+                      style: const TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary500,

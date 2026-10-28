@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spenza/core/utils/app_size.dart';
 
 /// Responsive breakpoints following Material Design guidelines
 class ResponsiveBreakpoints {
@@ -20,7 +21,7 @@ enum ScreenSize {
 class Responsive {
   /// Get current screen size category
   static ScreenSize getScreenSize(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    final width = context.width;
 
     if (width < ResponsiveBreakpoints.mobile) {
       return ScreenSize.mobile;
@@ -35,24 +36,24 @@ class Responsive {
 
   /// Check if screen is mobile
   static bool isMobile(BuildContext context) {
-    return MediaQuery.of(context).size.width < ResponsiveBreakpoints.mobile;
+    return context.width < ResponsiveBreakpoints.mobile;
   }
 
   /// Check if screen is tablet
   static bool isTablet(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    final width = context.width;
     return width >= ResponsiveBreakpoints.mobile &&
         width < ResponsiveBreakpoints.tablet;
   }
 
   /// Check if screen is desktop
   static bool isDesktop(BuildContext context) {
-    return MediaQuery.of(context).size.width >= ResponsiveBreakpoints.tablet;
+    return context.width >= ResponsiveBreakpoints.tablet;
   }
 
   /// Check if screen is wide desktop
   static bool isWide(BuildContext context) {
-    return MediaQuery.of(context).size.width >= ResponsiveBreakpoints.wide;
+    return context.width >= ResponsiveBreakpoints.wide;
   }
 
   /// Get responsive value based on screen size

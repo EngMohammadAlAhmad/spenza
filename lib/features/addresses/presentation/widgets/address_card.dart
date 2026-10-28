@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
@@ -64,9 +65,9 @@ class AddressCard extends StatelessWidget {
                             color: const Color(0xFFFDE8E8),
                             borderRadius: AppRadius.medium,
                           ),
-                          child: const Text(
-                            'افتراضي',
-                            style: TextStyle(
+                          child: Text(
+                            'default_badge'.tr(),
+                            style: const TextStyle(
                               color: AppColors.primary500,
                               fontSize: 12.0,
                               fontWeight: FontWeight.bold,

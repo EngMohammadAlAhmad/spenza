@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/app_size.dart';
 
 class PatternBackground extends StatelessWidget {
   const PatternBackground({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final radialSize = MediaQuery.sizeOf(context).width * 0.85;
+    final radialSize = context.width * 0.85;
 
     return IgnorePointer(
       child: Stack(

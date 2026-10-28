@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
@@ -9,7 +10,7 @@ class ViewAllButton extends StatelessWidget {
   const ViewAllButton({
     super.key,
     required this.onPressed,
-    this.text = 'عرض الكل',
+    this.text = 'view_all',
   });
 
   @override
@@ -21,7 +22,7 @@ class ViewAllButton extends StatelessWidget {
         spacing: 5.0,
         children: [
           Text(
-            text,
+            text.tr(),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.primary,
                   fontWeight: FontWeight.bold,

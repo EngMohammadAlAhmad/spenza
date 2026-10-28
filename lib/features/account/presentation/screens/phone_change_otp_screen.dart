@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/widgets/app_back_button.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/pattern_background.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
@@ -80,9 +82,10 @@ class _PhoneChangeOtpScreenState extends State<PhoneChangeOtpScreen> {
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.neutral900),
-                onPressed: () => context.pop(false),
+              leading: Center(
+                child: AppBackButton(
+                  onTap: () => context.pop(false),
+                ),
               ),
             ),
             body: BlocConsumer<MyInfoBloc, MyInfoState>(
@@ -207,6 +210,7 @@ class _PhoneChangeOtpScreenState extends State<PhoneChangeOtpScreen> {
         controller: _controllers[index],
         focusNode: _focusNodes[index],
         keyboardType: TextInputType.number,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         textAlign: TextAlign.center,
         textAlignVertical: TextAlignVertical.center,
         maxLength: 1,

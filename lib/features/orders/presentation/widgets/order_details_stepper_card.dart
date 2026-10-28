@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -65,7 +66,7 @@ class OrderDetailsStepperCard extends StatelessWidget {
               // Top Title & Subtitle Header (When Cancelled)
               if (_isCancelled) ...[
                 Text(
-                  'انلغى طلبك',
+                  'order_cancelled_title'.tr(),
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w800,
                         color: AppColors.neutral900,
@@ -76,7 +77,7 @@ class OrderDetailsStepperCard extends StatelessWidget {
                 Text(
                   tracking?.message.isNotEmpty == true
                       ? tracking!.message
-                      : 'لغينا الطلب مثل ما طلبت، وما انطلب منك أي مبلغ.',
+                      : 'order_cancelled_desc'.tr(),
                   style: const TextStyle(
                     fontSize: 13.0,
                     color: AppColors.textSecondary,
@@ -364,7 +365,7 @@ class OrderDetailsStepperCard extends StatelessWidget {
         OrderTrackingStageEntity(
           key: 'received',
           step: 1,
-          title: 'استلمنا طلبك',
+          title: 'stage_received'.tr(),
           description: receivedTime,
           isReached: true,
           isCurrent: false,
@@ -372,7 +373,7 @@ class OrderDetailsStepperCard extends StatelessWidget {
         OrderTrackingStageEntity(
           key: 'cancelled',
           step: 2,
-          title: 'انلغى',
+          title: 'stage_cancelled'.tr(),
           description: cancelledTime,
           isReached: true,
           isCurrent: true,
@@ -380,7 +381,7 @@ class OrderDetailsStepperCard extends StatelessWidget {
         OrderTrackingStageEntity(
           key: 'with_courier',
           step: 3,
-          title: 'مع المندوب',
+          title: 'stage_with_courier'.tr(),
           description: '',
           isReached: false,
           isCurrent: false,
@@ -388,7 +389,7 @@ class OrderDetailsStepperCard extends StatelessWidget {
         OrderTrackingStageEntity(
           key: 'delivered',
           step: 4,
-          title: 'وصل',
+          title: 'stage_delivered'.tr(),
           description: '',
           isReached: false,
           isCurrent: false,
@@ -406,32 +407,32 @@ class OrderDetailsStepperCard extends StatelessWidget {
       OrderTrackingStageEntity(
         key: 'received',
         step: 1,
-        title: 'استلمنا طلبك',
-        description: 'تأكدنا من طلبك',
+        title: 'stage_received'.tr(),
+        description: 'stage_received_desc'.tr(),
         isReached: currentStep >= 1,
         isCurrent: currentStep == 1,
       ),
       OrderTrackingStageEntity(
         key: 'preparing',
         step: 2,
-        title: 'عم نجهزو',
-        description: 'نجهّز منتجاتك',
+        title: 'stage_preparing'.tr(),
+        description: 'stage_preparing_desc'.tr(),
         isReached: currentStep >= 2,
         isCurrent: currentStep == 2,
       ),
       OrderTrackingStageEntity(
         key: 'with_courier',
         step: 3,
-        title: 'مع المندوب',
-        description: 'في الطريق إليك',
+        title: 'stage_with_courier'.tr(),
+        description: 'stage_with_courier_desc'.tr(),
         isReached: currentStep >= 3,
         isCurrent: currentStep == 3,
       ),
       OrderTrackingStageEntity(
         key: 'delivered',
         step: 4,
-        title: 'وصل',
-        description: 'تم التسليم',
+        title: 'stage_delivered'.tr(),
+        description: 'stage_delivered_desc'.tr(),
         isReached: currentStep >= 4,
         isCurrent: currentStep == 4,
       ),
@@ -458,19 +459,16 @@ class OrderDetailsStepperCard extends StatelessWidget {
   String _getRejectionReasonTitle() {
     if (rejectionReason != null && rejectionReason!.trim().isNotEmpty) {
       final reason = rejectionReason!.trim();
-      if (reason.startsWith('السبب:') || reason.startsWith('سبب:')) {
-        return reason;
-      }
-      return 'السبب: $reason';
+      return '${'reason_prefix'.tr()}$reason';
     }
-    return 'السبب: الرجاء التواصل مع الدعم';
+    return '${'reason_prefix'.tr()}${'contact_support_reason'.tr()}';
   }
 
   String _getRejectionReasonDetail() {
     if (rejectionReason != null && rejectionReason!.trim().isNotEmpty) {
       return '';
     }
-    return 'السبب: الرجاء التواصل مع الدعم';
+    return '${'reason_prefix'.tr()}${'contact_support_reason'.tr()}';
   }
 }
 

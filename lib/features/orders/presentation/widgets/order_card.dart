@@ -1,12 +1,13 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/features/orders/domain/entities/order_response_entity.dart';
+import 'package:spenza/features/orders/presentation/utils/order_localization_helper.dart';
 
 class OrderCard extends StatelessWidget {
   final OrderResponseEntity order;
@@ -20,7 +21,6 @@ class OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('HHHH ${order.status}');
     final formatter = NumberFormat('#,##0');
     final statusStyle = _getStatusStyle(order);
     final paymentStatusStyle = _getPaymentStatusStyle(order);
@@ -66,7 +66,7 @@ class OrderCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 4.0),
                           Text(
-                            '${_formatDate(order.placedAt)} · ${order.itemsCount} ${order.itemsCount == 1 ? 'منتج' : 'منتجات'}',
+                            '${_formatDate(order.placedAt)} · ${order.itemsCount} ${order.itemsCount == 1 ? 'item_unit'.tr() : 'items_unit'.tr()}',
                             style: const TextStyle(
                               fontSize: 12.0,
                               color: AppColors.textSecondary,
@@ -93,7 +93,7 @@ class OrderCard extends StatelessWidget {
                       child: Text(
                         order.statusLabel.isNotEmpty
                             ? order.statusLabel
-                            : 'قيد الانتظار',
+                            : 'pending'.tr(),
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.bold,
@@ -123,7 +123,7 @@ class OrderCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${formatter.format(order.totalAmount)} ل.س',
+                          '${formatter.format(order.totalAmount)} ${'sp_currency'.tr()}',
                           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                             fontWeight: FontWeight.w800,
                           ),
@@ -135,7 +135,7 @@ class OrderCard extends StatelessWidget {
                             Text(
                               order.paymentMethodLabel.isNotEmpty
                                   ? order.paymentMethodLabel
-                                  : 'كاش عند الاستلام',
+                                  : 'cash_on_delivery_title'.tr(),
                               style: const TextStyle(
                                 fontSize: 11.0,
                                 color: AppColors.textSecondary,
@@ -160,19 +160,26 @@ class OrderCard extends StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   color: paymentStatusStyle.backgroundColor,
-                                  borderRadius: AppRadius.small,
-                                  border: Border.all(
-                                    color: paymentStatusStyle.textColor.withValues(alpha: 0.15),
-                                    width: 1.0,
-                                  ),
+                                  borderRadius: AppRadius.large,
                                 ),
-                                child: Text(
-                                  order.paymentStatusLabel,
-                                  style: TextStyle(
-                                    fontSize: 10.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: paymentStatusStyle.textColor,
-                                  ),
+                                child: Row(
+                                  spacing: 3.0,
+                                  children: [
+                                    Text(
+                                      order.paymentStatusLabel,
+                                      style: TextStyle(
+                                        fontSize: 10.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: paymentStatusStyle.textColor,
+                                      ),
+                                    ),
+                                    SvgPicture.asset(
+                                      AppAssets.cashIcon,
+                                      height: 20.0,
+                                      width: 20.0,
+                                      colorFilter: .mode(AppColors.successForeground, .srcIn),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -211,34 +218,60 @@ class OrderCard extends StatelessWidget {
   }
 
   Widget _buildThumbnails(List<String> images) {
+    final Widget thumbnailsRow;
+
     if (images.isNotEmpty) {
-      final displayImages = images.take(3).toList();
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        spacing: 6.0,
-        children: displayImages.map((url) {
-          return ClipRRect(
-            borderRadius: AppRadius.small,
-            child: Image.network(
-              url,
-              width: 36.0,
-              height: 36.0,
-              fit: BoxFit.cover,
-              errorBuilder: (_, _, _) => _buildPlaceholderSquare(),
-            ),
-          );
-        }).toList(),
+      thumbnailsRow = SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 6.0,
+          children: images.map((url) {
+            return ClipRRect(
+              borderRadius: AppRadius.small,
+              child: Image.network(
+                url,
+                width: 36.0,
+                height: 36.0,
+                fit: BoxFit.cover,
+                errorBuilder: (_, _, _) => _buildPlaceholderSquare(),
+              ),
+            );
+          }).toList(),
+        ),
+      );
+    } else {
+      final count = order.itemsCount > 0 ? order.itemsCount : 1;
+      thumbnailsRow = SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 6.0,
+          children: List.generate(
+            count,
+            (_) => _buildPlaceholderSquare(),
+          ),
+        ),
       );
     }
 
-    // Default placeholder product thumbnails matching mockup style
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      spacing: 6.0,
-      children: List.generate(
-        order.itemsCount > 3 ? 3 : (order.itemsCount > 0 ? order.itemsCount : 1),
-        (_) => _buildPlaceholderSquare(),
-      ),
+    return ShaderMask(
+      shaderCallback: (Rect bounds) {
+        return const LinearGradient(
+          begin: Alignment.centerRight,
+          end: Alignment.centerLeft,
+          colors: [
+            Colors.black,
+            Colors.black,
+            Colors.transparent,
+          ],
+          stops: [0.0, 0.75, 1.0],
+        ).createShader(bounds);
+      },
+      blendMode: BlendMode.dstIn,
+      child: thumbnailsRow,
     );
   }
 
@@ -247,7 +280,7 @@ class OrderCard extends StatelessWidget {
   }
 
   String _formatDate(String dateStr) {
-    if (dateStr.isEmpty) return 'اليوم';
+    if (dateStr.isEmpty) return 'today'.tr();
     try {
       final dt = DateTime.parse(dateStr).toLocal();
       final now = DateTime.now();
@@ -256,14 +289,14 @@ class OrderCard extends StatelessWidget {
       final itemDate = DateTime(dt.year, dt.month, dt.day);
 
       if (itemDate == today) {
-        return 'اليوم';
+        return 'today'.tr();
       } else if (itemDate == yesterday) {
-        return 'أمس';
+        return 'yesterday'.tr();
       } else {
         return DateFormat('yyyy/MM/dd').format(dt);
       }
     } catch (_) {
-      return 'اليوم';
+      return 'today'.tr();
     }
   }
 
@@ -324,7 +357,7 @@ class OrderCard extends StatelessWidget {
         label.contains('تأكيد')) {
       return _StatusStyle(
         backgroundColor: const Color(0xFFFEF3C7),
-        textColor: const Color(0xFFB45309),
+        textColor: AppColors.warningAlert,
       );
     }
 
@@ -369,7 +402,7 @@ class OrderCard extends StatelessWidget {
         label.contains('تأكيد')) {
       return _StatusStyle(
         backgroundColor: const Color(0xFFFEF3C7),
-        textColor: const Color(0xFFB45309),
+        textColor: AppColors.warningAlert,
       );
     }
 
@@ -380,17 +413,7 @@ class OrderCard extends StatelessWidget {
   }
 
   String _getActionLabel(OrderResponseEntity order) {
-    final label = order.statusLabel;
-    final status = order.status.toLowerCase();
-
-    if (status.contains('cancel') || label.contains('ملغ') || label.contains('إلغاء')) {
-      return 'تفاصيل الطلب';
-    } else if (label.contains('حوالة') || order.needsPaymentReview || label.contains('دفعه')) {
-      return 'حالة الدفع';
-    } else if (label.contains('مندوب') || label.contains('توصيل')) {
-      return 'تتبع الطلب';
-    }
-    return 'تفاصيل الطلب';
+    return OrderLocalizationHelper.getActionLabel(order);
   }
 }
 

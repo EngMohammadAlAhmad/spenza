@@ -124,7 +124,20 @@ class AppRouter {
       ),
       GoRoute(
         path: RoutePaths.checkout,
-        builder: (context, state) => const CheckoutScreen(),
+        pageBuilder: (context, state) {
+          return CustomTransitionPage<void>(
+            key: state.pageKey,
+            child: const CheckoutScreen(),
+            transitionDuration: const Duration(milliseconds: 500),
+            reverseTransitionDuration: const Duration(milliseconds: 500),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(
+                opacity: animation,
+                child: child,
+              );
+            },
+          );
+        },
       ),
       GoRoute(
         path: RoutePaths.addresses,

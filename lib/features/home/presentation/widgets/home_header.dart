@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/animations/circular_reveal_route.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_bloc.dart';
@@ -51,7 +53,7 @@ class _HomeHeaderContent extends StatelessWidget {
         bottomRight: Radius.circular(34.0),
       ),
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 8.0,
+        top: context.screenPadding.top + 8.0,
         left: 16.0,
         right: 16.0,
         bottom: 16.0,
@@ -61,7 +63,7 @@ class _HomeHeaderContent extends StatelessWidget {
         children: [
           BlocBuilder<AddressesBloc, AddressesState>(
             builder: (context, state) {
-              String addressText = 'اختر منطقتك';
+              String addressText = 'select_region'.tr();
 
               if (isLoggedIn && state.addresses.isNotEmpty) {
                 final defaultMatches = state.addresses.where((a) => a.isDefault);
@@ -103,7 +105,7 @@ class _HomeHeaderContent extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'التوصيل لِـ',
+                            'deliver_to'.tr(),
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall!
@@ -175,7 +177,7 @@ class _HomeHeaderContent extends StatelessWidget {
             ),
           );
         },
-        child: const AbsorbPointer(
+        child: AbsorbPointer(
           child: AppSearchField(
             readOnly: true,
           ),

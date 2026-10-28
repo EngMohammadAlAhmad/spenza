@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spenza/core/enums/request_state.dart';
@@ -82,10 +83,10 @@ class Step2DeliveryAndPaymentView extends StatelessWidget {
 
         final areaName = selectedAddress?.area.isNotEmpty == true
             ? selectedAddress!.area
-            : (options?.paymentZoneLabel ?? 'المزة');
+            : (options?.paymentZoneLabel ?? 'Mezzah');
         final cityName = selectedAddress?.cityName.isNotEmpty == true
             ? selectedAddress!.cityName
-            : (options?.paymentZoneLabel ?? 'دمشق');
+            : (options?.paymentZoneLabel ?? 'Damascus');
         final locationLabel = '$areaName، $cityName';
 
         return SingleChildScrollView(
@@ -98,9 +99,9 @@ class Step2DeliveryAndPaymentView extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'طريقة التوصيل',
-                    style: TextStyle(
+                  Text(
+                    'delivery_method'.tr(),
+                    style: const TextStyle(
                       fontSize: 17.0,
                       fontWeight: FontWeight.bold,
                       color: AppColors.neutral900,
@@ -119,11 +120,11 @@ class Step2DeliveryAndPaymentView extends StatelessWidget {
 
               // Dynamic Delivery Options List
               if (deliveryOptions.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
                   child: Text(
-                    'لا توجد خيارات توصيل متاحة لهذه المنطقة حالياً',
-                    style: TextStyle(fontSize: 14.0, color: AppColors.neutral),
+                    'no_delivery_options_note'.tr(),
+                    style: const TextStyle(fontSize: 14.0, color: AppColors.neutral),
                   ),
                 )
               else
@@ -144,8 +145,8 @@ class Step2DeliveryAndPaymentView extends StatelessWidget {
                         : (opt.unavailableReason ?? opt.description);
 
                     final priceText = opt.isFree
-                        ? 'مجاني'
-                        : '${opt.fee} ${options?.currency ?? 'ل.س'}';
+                        ? 'free'.tr()
+                        : '${opt.fee} ${options?.currency ?? 'sp_currency'.tr()}';
 
                     return CheckoutOptionCard(
                       title: opt.methodLabel,
@@ -164,9 +165,9 @@ class Step2DeliveryAndPaymentView extends StatelessWidget {
               const SizedBox(height: 24.0),
 
               // 2. Payment Method Section Header
-              const Text(
-                'طريقة الدفع',
-                style: TextStyle(
+              Text(
+                'payment_method'.tr(),
+                style: const TextStyle(
                   fontSize: 17.0,
                   fontWeight: FontWeight.bold,
                   color: AppColors.neutral900,
@@ -176,11 +177,11 @@ class Step2DeliveryAndPaymentView extends StatelessWidget {
 
               // Dynamic Payment Methods List
               if (paymentMethods.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
                   child: Text(
-                    'لا توجد وسائل دفع متاحة لهذه المنطقة حالياً',
-                    style: TextStyle(fontSize: 14.0, color: AppColors.neutral),
+                    'no_payment_methods_note'.tr(),
+                    style: const TextStyle(fontSize: 14.0, color: AppColors.neutral),
                   ),
                 )
               else
@@ -198,19 +199,18 @@ class Step2DeliveryAndPaymentView extends StatelessWidget {
                             method.key == 'bank_transfer');
 
                     String icon = AppAssets.cashIcon;
-                    String subtitle = 'دفع عند الاستلام';
+                    String subtitle = 'cash_on_delivery_desc'.tr();
 
                     if (method.key == 'bank_transfer' || method.key == 'bank') {
                       icon = AppAssets.bankIcon;
-                      subtitle =
-                          'بتحول وبترفع صورة الوصل، ومنتأكد الدفع بعد المراجعة';
+                      subtitle = 'bank_transfer_desc'.tr();
                     } else if (method.key == 'cash_on_delivery' ||
                         method.key == 'cash') {
                       icon = AppAssets.cashIcon;
-                      subtitle = 'بتدفع للمندوب وقت يوصلك الطلب';
+                      subtitle = 'cash_on_delivery_desc'.tr();
                     } else {
                       icon = AppAssets.cardIcon;
-                      subtitle = 'دفع إلكتروني مباشر';
+                      subtitle = 'electronic_payment_desc'.tr();
                     }
 
                     return CheckoutOptionCard(

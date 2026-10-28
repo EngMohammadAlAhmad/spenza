@@ -33,14 +33,33 @@ class CategoryProductsBloc extends Bloc<CategoryProductsEvent, BaseState<Categor
   ) async {
     final bool isNewCategory = state.data?.category.id != event.categoryId;
     final bool isNewSort = state.sort != event.sort;
+    final bool isNewMinPrice = state.minPrice != event.minPrice;
+    final bool isNewMaxPrice = state.maxPrice != event.maxPrice;
+    final bool isNewInStock = state.inStock != event.inStock;
 
-    if (event.isRefresh || isNewCategory || isNewSort) {
+    final bool isFilterChanged = isNewSort || isNewMinPrice || isNewMaxPrice || isNewInStock;
+
+    if (event.isRefresh || isNewCategory || isFilterChanged) {
       emit(BaseState<CategoryProductsResultEntity>(
         requestStatus: RequestStatus.loading,
         currentPage: 1,
         hasReachedMax: false,
-        data: isNewCategory ? null : state.data,
+        data: isNewCategory
+            ? null
+            : (state.data != null
+                ? CategoryProductsResultEntity(
+                    category: state.data!.category,
+                    children: state.data!.children,
+                    products: const [],
+                    currentPage: 1,
+                    lastPage: 1,
+                    total: 0,
+                  )
+                : null),
         sort: event.sort,
+        minPrice: event.minPrice,
+        maxPrice: event.maxPrice,
+        inStock: event.inStock,
       ));
     } else {
       if (state.hasReachedMax == true || state.requestStatus == RequestStatus.loading) return;
@@ -49,10 +68,18 @@ class CategoryProductsBloc extends Bloc<CategoryProductsEvent, BaseState<Categor
 
     final Either<dynamic, dynamic> result;
 
-    if (event.sort != null && event.sort != 'newest') {
+    final bool hasSearchFilters = (event.sort != null && event.sort != 'newest') ||
+        event.minPrice != null ||
+        event.maxPrice != null ||
+        event.inStock != null;
+
+    if (hasSearchFilters) {
       result = await searchProductsUseCase.call(SearchParams(
         categoryId: event.categoryId,
         sort: event.sort,
+        minPrice: event.minPrice,
+        maxPrice: event.maxPrice,
+        inStock: event.inStock,
         page: state.currentPage,
         perPage: 20,
       ));
@@ -71,7 +98,7 @@ class CategoryProductsBloc extends Bloc<CategoryProductsEvent, BaseState<Categor
       )),
       (resultData) {
         final List<ProductEntity> products = resultData.products;
-        final currentProducts = (isNewCategory || event.isRefresh || isNewSort) ? <ProductEntity>[] : (state.data?.products ?? <ProductEntity>[]);
+        final currentProducts = (isNewCategory || event.isRefresh || isFilterChanged) ? <ProductEntity>[] : (state.data?.products ?? <ProductEntity>[]);
         final List<ProductEntity> updatedProducts = [...currentProducts, ...products];
 
         final updatedResult = CategoryProductsResultEntity(
@@ -91,6 +118,9 @@ class CategoryProductsBloc extends Bloc<CategoryProductsEvent, BaseState<Categor
           currentPage: resultData.currentPage + 1,
           hasReachedMax: resultData.currentPage >= resultData.lastPage,
           sort: event.sort,
+          minPrice: event.minPrice,
+          maxPrice: event.maxPrice,
+          inStock: event.inStock,
         ));
       },
     );

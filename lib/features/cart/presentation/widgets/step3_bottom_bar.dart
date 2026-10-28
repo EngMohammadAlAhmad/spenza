@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spenza/core/themes/app_colors.dart';
@@ -20,14 +21,14 @@ class Step3BottomBar extends StatelessWidget {
     final formatter = NumberFormat('#,##0');
 
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8,
-            offset: Offset(0, -2),
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 16.0,
+            offset: const Offset(0, -4),
           ),
         ],
       ),
@@ -43,9 +44,9 @@ class Step3BottomBar extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    'الإجمالي',
-                    style: TextStyle(
+                  Text(
+                    'total'.tr(),
+                    style: const TextStyle(
                       fontSize: 13.0,
                       color: AppColors.neutral,
                       fontWeight: FontWeight.w500,
@@ -53,7 +54,7 @@ class Step3BottomBar extends StatelessWidget {
                   ),
                   const SizedBox(height: 2.0),
                   Text(
-                    '${formatter.format(totalAmount)} ل.س',
+                    '${formatter.format(totalAmount)} ${'sp_currency'.tr()}',
                     style: const TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w900,
@@ -63,11 +64,17 @@ class Step3BottomBar extends StatelessWidget {
                 ],
               ),
               Expanded(
-                child: CustomButton(
-                  text: 'أكّد الطلب',
-                  height: 48.0,
-                  isLoading: isLoading,
-                  onPressed: isLoading ? null : onConfirmOrderPressed,
+                child: Hero(
+                  tag: 'checkout_bottom_button_hero',
+                  child: Material(
+                    color: Colors.transparent,
+                    child: CustomButton(
+                      text: 'confirm_order_btn'.tr(),
+                      height: 52.0,
+                      isLoading: isLoading,
+                      onPressed: isLoading ? null : onConfirmOrderPressed,
+                    ),
+                  ),
                 ),
               ),
             ],

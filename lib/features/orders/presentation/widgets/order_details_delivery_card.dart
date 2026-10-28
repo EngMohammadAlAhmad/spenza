@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
@@ -18,7 +19,7 @@ class OrderDetailsDeliveryCard extends StatelessWidget {
 
     final addressTitle = addr != null && addr.label.isNotEmpty
         ? '${addr.label} · ${addr.area.isNotEmpty ? addr.area : addr.cityName}، ${addr.countryName}'
-        : 'المنزل · ${order.cityName}، ${order.countryName}';
+        : '${'home_label'.tr()} · ${order.cityName}، ${order.countryName}';
 
     final addressDetails = addr != null && addr.line.isNotEmpty
         ? '${addr.line} · ${addr.phone}'
@@ -26,7 +27,7 @@ class OrderDetailsDeliveryCard extends StatelessWidget {
 
     final deliveryInfo = del != null && del.methodLabel.isNotEmpty
         ? '${del.methodLabel} · ${del.etaLabel}'
-        : '${order.deliveryMethodLabel} · خلال 48 ساعة';
+        : '${order.deliveryMethodLabel} · ${'within_48_hours'.tr()}';
 
     return Container(
       width: double.infinity,
@@ -45,9 +46,9 @@ class OrderDetailsDeliveryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'التوصيل لـ',
-            style: TextStyle(
+          Text(
+            'deliver_to_title'.tr(),
+            style: const TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
               color: AppColors.neutral900,

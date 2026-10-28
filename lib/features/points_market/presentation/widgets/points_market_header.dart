@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,6 +7,7 @@ import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/features/points_market/domain/entities/points_summary_entity.dart';
@@ -22,7 +24,7 @@ class PointsMarketHeader extends StatelessWidget {
 
         return AppHeader(
           style: AppHeaderStyle.gradient,
-          title: 'سوق النقاط',
+          title: 'points_market'.tr(),
           onBackPressed: () => Navigator.pop(context),
           trailingActions: [
             IconButton(
@@ -31,7 +33,7 @@ class PointsMarketHeader extends StatelessWidget {
             ),
           ],
           padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top + 8.0,
+            top: context.screenPadding.top + 8.0,
             left: 16.0,
             right: 16.0,
             bottom: 24.0,
@@ -59,7 +61,7 @@ class PointsMarketHeader extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'رصيدك',
+                        'your_balance'.tr(),
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.85),
                           fontSize: 14.0,
@@ -76,9 +78,9 @@ class PointsMarketHeader extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const TextSpan(
-                              text: 'نقطة',
-                              style: TextStyle(
+                            TextSpan(
+                              text: 'points_unit'.tr(),
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -108,7 +110,7 @@ class PointsMarketHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'أول طلب بيبلشلك الرصيد. طلب بـ 50,000 ل.س بيعطيك 50 نقطة.',
+                      'points_card_progress_desc'.tr(),
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.95),
                         fontSize: 12.5,
@@ -148,9 +150,9 @@ class PointsMarketHeader extends StatelessWidget {
                         color: Colors.white,
                         borderRadius: AppRadius.extraLarge,
                       ),
-                      child: const Text(
-                        'مكافآتي',
-                        style: TextStyle(
+                      child: Text(
+                        'my_rewards'.tr(),
+                        style: const TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 13,
@@ -176,11 +178,11 @@ class PointsMarketHeader extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SvgPicture.asset(AppAssets.activityIcon),
-                          const Text(
-                            'حركة النقاط',
-                            style: TextStyle(
+                          Text(
+                            'points_history'.tr(),
+                            style: const TextStyle(
                               color: Colors.white,
-                              fontWeight: .bold,
+                              fontWeight: FontWeight.bold,
                               fontSize: 13,
                             ),
                           ),

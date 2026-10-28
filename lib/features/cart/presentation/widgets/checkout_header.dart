@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 
@@ -18,8 +19,8 @@ class CheckoutHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppHeader(
-      title: 'إتمام الطلب',
-      subtitle: '$currentStep من $totalSteps · $stepTitle',
+      title: 'complete_order'.tr(),
+      subtitle: '$currentStep ${'of'.tr()} $totalSteps · $stepTitle',
       onBackPressed: onBackPressed,
       style: AppHeaderStyle.light,
       borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28.0)),

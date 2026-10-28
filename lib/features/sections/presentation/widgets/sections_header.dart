@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/animations/circular_reveal_route.dart';
+import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
 import 'package:spenza/features/search/presentation/screens/search_screen.dart';
@@ -28,7 +30,7 @@ class SectionsHeader extends StatelessWidget {
         bottomRight: Radius.circular(34.0),
       ),
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 8,
+        top: context.screenPadding.top + 8,
         left: 16.0,
         right: 16.0,
         bottom: 24.0,
@@ -37,7 +39,7 @@ class SectionsHeader extends StatelessWidget {
         spacing: 16.0,
         children: [
           Text(
-            'الأقسام',
+            'sections'.tr(),
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
@@ -55,7 +57,7 @@ class SectionsHeader extends StatelessWidget {
                   ),
                 );
               },
-              child: const AbsorbPointer(
+              child: AbsorbPointer(
                 child: AppSearchField(
                   readOnly: true,
                 ),
@@ -87,7 +89,7 @@ class SectionsHeader extends StatelessWidget {
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    'التصنيفات',
+                    'categories'.tr(),
                     style: TextStyle(
                       color: currentPage == 0
                           ? Colors.white
@@ -112,7 +114,7 @@ class SectionsHeader extends StatelessWidget {
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    'الماركات',
+                    'brands'.tr(),
                     style: TextStyle(
                       color: currentPage == 1
                           ? Colors.white

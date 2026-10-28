@@ -14,6 +14,9 @@ class BaseState<T> extends Equatable {
 
   final int currentPage;
   final String? sort; // for sorting filters
+  final double? minPrice;
+  final double? maxPrice;
+  final int? inStock;
 
   const BaseState({
     this.requestStatus = RequestStatus.init,
@@ -23,6 +26,9 @@ class BaseState<T> extends Equatable {
     this.message,
     this.currentPage = 1,
     this.sort,
+    this.minPrice,
+    this.maxPrice,
+    this.inStock,
   });
 
   BaseState<T> copyWith({
@@ -33,6 +39,9 @@ class BaseState<T> extends Equatable {
     String? message,
     int? currentPage,
     String? sort,
+    double? minPrice,
+    double? maxPrice,
+    int? inStock,
   }) => BaseState<T>(
     data: data ?? this.data,
     failure: failure ?? this.failure,
@@ -41,10 +50,24 @@ class BaseState<T> extends Equatable {
     message: message ?? this.message,
     currentPage: currentPage ?? this.currentPage,
     sort: sort ?? this.sort,
+    minPrice: minPrice ?? this.minPrice,
+    maxPrice: maxPrice ?? this.maxPrice,
+    inStock: inStock ?? this.inStock,
   );
 
   @override
-  List<Object?> get props => [requestStatus, failure, data, hasReachedMax, message, currentPage, sort];
+  List<Object?> get props => [
+        requestStatus,
+        failure,
+        data,
+        hasReachedMax,
+        message,
+        currentPage,
+        sort,
+        minPrice,
+        maxPrice,
+        inStock,
+      ];
 
   BaseState<T> loading() {
     return copyWith(requestStatus: RequestStatus.loading);

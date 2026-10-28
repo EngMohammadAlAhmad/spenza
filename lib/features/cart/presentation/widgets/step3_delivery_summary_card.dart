@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
@@ -21,14 +22,14 @@ class Step3DeliverySummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = address != null ? address!.fullTitle : 'المنزل • المزة، دمشق';
+    final title = address != null ? address!.fullTitle : '';
     final details = address != null && address!.fullAddressLine.isNotEmpty
         ? '${address!.fullAddressLine} • ${address!.formattedPhone}'
-        : 'شارع الجلاء، بناء 12، طابق 3 • 0944 123 456';
+        : '';
     final isExpress = deliveryType == 'express';
     final deliveryText = isExpress
-        ? 'توصيل مستعجل • خلال ساعتين'
-        : 'توصيل عادي • خلال 48 ساعة';
+        ? 'express_delivery_desc'.tr()
+        : 'standard_delivery_desc'.tr();
 
     return Container(
       padding: const EdgeInsets.all(16.0),
@@ -56,9 +57,9 @@ class Step3DeliverySummaryCard extends StatelessWidget {
                     AppAssets.deliveryLocationIcon,
                   ),
                   const SizedBox(width: 6.0),
-                  const Text(
-                    'التوصيل',
-                    style: TextStyle(
+                  Text(
+                    'delivery_title'.tr(),
+                    style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       color: AppColors.neutral900,
@@ -72,12 +73,12 @@ class Step3DeliverySummaryCard extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       AppAssets.editIcon,
-                      colorFilter: .mode(AppColors.primary, .srcIn),
+                      colorFilter: const ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
                     ),
                     const SizedBox(width: 4.0),
-                    const Text(
-                      'تعديل',
-                      style: TextStyle(
+                    Text(
+                      'edit'.tr(),
+                      style: const TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary500,
@@ -91,24 +92,26 @@ class Step3DeliverySummaryCard extends StatelessWidget {
           const SizedBox(height: 10.0),
 
           // Title
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 15.0,
-              fontWeight: FontWeight.bold,
-              color: AppColors.neutral900,
+          if (title.isNotEmpty)
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+                color: AppColors.neutral900,
+              ),
             ),
-          ),
           const SizedBox(height: 4.0),
 
           // Address Details
-          Text(
-            details,
-            style: const TextStyle(
-              fontSize: 13.0,
-              color: AppColors.neutral,
+          if (details.isNotEmpty)
+            Text(
+              details,
+              style: const TextStyle(
+                fontSize: 13.0,
+                color: AppColors.neutral,
+              ),
             ),
-          ),
           const SizedBox(height: 8.0),
 
           // Delivery Type & Fee
@@ -124,7 +127,7 @@ class Step3DeliverySummaryCard extends StatelessWidget {
                 ),
               ),
               Text(
-                deliveryFee == 0 ? "مجاني" : "$deliveryFee ل.س",
+                deliveryFee == 0 ? 'free'.tr() : '$deliveryFee ${'sp_currency'.tr()}',
                 style: const TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.bold,

@@ -1,14 +1,16 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:spenza/core/shared/entities/product_entity.dart';
+import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favorites_bloc.dart';
 import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favorites_event.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/widgets/app_back_button.dart';
 import 'package:spenza/core/widgets/app_icon_placeholder.dart';
 import 'package:spenza/core/widgets/circle_action_button.dart';
 import 'package:spenza/core/widgets/favorite_button.dart';
@@ -131,15 +133,15 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
 
               // Controls (Back, Share, Favorite)
               Positioned(
-                top: MediaQuery.of(context).padding.top + 16,
+                top: context.screenPadding.top + 16,
                 left: 16,
                 right: 16,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleActionButton(
-                      icon: Icons.arrow_back_ios_rounded,
-                      onTap: () => context.pop(),
+                    const AppBackButton(
+                      backgroundColor: Colors.white,
+                      withShadow: true,
                     )
                         .animate()
                         .fadeIn(duration: 650.ms, delay: 200.ms)
@@ -304,7 +306,7 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                   .animate(onPlay: (controller) => controller.repeat(reverse: true))
                   .scaleXY(begin: 1.0, end: 1.1, duration: 1500.ms, curve: Curves.easeInOut),
               const SizedBox(height: 12),
-              const Text('تشغيل الفيديو', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.secondary)),
+              Text('play_video'.tr(), style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.secondary)),
             ],
           ),
         ),
@@ -321,7 +323,7 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                   .scaleXY(begin: 1.0, end: 1.1, duration: 1500.ms, curve: Curves.easeInOut)
                   .shimmer(delay: 1000.ms, duration: 2000.ms),
               const SizedBox(height: 12),
-              const Text('عرض 3D', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.secondary)),
+              Text('view_3d'.tr(), style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.secondary)),
             ],
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -96,9 +97,9 @@ class Step1DeliveryAddressView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title Question
-                const Text(
-                  'وين نوصلك الطلب؟',
-                  style: TextStyle(
+                Text(
+                  'where_to_deliver_question'.tr(),
+                  style: const TextStyle(
                     fontSize: 17.0,
                     fontWeight: FontWeight.bold,
                     color: AppColors.neutral900,
@@ -106,12 +107,12 @@ class Step1DeliveryAddressView extends StatelessWidget {
                 ),
                 // Address List Selection
                 if (state.addresses.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Center(
                       child: Text(
-                        'لا توجد عناوين مضافة، أضف عنوان جديد لمتابعة الطلب',
-                        style: TextStyle(
+                        'no_addresses_add_new_note'.tr(),
+                        style: const TextStyle(
                           fontSize: 14.0,
                           color: AppColors.neutral,
                           fontWeight: FontWeight.w500,
@@ -123,7 +124,7 @@ class Step1DeliveryAddressView extends StatelessWidget {
                   ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.only(top: 10.0),
+                    padding: const EdgeInsets.only(top: 10.0),
                     itemCount: state.addresses.length,
                     separatorBuilder: (_, _) => const SizedBox(height: 12.0),
                     itemBuilder: (context, index) {

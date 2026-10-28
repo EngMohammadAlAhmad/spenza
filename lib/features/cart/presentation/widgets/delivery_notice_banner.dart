@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
@@ -14,7 +15,7 @@ class DeliveryNoticeBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final cityName = selectedAddress?.cityName.isNotEmpty == true
         ? selectedAddress!.cityName
-        : 'دمشق';
+        : 'Damascus';
 
     return Container(
       width: double.infinity,
@@ -24,7 +25,7 @@ class DeliveryNoticeBanner extends StatelessWidget {
         borderRadius: AppRadius.upMedium,
       ),
       child: Row(
-        crossAxisAlignment: .start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Icon(
             Icons.info_outline_rounded,
@@ -34,10 +35,10 @@ class DeliveryNoticeBanner extends StatelessWidget {
           const SizedBox(width: 12.0),
           Expanded(
             child: Column(
-              crossAxisAlignment: .start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'التوصيل لـ $cityName',
+                  'delivery_to_city'.tr(args: [cityName]),
                   style: const TextStyle(
                     fontSize: 15.0,
                     fontWeight: FontWeight.bold,
@@ -45,9 +46,9 @@ class DeliveryNoticeBanner extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4.0),
-                const Text(
-                  'رسوم وطرق التوصيل والدفع بتبين بالخطوة الجاية حسب العنوان.',
-                  style: TextStyle(
+                Text(
+                  'delivery_notice_desc'.tr(),
+                  style: const TextStyle(
                     fontSize: 13.0,
                     color: Color(0xFF3B82F6),
                     height: 1.3,

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -9,13 +10,11 @@ import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_bloc.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_event.dart';
 import 'package:spenza/features/cart/presentation/blocs/cart_bloc/cart_bloc.dart';
-import 'package:spenza/features/cart/presentation/widgets/checkout_bottom_bar.dart';
 import 'package:spenza/features/cart/presentation/widgets/checkout_header.dart';
 import 'package:spenza/features/cart/presentation/widgets/checkout_progress_indicator.dart';
+import 'package:spenza/features/cart/presentation/widgets/checkout_steps_bottom_bar.dart';
 import 'package:spenza/features/cart/presentation/widgets/step1_delivery_address_view.dart';
-import 'package:spenza/features/cart/presentation/widgets/step2_bottom_bar.dart';
 import 'package:spenza/features/cart/presentation/widgets/step2_delivery_and_payment_view.dart';
-import 'package:spenza/features/cart/presentation/widgets/step3_bottom_bar.dart';
 import 'package:spenza/features/cart/presentation/widgets/step3_review_and_confirm_view.dart';
 import 'package:spenza/features/orders/data/models/create_order_params.dart';
 import 'package:spenza/features/orders/presentation/bloc/orders_bloc.dart';
@@ -61,13 +60,13 @@ class _CheckoutViewState extends State<_CheckoutView> {
   String get stepTitle {
     switch (_currentStep) {
       case 1:
-        return 'عنوان التوصيل';
+        return 'delivery_address_step_title'.tr();
       case 2:
-        return 'التوصيل والدفع';
+        return 'delivery_and_payment_step_title'.tr();
       case 3:
-        return 'مراجعة وتأكيد';
+        return 'review_and_confirm_step_title'.tr();
       default:
-        return 'عنوان التوصيل';
+        return 'delivery_address_step_title'.tr();
     }
   }
 
@@ -98,7 +97,7 @@ class _CheckoutViewState extends State<_CheckoutView> {
   void _submitOrder() {
     final cartState = context.read<CartBloc>().state;
     if (cartState.items.isEmpty) {
-      SnackbarService.showError(context, message: 'السلة فارغة');
+      SnackbarService.showError(context, message: 'empty_cart'.tr());
       return;
     }
 
@@ -201,72 +200,70 @@ class _CheckoutViewState extends State<_CheckoutView> {
 
             // 3. Step Content Body
             Expanded(
-              child: _currentStep == 1
-                  ? Step1DeliveryAddressView(
-                      selectedAddressId: _selectedAddressId,
-                      onAddressSelected: _onAddressSelected,
-                    )
-                  : (_currentStep == 2
-                      ? Step2DeliveryAndPaymentView(
-                          selectedAddress: selectedAddress,
-                          selectedDeliveryType: _selectedDeliveryType,
-                          selectedPaymentMethod: _selectedPaymentMethod,
-                          onDeliveryTypeChanged: (type) {
-                            setState(() => _selectedDeliveryType = type);
-                          },
-                          onPaymentMethodChanged: (method) {
-                            setState(() => _selectedPaymentMethod = method);
-                          },
-                        )
-                      : Step3ReviewAndConfirmView(
-                          selectedAddress: selectedAddress,
-                          selectedDeliveryType: _selectedDeliveryType,
-                          selectedPaymentMethod: _selectedPaymentMethod,
-                          onDriverNoteChanged: (note) {
-                            _driverNote = note;
-                          },
-                          onEditDeliveryStepPressed: () {
-                            setState(() => _currentStep = 1);
-                          },
-                          onEditPaymentStepPressed: () {
-                            setState(() => _currentStep = 2);
-                          },
-                          onEditCartPressed: () {
-                            if (context.canPop()) {
-                              context.pop();
-                            } else {
-                              context.go(RoutePaths.cart);
-                            }
-                          },
-                        )),
+              child: IndexedStack(
+                index: _currentStep - 1,
+                children: [
+                  Step1DeliveryAddressView(
+                    selectedAddressId: _selectedAddressId,
+                    onAddressSelected: _onAddressSelected,
+                  ),
+                  Step2DeliveryAndPaymentView(
+                    selectedAddress: selectedAddress,
+                    selectedDeliveryType: _selectedDeliveryType,
+                    selectedPaymentMethod: _selectedPaymentMethod,
+                    onDeliveryTypeChanged: (type) {
+                      setState(() => _selectedDeliveryType = type);
+                    },
+                    onPaymentMethodChanged: (method) {
+                      setState(() => _selectedPaymentMethod = method);
+                    },
+                  ),
+                  Step3ReviewAndConfirmView(
+                    selectedAddress: selectedAddress,
+                    selectedDeliveryType: _selectedDeliveryType,
+                    selectedPaymentMethod: _selectedPaymentMethod,
+                    onDriverNoteChanged: (note) {
+                      _driverNote = note;
+                    },
+                    onEditDeliveryStepPressed: () {
+                      setState(() => _currentStep = 1);
+                    },
+                    onEditPaymentStepPressed: () {
+                      setState(() => _currentStep = 2);
+                    },
+                    onEditCartPressed: () {
+                      if (context.canPop()) {
+                        context.pop();
+                      } else {
+                        context.go(RoutePaths.cart);
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),
-        bottomNavigationBar: _currentStep == 1
-            ? CheckoutBottomBar(
-                isEnabled: _selectedAddressId != null,
-                onNextPressed: () {
-                  setState(() => _currentStep = 2);
-                },
-              )
-            : (_currentStep == 2
-                ? Step2BottomBar(
-                    totalAmount: totalAmount,
-                    onReviewPressed: () {
-                      setState(() => _currentStep = 3);
-                    },
-                  )
-                : BlocBuilder<OrdersBloc, OrdersState>(
-                    builder: (context, ordersState) {
-                      final isLoading =
-                          ordersState.createOrderStatus == RequestStatus.loading;
-                      return Step3BottomBar(
-                        totalAmount: totalAmount,
-                        isLoading: isLoading,
-                        onConfirmOrderPressed: isLoading ? null : _submitOrder,
-                      );
-                    },
-                  )),
+        bottomNavigationBar: BlocBuilder<OrdersBloc, OrdersState>(
+          builder: (context, ordersState) {
+            final isOrdersLoading =
+                ordersState.createOrderStatus == RequestStatus.loading;
+
+            return CheckoutStepsBottomBar(
+              currentStep: _currentStep,
+              isStep1Enabled: _selectedAddressId != null,
+              onStep1Pressed: () {
+                setState(() => _currentStep = 2);
+              },
+              totalAmount: totalAmount,
+              onStep2Pressed: () {
+                setState(() => _currentStep = 3);
+              },
+              isStep3Loading: isOrdersLoading,
+              onStep3Pressed: _submitOrder,
+            );
+          },
+        ),
       ),
     );
   }

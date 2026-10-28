@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
@@ -29,7 +30,7 @@ class ShopByBrandSection extends StatelessWidget {
           mainAxisAlignment: .spaceBetween,
           children: [
             Text(
-              'تسوّق حسب الماركة',
+              'shop_by_brand'.tr(),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: .bold,
               ),
@@ -76,15 +77,7 @@ class ShopByBrandSection extends StatelessWidget {
                               ? Center(child: Text(brand.name, style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             fontSize: 15.0,
                             fontWeight: .w800,
-                          )))/*CachedNetworkImage(
-                                  imageUrl: brand.image!,
-                                  fit: BoxFit.contain,
-                                  placeholder: (context, url) => const ShimmerPlaceholder(
-                                    width: 96.0,
-                                    height: 64.0,
-                                  ),
-                                  errorWidget: (context, url, error) => const AppIconPlaceholder(size: 75.0, padding: 8.0),
-                                )*/
+                          )))
                               : const AppIconPlaceholder(size: 75.0, padding: 8),
                         ),
                       ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           const SizedBox(height: 20.0),
                           Text(
-                            'يا هلا ومرحبا',
+                            'welcome_title'.tr(),
                             style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                                   color: AppColors.primary,
                                   fontWeight: FontWeight.w700,
@@ -69,14 +70,14 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 12.0),
                           Text(
-                            'سجّل دخولك وخلي كل احتياجاتك أقرب مما تتخيل',
+                            'welcome_subtitle'.tr(),
                             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                   color: AppColors.neutral,
                                 ),
                           ),
                           const SizedBox(height: 32.0),
                           Text(
-                            'رقم موبايلك',
+                            'mobile_number'.tr(),
                             style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
@@ -87,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                           _buildPhoneField(),
                           const SizedBox(height: 24.0),
                           CustomButton(
-                            text: 'ابعتلي رمز التحقق',
+                            text: 'send_otp'.tr(),
                             height: 56.0,
                             isLoading: state.isLoading,
                             onPressed: _isPhoneValid && !state.isLoading
@@ -108,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                               children: [
                                 Image.asset(AppAssets.dottedLine),
                                 Text(
-                                  'أو',
+                                  'or'.tr(),
                                   style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                         fontSize: 11.0,
                                       ),
@@ -122,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: TextButton(
                               onPressed: () => context.go(RoutePaths.home),
                               child: Text(
-                                'بلّش تصفّح كضيف بدون حساب',
+                                'browse_as_guest'.tr(),
                                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                       color: AppColors.primary,
                                       fontWeight: FontWeight.bold,
@@ -148,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
       textDirection: TextDirection.ltr,
       child: CustomTextField(
         controller: widget.phoneController,
-        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
               color: AppColors.neutral,
               fontFamily: 'Baloo2',
             ),
