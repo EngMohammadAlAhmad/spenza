@@ -253,8 +253,10 @@ abstract class  LocaleKeys {
   static const brands = 'brands';
   static const n_products = 'n_products';
   static const no_products_in_category = 'no_products_in_category';
+  static const no_products_subtitle = 'no_products_subtitle';
   static const all = 'all';
   static const no_search_results = 'no_search_results';
+  static const no_search_results_subtitle = 'no_search_results_subtitle';
   static const recent_searches = 'recent_searches';
   static const trending_searches = 'trending_searches';
   static const search_tag_pencils = 'search_tag_pencils';

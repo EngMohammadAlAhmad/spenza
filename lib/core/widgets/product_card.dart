@@ -78,7 +78,7 @@ class _ProductCardState extends State<ProductCard> {
                               ),
                               errorWidget: (context, url, error) => const AppIconPlaceholder(size: 60),
                             )
-                          : const AppIconPlaceholder(size: 60),
+                          : const AppIconPlaceholder(size: 120.0),
                     ),
                     // Discount Badge
                     if (product.discountPercentage > 0)

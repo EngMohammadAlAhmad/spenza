@@ -10,6 +10,7 @@ import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/app_back_button.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
+import 'package:spenza/core/widgets/empty_result_widget.dart';
 import 'package:spenza/core/widgets/product_card.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
@@ -136,7 +137,13 @@ class _SearchScreenState extends State<SearchScreen> {
                       }
 
                       if (products.isEmpty) {
-                        return Center(child: Text('no_search_results'.tr()));
+                        return Center(
+                          child: EmptyResultWidget(
+                            title: 'no_search_results'.tr(),
+                            subtitle: 'no_search_results_subtitle'.tr(),
+                            showShoppingButton: false,
+                          ),
+                        );
                       }
 
                       return GridView.builder(

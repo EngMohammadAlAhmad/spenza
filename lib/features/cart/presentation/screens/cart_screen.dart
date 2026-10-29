@@ -9,6 +9,7 @@ import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
+import 'package:spenza/core/widgets/empty_result_widget.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_bloc.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_event.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_state.dart';
@@ -16,7 +17,6 @@ import 'package:spenza/features/cart/data/models/cart_preview_model.dart';
 import 'package:spenza/features/cart/presentation/blocs/cart_bloc/cart_bloc.dart';
 import 'package:spenza/features/cart/presentation/widgets/cart_header.dart';
 import 'package:spenza/features/cart/presentation/widgets/cart_item_card.dart';
-import 'package:spenza/features/cart/presentation/widgets/empty_cart_widget.dart';
 import 'package:spenza/injection_locator.dart' as di;
 
 class CartScreen extends StatelessWidget {
@@ -101,7 +101,7 @@ class _CartViewState extends State<_CartView> {
                 const CartHeader(),
                 Expanded(
                   child: isEmpty
-                      ? EmptyCartWidget(
+                      ? EmptyResultWidget(
                           title: 'empty_cart_title'.tr(),
                           subtitle: 'empty_cart_subtitle'.tr(),
                           showShoppingButton: true,

@@ -8,6 +8,7 @@ import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/app_back_button.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
+import 'package:spenza/core/widgets/empty_result_widget.dart';
 import 'package:spenza/core/widgets/filter_bottom_sheet.dart';
 import 'package:spenza/core/widgets/product_card.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
@@ -18,7 +19,6 @@ import 'package:spenza/core/utils/animations/circular_reveal_route.dart';
 import 'package:spenza/features/search/presentation/screens/search_screen.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
 import 'package:spenza/core/errors/failure.dart';
-import 'package:spenza/features/cart/presentation/widgets/empty_cart_widget.dart';
 
 class CategoryProductsScreen extends StatefulWidget {
   final int categoryId;
@@ -336,10 +336,12 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
     }
 
     if (products.isEmpty) {
-      return EmptyCartWidget(
-        title: 'no_products_in_category'.tr(),
-        subtitle: 'no_products_subtitle'.tr(),
-        showShoppingButton: false,
+      return Center(
+        child: EmptyResultWidget(
+          title: 'no_products_in_category'.tr(),
+          subtitle: 'no_products_subtitle'.tr(),
+          showShoppingButton: false,
+        ),
       );
     }
 

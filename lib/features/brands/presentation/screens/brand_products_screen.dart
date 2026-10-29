@@ -7,6 +7,7 @@ import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/app_back_button.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
+import 'package:spenza/core/widgets/empty_result_widget.dart';
 import 'package:spenza/core/widgets/filter_bottom_sheet.dart';
 import 'package:spenza/core/widgets/product_card.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
@@ -17,7 +18,6 @@ import 'package:spenza/core/widgets/no_internet_widget.dart';
 import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/features/brands/domain/entities/brand_products_result_entity.dart';
 import 'package:spenza/features/brands/presentation/blocs/brand_products_bloc/brand_products_bloc.dart';
-import 'package:spenza/features/cart/presentation/widgets/empty_cart_widget.dart';
 
 class BrandProductsScreen extends StatefulWidget {
   final int brandId;
@@ -103,10 +103,12 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
                   }
 
                   if (products.isEmpty) {
-                    return EmptyCartWidget(
-                      title: 'no_products_for_brand'.tr(),
-                      subtitle: 'no_products_subtitle'.tr(),
-                      showShoppingButton: false,
+                    return Center(
+                      child: EmptyResultWidget(
+                        title: 'no_products_for_brand'.tr(),
+                        subtitle: 'no_products_subtitle'.tr(),
+                        showShoppingButton: false,
+                      ),
                     );
                   }
 

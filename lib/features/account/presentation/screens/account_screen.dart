@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,7 @@ import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
+import 'package:spenza/core/widgets/custom_dialog.dart';
 import 'package:spenza/features/account/domain/entities/user_entity.dart';
 import 'package:spenza/features/account/presentation/blocs/account_bloc/account_bloc.dart';
 import 'package:spenza/features/account/presentation/blocs/account_bloc/account_event.dart';
@@ -19,13 +21,20 @@ import 'package:spenza/features/account/presentation/widgets/account_menu_item.d
 import 'package:spenza/features/account/presentation/widgets/account_menu_section.dart';
 import 'package:spenza/features/account/presentation/widgets/business_account_card.dart';
 import 'package:spenza/features/account/presentation/widgets/logout_button.dart';
-import 'package:spenza/core/widgets/custom_dialog.dart';
 import 'package:spenza/features/auth/presentation/bloc/auth_status_bloc.dart';
 import 'package:spenza/features/home/presentation/widgets/points_card.dart';
 import 'package:spenza/injection_locator.dart' as di;
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
+
+  @override
+  State<AccountScreen> createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
+  int _animTrigger = 0;
+  bool _wasSelected = false;
 
   void _showLogoutDialog(BuildContext context) {
     AppCustomDialog.show(
@@ -49,6 +58,8 @@ class AccountScreen extends StatelessWidget {
   }
 
   Widget _buildGuestView(BuildContext context) {
+    final keyPrefix = 'guest_anim_$_animTrigger';
+
     return Column(
       children: [
         // Top Header for Guest
@@ -80,7 +91,10 @@ class AccountScreen extends StatelessWidget {
               color: Colors.black,
             ),
           ),
-        ),
+        )
+            .animate(key: ValueKey('${keyPrefix}_header'))
+            .fadeIn(duration: 400.ms, curve: Curves.easeOutCubic)
+            .slideY(begin: -0.06, end: 0, curve: Curves.easeOutCubic),
 
         // Content Body
         Expanded(
@@ -109,7 +123,11 @@ class AccountScreen extends StatelessWidget {
                     children: [
                       SvgPicture.asset(
                         AppAssets.personalData,
-                      ),
+                      ).animate(key: ValueKey('${keyPrefix}_img')).scale(
+                            delay: 150.ms,
+                            duration: 450.ms,
+                            curve: Curves.easeOutBack,
+                          ),
                       const SizedBox(height: 20.0),
                       Text(
                         'welcome_title'.tr(),
@@ -138,7 +156,11 @@ class AccountScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
+                )
+                    .animate(key: ValueKey('${keyPrefix}_login_card'))
+                    .fadeIn(delay: 60.ms, duration: 400.ms, curve: Curves.easeOutCubic)
+                    .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic),
+
                 const SizedBox(height: 16.0),
 
                 // Options Card
@@ -192,7 +214,11 @@ class AccountScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
+                )
+                    .animate(key: ValueKey('${keyPrefix}_options'))
+                    .fadeIn(delay: 150.ms, duration: 400.ms, curve: Curves.easeOutCubic)
+                    .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic),
+
                 const SizedBox(height: 90.0),
               ],
             ),
@@ -212,6 +238,21 @@ class AccountScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isSelected = true;
+    try {
+      final shell = StatefulNavigationShell.of(context);
+      isSelected = shell.currentIndex == 4;
+    } catch (_) {
+      isSelected = true;
+    }
+
+    if (isSelected && !_wasSelected) {
+      _animTrigger++;
+      _wasSelected = true;
+    } else if (!isSelected && _wasSelected) {
+      _wasSelected = false;
+    }
+
     return BlocProvider(
       create: (context) => di.sl<AccountBloc>()..add(const GetUserProfileEvent()),
       child: PopScope(
@@ -232,6 +273,7 @@ class AccountScreen extends StatelessWidget {
                 builder: (context, state) {
                   final user = state.data;
                   final isLoading = state.isLoading;
+                  final keyPrefix = 'user_anim_$_animTrigger';
 
                   return Column(
                     children: [
@@ -240,7 +282,10 @@ class AccountScreen extends StatelessWidget {
                         user: user,
                         isLoading: isLoading,
                         onEditPressed: () => _navigateToMyInfo(context, user),
-                      ),
+                      )
+                          .animate(key: ValueKey('${keyPrefix}_header'))
+                          .fadeIn(duration: 400.ms, curve: Curves.easeOutCubic)
+                          .slideY(begin: -0.06, end: 0, curve: Curves.easeOutCubic),
 
                       // Scrollable Content
                       Expanded(
@@ -253,8 +298,13 @@ class AccountScreen extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 32.0),
                             child: Column(
                               children: [
-                                // 1. Points Card (Same as in Home Screen)
-                                const PointsCard(),
+                                // 1. Points Card
+                                const PointsCard()
+                                    .animate(key: ValueKey('${keyPrefix}_points'))
+                                    .fadeIn(delay: 40.ms, duration: 380.ms, curve: Curves.easeOutCubic)
+                                    .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic)
+                                    .scale(begin: const Offset(0.97, 0.97), end: const Offset(1.0, 1.0)),
+
                                 const SizedBox(height: 16.0),
 
                                 // 2. Business Account Banner
@@ -262,7 +312,12 @@ class AccountScreen extends StatelessWidget {
                                   onTap: () {
                                     context.push(RoutePaths.businessAccount);
                                   },
-                                ),
+                                )
+                                    .animate(key: ValueKey('${keyPrefix}_business'))
+                                    .fadeIn(delay: 80.ms, duration: 380.ms, curve: Curves.easeOutCubic)
+                                    .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic)
+                                    .scale(begin: const Offset(0.97, 0.97), end: const Offset(1.0, 1.0)),
+
                                 const SizedBox(height: 20.0),
 
                                 // 3. Account Section ("الحساب")
@@ -284,13 +339,16 @@ class AccountScreen extends StatelessWidget {
                                     AccountMenuItem(
                                       iconPath: AppAssets.notificationsIcon2,
                                       title: 'notifications'.tr(),
-                                      //badgeText: '2 جديد',
                                       onTap: () {
                                         context.push(RoutePaths.notifications);
                                       },
                                     ),
                                   ],
-                                ),
+                                )
+                                    .animate(key: ValueKey('${keyPrefix}_acc_section'))
+                                    .fadeIn(delay: 120.ms, duration: 380.ms, curve: Curves.easeOutCubic)
+                                    .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic),
+
                                 const SizedBox(height: 20.0),
 
                                 // 4. App Section ("التطبيق")
@@ -313,13 +371,21 @@ class AccountScreen extends StatelessWidget {
                                       onTap: () {},
                                     ),
                                   ],
-                                ),
+                                )
+                                    .animate(key: ValueKey('${keyPrefix}_app_section'))
+                                    .fadeIn(delay: 160.ms, duration: 380.ms, curve: Curves.easeOutCubic)
+                                    .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic),
+
                                 const SizedBox(height: 20.0),
 
                                 // 5. Logout Button
                                 LogoutButton(
                                   onTap: () => _showLogoutDialog(context),
-                                ),
+                                )
+                                    .animate(key: ValueKey('${keyPrefix}_logout'))
+                                    .fadeIn(delay: 200.ms, duration: 380.ms, curve: Curves.easeOutCubic)
+                                    .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic),
+
                                 const SizedBox(height: 90.0),
                               ],
                             ),
