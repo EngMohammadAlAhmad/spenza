@@ -1,13 +1,13 @@
 import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 
 class AppCustomDialog extends StatefulWidget {
-  final Widget? icon;
-  final IconData? iconData;
+  final String? iconPath;
   final Color iconColor;
   final Color? iconBackgroundColor;
   final String title;
@@ -25,8 +25,7 @@ class AppCustomDialog extends StatefulWidget {
 
   const AppCustomDialog({
     super.key,
-    this.icon,
-    this.iconData,
+    this.iconPath,
     this.iconColor = AppColors.primary500,
     this.iconBackgroundColor,
     required this.title,
@@ -46,7 +45,7 @@ class AppCustomDialog extends StatefulWidget {
   static Future<T?> show<T>({
     required BuildContext context,
     Widget? icon,
-    IconData? iconData,
+    String? iconPath,
     Color iconColor = AppColors.primary500,
     Color? iconBackgroundColor,
     required String title,
@@ -63,6 +62,7 @@ class AppCustomDialog extends StatefulWidget {
     bool isLoading = false,
     bool barrierDismissible = true,
   }) {
+
     return showGeneralDialog<T>(
       context: context,
       barrierDismissible: barrierDismissible,
@@ -71,8 +71,7 @@ class AppCustomDialog extends StatefulWidget {
       transitionDuration: const Duration(milliseconds: 380),
       pageBuilder: (context, animation, secondaryAnimation) {
         return AppCustomDialog(
-          icon: icon,
-          iconData: iconData,
+          iconPath: iconPath,
           iconColor: iconColor,
           iconBackgroundColor: iconBackgroundColor,
           title: title,
@@ -162,7 +161,7 @@ class _AppCustomDialogState extends State<AppCustomDialog>
 
   @override
   Widget build(BuildContext context) {
-    final hasIcon = widget.icon != null || widget.iconData != null;
+    final hasIcon = widget.iconPath != null;
     final bgColor = widget.iconBackgroundColor ?? widget.iconColor.withValues(alpha: 0.12);
     const double iconDiameter = 76.0;
     const double iconRadius = iconDiameter / 2;
@@ -311,17 +310,17 @@ class _AppCustomDialogState extends State<AppCustomDialog>
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.06),
                           blurRadius: 8.0,
-                          offset: const Offset(0, 2),
+                          offset: const Offset(0.0, 2.0),
                         ),
                       ],
                     ),
                     alignment: Alignment.center,
-                    child: widget.icon ??
-                        Icon(
-                          widget.iconData,
-                          color: widget.iconColor,
-                          size: 50.0,
-                        ),
+                    child: widget.iconPath != null
+                            ? SvgPicture.asset(
+                                widget.iconPath!,
+                                colorFilter: ColorFilter.mode(widget.iconColor, BlendMode.srcIn),
+                              )
+                            : const SizedBox.shrink(),
                   ),
                 ),
               ),
@@ -338,7 +337,7 @@ class ConfirmationDialog extends StatelessWidget {
   final String confirmText;
   final String cancelText;
   final Color? confirmColor;
-  final IconData? icon;
+  final String? icon;
 
   const ConfirmationDialog({
     super.key,
@@ -353,7 +352,7 @@ class ConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppCustomDialog(
-      iconData: icon,
+      iconPath: icon,
       iconColor: confirmColor ?? AppColors.primary500,
       title: title,
       description: message,

@@ -11,6 +11,7 @@ import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/base_state.dart';
+import 'package:spenza/core/utils/tab_index_notifier.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_dialog.dart';
 import 'package:spenza/features/account/domain/entities/user_entity.dart';
@@ -21,6 +22,7 @@ import 'package:spenza/features/account/presentation/widgets/account_menu_item.d
 import 'package:spenza/features/account/presentation/widgets/account_menu_section.dart';
 import 'package:spenza/features/account/presentation/widgets/business_account_card.dart';
 import 'package:spenza/features/account/presentation/widgets/logout_button.dart';
+import 'package:spenza/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:spenza/features/auth/presentation/bloc/auth_status_bloc.dart';
 import 'package:spenza/features/home/presentation/widgets/points_card.dart';
 import 'package:spenza/injection_locator.dart' as di;
@@ -33,13 +35,37 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  /// Index of the Account branch in the bottom navigation bar.
+  static const int _tabIndex = 4;
+
+  /// Changing this value changes the animation keys, which restarts them.
   int _animTrigger = 0;
-  bool _wasSelected = false;
+  int _lastIndex = navTabIndex.value;
+
+  @override
+  void initState() {
+    super.initState();
+    navTabIndex.addListener(_onTabChanged);
+  }
+
+  void _onTabChanged() {
+    final index = navTabIndex.value;
+    if (index == _tabIndex && _lastIndex != _tabIndex && mounted) {
+      setState(() => _animTrigger++);
+    }
+    _lastIndex = index;
+  }
+
+  @override
+  void dispose() {
+    navTabIndex.removeListener(_onTabChanged);
+    super.dispose();
+  }
 
   void _showLogoutDialog(BuildContext context) {
     AppCustomDialog.show(
       context: context,
-      iconData: Icons.logout_rounded,
+      iconPath: AppAssets.logoutIcon,
       iconColor: AppColors.primary500,
       title: 'logout_confirmation_title'.tr(),
       description: 'logout_confirmation_message'.tr(),
@@ -48,6 +74,7 @@ class _AccountScreenState extends State<AccountScreen> {
       secondaryButtonText: 'cancel'.tr(),
       onPrimaryPressed: () async {
         Navigator.of(context).pop();
+        await di.sl<LogoutUseCase>().call();
         await di.sl<CacheHelper>().deleteAuthToken();
         if (context.mounted) {
           context.read<AuthStatusBloc>().add(UpdateAuthStatus(false));
@@ -124,10 +151,10 @@ class _AccountScreenState extends State<AccountScreen> {
                       SvgPicture.asset(
                         AppAssets.personalData,
                       ).animate(key: ValueKey('${keyPrefix}_img')).scale(
-                            delay: 150.ms,
-                            duration: 450.ms,
-                            curve: Curves.easeOutBack,
-                          ),
+                        delay: 150.ms,
+                        duration: 450.ms,
+                        curve: Curves.easeOutBack,
+                      ),
                       const SizedBox(height: 20.0),
                       Text(
                         'welcome_title'.tr(),
@@ -238,21 +265,6 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isSelected = true;
-    try {
-      final shell = StatefulNavigationShell.of(context);
-      isSelected = shell.currentIndex == 4;
-    } catch (_) {
-      isSelected = true;
-    }
-
-    if (isSelected && !_wasSelected) {
-      _animTrigger++;
-      _wasSelected = true;
-    } else if (!isSelected && _wasSelected) {
-      _wasSelected = false;
-    }
-
     return BlocProvider(
       create: (context) => di.sl<AccountBloc>()..add(const GetUserProfileEvent()),
       child: PopScope(

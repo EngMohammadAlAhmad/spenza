@@ -44,7 +44,7 @@ class SectionsHeader extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
                 ),
-          ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideX(begin: 0.2, end: 0.0),
+          ).animate().fadeIn(delay: 100.ms, duration: 400.ms).slideX(begin: 0.2, end: 0.0),
           Expanded(
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
@@ -63,7 +63,7 @@ class SectionsHeader extends StatelessWidget {
                 ),
               ),
             ),
-          ).animate().fadeIn(delay: 400.ms, duration: 600.ms).scale(begin: const Offset(0.9, 0.9)),
+          ).animate().fadeIn(delay: 200.ms, duration: 400.ms).scale(begin: const Offset(0.9, 0.9)),
         ],
       ),
       bottomChild: Container(
@@ -127,7 +127,7 @@ class SectionsHeader extends StatelessWidget {
             ),
           ],
         ),
-      ).animate().fadeIn(delay: 600.ms, duration: 600.ms).slideY(begin: 0.2, end: 0),
-    ).animate().fadeIn(duration: 800.ms).slideY(begin: -0.05, end: 0, curve: Curves.easeOutCubic);
+      ).animate().fadeIn(delay: 400.ms, duration: 400.ms).slideY(begin: 0.2, end: 0),
+    ).animate().fadeIn(duration: 500.ms).slideY(begin: -0.05, end: 0, curve: Curves.easeOutCubic);
   }
 }

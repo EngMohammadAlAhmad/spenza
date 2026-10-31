@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/tab_index_notifier.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({
@@ -60,6 +61,24 @@ class _HomeShellState extends State<HomeShell> {
     if (shouldNavigate && newIndex >= 0 && newIndex < totalBranches) {
       HapticFeedback.selectionClick();
       widget.navigationShell.goBranch(newIndex);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    navTabIndex.value = widget.navigationShell.currentIndex;
+  }
+
+  @override
+  void didUpdateWidget(covariant HomeShell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final newIndex = widget.navigationShell.currentIndex;
+    if (oldWidget.navigationShell.currentIndex != newIndex) {
+      // Post-frame to avoid setState-during-build in listeners
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        navTabIndex.value = newIndex;
+      });
     }
   }
 

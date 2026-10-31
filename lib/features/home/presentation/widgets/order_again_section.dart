@@ -459,7 +459,7 @@ class _ReorderDialogContent extends StatelessWidget {
         final isLoading = state.reorderStatus == RequestStatus.loading;
 
         return AppCustomDialog(
-          iconData: Icons.refresh_rounded,
+          iconPath: AppAssets.refreshIcon,
           iconColor: AppColors.primary,
           title: 'reorder'.tr(),
           description: 'reorder_confirm_msg'.tr(args: [orderNumStr, priceStr]),

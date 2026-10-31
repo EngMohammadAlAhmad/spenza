@@ -33,4 +33,9 @@ class AuthRepositoryImpl implements AuthRepository {
           code: code,
         ));
   }
+
+  @override
+  Future<Either<Failure, String>> logout() async {
+    return await handleRepositoryCall(() => datasource.logout());
+  }
 }

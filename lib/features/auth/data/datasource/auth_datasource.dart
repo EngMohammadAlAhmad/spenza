@@ -49,4 +49,12 @@ class AuthDatasource {
 
     return AuthResultModel.fromJson(response);
   }
+
+  Future<String> logout() async {
+    final response = await api.post(EndPoints.logout);
+    if (response is Map && response.containsKey('message')) {
+      return response['message'] as String;
+    }
+    return 'Logged out successfully';
+  }
 }

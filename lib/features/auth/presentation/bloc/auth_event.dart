@@ -40,3 +40,7 @@ class RegisterEvent extends AuthEvent {
   @override
   List<Object> get props => [name, phoneNumber, code];
 }
+
+class LogoutEvent extends AuthEvent {
+  const LogoutEvent();
+}

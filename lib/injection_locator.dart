@@ -71,6 +71,7 @@ import 'package:spenza/features/onboarding/presentation/bloc/onboarding_bloc.dar
 import 'package:spenza/features/auth/data/datasource/auth_datasource.dart';
 import 'package:spenza/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:spenza/features/auth/domain/repositories/auth_repository.dart';
+import 'package:spenza/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:spenza/features/auth/domain/usecases/register_usecase.dart';
 import 'package:spenza/features/auth/domain/usecases/request_otp_usecase.dart';
 import 'package:spenza/features/auth/domain/usecases/verify_otp_usecase.dart';
@@ -228,12 +229,14 @@ Future<void> init() async {
         requestOtpUseCase: sl(),
         verifyOtpUseCase: sl(),
         registerUseCase: sl(),
+        logoutUseCase: sl(),
         cacheHelper: sl(),
         authStatusBloc: sl(),
       ));
   sl.registerLazySingleton(() => RequestOtpUseCase(repository: sl()));
   sl.registerLazySingleton(() => VerifyOtpUseCase(repository: sl()));
   sl.registerLazySingleton(() => RegisterUseCase(repository: sl()));
+  sl.registerLazySingleton(() => LogoutUseCase(repository: sl()));
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(datasource: sl()));
   sl.registerLazySingleton(() => AuthDatasource(api: sl()));
 

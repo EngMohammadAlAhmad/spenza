@@ -165,7 +165,7 @@ class _HomeHeaderContent extends StatelessWidget {
             ],
           ),
         ],
-      ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideX(begin: 0.1, end: 0),
+      ).animate().fadeIn(delay: 100.ms, duration: 400.ms).slideX(begin: 0.1, end: 0),
       bottomChild: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTapDown: (details) {
@@ -182,7 +182,7 @@ class _HomeHeaderContent extends StatelessWidget {
             readOnly: true,
           ),
         ),
-      ).animate().fadeIn(delay: 400.ms, duration: 600.ms).scale(begin: const Offset(0.95, 0.95)),
-    ).animate().fadeIn(duration: 800.ms).slideY(begin: -0.05, end: 0, curve: Curves.easeOutCubic);
+      ).animate().fadeIn(delay: 300.ms, duration: 400.ms).scale(begin: const Offset(0.95, 0.95)),
+    ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.05, end: 0, curve: Curves.easeOutCubic);
   }
 }

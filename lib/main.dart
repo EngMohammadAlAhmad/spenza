@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spenza/app.dart';
@@ -23,14 +24,20 @@ Future<void> main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    if (!kIsWeb) {
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    }
     await di.init();
 
     FlutterError.onError = (details) {
-      di.sl<CrashReporter>().recordError(details.exception, details.stack, fatal: true);
+      if (di.sl.isRegistered<CrashReporter>()) {
+        di.sl<CrashReporter>().recordError(details.exception, details.stack, fatal: true);
+      }
     };
     PlatformDispatcher.instance.onError = (error, stack) {
-      di.sl<CrashReporter>().recordError(error, stack, fatal: true);
+      if (di.sl.isRegistered<CrashReporter>()) {
+        di.sl<CrashReporter>().recordError(error, stack, fatal: true);
+      }
       return true;
     };
 
@@ -46,7 +53,13 @@ Future<void> main() async {
         child: const MyApp(),
       ),
     );
-  }, (error, stack) => di.sl<CrashReporter>().recordError(error, stack, fatal: true));
+  }, (error, stack) {
+    if (di.sl.isRegistered<CrashReporter>()) {
+      di.sl<CrashReporter>().recordError(error, stack, fatal: true);
+    } else {
+      debugPrint('Uncaught error: $error\n$stack');
+    }
+  });
 }
 
 // dart run easy_localization:generate -S "assets/translations" -O "lib/core/translations"

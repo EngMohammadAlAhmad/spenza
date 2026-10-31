@@ -9,6 +9,7 @@ import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/utils/tab_index_notifier.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/auth/presentation/bloc/auth_status_bloc.dart';
 import 'package:spenza/features/orders/presentation/bloc/orders_bloc.dart';
@@ -18,11 +19,45 @@ import 'package:spenza/features/orders/presentation/widgets/order_card.dart';
 import 'package:spenza/features/orders/presentation/widgets/orders_header.dart';
 import 'package:spenza/injection_locator.dart';
 
-class OrdersScreen extends StatelessWidget {
+class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
 
   @override
+  State<OrdersScreen> createState() => _OrdersScreenState();
+}
+
+class _OrdersScreenState extends State<OrdersScreen> {
+  /// Index of the Orders branch in the bottom navigation bar.
+  static const int _tabIndex = 3;
+
+  /// Changing this value changes the animation keys, which restarts them.
+  int _animTrigger = 0;
+  int _lastIndex = navTabIndex.value;
+
+  @override
+  void initState() {
+    super.initState();
+    navTabIndex.addListener(_onTabChanged);
+  }
+
+  void _onTabChanged() {
+    final index = navTabIndex.value;
+    if (index == _tabIndex && _lastIndex != _tabIndex && mounted) {
+      setState(() => _animTrigger++);
+    }
+    _lastIndex = index;
+  }
+
+  @override
+  void dispose() {
+    navTabIndex.removeListener(_onTabChanged);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final keyPrefix = 'orders_anim_$_animTrigger';
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -36,7 +71,8 @@ class OrdersScreen extends StatelessWidget {
             if (!authState.isLoggedIn) {
               return Column(
                 children: [
-                  const OrdersHeader(
+                  OrdersHeader(
+                    key: ValueKey('${keyPrefix}_guest_header'),
                     selectedTabIndex: 0,
                     activeCount: 0,
                     completedCount: 0,
@@ -45,7 +81,7 @@ class OrdersScreen extends StatelessWidget {
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: _buildLoginPrompt(context),
+                      child: _buildLoginPrompt(context, keyPrefix),
                     ),
                   ),
                 ],
@@ -54,7 +90,10 @@ class OrdersScreen extends StatelessWidget {
 
             return BlocProvider<OrdersBloc>(
               create: (context) => sl<OrdersBloc>()..add(const GetMyOrdersEvent()),
-              child: const _OrdersContent(),
+              child: _OrdersContent(
+                key: ValueKey('${keyPrefix}_content'),
+                animTrigger: _animTrigger,
+              ),
             );
           },
         ),
@@ -64,7 +103,7 @@ class OrdersScreen extends StatelessWidget {
 
   static void _dummyTabChange(int index) {}
 
-  Widget _buildLoginPrompt(BuildContext context) {
+  Widget _buildLoginPrompt(BuildContext context, String keyPrefix) {
     return Column(
       spacing: 15.0,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -73,7 +112,9 @@ class OrdersScreen extends StatelessWidget {
           AppAssets.ordersScreenIcon,
           height: 96.0,
           width: 96.0,
-        ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
+        )
+            .animate(key: ValueKey('${keyPrefix}_login_icon'))
+            .scale(duration: 600.ms, curve: Curves.easeOutBack),
         Text(
           'track_orders_easily'.tr(),
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -81,20 +122,29 @@ class OrdersScreen extends StatelessWidget {
                 color: AppColors.neutral900,
               ),
           textAlign: TextAlign.center,
-        ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2, end: 0),
+        )
+            .animate(key: ValueKey('${keyPrefix}_login_title'))
+            .fadeIn(delay: 200.ms)
+            .slideY(begin: 0.2, end: 0),
         Text(
           'login_orders_desc'.tr(),
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: AppColors.textSecondary,
               ),
           textAlign: TextAlign.center,
-        ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.2, end: 0.0),
+        )
+            .animate(key: ValueKey('${keyPrefix}_login_desc'))
+            .fadeIn(delay: 400.ms)
+            .slideY(begin: 0.2, end: 0.0),
         CustomButton(
           text: 'login'.tr(),
           onPressed: () => context.push(RoutePaths.login),
           icon: SvgPicture.asset(AppAssets.loginIcon),
           width: 200.0,
-        ).animate().fadeIn(delay: 600.ms).scale(begin: const Offset(0.95, 0.95)),
+        )
+            .animate(key: ValueKey('${keyPrefix}_login_btn'))
+            .fadeIn(delay: 600.ms)
+            .scale(begin: const Offset(0.95, 0.95)),
         TextButton(
           onPressed: () => context.go(RoutePaths.home),
           child: Text(
@@ -104,14 +154,15 @@ class OrdersScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
           ),
-        ).animate().fadeIn(delay: 800.ms),
+        ).animate(key: ValueKey('${keyPrefix}_login_browse')).fadeIn(delay: 800.ms),
       ],
     );
   }
 }
 
 class _OrdersContent extends StatefulWidget {
-  const _OrdersContent();
+  final int animTrigger;
+  const _OrdersContent({super.key, required this.animTrigger});
 
   @override
   State<_OrdersContent> createState() => _OrdersContentState();
@@ -144,12 +195,15 @@ class _OrdersContentState extends State<_OrdersContent> {
 
   @override
   Widget build(BuildContext context) {
+    final keyPrefix = 'user_orders_${widget.animTrigger}';
+
     return BlocBuilder<OrdersBloc, OrdersState>(
       builder: (context, state) {
         return Column(
           children: [
             // Header with Tab Switcher
             OrdersHeader(
+              key: ValueKey('${keyPrefix}_header'),
               selectedTabIndex: state.selectedTabIndex,
               activeCount: state.activeCount,
               completedCount: state.completedCount,
@@ -183,7 +237,7 @@ class _OrdersContentState extends State<_OrdersContent> {
                   );
                 },
                 child: KeyedSubtree(
-                  key: ValueKey<int>(state.selectedTabIndex),
+                  key: ValueKey<String>('${keyPrefix}_tab_${state.selectedTabIndex}'),
                   child: RefreshIndicator(
                     color: AppColors.primary500,
                     onRefresh: () async {
@@ -191,7 +245,7 @@ class _OrdersContentState extends State<_OrdersContent> {
                           .read<OrdersBloc>()
                           .add(const GetMyOrdersEvent(isRefresh: true));
                     },
-                    child: _buildOrdersBody(context, state),
+                    child: _buildOrdersBody(context, state, keyPrefix),
                   ),
                 ),
               ),
@@ -202,7 +256,7 @@ class _OrdersContentState extends State<_OrdersContent> {
     );
   }
 
-  Widget _buildOrdersBody(BuildContext context, OrdersState state) {
+  Widget _buildOrdersBody(BuildContext context, OrdersState state, String keyPrefix) {
     if (state.getMyOrdersStatus == RequestStatus.loading && state.orders.isEmpty) {
       return const Center(
         child: CircularProgressIndicator(color: AppColors.primary500),
@@ -247,7 +301,7 @@ class _OrdersContentState extends State<_OrdersContent> {
     final currentOrders = state.currentTabOrders;
 
     if (currentOrders.isEmpty) {
-      return _buildEmptyOrdersState(context);
+      return _buildEmptyOrdersState(context, keyPrefix);
     }
 
     return ListView.builder(
@@ -276,10 +330,13 @@ class _OrdersContentState extends State<_OrdersContent> {
         return OrderCard(
           order: order,
           onTap: () => context.push(RoutePaths.orderDetails, extra: order.orderNumber),
-        ).animate().fadeIn(
+        )
+            .animate(key: ValueKey('${keyPrefix}_card_${order.id}'))
+            .fadeIn(
               duration: 250.ms,
               delay: (index * 40).clamp(0, 240).ms,
-            ).slideY(
+            )
+            .slideY(
               begin: 0.08,
               end: 0,
               curve: Curves.easeOutCubic,
@@ -288,7 +345,7 @@ class _OrdersContentState extends State<_OrdersContent> {
     );
   }
 
-  Widget _buildEmptyOrdersState(BuildContext context) {
+  Widget _buildEmptyOrdersState(BuildContext context, String keyPrefix) {
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(
         parent: BouncingScrollPhysics(),
@@ -319,7 +376,9 @@ class _OrdersContentState extends State<_OrdersContent> {
                   fit: BoxFit.contain,
                 ),
               ],
-            ).animate().scale(duration: 500.ms, curve: Curves.easeOutBack),
+            )
+                .animate(key: ValueKey('${keyPrefix}_empty_icon'))
+                .scale(duration: 500.ms, curve: Curves.easeOutBack),
 
             const SizedBox(height: 28.0),
 
@@ -332,7 +391,10 @@ class _OrdersContentState extends State<_OrdersContent> {
                 color: AppColors.neutral900,
               ),
               textAlign: TextAlign.center,
-            ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2, end: 0),
+            )
+                .animate(key: ValueKey('${keyPrefix}_empty_title'))
+                .fadeIn(delay: 200.ms)
+                .slideY(begin: 0.2, end: 0),
 
             const SizedBox(height: 8.0),
 
@@ -345,7 +407,10 @@ class _OrdersContentState extends State<_OrdersContent> {
                 height: 1.4,
               ),
               textAlign: TextAlign.center,
-            ).animate().fadeIn(delay: 350.ms).slideY(begin: 0.2, end: 0),
+            )
+                .animate(key: ValueKey('${keyPrefix}_empty_desc'))
+                .fadeIn(delay: 350.ms)
+                .slideY(begin: 0.2, end: 0),
 
             const SizedBox(height: 32.0),
 
@@ -355,7 +420,10 @@ class _OrdersContentState extends State<_OrdersContent> {
               width: 220.0,
               height: 48.0,
               onPressed: () => context.go(RoutePaths.home),
-            ).animate().fadeIn(delay: 500.ms).scale(begin: const Offset(0.95, 0.95)),
+            )
+                .animate(key: ValueKey('${keyPrefix}_empty_btn'))
+                .fadeIn(delay: 500.ms)
+                .scale(begin: const Offset(0.95, 0.95)),
           ],
         ),
       ),

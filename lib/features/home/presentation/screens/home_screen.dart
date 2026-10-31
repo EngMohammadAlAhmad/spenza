@@ -9,6 +9,7 @@ import 'package:spenza/core/utils/app_assets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/base_state.dart';
+import 'package:spenza/core/utils/tab_index_notifier.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
 import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/core/databases/cache/cache_helper.dart';
@@ -33,9 +34,37 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  /// Index of the Home branch in the bottom navigation bar.
+  static const int _tabIndex = 0;
+
+  /// Changing this value changes the animation keys, which restarts them.
+  int _animTrigger = 0;
+  int _lastIndex = navTabIndex.value;
+
+  @override
+  void initState() {
+    super.initState();
+    navTabIndex.addListener(_onTabChanged);
+  }
+
+  void _onTabChanged() {
+    final index = navTabIndex.value;
+    if (index == _tabIndex && _lastIndex != _tabIndex && mounted) {
+      setState(() => _animTrigger++);
+    }
+    _lastIndex = index;
+  }
+
+  @override
+  void dispose() {
+    navTabIndex.removeListener(_onTabChanged);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final bottomInset = context.screenPadding.bottom;
+    final keyPrefix = 'home_anim_$_animTrigger';
 
     return BlocProvider(
       create: (context) => di.sl<HomeBloc>()..add(const GetHomeDataEvent()),
@@ -49,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (state.failure is OfflineFailure) {
                   return Column(
                     children: [
-                      const HomeHeader(),
+                      HomeHeader(key: ValueKey('${keyPrefix}_header')),
                       Expanded(
                         child: NoInternetWidget(
                           onRetry: () {
@@ -71,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Column(
                     children: [
-                      const HomeHeader(),
+                      HomeHeader(key: ValueKey('${keyPrefix}_header')),
                       Expanded(
                         child: RefreshIndicator(
                           onRefresh: () async {
@@ -86,44 +115,59 @@ class _HomeScreenState extends State<HomeScreen> {
                                 BannerSlider(
                                   banners: data?.banners ?? [],
                                   isLoading: isLoading,
-                                ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic),
+                                )
+                                    .animate(key: ValueKey('${keyPrefix}_banner'))
+                                    .fadeIn(duration: 500.ms)
+                                    .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic),
 
                                 if (isLoggedIn)
                                   const PointsCard()
-                                      .animate(delay: 60.ms)
+                                      .animate(key: ValueKey('${keyPrefix}_points'), delay: 60.ms)
                                       .fadeIn(duration: 450.ms)
                                       .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
 
                                 ShopByCategorySection(
                                   categories: data?.categories ?? [],
                                   isLoading: isLoading,
-                                ).animate(delay: 80.ms).fadeIn(duration: 450.ms).slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
+                                )
+                                    .animate(key: ValueKey('${keyPrefix}_categories'), delay: 80.ms)
+                                    .fadeIn(duration: 450.ms)
+                                    .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
 
                                 if (isLoggedIn)
                                   const OrderAgainSection()
-                                      .animate(delay: 120.ms)
+                                      .animate(key: ValueKey('${keyPrefix}_order_again'), delay: 120.ms)
                                       .fadeIn(duration: 450.ms)
                                       .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
 
                                 const FreeDeliveryCard()
-                                    .animate(delay: 160.ms)
+                                    .animate(key: ValueKey('${keyPrefix}_free_delivery'), delay: 160.ms)
                                     .fadeIn(duration: 450.ms)
                                     .scaleXY(begin: 0.94, end: 1, curve: Curves.easeOutCubic),
 
                                 TodayOffersSection(
                                   products: data?.discountedProducts ?? [],
                                   isLoading: isLoading,
-                                ).animate(delay: 320.ms).fadeIn(duration: 450.ms).slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
+                                )
+                                    .animate(key: ValueKey('${keyPrefix}_today_offers'), delay: 320.ms)
+                                    .fadeIn(duration: 450.ms)
+                                    .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
 
                                 ShopByBrandSection(
                                   brands: data?.brands ?? [],
                                   isLoading: isLoading,
-                                ).animate(delay: 400.ms).fadeIn(duration: 450.ms).slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
+                                )
+                                    .animate(key: ValueKey('${keyPrefix}_brands'), delay: 400.ms)
+                                    .fadeIn(duration: 450.ms)
+                                    .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
 
                                 BestSellingSection(
                                   products: data?.products ?? [],
                                   isLoading: isLoading,
-                                ).animate(delay: 480.ms).fadeIn(duration: 450.ms).slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
+                                )
+                                    .animate(key: ValueKey('${keyPrefix}_best_selling'), delay: 480.ms)
+                                    .fadeIn(duration: 450.ms)
+                                    .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
                               ],
                             ),
                           ),

@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/utils/base_state.dart';
+import 'package:spenza/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:spenza/features/auth/domain/usecases/register_usecase.dart';
 import 'package:spenza/features/auth/domain/usecases/request_otp_usecase.dart';
 import 'package:spenza/features/auth/domain/usecases/verify_otp_usecase.dart';
@@ -11,6 +12,7 @@ class AuthBloc extends Bloc<AuthEvent, BaseState<Object>> {
   final RequestOtpUseCase requestOtpUseCase;
   final VerifyOtpUseCase verifyOtpUseCase;
   final RegisterUseCase registerUseCase;
+  final LogoutUseCase logoutUseCase;
   final CacheHelper cacheHelper;
   final AuthStatusBloc authStatusBloc;
 
@@ -18,6 +20,7 @@ class AuthBloc extends Bloc<AuthEvent, BaseState<Object>> {
     required this.requestOtpUseCase,
     required this.verifyOtpUseCase,
     required this.registerUseCase,
+    required this.logoutUseCase,
     required this.cacheHelper,
     required this.authStatusBloc,
   }) : super(const BaseState<Object>()) {
@@ -60,6 +63,23 @@ class AuthBloc extends Bloc<AuthEvent, BaseState<Object>> {
             authStatusBloc.add(UpdateAuthStatus(true));
           }
           emit(state.success(authResult, message: authResult.message));
+        },
+      );
+    });
+
+    on<LogoutEvent>((event, emit) async {
+      emit(state.loading());
+      final result = await logoutUseCase();
+      await result.fold(
+        (failure) async {
+          await cacheHelper.deleteAuthToken();
+          authStatusBloc.add(UpdateAuthStatus(false));
+          emit(state.error(failure));
+        },
+        (message) async {
+          await cacheHelper.deleteAuthToken();
+          authStatusBloc.add(UpdateAuthStatus(false));
+          emit(state.success(message, message: message));
         },
       );
     });
