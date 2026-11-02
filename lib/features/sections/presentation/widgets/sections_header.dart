@@ -73,57 +73,69 @@ class SectionsHeader extends StatelessWidget {
           color: AppColors.neutral200,
           borderRadius: AppRadius.extra4Large,
         ),
-        child: Row(
+        child: Stack(
           children: [
-            // Categories Tab
-            Expanded(
-              child: GestureDetector(
-                onTap: () => onTabTapped(0),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
+            // Sliding Indicator Pill
+            AnimatedAlign(
+              duration: const Duration(milliseconds: 280),
+              curve: Curves.fastOutSlowIn,
+              alignment: currentPage == 0
+                  ? AlignmentDirectional.centerStart
+                  : AlignmentDirectional.centerEnd,
+              child: FractionallySizedBox(
+                widthFactor: 0.5,
+                heightFactor: 1.0,
+                child: Container(
                   decoration: BoxDecoration(
-                    color: currentPage == 0
-                        ? AppColors.primary
-                        : Colors.transparent,
+                    color: AppColors.primaryTint,
                     borderRadius: AppRadius.extra4Large,
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    'categories'.tr(),
-                    style: TextStyle(
-                      color: currentPage == 0
-                          ? Colors.white
-                          : AppColors.neutral,
-                      fontWeight: FontWeight.bold,
-                    ),
                   ),
                 ),
               ),
             ),
-            // Brands Tab
-            Expanded(
-              child: GestureDetector(
-                onTap: () => onTabTapped(1),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  decoration: BoxDecoration(
-                    color: currentPage == 1
-                        ? AppColors.primary
-                        : Colors.transparent,
-                    borderRadius: AppRadius.extra4Large,
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    'brands'.tr(),
-                    style: TextStyle(
-                      color: currentPage == 1
-                          ? Colors.white
-                          : AppColors.neutral,
-                      fontWeight: FontWeight.bold,
+
+            // Tab Buttons
+            Row(
+              children: [
+                // Categories Tab
+                Expanded(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => onTabTapped(0),
+                    child: Center(
+                      child: AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 200),
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: currentPage == 0
+                              ? AppColors.primaryBold
+                              : AppColors.neutral,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        child: Text('categories'.tr()),
+                      ),
                     ),
                   ),
                 ),
-              ),
+                // Brands Tab
+                Expanded(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => onTabTapped(1),
+                    child: Center(
+                      child: AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 200),
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: currentPage == 1
+                              ? AppColors.primaryBold
+                              : AppColors.neutral,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        child: Text('brands'.tr()),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

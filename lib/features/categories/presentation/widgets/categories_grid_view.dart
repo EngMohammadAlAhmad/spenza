@@ -7,6 +7,7 @@ import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
 import 'package:spenza/core/utils/base_state.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/features/categories/presentation/blocs/categories_bloc/categories_bloc.dart';
@@ -49,10 +50,17 @@ class _CategoriesGridViewState extends State<CategoriesGridView> {
 
   @override
   Widget build(BuildContext context) {
+    final crossAxisCount = context.gridColumns(
+      mobile: 2,
+      tabletPortrait: 4,
+      tabletLandscape: 6,
+      desktop: 6,
+    );
+
     return BlocBuilder<CategoriesBloc, BaseState<List>>(
       builder: (context, state) {
         if (state.isInit || (state.isLoading && (state.data == null || state.data!.isEmpty))) {
-          return _buildLoadingGrid();
+          return _buildLoadingGrid(crossAxisCount);
         }
 
         if (state.isError && (state.data == null || state.data!.isEmpty)) {
@@ -70,13 +78,13 @@ class _CategoriesGridViewState extends State<CategoriesGridView> {
           controller: _scrollController,
           padding: const EdgeInsets.only(bottom: 120.0),
           physics: const BouncingScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
             childAspectRatio: 174.0 / 179.0,
             crossAxisSpacing: 16.0,
             mainAxisSpacing: 16.0,
           ),
-          itemCount: state.hasReachedMax == true ? categories.length : categories.length + 2,
+          itemCount: state.hasReachedMax == true ? categories.length : categories.length + crossAxisCount,
           itemBuilder: (context, index) {
             if (index >= categories.length) {
               return const ShimmerPlaceholder(
@@ -98,17 +106,17 @@ class _CategoriesGridViewState extends State<CategoriesGridView> {
     );
   }
 
-  Widget _buildLoadingGrid() {
+  Widget _buildLoadingGrid(int crossAxisCount) {
     return GridView.builder(
       padding: const EdgeInsets.only(bottom: 120.0),
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
         childAspectRatio: 174.0 / 179.0,
         crossAxisSpacing: 16.0,
         mainAxisSpacing: 16.0,
       ),
-      itemCount: 6,
+      itemCount: crossAxisCount * 3,
       itemBuilder: (context, index) => ShimmerPlaceholder(
         width: double.infinity,
         height: double.infinity,

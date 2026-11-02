@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/app_back_button.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/pattern_background.dart';
@@ -104,94 +105,100 @@ class _PhoneChangeOtpScreenState extends State<PhoneChangeOtpScreen> {
 
                 return SingleChildScrollView(
                   padding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
-                  child: Column(
-                    spacing: 24.0,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'شو الرمز يلي وصلك؟',
-                        style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w700,
-                        ),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: context.isTablet ? 480.0 : double.infinity,
                       ),
-                      Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'بعتنالك رمز من 6 أرقام على ',
-                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                color: AppColors.neutral,
-                              ),
+                      child: Column(
+                        spacing: 24.0,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'شو الرمز يلي وصلك؟',
+                            style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w700,
                             ),
+                          ),
+                          Text.rich(
                             TextSpan(
-                              text: '+963${widget.phoneNumber}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.blue,
-                                fontFamily: 'Baloo2',
-                              ),
+                              children: [
+                                TextSpan(
+                                  text: 'بعتنالك رمز من 6 أرقام على ',
+                                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: AppColors.neutral,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: '+963${widget.phoneNumber}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.blue,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(fontSize: 15.0, color: AppColors.neutral, height: 1.4),
-                      ),
-                      // OTP Input Boxes
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: List.generate(6, (index) => _buildOTPBox(index)),
-                        ),
-                      ),
-                      Center(
-                        child: Text.rich(
-                          TextSpan(
-                            children: [
-                              const TextSpan(text: 'ما وصل الرمز؟ ابعتلي ياه مرة تانية بعد '),
+                            textAlign: TextAlign.right,
+                            style: const TextStyle(fontSize: 15.0, color: AppColors.neutral, height: 1.4),
+                          ),
+                          // OTP Input Boxes
+                          Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: List.generate(6, (index) => _buildOTPBox(index)),
+                            ),
+                          ),
+                          Center(
+                            child: Text.rich(
                               TextSpan(
-                                text: '00:${_resendCountdown.toString().padLeft(2, '0')}',
-                                style: const TextStyle(color: AppColors.blue, fontWeight: FontWeight.bold),
+                                children: [
+                                  const TextSpan(text: 'ما وصل الرمز؟ ابعتلي ياه مرة تانية بعد '),
+                                  TextSpan(
+                                    text: '00:${_resendCountdown.toString().padLeft(2, '0')}',
+                                    style: const TextStyle(color: AppColors.blue, fontWeight: FontWeight.bold),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          style: const TextStyle(color: AppColors.neutral, fontSize: 13.0),
-                        ),
-                      ),
-                      if (_resendCountdown == 0)
-                        Center(
-                          child: TextButton(
-                            onPressed: () {
-                              context.read<MyInfoBloc>().add(RequestPhoneChangeEvent(phoneNumber: widget.phoneNumber));
-                              _startTimer();
-                            },
-                            child: const Text(
-                              'إعادة إرسال الرمز',
-                              style: TextStyle(
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: const TextStyle(color: AppColors.neutral, fontSize: 13.0),
                             ),
                           ),
-                        ),
-                      const SizedBox(height: 12.0),
-                      CustomButton(
-                        text: 'تحقّق',
-                        height: 52.0,
-                        isLoading: isLoading,
-                        onPressed: _isOtpComplete && !isLoading
-                            ? () {
-                          FocusScope.of(context).unfocus();
-                          final code = _controllers.map((c) => c.text).join();
-                          context.read<MyInfoBloc>().add(ConfirmPhoneChangeEvent(
-                            phoneNumber: widget.phoneNumber,
-                            code: code,
-                          ));
-                        }
-                            : null,
+                          if (_resendCountdown == 0)
+                            Center(
+                              child: TextButton(
+                                onPressed: () {
+                                  context.read<MyInfoBloc>().add(RequestPhoneChangeEvent(phoneNumber: widget.phoneNumber));
+                                  _startTimer();
+                                },
+                                child: const Text(
+                                  'إعادة إرسال الرمز',
+                                  style: TextStyle(
+                                    color: AppColors.primary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          const SizedBox(height: 12.0),
+                          CustomButton(
+                            text: 'تحقّق',
+                            height: 52.0,
+                            isLoading: isLoading,
+                            onPressed: _isOtpComplete && !isLoading
+                                ? () {
+                              FocusScope.of(context).unfocus();
+                              final code = _controllers.map((c) => c.text).join();
+                              context.read<MyInfoBloc>().add(ConfirmPhoneChangeEvent(
+                                phoneNumber: widget.phoneNumber,
+                                code: code,
+                              ));
+                            }
+                                : null,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 );
               },

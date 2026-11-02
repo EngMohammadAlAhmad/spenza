@@ -33,6 +33,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   /// Changing this value changes the animation keys, which restarts them.
   int _animTrigger = 0;
   int _lastIndex = navTabIndex.value;
+  int _guestTabIndex = 0;
 
   @override
   void initState() {
@@ -73,10 +74,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 children: [
                   OrdersHeader(
                     key: ValueKey('${keyPrefix}_guest_header'),
-                    selectedTabIndex: 0,
+                    selectedTabIndex: _guestTabIndex,
                     activeCount: 0,
                     completedCount: 0,
-                    onTabChanged: _dummyTabChange,
+                    onTabChanged: (index) {
+                      setState(() => _guestTabIndex = index);
+                    },
                   ),
                   Expanded(
                     child: Padding(
@@ -100,8 +103,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
       ),
     );
   }
-
-  static void _dummyTabChange(int index) {}
 
   Widget _buildLoginPrompt(BuildContext context, String keyPrefix) {
     return Column(

@@ -7,7 +7,9 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/base_state.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
 import 'package:spenza/features/auth/domain/entities/verify_otp_result_entity.dart';
@@ -56,6 +58,8 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final hPadding = context.isTablet ? context.width * 0.3 : 24.0;
+
     return BlocProvider(
       create: (context) => sl<AuthBloc>(),
       child: BlocConsumer<AuthBloc, BaseState<Object>>(
@@ -81,7 +85,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: IntrinsicHeight(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(24.0, 40.0, 24.0, 24.0),
+                      padding: EdgeInsets.fromLTRB(hPadding, 40.0, hPadding, 24.0),
                       child: Column(
                         spacing: 25.0,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +111,6 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.blue,
-                                    fontFamily: 'Baloo2',
                                   ),
                                 ),
                               ],
@@ -192,7 +195,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
 
   Widget _buildOTPBox(int index) {
     return SizedBox(
-      width: 50.0, // Reduced width slightly to fit 6 boxes
+      width: 50.0,
       height: 58.0,
       child: TextFormField(
         controller: _controllers[index],

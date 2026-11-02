@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/features/home/domain/entities/banner_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spenza/core/widgets/app_icon_placeholder.dart';
@@ -24,13 +25,28 @@ class _BannerSliderState extends State<BannerSlider> {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = context.isTablet;
+    final double carouselHeight = isTablet ? 328.0 : 152.0;
+    final double viewportFraction = isTablet ? 0.6 : 0.92;
+
     if (widget.isLoading) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: ShimmerPlaceholder(
-          width: double.infinity,
-          height: 152.0,
-          borderRadius: AppRadius.overMedium,
+      return CarouselSlider.builder(
+        itemCount: 3,
+        itemBuilder: (context, index, realIndex) {
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: ShimmerPlaceholder(
+              width: double.infinity,
+              height: carouselHeight,
+              borderRadius: AppRadius.overMedium,
+            ),
+          );
+        },
+        options: CarouselOptions(
+          height: carouselHeight,
+          viewportFraction: viewportFraction,
+          enableInfiniteScroll: false,
+          autoPlay: false,
         ),
       );
     }
@@ -52,9 +68,9 @@ class _BannerSliderState extends State<BannerSlider> {
                   imageUrl: banner.image,
                   fit: BoxFit.cover,
                   width: double.infinity,
-                  placeholder: (context, url) => const ShimmerPlaceholder(
+                  placeholder: (context, url) => ShimmerPlaceholder(
                     width: double.infinity,
-                    height: 152.0,
+                    height: carouselHeight,
                   ),
                   errorWidget: (context, url, error) => Container(
                     color: AppColors.fillColor,
@@ -65,8 +81,8 @@ class _BannerSliderState extends State<BannerSlider> {
             );
           },
           options: CarouselOptions(
-            height: 152.0,
-            viewportFraction: 0.92,
+            height: carouselHeight,
+            viewportFraction: viewportFraction,
             enlargeCenterPage: false,
             enableInfiniteScroll: true,
             autoPlay: true,

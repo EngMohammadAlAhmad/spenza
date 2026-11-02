@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/app_back_button.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
@@ -30,12 +31,18 @@ class BrandProductsScreen extends StatefulWidget {
 
 class _BrandProductsScreenState extends State<BrandProductsScreen> {
   final ScrollController _scrollController = ScrollController();
-  String _selectedSortKey = 'newest';
+  String _selectedSortKey = 'default';
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    context.read<BrandProductsBloc>().add(
+          GetBrandProductsEvent(
+            brandId: widget.brandId,
+            isRefresh: true,
+          ),
+        );
   }
 
   @override
@@ -47,13 +54,17 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
   void _onScroll() {
     if (_isBottom) {
       final state = context.read<BrandProductsBloc>().state;
-      context.read<BrandProductsBloc>().add(GetBrandProductsEvent(
+      if (state.hasReachedMax == false && !state.isLoading) {
+        context.read<BrandProductsBloc>().add(
+          GetBrandProductsEvent(
             brandId: widget.brandId,
             sort: _selectedSortKey,
             minPrice: state.minPrice,
             maxPrice: state.maxPrice,
             inStock: state.inStock,
-          ));
+          ),
+        );
+      }
     }
   }
 
@@ -66,82 +77,86 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-        body: Column(
-          spacing: 15.0,
-          children: [
-            BlocBuilder<BrandProductsBloc, BaseState<BrandProductsResultEntity>>(
-              builder: (context, state) {
-                return _buildHeader(context, state);
-              },
-            ),
-            Expanded(
-              child: BlocBuilder<BrandProductsBloc, BaseState<BrandProductsResultEntity>>(
-                builder: (context, state) {
-                  final data = state.data;
-                  final products = data?.products ?? [];
+    final crossAxisCount = context.gridColumns(
+      mobile: 2,
+      tabletPortrait: 4,
+      tabletLandscape: 6,
+      desktop: 6,
+    );
 
-                  if (state.isLoading && (products.isEmpty || state.currentPage == 1)) {
-                    return _buildLoadingGrid();
-                  }
+    return Scaffold(
+      backgroundColor: AppColors.neutralBackground,
+      body: BlocBuilder<BrandProductsBloc, BaseState<BrandProductsResultEntity>>(
+        builder: (context, state) {
+          return Column(
+            children: [
+              _buildHeader(context, state),
+              const SizedBox(height: 16.0),
+              Expanded(
+                child: BlocBuilder<BrandProductsBloc, BaseState<BrandProductsResultEntity>>(
+                  builder: (context, state) {
+                    final data = state.data;
+                    final products = data?.products ?? [];
 
-                  if (state.isError && products.isEmpty) {
-                    if (state.failure is OfflineFailure) {
-                      return NoInternetWidget(
-                        onRetry: () {
-                          context.read<BrandProductsBloc>().add(GetBrandProductsEvent(
-                                brandId: widget.brandId,
-                                isRefresh: true,
-                              ));
-                        },
-                      );
+                    if (state.isLoading && (products.isEmpty || state.currentPage == 1)) {
+                      return _buildLoadingGrid(crossAxisCount);
                     }
-                    return Center(child: Text(state.errorMessage));
-                  }
 
-                  if (products.isEmpty) {
-                    return Center(
-                      child: EmptyResultWidget(
-                        title: 'no_products_for_brand'.tr(),
-                        subtitle: 'no_products_subtitle'.tr(),
-                        showShoppingButton: false,
-                      ),
-                    );
-                  }
-
-                  return GridView.builder(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 100.0),
-                    physics: const BouncingScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 174 / 250,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                    ),
-                    itemCount: state.hasReachedMax == true ? products.length : products.length + 2,
-                    itemBuilder: (context, index) {
-                      if (index >= products.length) {
-                        return const ShimmerPlaceholder(
-                          width: double.infinity,
-                          height: double.infinity,
-                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                    if (state.isError && products.isEmpty) {
+                      if (state.failure is OfflineFailure) {
+                        return NoInternetWidget(
+                          onRetry: () {
+                            context.read<BrandProductsBloc>().add(GetBrandProductsEvent(
+                                  brandId: widget.brandId,
+                                  isRefresh: true,
+                                ));
+                          },
                         );
                       }
-                      return ProductCard(product: products[index])
-                          .animate()
-                          .fadeIn(duration: 400.ms)
-                          .scale(begin: const Offset(0.9, 0.9));
-                    },
-                  );
-                },
+                      return Center(child: Text(state.errorMessage));
+                    }
+
+                    if (products.isEmpty) {
+                      return Center(
+                        child: EmptyResultWidget(
+                          title: 'no_products_for_brand'.tr(),
+                          subtitle: 'no_products_subtitle'.tr(),
+                          showShoppingButton: false,
+                        ),
+                      );
+                    }
+
+                    return GridView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 100.0),
+                      physics: const BouncingScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        childAspectRatio: 174 / 250,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                      ),
+                      itemCount: state.hasReachedMax == true ? products.length : products.length + crossAxisCount,
+                      itemBuilder: (context, index) {
+                        if (index >= products.length) {
+                          return const ShimmerPlaceholder(
+                            width: double.infinity,
+                            height: double.infinity,
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                          );
+                        }
+                        return ProductCard(product: products[index])
+                            .animate()
+                            .fadeIn(duration: 400.ms)
+                            .scale(begin: const Offset(0.9, 0.9));
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -153,12 +168,11 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
         : (state.data?.products.length ?? 0);
 
     return Container(
-      height: 200.0,
       padding: EdgeInsets.only(
         top: context.screenPadding.top + 8.0,
         left: 16.0,
         right: 16.0,
-        bottom: 10.0,
+        bottom: 12.0,
       ),
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -168,6 +182,7 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -238,7 +253,7 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
               ),
             ],
           ),
-          const Spacer(),
+          const SizedBox(height: 16.0),
           _buildSortRow(context, totalProducts),
         ],
       ),
@@ -280,16 +295,16 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
     );
   }
 
-  Widget _buildLoadingGrid() {
+  Widget _buildLoadingGrid(int crossAxisCount) {
     return GridView.builder(
       padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
         childAspectRatio: 174 / 250,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),
-      itemCount: 6,
+      itemCount: crossAxisCount * 3,
       itemBuilder: (_, _) => const ShimmerPlaceholder(
         width: double.infinity,
         height: double.infinity,

@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/base_state.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
@@ -40,6 +42,8 @@ class _RegisterCompletePageState extends State<RegisterCompletePage> {
 
   @override
   Widget build(BuildContext context) {
+    final hPadding = context.isTablet ? context.width * 0.3 : 24.0;
+
     return BlocProvider(
       create: (context) => sl<AuthBloc>(),
       child: BlocConsumer<AuthBloc, BaseState<Object>>(
@@ -53,7 +57,7 @@ class _RegisterCompletePageState extends State<RegisterCompletePage> {
         },
         builder: (context, state) {
           return SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(24.0, 40.0, 24.0, 10.0),
+            padding: EdgeInsets.fromLTRB(hPadding, 40.0, hPadding, 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

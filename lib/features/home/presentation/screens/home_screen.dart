@@ -8,6 +8,7 @@ import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/utils/tab_index_notifier.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
@@ -65,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final bottomInset = context.screenPadding.bottom;
     final keyPrefix = 'home_anim_$_animTrigger';
+    final isTablet = context.isTablet;
 
     return BlocProvider(
       create: (context) => di.sl<HomeBloc>()..add(const GetHomeDataEvent()),
@@ -120,7 +122,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                     .fadeIn(duration: 500.ms)
                                     .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic),
 
-                                if (isLoggedIn)
+                                if (isTablet && isLoggedIn)
+                                  IntrinsicHeight(
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                        Expanded(
+                                          child: const PointsCard()
+                                              .animate(key: ValueKey('${keyPrefix}_points'), delay: 60.ms)
+                                              .fadeIn(duration: 450.ms)
+                                              .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
+                                        ),
+                                        const SizedBox(width: 16.0),
+                                        Expanded(
+                                          child: const FreeDeliveryCard()
+                                              .animate(key: ValueKey('${keyPrefix}_free_delivery'), delay: 160.ms)
+                                              .fadeIn(duration: 450.ms)
+                                              .scaleXY(begin: 0.94, end: 1, curve: Curves.easeOutCubic),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                else if (!isTablet && isLoggedIn)
                                   const PointsCard()
                                       .animate(key: ValueKey('${keyPrefix}_points'), delay: 60.ms)
                                       .fadeIn(duration: 450.ms)
@@ -140,10 +163,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       .fadeIn(duration: 450.ms)
                                       .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
 
-                                const FreeDeliveryCard()
-                                    .animate(key: ValueKey('${keyPrefix}_free_delivery'), delay: 160.ms)
-                                    .fadeIn(duration: 450.ms)
-                                    .scaleXY(begin: 0.94, end: 1, curve: Curves.easeOutCubic),
+                                if (!isTablet || !isLoggedIn)
+                                  const FreeDeliveryCard()
+                                      .animate(key: ValueKey('${keyPrefix}_free_delivery'), delay: 160.ms)
+                                      .fadeIn(duration: 450.ms)
+                                      .scaleXY(begin: 0.94, end: 1, curve: Curves.easeOutCubic),
 
                                 TodayOffersSection(
                                   products: data?.discountedProducts ?? [],
@@ -198,7 +222,7 @@ class FreeDeliveryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 76.5,
-      width: context.width,
+      width: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.secondary,
         borderRadius: AppRadius.brandRadius,
@@ -220,33 +244,37 @@ class FreeDeliveryCard extends StatelessWidget {
              .moveX(begin: 20, end: -20, duration: 3.seconds, curve: Curves.linear),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 17.0, vertical: 12.75),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.75),
             child: Row(
-              spacing: 25.0,
+              spacing: 16.0,
               children: [
                 // Highway driving bounce animation
                 Image.asset(AppAssets.deliveryImage)
                     .animate(onPlay: (controller) => controller.repeat(reverse: true))
                     .moveY(begin: -2.5, end: 2.5, duration: 600.ms, curve: Curves.easeInOut),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    DefaultTextStyle(
-                      style: Theme.of(context).textTheme.bodyLarge!,
-                      child: AnimatedTextKit(
-                        animatedTexts: [
-                          RichTyperAnimatedText(
-                            boldText: 'free_delivery_damascus'.tr(),
-                            normalText: 'for_orders_above_1500'.tr(),
-                            speed: const Duration(milliseconds: 60),
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: DefaultTextStyle(
+                          style: Theme.of(context).textTheme.bodyLarge!,
+                          child: AnimatedTextKit(
+                            animatedTexts: [
+                              RichTyperAnimatedText(
+                                boldText: 'free_delivery_damascus'.tr(),
+                                normalText: 'for_orders_above_1500'.tr(),
+                                speed: const Duration(milliseconds: 60),
+                              ),
+                            ],
+                            repeatForever: true,
+                            pause: const Duration(seconds: 3),
                           ),
-                        ],
-                        repeatForever: true,
-                        pause: const Duration(seconds: 3),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),

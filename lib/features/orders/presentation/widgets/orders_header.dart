@@ -1,4 +1,4 @@
-import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
@@ -51,65 +51,58 @@ class OrdersHeader extends StatelessWidget {
           color: AppColors.neutralBackground,
           borderRadius: AppRadius.extraLarge,
         ),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final isRtl = Directionality.of(context) == TextDirection.rtl;
-            final alignment = selectedTabIndex == 0
-                ? (isRtl ? Alignment.centerRight : Alignment.centerLeft)
-                : (isRtl ? Alignment.centerLeft : Alignment.centerRight);
-
-            return Stack(
-              children: [
-                // Sliding Indicator Pill
-                AnimatedAlign(
-                  duration: const Duration(milliseconds: 280),
-                  curve: Curves.fastOutSlowIn,
-                  alignment: alignment,
-                  child: FractionallySizedBox(
-                    widthFactor: 0.5,
-                    heightFactor: 1.0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryTint,
-                        borderRadius: AppRadius.large,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.04),
-                            blurRadius: 6,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+        child: Stack(
+          children: [
+            // Sliding Indicator Pill
+            AnimatedAlign(
+              duration: const Duration(milliseconds: 280),
+              curve: Curves.fastOutSlowIn,
+              alignment: selectedTabIndex == 0
+                  ? AlignmentDirectional.centerStart
+                  : AlignmentDirectional.centerEnd,
+              child: FractionallySizedBox(
+                widthFactor: 0.5,
+                heightFactor: 1.0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryTint,
+                    borderRadius: AppRadius.large,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
                       ),
-                    ),
+                    ],
                   ),
                 ),
+              ),
+            ),
 
-                // Tab Option Items
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildTabItem(
-                        context,
-                        title: 'active_orders'.tr(),
-                        count: activeCount,
-                        isSelected: selectedTabIndex == 0,
-                        onTap: () => onTabChanged(0),
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildTabItem(
-                        context,
-                        title: 'previous_orders'.tr(),
-                        count: completedCount,
-                        isSelected: selectedTabIndex == 1,
-                        onTap: () => onTabChanged(1),
-                      ),
-                    ),
-                  ],
+            // Tab Option Items
+            Row(
+              children: [
+                Expanded(
+                  child: _buildTabItem(
+                    context,
+                    title: 'active_orders'.tr(),
+                    count: activeCount,
+                    isSelected: selectedTabIndex == 0,
+                    onTap: () => onTabChanged(0),
+                  ),
+                ),
+                Expanded(
+                  child: _buildTabItem(
+                    context,
+                    title: 'previous_orders'.tr(),
+                    count: completedCount,
+                    isSelected: selectedTabIndex == 1,
+                    onTap: () => onTabChanged(1),
+                  ),
                 ),
               ],
-            );
-          },
+            ),
+          ],
         ),
       ),
     );
@@ -125,9 +118,9 @@ class OrdersHeader extends StatelessWidget {
     const activeTextColor = Color(0xFF91292B);
     const inactiveTextColor = Color(0xFF7D7873);
 
-    return InkWell(
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      borderRadius: AppRadius.large,
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/utils/tab_index_notifier.dart';
 
 class HomeShell extends StatefulWidget {
@@ -148,7 +150,7 @@ class _HomeShellState extends State<HomeShell> {
           ),
           child: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              padding: EdgeInsets.symmetric(horizontal: context.isTablet ? context.width * 0.25 : 12.0, vertical: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: List.generate(items.length, (index) {

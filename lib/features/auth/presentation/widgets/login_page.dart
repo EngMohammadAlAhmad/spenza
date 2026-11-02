@@ -7,7 +7,9 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/base_state.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
@@ -37,6 +39,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final hPadding = context.isTablet ? context.width * 0.25 : 24.0;
+
     return BlocProvider(
       create: (context) => sl<AuthBloc>(),
       child: BlocConsumer<AuthBloc, BaseState<Object>>(
@@ -56,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: IntrinsicHeight(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(24.0, 40.0, 24.0, 24.0),
+                      padding: EdgeInsets.fromLTRB(hPadding, 40.0, hPadding, 24.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -79,10 +83,10 @@ class _LoginPageState extends State<LoginPage> {
                           Text(
                             'mobile_number'.tr(),
                             style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontSize: 13.0,
-                                ),
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 13.0,
+                            ),
                           ),
                           const SizedBox(height: 12.0),
                           _buildPhoneField(),
@@ -150,9 +154,8 @@ class _LoginPageState extends State<LoginPage> {
       child: CustomTextField(
         controller: widget.phoneController,
         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-              color: AppColors.neutral,
-              fontFamily: 'Baloo2',
-            ),
+          color: AppColors.neutral,
+        ),
         onChanged: (_) => setState(() {}),
         inputFormatters: [
           FilteringTextInputFormatter.digitsOnly,
@@ -185,9 +188,8 @@ class _LoginPageState extends State<LoginPage> {
         borderColor: AppColors.primaryLight.withValues(alpha: 0.5),
         hintText: '9xx xxx xxx',
         hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: AppColors.neutral,
-              fontFamily: 'Baloo2',
-            ),
+          color: AppColors.neutral,
+        ),
         fillColor: Colors.white,
       ),
     );

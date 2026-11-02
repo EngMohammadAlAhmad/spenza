@@ -9,6 +9,7 @@ import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/app_back_button.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/onboarding/domain/usecases/set_onboarding_status_usecase.dart';
@@ -46,30 +47,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   static const double _popScale = 0.12;
 
   // ---- Per-page tuning ----------------------------------------------------
-  // Each of these has one entry per page (index 0,1,2). They get lerped by
-  // `t` between the current and next page, exactly like the position rects,
-  // so size/offset/rotation all glide together instead of jump-cutting.
-
-  // How far ABOVE the mark word's top edge the mark (vector2) sits.
-  // Bigger number = higher up.
   final List<double> _markVerticalOffsetPerPage = [-20.0, 20.0, -20.0];
-
-  // How far to the RIGHT the mark (vector2) is shifted from its centered position.
   final List<double> _markHorizontalOffsetPerPage = [30.0, -40.0, 30.0];
-
-  // Width multiplier for the mark relative to the word it sits over.
-  // Smaller number = smaller mark.
   final List<double> _markWidthFactorPerPage = [0.7, 0.4, 0.7];
-
-  // Rotation (in degrees) applied to the mark on each page.
-  // Page 1 -> Page 2 transition sweeps 0deg -> 180deg.
-  // Page 2 -> Page 3 sweeps 180deg -> 0deg (mirrors back).
   final List<double> _markRotationDegPerPage = [0.0, 180.0, 0.0];
-
-  // How far BELOW the underline word's bottom edge the underline (vector1)
-  // sits. Smaller (or negative) number = sits lower on screen.
   final List<double> _underlineVerticalOffsetPerPage = [2.0, -6.0, 2.0];
-
   final List<double> _underlineWidthFactorPerPage = [0.8, 0.8, 0.8];
 
   final List<List<WordSpec>> _pageWords = const [
@@ -134,9 +116,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void _complete() async {
     context.read<OnboardingBloc>().add(CompleteOnboardingEvent());
-    // Ensure the onboarding status is saved in SharedPreferences BEFORE navigating.
-    // This prevents a race condition where the GoRouter redirect checks the status
-    // before the async write operation has finished.
     await di.sl<SetOnboardingStatusUseCase>().call(true);
     if (mounted) {
       context.go(RoutePaths.login);
@@ -184,6 +163,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape = context.isLandscape;
+
     return Scaffold(
       body: Material(
         color: const Color(0xCCF9EFDF),
@@ -193,88 +174,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Padding(
               padding: EdgeInsets.fromLTRB(
                 24.0,
-                context.height * 0.11,
+                isLandscape ? 60.0 : context.height * 0.11,
                 24.0,
                 0.0,
               ),
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: PageView.builder(
-                      controller: _pageController,
-                      physics: const NeverScrollableScrollPhysics(),
-                      onPageChanged: (index) =>
-                          setState(() => _currentIndex = index),
-                      itemCount: onboardingData.length,
-                      itemBuilder: (context, index) {
-                        final data = onboardingData[index];
-
-                        WidgetsBinding.instance.addPostFrameCallback(
-                              (_) => _measureAnchors(index),
-                        );
-
-                        return Column(
-                          children: [
-                            Expanded(child: Image.asset(data.image)),
-                            const SizedBox(height: 20.0),
-                            _buildTitle(index),
-                            const SizedBox(height: 20.0),
-                            Text(
-                              data.description,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall!
-                                  .copyWith(
-                                color: AppColors.neutral,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 20.0),
-                        SmoothPageIndicator(
-                          controller: _pageController,
-                          count: onboardingData.length,
-                          effect: ExpandingDotsEffect(
-                            dotHeight: 7.0,
-                            dotWidth: 7.0,
-                            activeDotColor: AppColors.primary,
-                            dotColor: AppColors.primary.withValues(alpha: 0.3),
-                          ),
-                        ),
-                        SizedBox(height: context.height * 0.03),
-                        if (_currentIndex < onboardingData.length - 1) ...[
-                          _buildPrimaryButton(text: 'التالي', onPressed: _onNext),
-                          const SizedBox(height: 10.0),
-                          _buildTextButton('تخطي', _complete),
-                        ] else ...[
-                          _buildPrimaryButton(
-                            text: 'يلا نبلش',
-                            onPressed: _complete,
-                            showArrow: false,
-                            decreaseFont: true,
-                          ),
-                          const SizedBox(height: 12),
-                          /*_buildSecondaryButton('عندي حساب — تسجيل الدخول', () {
-                            context.push(RoutePaths.login);
-                          }),*/
-                          SizedBox(height: context.height * 0.015),
-                          _buildFooterText(),
-                        ],
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              child: isLandscape
+                  ? _buildLandscapeContent(context)
+                  : _buildPortraitContent(context),
             ),
 
             IgnorePointer(
@@ -357,8 +263,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
 
             Positioned(
-              right: context.width * 0.05,
-              top: context.height * 0.055,
+              right: isLandscape ? 32.0 : context.width * 0.05,
+              top: isLandscape ? 24.0 : context.height * 0.055,
               child: _currentIndex != 0
                   ? AppBackButton(
                       backgroundColor: AppColors.primary.withValues(alpha: 0.1),
@@ -371,8 +277,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   : const SizedBox(),
             ),
             Positioned(
-              top: context.height * 0.06,
-              left: context.width * 0.06,
+              top: isLandscape ? 28.0 : context.height * 0.06,
+              left: isLandscape ? 32.0 : context.width * 0.06,
               child: Text(
                 '${_currentIndex + 1}/${onboardingData.length}',
                 style: Theme.of(context).textTheme.headlineSmall!.copyWith(
@@ -384,6 +290,201 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildPortraitContent(BuildContext context) {
+    final isTablet = context.isTablet;
+
+    return Column(
+      children: [
+        Expanded(
+          flex: isTablet ? 3 : 4,
+          child: PageView.builder(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            onPageChanged: (index) =>
+                setState(() => _currentIndex = index),
+            itemCount: onboardingData.length,
+            itemBuilder: (context, index) {
+              final data = onboardingData[index];
+
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) => _measureAnchors(index),
+              );
+
+              return Column(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.all(isTablet ? 32.0 : 0.0),
+                      constraints: BoxConstraints(
+                        maxHeight: isTablet ? context.height * 0.35 : double.infinity,
+                      ),
+                      child: Image.asset(
+                        data.image,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  _buildTitle(index),
+                  const SizedBox(height: 20.0),
+                  Text(
+                    data.description,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall!
+                        .copyWith(
+                      color: AppColors.neutral,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Center(
+            child: SizedBox(
+              width: isTablet ? 380.0 : double.infinity,
+              child: Column(
+                children: [
+                  const SizedBox(height: 20.0),
+                  SmoothPageIndicator(
+                    controller: _pageController,
+                    count: onboardingData.length,
+                    effect: ExpandingDotsEffect(
+                      dotHeight: 7.0,
+                      dotWidth: 7.0,
+                      activeDotColor: AppColors.primary,
+                      dotColor: AppColors.primary.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  SizedBox(height: context.height * 0.03),
+                  if (_currentIndex < onboardingData.length - 1) ...[
+                    _buildPrimaryButton(text: 'التالي', onPressed: _onNext),
+                    const SizedBox(height: 10.0),
+                    _buildTextButton('تخطي', _complete),
+                  ] else ...[
+                    _buildPrimaryButton(
+                      text: 'يلا نبلش',
+                      onPressed: _complete,
+                      showArrow: false,
+                      decreaseFont: true,
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(height: context.height * 0.015),
+                    _buildFooterText(),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLandscapeContent(BuildContext context) {
+    final data = onboardingData[_currentIndex];
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _measureAnchors(_currentIndex);
+    });
+
+    return Row(
+      children: [
+        // Image Side (Right side in RTL) - scaled down nicely with padding & constraints
+        Expanded(
+          flex: 5,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 28.0),
+            child: PageView.builder(
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              onPageChanged: (index) => setState(() => _currentIndex = index),
+              itemCount: onboardingData.length,
+              itemBuilder: (context, index) {
+                return Center(
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxHeight: context.height * 0.60,
+                      maxWidth: context.width * 0.38,
+                    ),
+                    child: Image.asset(
+                      onboardingData[index].image,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+
+        // Text & Controls Side (Left side in RTL)
+        Expanded(
+          flex: 5,
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildTitle(_currentIndex),
+                  const SizedBox(height: 20.0),
+                  Text(
+                    data.description,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                          color: AppColors.neutral,
+                          fontWeight: FontWeight.normal,
+                        ),
+                  ),
+                  const SizedBox(height: 24.0),
+                  SmoothPageIndicator(
+                    controller: _pageController,
+                    count: onboardingData.length,
+                    effect: ExpandingDotsEffect(
+                      dotHeight: 8.0,
+                      dotWidth: 8.0,
+                      activeDotColor: AppColors.primary,
+                      dotColor: AppColors.primary.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  const SizedBox(height: 32.0),
+                  SizedBox(
+                    width: 320.0,
+                    child: Column(
+                      children: [
+                        if (_currentIndex < onboardingData.length - 1) ...[
+                          _buildPrimaryButton(text: 'التالي', onPressed: _onNext),
+                          const SizedBox(height: 10.0),
+                          _buildTextButton('تخطي', _complete),
+                        ] else ...[
+                          _buildPrimaryButton(
+                            text: 'يلا نبلش',
+                            onPressed: _complete,
+                            showArrow: false,
+                            decreaseFont: true,
+                          ),
+                          const SizedBox(height: 12.0),
+                          _buildFooterText(),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -425,15 +526,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       fontSize: decreaseFont ? 14.0 : null,
     );
   }
-
-  /*Widget _buildSecondaryButton(String text, VoidCallback onPressed) {
-    return CustomButton(
-      text: text,
-      onPressed: onPressed,
-      height: 48.0,
-      isOutlined: true,
-    );
-  }*/
 
   Widget _buildTextButton(String text, VoidCallback onPressed) {
     return TextButton(

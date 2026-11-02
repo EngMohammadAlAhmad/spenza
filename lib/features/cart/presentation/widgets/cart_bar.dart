@@ -8,6 +8,8 @@ import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/features/cart/presentation/blocs/cart_bloc/cart_bloc.dart';
 
 class CartBar extends StatelessWidget {
@@ -35,7 +37,7 @@ class CartBar extends StatelessWidget {
         return Material(
           color: Colors.transparent,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.symmetric(horizontal: context.isTablet ? context.width * 0.33 : 16.0),
             child: InkWell(
               onTap: () {
                 if (GoRouterState.of(context).matchedLocation != RoutePaths.cart) {

@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/app_back_button.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
@@ -116,12 +117,11 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
         : (state.data?.products.length ?? 0);
 
     return Container(
-      height: 245.0,
       padding: EdgeInsets.only(
         top: context.screenPadding.top + 8.0,
         left: 16.0,
         right: 16.0,
-        bottom: 10.0,
+        bottom: 12.0,
       ),
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -131,6 +131,8 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
         ),
       ),
       child: Column(
+        spacing: 10.0,
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -184,7 +186,6 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 13.0),
           Row(
             children: [
               Text(
@@ -219,9 +220,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
               ],
             ],
           ),
-          const SizedBox(height: 13.0),
           _buildSubCategoriesRow(context, displayChildren),
-          const SizedBox(height: 10.0),
           _buildSortRow(context, totalProducts),
         ],
       ),
@@ -307,16 +306,23 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
   }
 
   Widget _buildProductsGrid(BaseState<CategoryProductsResultEntity> state, List products) {
+    final crossAxisCount = context.gridColumns(
+      mobile: 2,
+      tabletPortrait: 4,
+      tabletLandscape: 6,
+      desktop: 6,
+    );
+
     if (state.isLoading && (products.isEmpty || state.currentPage == 1)) {
       return GridView.builder(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount,
           childAspectRatio: 174 / 250,
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
         ),
-        itemCount: 6,
+        itemCount: crossAxisCount * 3,
         itemBuilder: (_, _) => const ShimmerPlaceholder(width: double.infinity, height: double.infinity, borderRadius: BorderRadius.all(Radius.circular(16))),
       );
     }
@@ -349,13 +355,13 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
       controller: _scrollController,
       padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 100.0),
       physics: const BouncingScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
         childAspectRatio: 174 / 250,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),
-      itemCount: state.hasReachedMax == true ? products.length : products.length + 2,
+      itemCount: state.hasReachedMax == true ? products.length : products.length + crossAxisCount,
       itemBuilder: (context, index) {
         if (index >= products.length) {
           return const ShimmerPlaceholder(width: double.infinity, height: double.infinity, borderRadius: BorderRadius.all(Radius.circular(16)));
