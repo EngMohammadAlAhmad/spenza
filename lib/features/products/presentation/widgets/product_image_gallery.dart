@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/shared/entities/product_entity.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favorites_bloc.dart';
@@ -31,6 +33,7 @@ class ProductImageGallery extends StatefulWidget {
   final List<String> sideImages;
   final String? video;
   final String? model3d;
+  final Widget? child;
 
   const ProductImageGallery({
     super.key,
@@ -39,6 +42,7 @@ class ProductImageGallery extends StatefulWidget {
     this.sideImages = const [],
     this.video,
     this.model3d,
+    this.child,
   });
 
   @override
@@ -89,9 +93,9 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
 
     return Column(
       children: [
-        // Main Image Container
+        // Main Image Container (Flat bottom edge)
         Container(
-          height: 300.0,
+          height: 340.0,
           width: double.infinity,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -105,30 +109,51 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
           ),
           child: Stack(
             children: [
-              // Main Content
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(28),
-                  bottomRight: Radius.circular(28),
-                ),
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 500),
-                  switchInCurve: Curves.easeOutCubic,
-                  switchOutCurve: Curves.easeInCubic,
-                  transitionBuilder: (child, animation) {
-                    return FadeTransition(
-                      opacity: animation,
-                      child: ScaleTransition(
-                        scale: Tween<double>(begin: 0.94, end: 1.0).animate(animation),
-                        child: child,
+              // Main Content & Top Edge Shading (Vignette)
+              Stack(
+                children: [
+                  Positioned.fill(
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 500),
+                      switchInCurve: Curves.easeOutCubic,
+                      switchOutCurve: Curves.easeInCubic,
+                      transitionBuilder: (child, animation) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: ScaleTransition(
+                            scale: Tween<double>(begin: 0.94, end: 1.0).animate(animation),
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: KeyedSubtree(
+                        key: ValueKey<int>(_currentIndex),
+                        child: _buildMainContent(currentItem),
                       ),
-                    );
-                  },
-                  child: KeyedSubtree(
-                    key: ValueKey<int>(_currentIndex),
-                    child: _buildMainContent(currentItem),
+                    ),
                   ),
-                ),
+                  // Top Edge Shading / Vignette Overlay
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: context.height * 0.15,
+                    child: IgnorePointer(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black.withValues(alpha: 0.30),
+                              Colors.black.withValues(alpha: 0.0),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
 
               // Controls (Back, Share, Favorite)
@@ -153,9 +178,8 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                     Row(
                       children: [
                         CircleActionButton(
-                          icon: Icons.share_outlined,
+                          iconPath: AppAssets.shareIcon,
                           onTap: () {},
-                          shareButton: true,
                         )
                             .animate()
                             .fadeIn(duration: 650.ms, delay: 350.ms)
@@ -188,6 +212,69 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                   ],
                 ),
               ),
+
+              // Page Counter Pill Badge (1/6)
+              if (_allMedia.length > 1)
+                Positioned(
+                  bottom: 44.0,
+                  left: 16.0,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: Row(
+                      spacing: 7.0,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset(AppAssets.imagesIcon),
+                        Text(
+                          '${_currentIndex + 1}/${_allMedia.length}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13.0,
+                          ),
+                        ),
+
+                      ],
+                    ),
+                  )
+                      .animate()
+                      .fadeIn(duration: 500.ms, delay: 300.ms),
+                ),
+
+              // Save Discount Badge
+              if (widget.product.discountPercentage > 0)
+                Positioned(
+                  bottom: 44.0,
+                  right: 16.0,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: AppRadius.large,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0.0, 4.0),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      'save_amount'.tr(args: [
+                        (widget.product.price - widget.product.discountedPrice).toStringAsFixed(0),
+                        'sp_currency'.tr()
+                      ]),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                  )
+                      .animate()
+                      .fadeIn(delay: 500.ms, duration: 650.ms)
+                      .scale(begin: const Offset(0.4, 0.4), duration: 750.ms, curve: Curves.easeOutBack),
+                ),
             ],
           ),
         )
@@ -199,81 +286,101 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
               curve: Curves.easeOutCubic,
             ),
 
-        const SizedBox(height: 20),
-
-        // Media Row (Thumbnails/Icons)
-        SizedBox(
-          height: 64.0,
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            scrollDirection: Axis.horizontal,
-            itemCount: _allMedia.length,
-            separatorBuilder: (_, _) => const SizedBox(width: 10.0),
-            itemBuilder: (context, index) {
-              final item = _allMedia[index];
-              final isSelected = _currentIndex == index;
-              return AnimatedScale(
-                scale: isSelected ? 1.08 : 1.0,
-                duration: const Duration(milliseconds: 350),
-                curve: Curves.easeOutBack,
-                child: GestureDetector(
-                  onTap: () => setState(() => _currentIndex = index),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 350),
-                    width: 64.0,
-                    decoration: BoxDecoration(
-                      color: isSelected ? AppColors.secondary.withValues(alpha: 0.1) : Colors.white,
-                      borderRadius: AppRadius.large,
-                      border: Border.all(
-                        color: isSelected ? AppColors.secondary : AppColors.fillColor,
-                        width: isSelected ? 2.5 : 1.5,
-                      ),
-                      boxShadow: isSelected
-                          ? [
-                              BoxShadow(
-                                color: AppColors.secondary.withValues(alpha: 0.25),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              )
-                            ]
-                          : [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.03),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
+        // Overlapping Details Card with Top Corners Radius overlaying above the image
+        Transform.translate(
+          offset: const Offset(0.0, -28.0),
+          child: Container(
+            decoration: const BoxDecoration(
+              color: AppColors.neutralBackground,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(28.0),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 20.0),
+                // Media Row (Thumbnails/Icons)
+                SizedBox(
+                  height: 64.0,
+                  child: ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _allMedia.length,
+                    separatorBuilder: (_, _) => const SizedBox(width: 10.0),
+                    itemBuilder: (context, index) {
+                      final item = _allMedia[index];
+                      final isSelected = _currentIndex == index;
+                      return AnimatedScale(
+                        scale: isSelected ? 1.08 : 1.0,
+                        duration: const Duration(milliseconds: 350),
+                        curve: Curves.easeOutBack,
+                        child: GestureDetector(
+                          onTap: () => setState(() => _currentIndex = index),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 350),
+                            width: 64.0,
+                            decoration: BoxDecoration(
+                              color: isSelected ? AppColors.secondary.withValues(alpha: 0.1) : Colors.white,
+                              borderRadius: AppRadius.large,
+                              border: Border.all(
+                                color: isSelected ? AppColors.secondary : AppColors.fillColor,
+                                width: isSelected ? 2.5 : 1.5,
                               ),
-                            ],
-                    ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        if (item.type == GalleryItemType.image && item.url != null)
-                          ClipRRect(
-                            borderRadius: AppRadius.upMedium,
-                            child: CachedNetworkImage(
-                              imageUrl: item.url!,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
+                              boxShadow: isSelected
+                                  ? [
+                                      BoxShadow(
+                                        color: AppColors.secondary.withValues(alpha: 0.25),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                      )
+                                    ]
+                                  : [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(alpha: 0.03),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
                             ),
-                          )
-                        else
-                          _buildThumbnailIcon(item.type, isSelected),
-                        if (item.type == GalleryItemType.model3d)
-                          const Icon(Icons.view_in_ar_rounded, color: Colors.white, size: 24),
-                      ],
-                    ),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                if (item.type == GalleryItemType.image && item.url != null)
+                                  ClipRRect(
+                                    borderRadius: AppRadius.upMedium,
+                                    child: CachedNetworkImage(
+                                      imageUrl: item.url!,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                    ),
+                                  )
+                                else
+                                  _buildThumbnailIcon(item.type, isSelected),
+                                if (item.type == GalleryItemType.model3d)
+                                  const Icon(Icons.view_in_ar_rounded, color: Colors.white, size: 24),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                          .animate()
+                          .fadeIn(delay: (350 + index * 120).ms, duration: 700.ms)
+                          .scale(
+                            begin: const Offset(0.5, 0.5),
+                            duration: 700.ms,
+                            curve: Curves.easeOutBack,
+                          );
+                    },
                   ),
                 ),
-              )
-                  .animate()
-                  .fadeIn(delay: (350 + index * 120).ms, duration: 700.ms)
-                  .scale(
-                    begin: const Offset(0.5, 0.5),
-                    duration: 700.ms,
-                    curve: Curves.easeOutBack,
-                  );
-            },
+                if (widget.child != null) ...[
+                  const SizedBox(height: 12.0),
+                  widget.child!,
+                ],
+              ],
+            ),
           ),
         ),
       ],
@@ -282,19 +389,17 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
 
   Widget _buildMainContent(GalleryItem item) {
     if (item.type == GalleryItemType.image) {
-      return item.url != null
-          ? CachedNetworkImage(
-              imageUrl: item.url!,
-              width: double.infinity,
-              height: double.infinity,
-              fit: BoxFit.contain,
-              placeholder: (context, url) => const ShimmerPlaceholder(
-                width: double.infinity,
-                height: double.infinity,
-              ),
-              errorWidget: (context, url, error) => const AppIconPlaceholder(size: 150),
-            )
-          : const AppIconPlaceholder(size: 150);
+      return item.url != null ? CachedNetworkImage(
+        imageUrl: item.url!,
+        width: double.infinity,
+        height: double.infinity,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => const ShimmerPlaceholder(
+          width: double.infinity,
+          height: double.infinity,
+        ),
+        errorWidget: (context, url, error) => const AppIconPlaceholder(size: 150),
+      ) : const AppIconPlaceholder(size: 150);
     } else if (item.type == GalleryItemType.video) {
       return Container(
         color: AppColors.neutral200,

@@ -17,6 +17,9 @@ class SearchBloc extends Bloc<SearchEvent, BaseState<SearchResultEntity>> {
   int? _lastCategoryId;
   int? _lastBrandId;
   String? _lastSort;
+  double? _lastMinPrice;
+  double? _lastMaxPrice;
+  int? _lastInStock;
 
   SearchBloc({required this.searchProductsUseCase})
       : super(const BaseState<SearchResultEntity>()) {
@@ -38,6 +41,9 @@ class SearchBloc extends Bloc<SearchEvent, BaseState<SearchResultEntity>> {
     _lastCategoryId = event.categoryId;
     _lastBrandId = event.brandId;
     _lastSort = event.sort;
+    _lastMinPrice = event.minPrice;
+    _lastMaxPrice = event.maxPrice;
+    _lastInStock = event.inStock;
 
     emit(const BaseState<SearchResultEntity>(requestStatus: RequestStatus.loading));
 
@@ -46,6 +52,9 @@ class SearchBloc extends Bloc<SearchEvent, BaseState<SearchResultEntity>> {
       categoryId: event.categoryId,
       brandId: event.brandId,
       sort: event.sort,
+      minPrice: event.minPrice,
+      maxPrice: event.maxPrice,
+      inStock: event.inStock,
       page: 1,
       perPage: 20,
     ));
@@ -68,7 +77,7 @@ class SearchBloc extends Bloc<SearchEvent, BaseState<SearchResultEntity>> {
     LoadMoreSearchEvent event,
     Emitter<BaseState<SearchResultEntity>> emit,
   ) async {
-    if (state.hasReachedMax == true || state.requestStatus == RequestStatus.loading || (_lastQuery == null && _lastCategoryId == null && _lastBrandId == null)) return;
+    if (state.hasReachedMax == true || state.requestStatus == RequestStatus.loading || (_lastQuery == null && _lastCategoryId == null && _lastBrandId == null && _lastMinPrice == null && _lastMaxPrice == null && _lastInStock == null)) return;
 
     emit(state.copyWith(requestStatus: RequestStatus.loading));
 
@@ -77,6 +86,9 @@ class SearchBloc extends Bloc<SearchEvent, BaseState<SearchResultEntity>> {
       categoryId: _lastCategoryId,
       brandId: _lastBrandId,
       sort: _lastSort,
+      minPrice: _lastMinPrice,
+      maxPrice: _lastMaxPrice,
+      inStock: _lastInStock,
       page: state.currentPage,
       perPage: 20,
     ));

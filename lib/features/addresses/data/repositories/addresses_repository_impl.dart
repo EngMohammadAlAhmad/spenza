@@ -5,6 +5,7 @@ import 'package:spenza/features/addresses/data/datasources/addresses_datasource.
 import 'package:spenza/features/addresses/domain/entities/add_address_params.dart';
 import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
 import 'package:spenza/features/addresses/domain/entities/governorate_entity.dart';
+import 'package:spenza/features/addresses/domain/entities/update_address_params.dart';
 import 'package:spenza/features/addresses/domain/repositories/addresses_repository.dart';
 
 class AddressesRepositoryImpl implements AddressesRepository {
@@ -20,6 +21,16 @@ class AddressesRepositoryImpl implements AddressesRepository {
   @override
   Future<Either<Failure, AddAddressResult>> addAddress(AddAddressParams params) async {
     return handleRepositoryCall<AddAddressResult>(() async => await datasource.addAddress(params));
+  }
+
+  @override
+  Future<Either<Failure, String>> updateAddress(UpdateAddressParams params) async {
+    return handleRepositoryCall<String>(() async => await datasource.updateAddress(params));
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteAddress(int addressId) async {
+    return handleRepositoryCall<String>(() async => await datasource.deleteAddress(addressId));
   }
 
   @override

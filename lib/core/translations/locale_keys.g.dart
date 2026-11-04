@@ -252,11 +252,14 @@ abstract class  LocaleKeys {
   static const search_product_placeholder = 'search_product_placeholder';
   static const brands = 'brands';
   static const n_products = 'n_products';
+  static const search_results_count_for_query = 'search_results_count_for_query';
   static const no_products_in_category = 'no_products_in_category';
   static const no_products_subtitle = 'no_products_subtitle';
   static const all = 'all';
   static const no_search_results = 'no_search_results';
+  static const no_search_results_query = 'no_search_results_query';
   static const no_search_results_subtitle = 'no_search_results_subtitle';
+  static const browse_categories = 'browse_categories';
   static const recent_searches = 'recent_searches';
   static const trending_searches = 'trending_searches';
   static const search_tag_pencils = 'search_tag_pencils';
@@ -287,6 +290,12 @@ abstract class  LocaleKeys {
   static const out_of_stock = 'out_of_stock';
   static const in_stock = 'in_stock';
   static const unit = 'unit';
+  static const selling_unit = 'selling_unit';
+  static const price_varies_by_unit = 'price_varies_by_unit';
+  static const buying_for_business = 'buying_for_business';
+  static const open_business_account_desc = 'open_business_account_desc';
+  static const for_unit_prefix = 'for_unit_prefix';
+  static const order_now = 'order_now';
   static const quantity = 'quantity';
   static const description = 'description';
   static const you_may_also_like = 'you_may_also_like';

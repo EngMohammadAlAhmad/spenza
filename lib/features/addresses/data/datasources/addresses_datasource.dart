@@ -3,10 +3,13 @@ import 'package:spenza/core/databases/api/end_points.dart';
 import 'package:spenza/features/addresses/data/models/address_model.dart';
 import 'package:spenza/features/addresses/data/models/governorate_model.dart';
 import 'package:spenza/features/addresses/domain/entities/add_address_params.dart';
+import 'package:spenza/features/addresses/domain/entities/update_address_params.dart';
 
 abstract class AddressesDatasource {
   Future<List<AddressModel>> getAddresses();
   Future<AddAddressResult> addAddress(AddAddressParams params);
+  Future<String> updateAddress(UpdateAddressParams params);
+  Future<String> deleteAddress(int addressId);
   Future<List<GovernorateModel>> getLocations();
 }
 
@@ -61,6 +64,39 @@ class AddressesDatasourceImpl implements AddressesDatasource {
 
     final address = AddressModel.fromJson(addressJson);
     return AddAddressResult(message: message, address: address);
+  }
+
+  @override
+  Future<String> updateAddress(UpdateAddressParams params) async {
+    final response = await api.post(
+      '${EndPoints.addresses}/${params.addressId}',
+      data: params.toJson(),
+    );
+
+    String message = 'تم تعديل العنوان بنجاح';
+    if (response is Map<String, dynamic> &&
+        response['message'] != null &&
+        (response['message'] as String).isNotEmpty) {
+      message = response['message'] as String;
+    }
+
+    return message;
+  }
+
+  @override
+  Future<String> deleteAddress(int addressId) async {
+    final response = await api.delete(
+      '${EndPoints.addresses}/$addressId',
+    );
+
+    String message = 'تم حذف العنوان بنجاح';
+    if (response is Map<String, dynamic> &&
+        response['message'] != null &&
+        (response['message'] as String).isNotEmpty) {
+      message = response['message'] as String;
+    }
+
+    return message;
   }
 
   @override

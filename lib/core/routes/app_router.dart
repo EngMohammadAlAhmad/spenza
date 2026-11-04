@@ -22,6 +22,7 @@ import 'package:spenza/features/account/presentation/screens/business_account_sc
 import 'package:spenza/features/account/domain/entities/user_entity.dart';
 import 'package:spenza/features/addresses/presentation/screens/addresses_screen.dart';
 import 'package:spenza/features/addresses/presentation/screens/add_address_screen.dart';
+import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
 import 'package:spenza/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:spenza/features/cart/presentation/screens/cart_screen.dart';
 import 'package:spenza/features/cart/presentation/screens/checkout_screen.dart';
@@ -145,7 +146,10 @@ class AppRouter {
       ),
       GoRoute(
         path: RoutePaths.addAddress,
-        builder: (context, state) => const AddAddressScreen(),
+        builder: (context, state) {
+          final addressToEdit = state.extra as AddressEntity?;
+          return AddAddressScreen(addressToEdit: addressToEdit);
+        },
       ),
       GoRoute(
         path: RoutePaths.notifications,

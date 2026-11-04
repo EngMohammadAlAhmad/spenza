@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 
 class AppIconPlaceholder extends StatelessWidget {
@@ -22,7 +23,7 @@ class AppIconPlaceholder extends StatelessWidget {
           AppAssets.logoWatermark,
           width: size,
           height: size,
-          color: color ?? Colors.grey[300],
+          color: color ?? AppColors.primary.withValues(alpha: 0.5),
           fit: BoxFit.contain,
           errorBuilder: (context, error, stackTrace) => Icon(
             Icons.image_outlined,

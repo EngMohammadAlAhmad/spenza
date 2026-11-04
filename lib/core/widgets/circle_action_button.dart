@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:spenza/core/themes/app_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CircleActionButton extends StatelessWidget {
-  final IconData icon;
+  final String iconPath;
   final VoidCallback onTap;
   final Color? backgroundColor;
-  final bool? shareButton;
   final bool? withShadow;
 
   const CircleActionButton({
     super.key,
-    required this.icon,
+    required this.iconPath,
     required this.onTap,
-    this.shareButton = false,
     this.backgroundColor = Colors.white,
     this.withShadow = true,
   });
@@ -36,10 +34,10 @@ class CircleActionButton extends StatelessWidget {
           ]
               : null,
         ),
-        child: Icon(
-          icon,
-          size: 22.0,
-          color: shareButton! ? AppColors.primary : AppColors.neutral,
+        child: SvgPicture.asset(
+          iconPath,
+          height: 22.0,
+          width: 22.0,
         ),
       ),
     );

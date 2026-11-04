@@ -12,8 +12,10 @@ import 'package:spenza/features/addresses/data/datasources/addresses_datasource.
 import 'package:spenza/features/addresses/data/repositories/addresses_repository_impl.dart';
 import 'package:spenza/features/addresses/domain/repositories/addresses_repository.dart';
 import 'package:spenza/features/addresses/domain/usecases/add_address_use_case.dart';
+import 'package:spenza/features/addresses/domain/usecases/delete_address_use_case.dart';
 import 'package:spenza/features/addresses/domain/usecases/get_addresses_use_case.dart';
 import 'package:spenza/features/addresses/domain/usecases/get_locations_use_case.dart';
+import 'package:spenza/features/addresses/domain/usecases/update_address_use_case.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_bloc.dart';
 import 'package:spenza/features/orders/data/datasources/orders_datasource.dart';
 import 'package:spenza/features/orders/data/repositories/orders_repository_impl.dart';
@@ -255,16 +257,20 @@ Future<void> init() async {
   sl.registerLazySingleton(() => AccountDatasource(api: sl()));
 
   // Addresses Feature
-  sl.registerLazySingleton(() => AddressesBloc(
-        getAddressesUseCase: sl(),
-        addAddressUseCase: sl(),
-        getLocationsUseCase: sl(),
-      ));
   sl.registerLazySingleton(() => GetAddressesUseCase(repository: sl()));
   sl.registerLazySingleton(() => AddAddressUseCase(repository: sl()));
+  sl.registerLazySingleton(() => UpdateAddressUseCase(repository: sl()));
+  sl.registerLazySingleton(() => DeleteAddressUseCase(repository: sl()));
   sl.registerLazySingleton(() => GetLocationsUseCase(repository: sl()));
   sl.registerLazySingleton<AddressesRepository>(() => AddressesRepositoryImpl(datasource: sl()));
   sl.registerLazySingleton<AddressesDatasource>(() => AddressesDatasourceImpl(api: sl()));
+  sl.registerLazySingleton(() => AddressesBloc(
+        getAddressesUseCase: sl(),
+        addAddressUseCase: sl(),
+        updateAddressUseCase: sl(),
+        deleteAddressUseCase: sl(),
+        getLocationsUseCase: sl(),
+      ));
 
   // Points Market Feature
   sl.registerFactory(() => PointsMarketBloc(getUserPointsUseCase: sl()));

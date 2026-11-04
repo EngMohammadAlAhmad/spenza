@@ -35,8 +35,10 @@ class SelectVariantOptionEvent extends ProductDetailsEvent {
 
 class UpdateQuantityEvent extends ProductDetailsEvent {
   final int delta;
-  const UpdateQuantityEvent(this.delta);
+  final int? maxQuantity;
+
+  const UpdateQuantityEvent(this.delta, {this.maxQuantity});
 
   @override
-  List<Object?> get props => [delta];
+  List<Object?> get props => [delta, maxQuantity];
 }

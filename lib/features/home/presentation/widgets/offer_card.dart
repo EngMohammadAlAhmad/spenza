@@ -49,9 +49,13 @@ class _OfferCardState extends State<OfferCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
+              Container(
                 height: 160.0,
                 width: double.infinity,
+                decoration: BoxDecoration(
+                  color: AppColors.secondary.withValues(alpha: 0.5),
+                  borderRadius: AppRadius.topOnly,
+                ),
                 child: Stack(
                   children: [
                     ClipRRect(

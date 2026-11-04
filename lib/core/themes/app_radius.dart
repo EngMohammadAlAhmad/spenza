@@ -37,7 +37,7 @@ class AppRadius {
 
   // Specific corner radius if needed
   static const BorderRadius topOnly = .only(
-    topLeft: Radius.circular(12.0),
-    topRight: Radius.circular(12.0),
+    topLeft: Radius.circular(16.0),
+    topRight: Radius.circular(16.0),
   );
 }

@@ -110,8 +110,12 @@ class _BestSellingCardState extends State<BestSellingCard> {
           child: Column(
             crossAxisAlignment: .start,
             children: [
-              SizedBox(
+              Container(
                 height: 160.0,
+                decoration: BoxDecoration(
+                  color: AppColors.secondary.withValues(alpha: 0.5),
+                  borderRadius: AppRadius.topOnly,
+                ),
                 width: double.infinity,
                 child: Stack(
                   children: [

@@ -62,64 +62,70 @@ class _ProductCardState extends State<ProductCard> {
               // Product Image
               Expanded(
                 flex: 3,
-                child: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
-                      child: product.photo != null && product.photo!.isNotEmpty
-                          ? CachedNetworkImage(
-                              imageUrl: product.photo!,
-                              width: double.infinity,
-                              height: double.infinity,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => const ShimmerPlaceholder(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.secondary.withValues(alpha: 0.3),
+                    borderRadius: AppRadius.topOnly,
+                  ),
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
+                        child: product.photo != null && product.photo!.isNotEmpty
+                            ? CachedNetworkImage(
+                                imageUrl: product.photo!,
                                 width: double.infinity,
                                 height: double.infinity,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => const ShimmerPlaceholder(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                ),
+                                errorWidget: (context, url, error) => const AppIconPlaceholder(size: 60),
+                              )
+                            : const AppIconPlaceholder(size: 120.0),
+                      ),
+                      // Discount Badge
+                      if (product.discountPercentage > 0)
+                        Positioned(
+                          top: 8.0,
+                          right: 8.0,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: AppRadius.large,
+                            ),
+                            child: Text(
+                              '-${product.discountPercentage.toInt()}%',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
                               ),
-                              errorWidget: (context, url, error) => const AppIconPlaceholder(size: 60),
-                            )
-                          : const AppIconPlaceholder(size: 120.0),
-                    ),
-                    // Discount Badge
-                    if (product.discountPercentage > 0)
-                      Positioned(
-                        top: 8.0,
-                        right: 8.0,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                          decoration: BoxDecoration(
-                            color: AppColors.primary,
-                            borderRadius: AppRadius.large,
-                          ),
-                          child: Text(
-                            '-${product.discountPercentage.toInt()}%',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
+                      // Favorite Button
+                      Positioned(
+                        top: 8.0,
+                        left: 8.0,
+                        child: BlocBuilder<FavoritesBloc, BaseState<List<ProductEntity>>>(
+                          builder: (context, state) {
+                            final isFavorite = state.data?.any((p) => p.id == product.id) ?? false;
+                            return FavoriteButton(
+                              size: 18.0,
+                              color: AppColors.grey,
+                              initialFavorite: isFavorite,
+                              onFavoriteChanged: (isFav) {
+                                context.read<FavoritesBloc>().add(ToggleFavoriteEvent(product));
+                              },
+                            );
+                          },
+                        ),
                       ),
-                    // Favorite Button
-                    Positioned(
-                      top: 8.0,
-                      left: 8.0,
-                      child: BlocBuilder<FavoritesBloc, BaseState<List<ProductEntity>>>(
-                        builder: (context, state) {
-                          final isFavorite = state.data?.any((p) => p.id == product.id) ?? false;
-                          return FavoriteButton(
-                            size: 18.0,
-                            color: AppColors.grey,
-                            initialFavorite: isFavorite,
-                            onFavoriteChanged: (isFav) {
-                              context.read<FavoritesBloc>().add(ToggleFavoriteEvent(product));
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               // Product Details

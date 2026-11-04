@@ -27,27 +27,44 @@ class _BannerSliderState extends State<BannerSlider> {
   Widget build(BuildContext context) {
     final isTablet = context.isTablet;
     final double carouselHeight = isTablet ? 328.0 : 152.0;
-    final double viewportFraction = isTablet ? 0.6 : 0.92;
+    final double viewportFraction = isTablet ? 0.45 : 0.92;
 
     if (widget.isLoading) {
-      return CarouselSlider.builder(
-        itemCount: 3,
-        itemBuilder: (context, index, realIndex) {
-          return Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: ShimmerPlaceholder(
-              width: double.infinity,
+      return Column(
+        children: [
+          CarouselSlider.builder(
+            itemCount: 3,
+            itemBuilder: (context, index, realIndex) {
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: ShimmerPlaceholder(
+                  width: double.infinity,
+                  height: carouselHeight,
+                  borderRadius: AppRadius.overMedium,
+                ),
+              );
+            },
+            options: CarouselOptions(
               height: carouselHeight,
-              borderRadius: AppRadius.overMedium,
+              viewportFraction: viewportFraction,
+              padEnds: !isTablet,
+              enableInfiniteScroll: true,
+              autoPlay: false,
             ),
-          );
-        },
-        options: CarouselOptions(
-          height: carouselHeight,
-          viewportFraction: viewportFraction,
-          enableInfiniteScroll: false,
-          autoPlay: false,
-        ),
+          ),
+          const SizedBox(height: 12),
+          AnimatedSmoothIndicator(
+            activeIndex: 0,
+            count: 3,
+            effect: ExpandingDotsEffect(
+              dotHeight: 8,
+              dotWidth: 8,
+              expansionFactor: 2.5,
+              activeDotColor: AppColors.primary,
+              dotColor: AppColors.primary.withValues(alpha: 0.3),
+            ),
+          ),
+        ],
       );
     }
 
@@ -61,7 +78,7 @@ class _BannerSliderState extends State<BannerSlider> {
           itemBuilder: (context, index, realIndex) {
             final banner = widget.banners[index];
             return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10.0),
+              margin: const EdgeInsets.symmetric(horizontal: 8.0),
               child: ClipRRect(
                 borderRadius: AppRadius.overMedium,
                 child: CachedNetworkImage(
@@ -83,6 +100,7 @@ class _BannerSliderState extends State<BannerSlider> {
           options: CarouselOptions(
             height: carouselHeight,
             viewportFraction: viewportFraction,
+            padEnds: !isTablet,
             enlargeCenterPage: false,
             enableInfiniteScroll: true,
             autoPlay: true,
@@ -95,7 +113,7 @@ class _BannerSliderState extends State<BannerSlider> {
         ),
         const SizedBox(height: 12),
         AnimatedSmoothIndicator(
-          activeIndex: _currentPage,
+          activeIndex: _currentPage.clamp(0, widget.banners.isEmpty ? 0 : widget.banners.length - 1),
           count: widget.banners.length,
           effect: ExpandingDotsEffect(
             dotHeight: 8,

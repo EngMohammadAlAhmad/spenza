@@ -66,7 +66,7 @@ class _AppSearchFieldState extends State<AppSearchField> {
   Widget build(BuildContext context) {
     return CustomTextField(
       controller: _effectiveController,
-      fillColor: AppColors.neutral200,
+      fillColor: AppColors.neutralBackground,
       focusNode: widget.focusNode,
       readOnly: widget.readOnly,
       onTap: widget.onTap,

@@ -12,6 +12,9 @@ class PerformSearchEvent extends SearchEvent {
   final int? categoryId;
   final int? brandId;
   final String? sort;
+  final double? minPrice;
+  final double? maxPrice;
+  final int? inStock;
   final bool isRefresh;
 
   const PerformSearchEvent({
@@ -19,11 +22,23 @@ class PerformSearchEvent extends SearchEvent {
     this.categoryId,
     this.brandId,
     this.sort,
+    this.minPrice,
+    this.maxPrice,
+    this.inStock,
     this.isRefresh = false,
   });
 
   @override
-  List<Object?> get props => [q, categoryId, brandId, sort, isRefresh];
+  List<Object?> get props => [
+        q,
+        categoryId,
+        brandId,
+        sort,
+        minPrice,
+        maxPrice,
+        inStock,
+        isRefresh,
+      ];
 }
 
 class LoadMoreSearchEvent extends SearchEvent {

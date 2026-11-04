@@ -38,6 +38,7 @@ class ProductItemEntity extends Equatable {
   final List<ProductVariantEntity> variants;
   final int defaultVariantId;
   final ProductStorageEntity storage;
+  final List<ProductSpecificationEntity> specifications;
 
   const ProductItemEntity({
     required this.id,
@@ -61,6 +62,7 @@ class ProductItemEntity extends Equatable {
     required this.variants,
     required this.defaultVariantId,
     required this.storage,
+    this.specifications = const [],
   });
 
   ProductEntity toProductEntity() {
@@ -100,7 +102,36 @@ class ProductItemEntity extends Equatable {
         variants,
         defaultVariantId,
         storage,
+        specifications,
       ];
+}
+
+class ProductSpecificationEntity extends Equatable {
+  final int attributeId;
+  final String name;
+  final List<ProductSpecificationValueEntity> values;
+
+  const ProductSpecificationEntity({
+    required this.attributeId,
+    required this.name,
+    required this.values,
+  });
+
+  @override
+  List<Object?> get props => [attributeId, name, values];
+}
+
+class ProductSpecificationValueEntity extends Equatable {
+  final int valueId;
+  final String name;
+
+  const ProductSpecificationValueEntity({
+    required this.valueId,
+    required this.name,
+  });
+
+  @override
+  List<Object?> get props => [valueId, name];
 }
 
 class ProductUnitEntity extends Equatable {

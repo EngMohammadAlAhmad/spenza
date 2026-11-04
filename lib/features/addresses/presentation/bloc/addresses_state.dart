@@ -13,6 +13,14 @@ class AddressesState extends Equatable {
   final Failure addAddressFailure;
   final String? addAddressSuccessMessage;
 
+  final RequestStatus updateAddressStatus;
+  final Failure updateAddressFailure;
+  final String? updateAddressSuccessMessage;
+
+  final RequestStatus deleteAddressStatus;
+  final Failure deleteAddressFailure;
+  final String? deleteAddressSuccessMessage;
+
   final List<GovernorateEntity> governorates;
   final RequestStatus locationsStatus;
   final Failure locationsFailure;
@@ -24,6 +32,12 @@ class AddressesState extends Equatable {
     this.addAddressStatus = RequestStatus.init,
     this.addAddressFailure = defaultFailure,
     this.addAddressSuccessMessage,
+    this.updateAddressStatus = RequestStatus.init,
+    this.updateAddressFailure = defaultFailure,
+    this.updateAddressSuccessMessage,
+    this.deleteAddressStatus = RequestStatus.init,
+    this.deleteAddressFailure = defaultFailure,
+    this.deleteAddressSuccessMessage,
     this.governorates = const [],
     this.locationsStatus = RequestStatus.init,
     this.locationsFailure = defaultFailure,
@@ -36,6 +50,12 @@ class AddressesState extends Equatable {
     RequestStatus? addAddressStatus,
     Failure? addAddressFailure,
     String? addAddressSuccessMessage,
+    RequestStatus? updateAddressStatus,
+    Failure? updateAddressFailure,
+    String? updateAddressSuccessMessage,
+    RequestStatus? deleteAddressStatus,
+    Failure? deleteAddressFailure,
+    String? deleteAddressSuccessMessage,
     List<GovernorateEntity>? governorates,
     RequestStatus? locationsStatus,
     Failure? locationsFailure,
@@ -47,6 +67,12 @@ class AddressesState extends Equatable {
       addAddressStatus: addAddressStatus ?? this.addAddressStatus,
       addAddressFailure: addAddressFailure ?? this.addAddressFailure,
       addAddressSuccessMessage: addAddressSuccessMessage ?? this.addAddressSuccessMessage,
+      updateAddressStatus: updateAddressStatus ?? this.updateAddressStatus,
+      updateAddressFailure: updateAddressFailure ?? this.updateAddressFailure,
+      updateAddressSuccessMessage: updateAddressSuccessMessage ?? this.updateAddressSuccessMessage,
+      deleteAddressStatus: deleteAddressStatus ?? this.deleteAddressStatus,
+      deleteAddressFailure: deleteAddressFailure ?? this.deleteAddressFailure,
+      deleteAddressSuccessMessage: deleteAddressSuccessMessage ?? this.deleteAddressSuccessMessage,
       governorates: governorates ?? this.governorates,
       locationsStatus: locationsStatus ?? this.locationsStatus,
       locationsFailure: locationsFailure ?? this.locationsFailure,
@@ -61,6 +87,12 @@ class AddressesState extends Equatable {
         addAddressStatus,
         addAddressFailure,
         addAddressSuccessMessage,
+        updateAddressStatus,
+        updateAddressFailure,
+        updateAddressSuccessMessage,
+        deleteAddressStatus,
+        deleteAddressFailure,
+        deleteAddressSuccessMessage,
         governorates,
         locationsStatus,
         locationsFailure,

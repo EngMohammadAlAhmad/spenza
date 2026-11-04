@@ -54,6 +54,8 @@ class AppAssets {
   static const String accountIcon = '$_icons/account_icon.svg';
   static const String accountSelected = '$_icons/account_selected.svg';
   static const String activityIcon = '$_icons/activity_icon.svg';
+  static const String availableIcon = '$_icons/available_icon.svg';
+  static const String unAvailableIcon = '$_icons/un_available_icon.svg';
   static const String backButton = '$_icons/back_button.svg';
   static const String backButton2 = '$_icons/back_button_2.svg';
   static const String bankIcon = '$_icons/bank_icon.svg';
@@ -127,4 +129,6 @@ class AppAssets {
   static const String truckIcon = '$_icons/truck_icon.svg';
   static const String bellIcon = '$_icons/bell_icon.svg';
   static const String questionIcon = '$_icons/question_icon.svg';
+  static const String shareIcon = '$_icons/share_icon.svg';
+  static const String imagesIcon = '$_icons/images.svg';
 }

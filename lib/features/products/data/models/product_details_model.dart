@@ -43,6 +43,7 @@ class ProductItemModel extends ProductItemEntity {
     required super.variants,
     required super.defaultVariantId,
     required super.storage,
+    super.specifications,
   });
 
   factory ProductItemModel.fromJson(Map<String, dynamic> json) {
@@ -63,17 +64,24 @@ class ProductItemModel extends ProductItemEntity {
       discountedPrice: json['discounted_price'] ?? 0,
       discountPercentage: json['discount_percentage'] ?? 0,
       defaultUnitId: json['default_unit_id'] ?? 0,
-      units: (json['units'] as List)
-          .map((e) => ProductUnitModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      variantOptions: (json['variant_options'] as List)
-          .map((e) => ProductVariantOptionModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      variants: (json['variants'] as List)
-          .map((e) => ProductVariantModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      units: (json['units'] as List?)
+              ?.map((e) => ProductUnitModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      variantOptions: (json['variant_options'] as List?)
+              ?.map((e) => ProductVariantOptionModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      variants: (json['variants'] as List?)
+              ?.map((e) => ProductVariantModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       defaultVariantId: json['default_variant_id'] ?? 0,
       storage: ProductStorageModel.fromJson(json['storage'] as Map<String, dynamic>),
+      specifications: (json['specifications'] as List?)
+              ?.map((e) => ProductSpecificationModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 }
@@ -166,6 +174,39 @@ class ProductStorageModel extends ProductStorageEntity {
       qtyAvailable: json['qty_available'] ?? 0,
       inStock: json['in_stock'] ?? true,
       isLowStock: json['is_low_stock'] ?? false,
+    );
+  }
+}
+
+class ProductSpecificationModel extends ProductSpecificationEntity {
+  const ProductSpecificationModel({
+    required super.attributeId,
+    required super.name,
+    required super.values,
+  });
+
+  factory ProductSpecificationModel.fromJson(Map<String, dynamic> json) {
+    return ProductSpecificationModel(
+      attributeId: json['attribute_id'] ?? 0,
+      name: json['name'] ?? '',
+      values: (json['values'] as List?)
+              ?.map((e) => ProductSpecificationValueModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+    );
+  }
+}
+
+class ProductSpecificationValueModel extends ProductSpecificationValueEntity {
+  const ProductSpecificationValueModel({
+    required super.valueId,
+    required super.name,
+  });
+
+  factory ProductSpecificationValueModel.fromJson(Map<String, dynamic> json) {
+    return ProductSpecificationValueModel(
+      valueId: json['value_id'] ?? 0,
+      name: json['name'] ?? '',
     );
   }
 }

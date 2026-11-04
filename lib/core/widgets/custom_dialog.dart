@@ -315,12 +315,12 @@ class _AppCustomDialogState extends State<AppCustomDialog>
                       ],
                     ),
                     alignment: Alignment.center,
-                    child: widget.iconPath != null
-                            ? SvgPicture.asset(
-                                widget.iconPath!,
-                                colorFilter: ColorFilter.mode(widget.iconColor, BlendMode.srcIn),
-                              )
-                            : const SizedBox.shrink(),
+                    child: widget.iconPath != null ? SvgPicture.asset(
+                      height: 30.0,
+                      width: 30.0,
+                      widget.iconPath!,
+                      colorFilter: ColorFilter.mode(widget.iconColor, BlendMode.srcIn),
+                    ) : const SizedBox.shrink(),
                   ),
                 ),
               ),

@@ -160,6 +160,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
                 ),
               ),
               FilterButton(
+                onlyIcon: true,
                 isFiltered: state.minPrice != null ||
                     state.maxPrice != null ||
                     (state.inStock != null && state.inStock == 1),

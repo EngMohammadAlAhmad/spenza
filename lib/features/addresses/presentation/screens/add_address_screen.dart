@@ -13,27 +13,33 @@ import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
 import 'package:spenza/features/addresses/domain/entities/add_address_params.dart';
+import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
 import 'package:spenza/features/addresses/domain/entities/city_entity.dart';
 import 'package:spenza/features/addresses/domain/entities/governorate_entity.dart';
+import 'package:spenza/features/addresses/domain/entities/update_address_params.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_bloc.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_event.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_state.dart';
 import 'package:spenza/injection_locator.dart' as di;
 
 class AddAddressScreen extends StatelessWidget {
-  const AddAddressScreen({super.key});
+  final AddressEntity? addressToEdit;
+
+  const AddAddressScreen({super.key, this.addressToEdit});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: di.sl<AddressesBloc>()..add(const GetLocationsEvent()),
-      child: const _AddAddressView(),
+      child: _AddAddressView(addressToEdit: addressToEdit),
     );
   }
 }
 
 class _AddAddressView extends StatefulWidget {
-  const _AddAddressView();
+  final AddressEntity? addressToEdit;
+
+  const _AddAddressView({this.addressToEdit});
 
   @override
   State<_AddAddressView> createState() => _AddAddressViewState();
@@ -54,6 +60,23 @@ class _AddAddressViewState extends State<_AddAddressView> {
   final TextEditingController _phoneController = TextEditingController();
 
   bool _isDefault = true;
+
+  bool get isEditing => widget.addressToEdit != null;
+
+  @override
+  void initState() {
+    super.initState();
+    if (isEditing) {
+      final addr = widget.addressToEdit!;
+      _selectedType = addr.type.isNotEmpty ? addr.type : 'home';
+      _selectedLabel = addr.label.isNotEmpty ? addr.label : 'Home';
+      _streetController.text = addr.street;
+      _buildingController.text = addr.building;
+      _floorController.text = addr.floor;
+      _phoneController.text = addr.phone;
+      _isDefault = addr.isDefault;
+    }
+  }
 
   @override
   void dispose() {
@@ -79,49 +102,102 @@ class _AddAddressViewState extends State<_AddAddressView> {
       return;
     }
 
-    final params = AddAddressParams(
-      type: _selectedType,
-      label: _selectedLabel,
-      cityId: _selectedCity!.id,
-      area: _selectedCity!.name,
-      street: _streetController.text.trim(),
-      building: _buildingController.text.trim(),
-      floor: _floorController.text.trim(),
-      phone: _phoneController.text.trim(),
-      isDefault: _isDefault,
-    );
+    if (isEditing) {
+      final params = UpdateAddressParams(
+        addressId: widget.addressToEdit!.id,
+        type: _selectedType,
+        label: _selectedLabel,
+        cityId: _selectedCity!.id,
+        area: _selectedCity!.name,
+        street: _streetController.text.trim(),
+        building: _buildingController.text.trim(),
+        floor: _floorController.text.trim(),
+        phone: _phoneController.text.trim(),
+        isDefault: _isDefault,
+      );
 
-    context.read<AddressesBloc>().add(AddAddressEvent(params));
+      context.read<AddressesBloc>().add(UpdateAddressEvent(params));
+    } else {
+      final params = AddAddressParams(
+        type: _selectedType,
+        label: _selectedLabel,
+        cityId: _selectedCity!.id,
+        area: _selectedCity!.name,
+        street: _streetController.text.trim(),
+        building: _buildingController.text.trim(),
+        floor: _floorController.text.trim(),
+        phone: _phoneController.text.trim(),
+        isDefault: _isDefault,
+      );
+
+      context.read<AddressesBloc>().add(AddAddressEvent(params));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AddressesBloc, AddressesState>(
-      listenWhen: (previous, current) =>
-          previous.addAddressStatus != current.addAddressStatus,
-      listener: (context, state) {
-        if (state.addAddressStatus == RequestStatus.success) {
-          final msg = state.addAddressSuccessMessage ?? 'address_saved_success'.tr();
-          SnackbarService.showSuccess(context, message: msg);
-          context.pop(true);
-        } else if (state.addAddressStatus == RequestStatus.error) {
-          SnackbarService.showError(
-            context,
-            message: state.addAddressFailure.errMessage,
-          );
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AddressesBloc, AddressesState>(
+          listenWhen: (previous, current) =>
+              previous.addAddressStatus != current.addAddressStatus,
+          listener: (context, state) {
+            if (state.addAddressStatus == RequestStatus.success) {
+              final msg = state.addAddressSuccessMessage ?? 'address_saved_success'.tr();
+              SnackbarService.showSuccess(context, message: msg);
+              context.pop(true);
+            } else if (state.addAddressStatus == RequestStatus.error) {
+              SnackbarService.showError(
+                context,
+                message: state.addAddressFailure.errMessage,
+              );
+            }
+          },
+        ),
+        BlocListener<AddressesBloc, AddressesState>(
+          listenWhen: (previous, current) =>
+              previous.updateAddressStatus != current.updateAddressStatus,
+          listener: (context, state) {
+            if (state.updateAddressStatus == RequestStatus.success) {
+              final msg = state.updateAddressSuccessMessage ?? 'تم تعديل العنوان بنجاح';
+              SnackbarService.showSuccess(context, message: msg);
+              context.pop(true);
+            } else if (state.updateAddressStatus == RequestStatus.error) {
+              SnackbarService.showError(
+                context,
+                message: state.updateAddressFailure.errMessage,
+              );
+            }
+          },
+        ),
+      ],
       child: AppScaffold(
-        title: 'new_address'.tr(),
+        title: isEditing ? 'تعديل العنوان' : 'new_address'.tr(),
         body: Column(
           children: [
-
             // Form Scrollable Body
             Expanded(
               child: BlocBuilder<AddressesBloc, AddressesState>(
                 builder: (context, state) {
                   // Sync initial governorate and city selection when locations are loaded
-                  if (state.governorates.isNotEmpty) {
+                  if (state.governorates.isNotEmpty && _selectedGovernorate == null) {
+                    if (isEditing) {
+                      final targetCityId = widget.addressToEdit!.cityId;
+                      final targetArea = widget.addressToEdit!.area;
+
+                      for (final gov in state.governorates) {
+                        final matchedCity = gov.cities.cast<CityEntity?>().firstWhere(
+                          (c) => c != null && (c.id == targetCityId || c.name == targetArea),
+                          orElse: () => null,
+                        );
+                        if (matchedCity != null) {
+                          _selectedGovernorate = gov;
+                          _selectedCity = matchedCity;
+                          break;
+                        }
+                      }
+                    }
+
                     if (_selectedGovernorate == null ||
                         !state.governorates.contains(_selectedGovernorate)) {
                       _selectedGovernorate = state.governorates.first;
@@ -236,8 +312,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
                                                   fontSize: 14.0,
                                                   fontWeight:
                                                   FontWeight.w500,
-                                                  color:
-                                                  AppColors.neutral900,
+                                                  color: AppColors.neutral900,
                                                 ),
                                               ),
                                             );
@@ -517,11 +592,12 @@ class _AddAddressViewState extends State<_AddAddressView> {
               ),
             ),
 
-            // Bottom Sticky Save Button
+            // Bottom Sticky Save / Edit Button
             BlocBuilder<AddressesBloc, AddressesState>(
               builder: (context, state) {
-                final isLoading =
-                    state.addAddressStatus == RequestStatus.loading;
+                final isLoading = isEditing
+                    ? state.updateAddressStatus == RequestStatus.loading
+                    : state.addAddressStatus == RequestStatus.loading;
                 return Container(
                   padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 20.0),
                   decoration: const BoxDecoration(
@@ -538,7 +614,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
                     ],
                   ),
                   child: CustomButton(
-                    text: 'save_address'.tr(),
+                    text: isEditing ? 'تعديل العنوان' : 'save_address'.tr(),
                     isLoading: isLoading,
                     onPressed: isLoading ? null : () => _submitAddress(context),
                   ),

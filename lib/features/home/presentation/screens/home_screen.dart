@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           child: SingleChildScrollView(
                             physics: const BouncingScrollPhysics(),
-                            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 150.0),
+                            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 170.0),
                             child: Column(
                               spacing: 25.0,
                               children: [

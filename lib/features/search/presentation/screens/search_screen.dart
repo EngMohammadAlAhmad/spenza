@@ -8,9 +8,11 @@ import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/base_state.dart';
-import 'package:spenza/core/widgets/app_back_button.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
+import 'package:spenza/core/widgets/app_scaffold.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
-import 'package:spenza/core/widgets/empty_result_widget.dart';
+import 'package:spenza/core/widgets/filter_bottom_sheet.dart';
+import 'package:spenza/features/search/presentation/widgets/search_empty_widget.dart';
 import 'package:spenza/core/widgets/product_card.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
@@ -34,6 +36,10 @@ class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   late final SearchBloc _searchBloc;
+
+  double? _minPrice;
+  double? _maxPrice;
+  int? _inStock;
 
   @override
   void initState() {
@@ -72,112 +78,174 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _performSearch(String query) {
-    if (query.trim().isEmpty) return;
+    if (query.trim().isEmpty && _minPrice == null && _maxPrice == null && _inStock == null) return;
     _focusNode.unfocus();
     _searchBloc.add(PerformSearchEvent(
-      q: query,
+      q: query.trim().isEmpty ? null : query.trim(),
       categoryId: widget.categoryId,
       brandId: widget.brandId,
+      minPrice: _minPrice,
+      maxPrice: _maxPrice,
+      inStock: _inStock,
     ));
+  }
+
+  Future<void> _openFilter() async {
+    final result = await FilterBottomSheet.show(
+      context: context,
+      minPrice: _minPrice,
+      maxPrice: _maxPrice,
+      inStock: _inStock,
+    );
+    if (result != null && mounted) {
+      setState(() {
+        _minPrice = result.minPrice;
+        _maxPrice = result.maxPrice;
+        _inStock = result.inStock;
+      });
+      _performSearch(_controller.text);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final crossAxisCount = context.gridColumns(
+      mobile: 2,
+      tabletPortrait: 4,
+      tabletLandscape: 6,
+      desktop: 6,
+    );
+
     return BlocProvider.value(
       value: _searchBloc,
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: Column(
-              children: [
-                // Search Header
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      const AppBackButton(),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: AppSearchField(
-                          controller: _controller,
-                          focusNode: _focusNode,
-                          onSubmitted: (value) => _performSearch(value),
-                        ),
+        child: AppScaffold(
+          titleWidget: AppSearchField(
+            controller: _controller,
+            focusNode: _focusNode,
+            onSubmitted: (value) => _performSearch(value),
+          ),
+          subtitleWidget: SizedBox(),
+          backgroundColor: AppColors.neutralBackground,
+          body: BlocBuilder<SearchBloc, BaseState<SearchResultEntity>>(
+            builder: (context, state) {
+              if (state.requestStatus == RequestStatus.init) {
+                return _buildInitialState();
+              }
+
+              final products = state.data?.products ?? [];
+
+              if (state.isLoading && products.isEmpty) {
+                return Column(
+                  children: [
+                    _buildHeaderRow(state),
+                    Expanded(child: _buildLoadingGrid(crossAxisCount)),
+                  ],
+                );
+              }
+
+              if (state.isError && products.isEmpty) {
+                if (state.failure is OfflineFailure) {
+                  return NoInternetWidget(
+                    onRetry: () {
+                      if (_controller.text.isNotEmpty || _minPrice != null || _maxPrice != null || _inStock != null) {
+                        _performSearch(_controller.text);
+                      }
+                    },
+                  );
+                }
+                return Center(child: Text(state.errorMessage));
+              }
+
+              if (products.isEmpty) {
+                return Column(
+                  children: [
+                    _buildHeaderRow(state),
+                    Expanded(
+                      child: SearchEmptyWidget(
+                        searchQuery: _controller.text,
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                  ],
+                );
+              }
 
-                Expanded(
-                  child: BlocBuilder<SearchBloc, BaseState<SearchResultEntity>>(
-                    builder: (context, state) {
-                      if (state.requestStatus == RequestStatus.init) {
-                        return _buildInitialState();
-                      }
-
-                      final products = state.data?.products ?? [];
-
-                      if (state.isLoading && products.isEmpty) {
-                        return _buildLoadingGrid();
-                      }
-
-                      if (state.isError && products.isEmpty) {
-                        if (state.failure is OfflineFailure) {
-                          return NoInternetWidget(
-                            onRetry: () {
-                              if (_controller.text.isNotEmpty) {
-                                _performSearch(_controller.text);
-                              }
-                            },
+              return Column(
+                children: [
+                  _buildHeaderRow(state),
+                  Expanded(
+                    child: GridView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+                      physics: const BouncingScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        childAspectRatio: 174 / 250,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                      ),
+                      itemCount: state.hasReachedMax == true
+                          ? products.length
+                          : products.length + crossAxisCount,
+                      itemBuilder: (context, index) {
+                        if (index >= products.length) {
+                          return const ShimmerPlaceholder(
+                            width: double.infinity,
+                            height: double.infinity,
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
                           );
                         }
-                        return Center(child: Text(state.errorMessage));
-                      }
-
-                      if (products.isEmpty) {
-                        return Center(
-                          child: EmptyResultWidget(
-                            title: 'no_search_results'.tr(),
-                            subtitle: 'no_search_results_subtitle'.tr(),
-                            showShoppingButton: false,
-                          ),
-                        );
-                      }
-
-                      return GridView.builder(
-                        controller: _scrollController,
-                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-                        physics: const BouncingScrollPhysics(),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 174 / 250,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                        ),
-                        itemCount: state.hasReachedMax == true ? products.length : products.length + 2,
-                        itemBuilder: (context, index) {
-                          if (index >= products.length) {
-                            return const ShimmerPlaceholder(
-                              width: double.infinity,
-                              height: double.infinity,
-                              borderRadius: BorderRadius.all(Radius.circular(16)),
-                            );
-                          }
-                          return ProductCard(product: products[index])
-                              .animate()
-                              .fadeIn(duration: 400.ms)
-                              .scale(begin: const Offset(0.9, 0.9));
-                        },
-                      );
-                    },
+                        return ProductCard(product: products[index])
+                            .animate()
+                            .fadeIn(duration: 400.ms)
+                            .scale(begin: const Offset(0.9, 0.9));
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              );
+            },
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildHeaderRow(BaseState<SearchResultEntity> state) {
+    final total = state.data?.total ?? (state.data?.products.length ?? 0);
+    final queryText = _controller.text.trim();
+
+    final isFiltered = _minPrice != null ||
+        _maxPrice != null ||
+        (_inStock != null && _inStock == 1);
+
+    final String countText = queryText.isNotEmpty
+        ? 'search_results_count_for_query'.tr(args: [total.toString(), queryText])
+        : 'n_products'.tr(args: [total.toString()]);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Text(
+              countText,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.neutral900,
+                  ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          FilterButton(
+            isFiltered: isFiltered,
+            onTap: _openFilter,
+          ),
+        ],
       ),
     );
   }
@@ -188,7 +256,7 @@ class _SearchScreenState extends State<SearchScreen> {
       children: [
         const SizedBox(height: 8),
         // Recent Searches
-        _buildSectionHeader('recent_searches'.tr(), AppAssets.clockIcon),
+        _buildSectionHeader('recent_searches'.tr(), AppAssets.activityIcon, iconColor: AppColors.neutral),
         const SizedBox(height: 12),
         Wrap(
           spacing: 10,
@@ -203,7 +271,7 @@ class _SearchScreenState extends State<SearchScreen> {
         const SizedBox(height: 32),
 
         // Popular Searches
-        _buildSectionHeader('trending_searches'.tr(), AppAssets.trendIcon),
+        _buildSectionHeader('trending_searches'.tr(), AppAssets.iconSmall),
         const SizedBox(height: 12),
         Wrap(
           spacing: 10,
@@ -222,11 +290,11 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildSectionHeader(String title, String iconPath) {
+  Widget _buildSectionHeader(String title, String iconPath, {Color? iconColor}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SvgPicture.asset(iconPath, colorFilter: const ColorFilter.mode(AppColors.neutral, BlendMode.srcIn), width: 20, height: 20),
+        SvgPicture.asset(iconPath, colorFilter: iconColor != null ? ColorFilter.mode(iconColor, BlendMode.srcIn) : null, width: 20, height: 20),
         const SizedBox(width: 8),
         Text(
           title,
@@ -244,12 +312,16 @@ class _SearchScreenState extends State<SearchScreen> {
     return GestureDetector(
       onTap: () {
         _controller.text = label;
+        _performSearch(label);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: AppColors.neutral200,
+          color: Colors.white,
           borderRadius: AppRadius.extraLarge,
+          border: Border.all(
+            color: AppColors.neutralBorderStrong,
+          )
         ),
         child: Text(
           label,
@@ -262,16 +334,16 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildLoadingGrid() {
+  Widget _buildLoadingGrid(int crossAxisCount) {
     return GridView.builder(
-      padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
         childAspectRatio: 174 / 250,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),
-      itemCount: 6,
+      itemCount: crossAxisCount * 3,
       itemBuilder: (_, _) => const ShimmerPlaceholder(
         width: double.infinity,
         height: double.infinity,

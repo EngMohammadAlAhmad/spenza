@@ -62,7 +62,7 @@ class _FavoriteButtonState extends State<FavoriteButton> {
         child: Icon(
           _isFavorite ? Icons.favorite : Icons.favorite_border,
           size: widget.size,
-          color: _isFavorite ? Colors.red : (widget.color ?? AppColors.neutral),
+          color: _isFavorite ? AppColors.primary : (widget.color ?? AppColors.neutral),
         ).animate(target: _isFavorite ? 1 : 0)
             .scaleXY(begin: 1.0, end: 1.3, duration: 150.ms)
             .then()

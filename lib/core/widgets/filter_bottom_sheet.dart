@@ -7,6 +7,8 @@ import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
 
+export 'filter_button.dart';
+
 class FilterResult {
   final double? minPrice;
   final double? maxPrice;
@@ -17,36 +19,6 @@ class FilterResult {
     this.maxPrice,
     this.inStock,
   });
-}
-
-class FilterButton extends StatelessWidget {
-  final VoidCallback onTap;
-  final bool isFiltered;
-
-  const FilterButton({
-    super.key,
-    required this.onTap,
-    this.isFiltered = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(13.0),
-        decoration: BoxDecoration(
-          color: isFiltered ? AppColors.primary : AppColors.primary.withValues(alpha: 0.1),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          Icons.tune,
-          size: 25.0,
-          color: isFiltered ? Colors.white : AppColors.primary,
-        ),
-      ),
-    );
-  }
 }
 
 class FilterBottomSheet extends StatefulWidget {

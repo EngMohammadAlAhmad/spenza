@@ -77,7 +77,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
   }
 
   void _onSelectUnit(SelectUnitEvent event, Emitter<ProductDetailsState> emit) {
-    emit(state.copyWith(selectedUnitId: event.unitId));
+    emit(state.copyWith(selectedUnitId: event.unitId, quantity: 1));
   }
 
   void _onSelectVariantOption(SelectVariantOptionEvent event, Emitter<ProductDetailsState> emit) {
@@ -87,8 +87,9 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
   }
 
   void _onUpdateQuantity(UpdateQuantityEvent event, Emitter<ProductDetailsState> emit) {
+    final maxQty = event.maxQuantity ?? double.maxFinite.toInt();
     final newQty = state.quantity + event.delta;
-    if (newQty >= 1) {
+    if (newQty >= 1 && newQty <= maxQty) {
       emit(state.copyWith(quantity: newQty));
     }
   }

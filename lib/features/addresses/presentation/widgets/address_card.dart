@@ -9,11 +9,13 @@ import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
 class AddressCard extends StatelessWidget {
   final AddressEntity address;
   final VoidCallback? onEditPressed;
+  final VoidCallback? onDeletePressed;
 
   const AddressCard({
     super.key,
     required this.address,
     this.onEditPressed,
+    this.onDeletePressed,
   });
 
   @override
@@ -102,9 +104,32 @@ class AddressCard extends StatelessWidget {
                 ],
               ),
             ),
-            InkWell(
-              onTap: onEditPressed,
-              child: SvgPicture.asset(AppAssets.editIcon),
+            const SizedBox(width: 12.0),
+
+            // Actions (Edit & Delete)
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InkWell(
+                  onTap: onEditPressed,
+                  child: SvgPicture.asset(AppAssets.editIcon),
+                ),
+                if (onDeletePressed != null) ...[
+                  const SizedBox(height: 14.0),
+                  InkWell(
+                    onTap: onDeletePressed,
+                    child: SvgPicture.asset(
+                      AppAssets.removeIcon,
+                      width: 20.0,
+                      height: 20.0,
+                      colorFilter: const ColorFilter.mode(
+                        AppColors.error,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
           ],
         ),
