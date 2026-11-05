@@ -4,7 +4,6 @@ import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/widgets/app_header.dart';
-import 'package:spenza/core/widgets/cart_header_icon_button.dart';
 
 class OrdersHeader extends StatelessWidget {
   final int selectedTabIndex;
@@ -26,7 +25,6 @@ class OrdersHeader extends StatelessWidget {
       style: AppHeaderStyle.light,
       title: 'my_orders'.tr(),
       showBackButton: false,
-      trailingActions: const [CartHeaderIconButton()],
       titleTextStyle: const TextStyle(
         fontSize: 20.0,
         fontWeight: FontWeight.bold,

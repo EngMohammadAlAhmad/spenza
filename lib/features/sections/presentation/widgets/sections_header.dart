@@ -7,7 +7,6 @@ import 'package:spenza/core/utils/animations/circular_reveal_route.dart';
 import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
-import 'package:spenza/core/widgets/cart_header_icon_button.dart';
 import 'package:spenza/features/search/presentation/screens/search_screen.dart';
 
 class SectionsHeader extends StatelessWidget {
@@ -34,7 +33,7 @@ class SectionsHeader extends StatelessWidget {
         top: context.screenPadding.top + 8,
         left: 16.0,
         right: 16.0,
-        bottom: 24.0,
+        bottom: 16.0,
       ),
       titleWidget: Row(
         spacing: 16.0,
@@ -42,9 +41,8 @@ class SectionsHeader extends StatelessWidget {
           Text(
             'sections'.tr(),
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
-                ),
+              fontWeight: FontWeight.bold,
+            ),
           ).animate().fadeIn(delay: 100.ms, duration: 400.ms).slideX(begin: 0.2, end: 0.0),
           Expanded(
             child: GestureDetector(
@@ -65,7 +63,6 @@ class SectionsHeader extends StatelessWidget {
               ),
             ),
           ).animate().fadeIn(delay: 200.ms, duration: 400.ms).scale(begin: const Offset(0.9, 0.9)),
-          const CartHeaderIconButton(),
         ],
       ),
       bottomChild: Container(
