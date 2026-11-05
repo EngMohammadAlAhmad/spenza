@@ -25,7 +25,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: di.sl<AddressesBloc>()..add(const GetAddressesEvent()),
+      value: di.sl<AddressesBloc>(),
       child: const _CartView(),
     );
   }
@@ -42,6 +42,7 @@ class _CartViewState extends State<_CartView> {
   @override
   void initState() {
     super.initState();
+    context.read<AddressesBloc>().add(const GetAddressesEvent());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchCheckoutPreview(context);
     });

@@ -30,7 +30,7 @@ class CheckoutScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(
-          value: di.sl<AddressesBloc>()..add(const GetAddressesEvent()),
+          value: di.sl<AddressesBloc>(),
         ),
         BlocProvider(
           create: (context) => di.sl<OrdersBloc>(),
@@ -56,6 +56,12 @@ class _CheckoutViewState extends State<_CheckoutView> {
   String _selectedDeliveryType = 'standard'; // 'standard', 'express'
   String _selectedPaymentMethod = 'cash'; // 'cash', 'bank', 'paymera'
   String _driverNote = '';
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<AddressesBloc>().add(const GetAddressesEvent());
+  }
 
   String get stepTitle {
     switch (_currentStep) {

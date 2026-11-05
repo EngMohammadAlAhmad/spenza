@@ -11,14 +11,14 @@ class CheckoutAddressCard extends StatelessWidget {
   final AddressEntity address;
   final bool isSelected;
   final VoidCallback onTap;
-  final VoidCallback onEditSuccess;
+  final VoidCallback? onEditSuccess;
 
   const CheckoutAddressCard({
     super.key,
     required this.address,
     required this.isSelected,
     required this.onTap,
-    required this.onEditSuccess,
+    this.onEditSuccess,
   });
 
   @override
@@ -132,9 +132,12 @@ class CheckoutAddressCard extends StatelessWidget {
               // Pencil Edit Icon
               InkWell(
                 onTap: () async {
-                  final result = await context.push(RoutePaths.addAddress);
+                  final result = await context.push(
+                    RoutePaths.addAddress,
+                    extra: address,
+                  );
                   if (result == true) {
-                    onEditSuccess();
+                    onEditSuccess?.call();
                   }
                 },
                 child: SvgPicture.asset(AppAssets.editIcon),

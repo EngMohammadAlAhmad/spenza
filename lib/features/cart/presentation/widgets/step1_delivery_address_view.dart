@@ -140,9 +140,6 @@ class Step1DeliveryAddressView extends StatelessWidget {
                               .read<CartBloc>()
                               .add(GetCheckoutOptionsEvent(cityId: cityId));
                         },
-                        onEditSuccess: () {
-                          context.read<AddressesBloc>().add(const GetAddressesEvent());
-                        },
                       );
                     },
                   ),
@@ -150,11 +147,8 @@ class Step1DeliveryAddressView extends StatelessWidget {
 
                 // Dashed Add Address Button
                 DashedAddAddressButton(
-                  onTap: () async {
-                    final result = await context.push(RoutePaths.addAddress);
-                    if (result == true && context.mounted) {
-                      context.read<AddressesBloc>().add(const GetAddressesEvent());
-                    }
+                  onTap: () {
+                    context.push(RoutePaths.addAddress);
                   },
                 ),
                 const SizedBox(height: 16.0),

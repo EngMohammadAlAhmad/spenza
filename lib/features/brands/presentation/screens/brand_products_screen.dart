@@ -8,6 +8,7 @@ import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/widgets/app_back_button.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
+import 'package:spenza/core/widgets/cart_header_icon_button.dart';
 import 'package:spenza/core/widgets/empty_result_widget.dart';
 import 'package:spenza/core/widgets/filter_bottom_sheet.dart';
 import 'package:spenza/core/widgets/product_card.dart';
@@ -235,6 +236,7 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
                   }
                 },
               ),
+              const CartHeaderIconButton(),
             ],
           ),
           const SizedBox(height: 13.0),

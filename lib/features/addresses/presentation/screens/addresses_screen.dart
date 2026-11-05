@@ -27,14 +27,25 @@ class AddressesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: di.sl<AddressesBloc>()..add(const GetAddressesEvent()),
+      value: di.sl<AddressesBloc>(),
       child: const _AddressesView(),
     );
   }
 }
 
-class _AddressesView extends StatelessWidget {
+class _AddressesView extends StatefulWidget {
   const _AddressesView();
+
+  @override
+  State<_AddressesView> createState() => _AddressesViewState();
+}
+
+class _AddressesViewState extends State<_AddressesView> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<AddressesBloc>().add(const GetAddressesEvent());
+  }
 
   void _showDeleteDialog(BuildContext context, AddressEntity address) {
     AppCustomDialog.show(
@@ -132,14 +143,11 @@ class _AddressesView extends StatelessWidget {
                         final address = state.addresses[index];
                         return AddressCard(
                           address: address,
-                          onEditPressed: () async {
-                            final result = await context.push(
+                          onEditPressed: () {
+                            context.push(
                               RoutePaths.addAddress,
                               extra: address,
                             );
-                            if (result == true && context.mounted) {
-                              context.read<AddressesBloc>().add(const GetAddressesEvent());
-                            }
                           },
                           onDeletePressed: () => _showDeleteDialog(context, address),
                         );
@@ -171,11 +179,8 @@ class _AddressesView extends StatelessWidget {
                   child: CustomButton(
                     text: 'add_new_address'.tr(),
                     icon: const Icon(Icons.add),
-                    onPressed: () async {
-                      final result = await context.push(RoutePaths.addAddress);
-                      if (result == true && blocContext.mounted) {
-                        blocContext.read<AddressesBloc>().add(const GetAddressesEvent());
-                      }
+                    onPressed: () {
+                      context.push(RoutePaths.addAddress);
                     },
                   ),
                 );

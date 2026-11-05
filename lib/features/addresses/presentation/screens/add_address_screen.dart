@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -30,7 +31,7 @@ class AddAddressScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: di.sl<AddressesBloc>()..add(const GetLocationsEvent()),
+      value: di.sl<AddressesBloc>(),
       child: _AddAddressView(addressToEdit: addressToEdit),
     );
   }
@@ -66,6 +67,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
   @override
   void initState() {
     super.initState();
+    context.read<AddressesBloc>().add(const GetLocationsEvent());
     if (isEditing) {
       final addr = widget.addressToEdit!;
       _selectedType = addr.type.isNotEmpty ? addr.type : 'home';
@@ -73,9 +75,37 @@ class _AddAddressViewState extends State<_AddAddressView> {
       _streetController.text = addr.street;
       _buildingController.text = addr.building;
       _floorController.text = addr.floor;
-      _phoneController.text = addr.phone;
+      _phoneController.text = _formatInitialPhone(addr.phone);
       _isDefault = addr.isDefault;
     }
+  }
+
+  static String _formatInitialPhone(String raw) {
+    var clean = raw.replaceAll(RegExp(r'\D'), '');
+    if (clean.startsWith('963')) {
+      clean = clean.substring(3);
+    } else if (clean.startsWith('0') && clean.length == 10) {
+      clean = clean.substring(1);
+    }
+    if (clean.length > 9) {
+      clean = clean.substring(0, 9);
+    }
+    var formatted = '';
+    for (var i = 0; i < clean.length; i++) {
+      formatted += clean[i];
+      if ((i == 2 || i == 5) && i != clean.length - 1) {
+        formatted += ' ';
+      }
+    }
+    return formatted;
+  }
+
+  String get _formattedPhoneToSubmit {
+    final clean = _phoneController.text.replaceAll(' ', '').trim();
+    if (clean.startsWith('9') && clean.length == 9) {
+      return '0$clean';
+    }
+    return clean;
   }
 
   @override
@@ -112,7 +142,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
         street: _streetController.text.trim(),
         building: _buildingController.text.trim(),
         floor: _floorController.text.trim(),
-        phone: _phoneController.text.trim(),
+        phone: _formattedPhoneToSubmit,
         isDefault: _isDefault,
       );
 
@@ -126,7 +156,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
         street: _streetController.text.trim(),
         building: _buildingController.text.trim(),
         floor: _floorController.text.trim(),
-        phone: _phoneController.text.trim(),
+        phone: _formattedPhoneToSubmit,
         isDefault: _isDefault,
       );
 
@@ -482,18 +512,66 @@ class _AddAddressViewState extends State<_AddAddressView> {
                             ),
                           ),
                           const SizedBox(height: 8.0),
-                          CustomTextField(
-                            controller: _phoneController,
-                            hintText: '09xx xxx xxx',
-                            fillColor: Colors.white,
+                          Directionality(
                             textDirection: TextDirection.ltr,
-                            forPhone: true,
-                            validator: (val) {
-                              if (val == null || val.trim().isEmpty) {
-                                return 'phone_validation'.tr();
-                              }
-                              return null;
-                            },
+                            child: CustomTextField(
+                              controller: _phoneController,
+                              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    color: AppColors.neutral900,
+                                  ),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                _PhoneInputFormatter(),
+                              ],
+                              prefixIcon: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(width: 20.0),
+                                  SvgPicture.asset(AppAssets.syFlag, width: 24),
+                                  const SizedBox(width: 8.0),
+                                  Text(
+                                    '+963',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          color: AppColors.neutral700,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                  SizedBox(
+                                    width: 25.0,
+                                    height: 52.0,
+                                    child: VerticalDivider(
+                                      color: AppColors.primaryLight
+                                          .withValues(alpha: 0.5),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              textDirection: TextDirection.ltr,
+                              forPhone: true,
+                              borderColor: AppColors.primaryLight
+                                  .withValues(alpha: 0.5),
+                              hintText: '9xx xxx xxx',
+                              hintStyle: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    color: AppColors.neutral,
+                                  ),
+                              fillColor: Colors.white,
+                              validator: (val) {
+                                if (val == null || val.trim().isEmpty) {
+                                  return 'phone_validation'.tr();
+                                }
+                                final clean = val.replaceAll(' ', '');
+                                if (!clean.startsWith('9') || clean.length != 9) {
+                                  return 'valid_phone_error'.tr();
+                                }
+                                return null;
+                              },
+                            ),
                           ),
                           const SizedBox(height: 20.0),
 
@@ -667,6 +745,28 @@ class _TypeChip extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _PhoneInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final text = newValue.text.replaceAll(' ', '');
+    if (text.length > 9) return oldValue;
+
+    var newText = '';
+    for (var i = 0; i < text.length; i++) {
+      newText += text[i];
+      if ((i == 2 || i == 5) && i != text.length - 1) {
+        newText += ' ';
+      }
+    }
+
+    return TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
     );
   }
 }

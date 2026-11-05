@@ -6,6 +6,7 @@ import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/widgets/app_header.dart';
+import 'package:spenza/core/widgets/cart_header_icon_button.dart';
 import 'package:spenza/features/account/domain/entities/user_entity.dart';
 import 'package:spenza/features/orders/presentation/widgets/animated_three_dots.dart';
 
@@ -32,6 +33,13 @@ class AccountHeader extends StatelessWidget {
       style: AppHeaderStyle.gradient,
       title: 'account'.tr(),
       showBackButton: false,
+      trailingActions: const [
+        CartHeaderIconButton(
+          iconColor: Colors.white,
+          badgeColor: Colors.white,
+          badgeTextColor: AppColors.primary,
+        ),
+      ],
       titleTextStyle: const TextStyle(
         color: Colors.white,
         fontSize: 20.0,

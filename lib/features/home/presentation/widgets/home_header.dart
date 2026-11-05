@@ -13,6 +13,7 @@ import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
+import 'package:spenza/core/widgets/cart_header_icon_button.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_bloc.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_event.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_state.dart';
@@ -24,21 +25,29 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLoggedIn = di.sl<CacheHelper>().getAuthToken().isNotEmpty;
-    final bloc = di.sl<AddressesBloc>();
-    if (isLoggedIn) {
-      bloc.add(const GetAddressesEvent());
-    }
-
     return BlocProvider.value(
-      value: bloc,
+      value: di.sl<AddressesBloc>(),
       child: const _HomeHeaderContent(),
     );
   }
 }
 
-class _HomeHeaderContent extends StatelessWidget {
+class _HomeHeaderContent extends StatefulWidget {
   const _HomeHeaderContent();
+
+  @override
+  State<_HomeHeaderContent> createState() => _HomeHeaderContentState();
+}
+
+class _HomeHeaderContentState extends State<_HomeHeaderContent> {
+  @override
+  void initState() {
+    super.initState();
+    final isLoggedIn = di.sl<CacheHelper>().getAuthToken().isNotEmpty;
+    if (isLoggedIn) {
+      context.read<AddressesBloc>().add(const GetAddressesEvent());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,22 +83,16 @@ class _HomeHeaderContent extends StatelessWidget {
               }
 
               return InkWell(
-                onTap: () async {
+                onTap: () {
                   if (!isLoggedIn) {
                     context.push(RoutePaths.login);
                     return;
                   }
 
                   if (state.addresses.isEmpty) {
-                    final result = await context.push(RoutePaths.addAddress);
-                    if (result == true && context.mounted) {
-                      context.read<AddressesBloc>().add(const GetAddressesEvent());
-                    }
+                    context.push(RoutePaths.addAddress);
                   } else {
-                    await context.push(RoutePaths.addresses);
-                    if (context.mounted) {
-                      context.read<AddressesBloc>().add(const GetAddressesEvent());
-                    }
+                    context.push(RoutePaths.addresses);
                   }
                 },
                 borderRadius: AppRadius.small,
@@ -144,16 +147,7 @@ class _HomeHeaderContent extends StatelessWidget {
             spacing: 5.0,
             mainAxisSize: MainAxisSize.min,
             children: [
-              IconButton(
-                padding: const EdgeInsets.all(6.0),
-                constraints: const BoxConstraints(),
-                onPressed: () {
-                  if (GoRouterState.of(context).matchedLocation != RoutePaths.cart) {
-                    context.push(RoutePaths.cart);
-                  }
-                },
-                icon: SvgPicture.asset(AppAssets.cartIcon),
-              ),
+              const CartHeaderIconButton(),
               IconButton(
                 padding: const EdgeInsets.all(6.0),
                 constraints: const BoxConstraints(),

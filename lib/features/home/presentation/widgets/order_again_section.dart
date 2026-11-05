@@ -19,6 +19,7 @@ import 'package:spenza/features/orders/domain/entities/order_response_entity.dar
 import 'package:spenza/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:spenza/features/orders/presentation/bloc/orders_event.dart';
 import 'package:spenza/features/orders/presentation/bloc/orders_state.dart';
+import 'package:spenza/features/orders/presentation/utils/order_localization_helper.dart';
 import 'package:spenza/injection_locator.dart' as di;
 
 class OrderAgainSection extends StatelessWidget {
@@ -264,11 +265,15 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
         ? 'order_hash'.tr(args: [order.orderNumber])
         : 'previous_order'.tr();
 
-    final String dateStr = order.placedAt.isNotEmpty
-        ? 'ordered_at'.tr(args: [order.placedAt])
+    final String dateRaw = order.placedAt.isNotEmpty
+        ? order.placedAt
         : (order.createdAt != null && order.createdAt!.isNotEmpty
-            ? 'ordered_at'.tr(args: [order.createdAt!])
-            : 'previous_order'.tr());
+            ? order.createdAt!
+            : '');
+
+    final String dateStr = dateRaw.isNotEmpty
+        ? 'ordered_at'.tr(args: [OrderLocalizationHelper.formatDate(dateRaw)])
+        : 'previous_order'.tr();
 
     return GestureDetector(
       onTapDown: (_) => setState(() => _pressed = true),
