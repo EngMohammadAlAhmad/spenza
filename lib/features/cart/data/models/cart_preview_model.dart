@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:spenza/features/cart/domain/entities/cart_preview_entity.dart';
 
@@ -174,7 +175,11 @@ class CartPreviewModel extends CartPreviewEntity {
       total: json['total'] is num
           ? json['total'] as num
           : (num.tryParse(json['total']?.toString() ?? '') ?? 0),
-      currency: json['currency']?.toString() ?? 'USD',
+      currency: (json['currency'] != null &&
+              json['currency'].toString().isNotEmpty &&
+              json['currency'].toString().toUpperCase() != 'USD')
+          ? json['currency'].toString()
+          : 'sp_currency'.tr(),
       pointsEarned: json['points_earned'] is num
           ? (json['points_earned'] as num).toInt()
           : (int.tryParse(json['points_earned']?.toString() ?? '') ?? 0),

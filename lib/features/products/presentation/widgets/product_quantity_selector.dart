@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
-import 'package:spenza/core/utils/app_size.dart';
 
 class ProductQuantitySection extends StatelessWidget {
   final int quantity;
@@ -21,8 +20,8 @@ class ProductQuantitySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: context.height * 0.08,
-      width: 360.0,
+      height: 64.0,
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
       decoration: BoxDecoration(
         borderRadius: AppRadius.large,

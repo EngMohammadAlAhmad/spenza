@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/widgets/app_bottom_container.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 
 class SearchEmptyWidget extends StatelessWidget {
@@ -133,41 +134,18 @@ class SearchEmptyWidget extends StatelessWidget {
         ),
 
         // Fixed Bottom Container surrounded with white area & rounded top border
-        Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
-            border: Border(
-              top: BorderSide(
-                color: AppColors.neutralBorderDefault.withValues(alpha: 0.5),
-                width: 1.0,
-              ),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 12.0,
-                offset: const Offset(0, -4),
-              ),
-            ],
-          ),
-          child: SafeArea(
-            top: false,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-              child: CustomButton(
-                text: 'browse_categories'.tr(),
-                height: 52.0,
-                onPressed: () {
-                  context.go(RoutePaths.categories);
-                },
-              )
-                  .animate(key: const ValueKey('search_empty_btn'))
-                  .fadeIn(delay: 600.ms)
-                  .scale(begin: const Offset(0.95, 0.95)),
-            ),
-          ),
+        AppBottomContainer(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+          child: CustomButton(
+            text: 'browse_categories'.tr(),
+            height: 48.0,
+            onPressed: () {
+              context.go(RoutePaths.categories);
+            },
+          )
+              .animate(key: const ValueKey('search_empty_btn'))
+              .fadeIn(delay: 600.ms)
+              .scale(begin: const Offset(0.95, 0.95)),
         ),
       ],
     );

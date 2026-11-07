@@ -86,6 +86,7 @@ class AppAssets {
   static const String locationIcon = '$_icons/location_icon.svg';
   static const String loginIcon = '$_icons/login_icon.svg';
   static const String logoutIcon = '$_icons/logout_icon.svg';
+  static const String logoutRoundedIcon = '$_icons/logout_rounded_icon.svg';
   static const String moonIcon = '$_icons/moon_icon.svg';
   static const String myAddressesIcon = '$_icons/my_addresses_icon.svg';
   static const String myInfoIcon = '$_icons/my_info_icon.svg';

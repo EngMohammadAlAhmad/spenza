@@ -159,7 +159,7 @@ class _SelectionOptionCard<T> extends StatelessWidget {
               alignment: Alignment.center,
               child: SvgPicture.asset(
                 option.iconPath,
-                colorFilter: .mode(
+                colorFilter: ColorFilter.mode(
                   isSelected ? const Color(0xFFC74436) : AppColors.neutral700,
                   BlendMode.srcIn,
                 ),

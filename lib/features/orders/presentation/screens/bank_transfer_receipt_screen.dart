@@ -7,12 +7,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
+import 'package:spenza/core/widgets/app_bottom_container.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
+import 'package:spenza/core/widgets/image_source_bottom_sheet.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
 import 'package:spenza/features/orders/data/models/upload_transfer_receipt_params.dart';
 import 'package:spenza/features/orders/domain/usecases/upload_transfer_receipt_use_case.dart';
+import 'package:spenza/features/orders/presentation/widgets/captured_receipt_preview_dialog.dart';
 import 'package:spenza/injection_locator.dart';
 
 class BankTransferReceiptScreen extends StatefulWidget {
@@ -92,104 +96,10 @@ class _BankTransferReceiptScreenState
   }
 
   Future<void> _showImageSourcePicker() async {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
-      ),
-      builder: (BuildContext ctx) {
-        return SafeArea(
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: AppRadius.micro,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                Text(
-                  'upload_transfer_receipt'.tr(),
-                  style: const TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.neutral900,
-                  ),
-                ),
-                const SizedBox(height: 6.0),
-                Text(
-                  'grant_camera_gallery_permission'.tr(),
-                  style: const TextStyle(
-                    fontSize: 13.0,
-                    color: AppColors.neutral,
-                  ),
-                ),
-                const SizedBox(height: 20.0),
-                ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: AppColors.thirdAccent,
-                      borderRadius: AppRadius.medium,
-                    ),
-                    child: const Icon(
-                      Icons.camera_alt_rounded,
-                      color: AppColors.blue,
-                    ),
-                  ),
-                  title: Text(
-                    'take_photo_camera'.tr(),
-                    style:
-                        const TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text('take_photo_directly'.tr(),
-                      style: const TextStyle(fontSize: 12.0)),
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    _pickFromCamera();
-                  },
-                ),
-                const Divider(height: 16),
-                ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: AppColors.thirdAccent,
-                      borderRadius: AppRadius.medium,
-                    ),
-                    child: const Icon(
-                      Icons.photo_library_rounded,
-                      color: AppColors.blue,
-                    ),
-                  ),
-                  title: Text(
-                    'choose_from_gallery'.tr(),
-                    style:
-                        const TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text('choose_image_file'.tr(),
-                      style: const TextStyle(fontSize: 12.0)),
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    _pickFromGallery();
-                  },
-                ),
-                const SizedBox(height: 10.0),
-              ],
-            ),
-          ),
-        );
-      },
+    ImageSourceBottomSheet.show(
+      context,
+      onCameraTap: _pickFromCamera,
+      onGalleryTap: _pickFromGallery,
     );
   }
 
@@ -262,95 +172,17 @@ class _BankTransferReceiptScreenState
   }
 
   void _showCapturedPreviewDialog(File capturedFile) {
-    showDialog(
+    CapturedReceiptPreviewDialog.show(
       context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: AppRadius.large),
-          child: Padding(
-            padding: const .all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'preview_captured_receipt'.tr(),
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.neutral900,
-                  ),
-                ),
-                const SizedBox(height: 12.0),
-                ClipRRect(
-                  borderRadius: AppRadius.medium,
-                  child: Image.file(
-                    capturedFile,
-                    height: 250,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.pop(dialogContext);
-                          _pickFromCamera();
-                        },
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Color(0xFFC74436)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: AppRadius.medium,
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        ),
-                        child: Text(
-                          'retry'.tr(),
-                          style: const TextStyle(
-                            color: Color(0xFFC74436),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12.0),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(dialogContext);
-                          setState(() {
-                            _receiptFile = capturedFile;
-                          });
-                          SnackbarService.showSuccess(
-                            context,
-                            message: 'receipt_accepted_success'.tr(),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF16A34A),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: AppRadius.medium,
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 12.0),
-                          elevation: 0,
-                        ),
-                        child: Text(
-                          'done'.tr(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+      capturedFile: capturedFile,
+      onRetry: _pickFromCamera,
+      onDone: () {
+        setState(() {
+          _receiptFile = capturedFile;
+        });
+        SnackbarService.showSuccess(
+          context,
+          message: 'receipt_accepted_success'.tr(),
         );
       },
     );
@@ -408,8 +240,382 @@ class _BankTransferReceiptScreenState
     }
   }
 
+  Widget _buildReceiptPreviewCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: AppRadius.large,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0.0, 4.0),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Main Upload / Image Container
+          _receiptFile == null
+              ? Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: _showImageSourcePicker,
+                    borderRadius: AppRadius.overMedium,
+                    child: Container(
+                      width: double.infinity,
+                      height: 200.0,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF9FAFB),
+                        borderRadius: AppRadius.overMedium,
+                        border: Border.all(
+                          color: const Color(0xFFE5E7EB),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(14.0),
+                            decoration: BoxDecoration(
+                              color: AppColors.blueAccent.withValues(alpha: 0.5),
+                              borderRadius: AppRadius.overMedium,
+                            ),
+                            child: const Icon(
+                              Icons.file_upload_outlined,
+                              size: 32.0,
+                              color: Color(0xFF4338CA),
+                            ),
+                          ),
+                          const SizedBox(height: 12.0),
+                          Text(
+                            'upload_transfer_receipt'.tr(),
+                            style: const TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.neutral900,
+                            ),
+                          ),
+                          const SizedBox(height: 4.0),
+                          Text(
+                            'tap_to_upload_receipt_desc'.tr(),
+                            style: const TextStyle(
+                              fontSize: 12.0,
+                              color: AppColors.neutral,
+                              height: 1.3,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: AppRadius.overMedium,
+                      child: Image.file(
+                        _receiptFile!,
+                        width: double.infinity,
+                        height: 220.0,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: GestureDetector(
+                        onTap: _showImageSourcePicker,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.65),
+                            borderRadius: AppRadius.medium,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.refresh_rounded,
+                                  color: Colors.white, size: 16),
+                              const SizedBox(width: 4),
+                              Text(
+                                'change'.tr(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+          const SizedBox(height: 14.0),
+
+          // Bottom Actions Row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: _showImageSourcePicker,
+                child: Text(
+                  _receiptFile != null
+                      ? 'replace_image'.tr()
+                      : 'upload_image'.tr(),
+                  style: const TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFC74436),
+                  ),
+                ),
+              ),
+              if (_receiptFile != null)
+                Row(
+                  children: [
+                    Text(
+                      'receipt_ready'.tr(),
+                      style: const TextStyle(
+                        fontSize: 13.5,
+                        color: AppColors.neutral700,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(width: 6.0),
+                    const Icon(
+                      Icons.check_circle_rounded,
+                      size: 20.0,
+                      color: Color(0xFF16A34A),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFormFields() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 16.0,
+      children: [
+        // 1. Transfer Reference Field
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
+              child: Text(
+                'transfer_number_optional'.tr(),
+                style: const TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.neutral900,
+                ),
+              ),
+            ),
+            CustomTextField(
+              controller: _referenceController,
+              hintText: 'enter_transfer_number'.tr(),
+              fillColor: Colors.white,
+              keyboardType: TextInputType.text,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 6.0, right: 4.0),
+              child: Text(
+                'speeds_up_review'.tr(),
+                style: const TextStyle(
+                  fontSize: 12.0,
+                  color: AppColors.neutral,
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        // 2. Amount Field
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
+              child: Text(
+                'amount_optional'.tr(),
+                style: const TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.neutral900,
+                ),
+              ),
+            ),
+            CustomTextField(
+              controller: _amountController,
+              hintText: 'enter_transferred_amount'.tr(),
+              fillColor: Colors.white,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+              ],
+            ),
+          ],
+        ),
+
+        // 3. Date Field (Picker)
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
+              child: Text(
+                'transferred_date_optional'.tr(),
+                style: const TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.neutral900,
+                ),
+              ),
+            ),
+            CustomTextField(
+              controller: _transferredAtController,
+              hintText: 'select_transfer_date'.tr(),
+              fillColor: Colors.white,
+              readOnly: true,
+              onTap: _selectTransferredDate,
+              suffixIcon: const Icon(
+                Icons.calendar_month_outlined,
+                color: AppColors.primary,
+                size: 20.0,
+              ),
+            ),
+          ],
+        ),
+
+        // 4. Note Field
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
+              child: Text(
+                'note_optional'.tr(),
+                style: const TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.neutral900,
+                ),
+              ),
+            ),
+            CustomTextField(
+              controller: _noteController,
+              hintText: 'add_note_about_transfer'.tr(),
+              fillColor: Colors.white,
+              maxLines: 3,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoNoticeBanner() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEEF2FF),
+        borderRadius: AppRadius.upMedium,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(
+            Icons.info_outline_rounded,
+            color: AppColors.blue,
+            size: 22.0,
+          ),
+          const SizedBox(width: 10.0),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'confirm_before_sending'.tr(),
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1E1B4B),
+                  ),
+                ),
+                const SizedBox(height: 4.0),
+                Text(
+                  'receipt_requirements_notice'.tr(),
+                  style: const TextStyle(
+                    fontSize: 14.0,
+                    color: AppColors.textBody,
+                    height: 1.3,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isTabletLandscape = context.isTabletLandscape;
+
+    Widget contentBody;
+
+    if (isTabletLandscape) {
+      contentBody = Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // First Child: Receipt Preview Card Container + Info Notice Banner (Right side in RTL)
+          Expanded(
+            flex: 1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 16.0,
+              children: [
+                _buildReceiptPreviewCard(),
+                _buildInfoNoticeBanner(),
+              ],
+            ),
+          ),
+          const SizedBox(width: 20.0),
+
+          // Second Child: Remaining Form Fields (Left side in RTL)
+          Expanded(
+            flex: 1,
+            child: _buildFormFields(),
+          ),
+        ],
+      );
+    } else {
+      contentBody = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16.0,
+        children: [
+          _buildReceiptPreviewCard(),
+          _buildFormFields(),
+          _buildInfoNoticeBanner(),
+        ],
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.neutralBackground,
       body: Column(
@@ -418,7 +624,8 @@ class _BankTransferReceiptScreenState
           AppHeader(
             title: 'transfer_receipt'.tr(),
             subtitle: 'order_hash'.tr(args: [widget.orderNumber]),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28.0)),
+            borderRadius:
+                const BorderRadius.vertical(bottom: Radius.circular(28.0)),
             onBackPressed: () {
               if (context.canPop()) {
                 context.pop();
@@ -432,365 +639,27 @@ class _BankTransferReceiptScreenState
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 16.0,
-                children: [
-                  // Receipt Preview Card Container
-                  Container(
-                    width: double.infinity,
-                    padding: const .all(16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: AppRadius.large,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.03),
-                          blurRadius: 10,
-                          offset: const Offset(0.0, 4.0),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        // Main Upload / Image Container
-                        _receiptFile == null
-                            ? Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: _showImageSourcePicker,
-                                  borderRadius: AppRadius.overMedium,
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 200.0,
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFF9FAFB),
-                                      borderRadius:
-                                          AppRadius.overMedium,
-                                      border: Border.all(
-                                        color: const Color(0xFFE5E7EB),
-                                        width: 1.5,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(14.0),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.blueAccent.withValues(alpha: 0.5),
-                                            borderRadius: AppRadius.overMedium,
-                                          ),
-                                          child: const Icon(
-                                            Icons.file_upload_outlined,
-                                            size: 32.0,
-                                            color: Color(0xFF4338CA),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 12.0),
-                                        Text(
-                                          'upload_transfer_receipt'.tr(),
-                                          style: const TextStyle(
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColors.neutral900,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4.0),
-                                        Text(
-                                          'tap_to_upload_receipt_desc'.tr(),
-                                          style: const TextStyle(
-                                            fontSize: 12.0,
-                                            color: AppColors.neutral,
-                                            height: 1.3,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: AppRadius.overMedium,
-                                    child: Image.file(
-                                      _receiptFile!,
-                                      width: double.infinity,
-                                      height: 220.0,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 10,
-                                    left: 10,
-                                    child: GestureDetector(
-                                      onTap: _showImageSourcePicker,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.black.withValues(alpha: 0.65),
-                                          borderRadius: AppRadius.medium,
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Icon(Icons.refresh_rounded, color: Colors.white, size: 16),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              'change'.tr(),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                        const SizedBox(height: 14.0),
-
-                        // Bottom Actions Row
-                        Row(
-                          mainAxisAlignment: .spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: _showImageSourcePicker,
-                              child: Text(
-                                _receiptFile != null
-                                    ? 'replace_image'.tr()
-                                    : 'upload_image'.tr(),
-                                style: const TextStyle(
-                                  fontSize: 13.5,
-                                  fontWeight: .bold,
-                                  color: Color(0xFFC74436),
-                                ),
-                              ),
-                            ),
-                            if (_receiptFile != null)
-                              Row(
-                                children: [
-                                  Text(
-                                    'receipt_ready'.tr(),
-                                    style: const TextStyle(
-                                      fontSize: 13.5,
-                                      color: AppColors.neutral700,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 6.0),
-                                  const Icon(
-                                    Icons.check_circle_rounded,
-                                    size: 20.0,
-                                    color: Color(0xFF16A34A),
-                                  ),
-                                ],
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // 1. Transfer Reference Field
-                  Column(
-                    crossAxisAlignment: .start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
-                        child: Text(
-                          'transfer_number_optional'.tr(),
-                          style: const TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: .bold,
-                            color: AppColors.neutral900,
-                          ),
-                        ),
-                      ),
-                      CustomTextField(
-                        controller: _referenceController,
-                        hintText: 'enter_transfer_number'.tr(),
-                        fillColor: Colors.white,
-                        keyboardType: TextInputType.text,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 6.0, right: 4.0),
-                        child: Text(
-                          'speeds_up_review'.tr(),
-                          style: const TextStyle(
-                            fontSize: 12.0,
-                            color: AppColors.neutral,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // 2. Amount Field
-                  Column(
-                    crossAxisAlignment: .start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
-                        child: Text(
-                          'amount_optional'.tr(),
-                          style: const TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: .bold,
-                            color: AppColors.neutral900,
-                          ),
-                        ),
-                      ),
-                      CustomTextField(
-                        controller: _amountController,
-                        hintText: 'enter_transferred_amount'.tr(),
-                        fillColor: Colors.white,
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
-                        ],
-                      ),
-                    ],
-                  ),
-
-                  // 3. Date Field (Picker)
-                  Column(
-                    crossAxisAlignment: .start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
-                        child: Text(
-                          'transferred_date_optional'.tr(),
-                          style: const TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: .bold,
-                            color: AppColors.neutral900,
-                          ),
-                        ),
-                      ),
-                      CustomTextField(
-                        controller: _transferredAtController,
-                        hintText: 'select_transfer_date'.tr(),
-                        fillColor: Colors.white,
-                        readOnly: true,
-                        onTap: _selectTransferredDate,
-                        suffixIcon: const Icon(
-                          Icons.calendar_month_outlined,
-                          color: AppColors.primary,
-                          size: 20.0,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // 4. Note Field
-                  Column(
-                    crossAxisAlignment: .start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
-                        child: Text(
-                          'note_optional'.tr(),
-                          style: const TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: .bold,
-                            color: AppColors.neutral900,
-                          ),
-                        ),
-                      ),
-                      CustomTextField(
-                        controller: _noteController,
-                        hintText: 'add_note_about_transfer'.tr(),
-                        fillColor: Colors.white,
-                        maxLines: 3,
-                      ),
-                    ],
-                  ),
-
-                  // Info Notice Banner
-                  Container(
-                    width: double.infinity,
-                    padding: const .all(16.0),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEEF2FF),
-                      borderRadius: AppRadius.upMedium,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: .start,
-                      children: [
-                        const Icon(
-                          Icons.info_outline_rounded,
-                          color: AppColors.blue,
-                          size: 22.0,
-                        ),
-                        const SizedBox(width: 10.0),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: .start,
-                            children: [
-                              Text(
-                                'confirm_before_sending'.tr(),
-                                style: const TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: .bold,
-                                  color: Color(0xFF1E1B4B),
-                                ),
-                              ),
-                              const SizedBox(height: 4.0),
-                              Text(
-                                'receipt_requirements_notice'.tr(),
-                                style: const TextStyle(
-                                  fontSize: 14.0,
-                                  color: AppColors.textBody,
-                                  height: 1.3,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              padding: EdgeInsets.symmetric(
+                horizontal: isTabletLandscape ? 32.0 : 16.0,
+                vertical: 16.0,
               ),
+              child: contentBody,
             ),
           ),
         ],
       ),
 
-      // Fixed Bottom Button
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 8,
-              offset: Offset(0, -2),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-            child: CustomButton(
-              text: 'send_receipt'.tr(),
-              height: 52.0,
-              isLoading: _isUploading,
-              onPressed: _isUploading ? null : _submitTransferReceipt,
-            ),
-          ),
+      // 3. Fixed Bottom Button using AppBottomContainer
+      bottomNavigationBar: AppBottomContainer(
+        padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 10.0),
+        child: CustomButton(
+          text: 'send_receipt'.tr(),
+          height: 52.0,
+          isLoading: _isUploading,
+          onPressed: _isUploading ? null : _submitTransferReceipt,
         ),
       ),
     );
   }
+  
 }

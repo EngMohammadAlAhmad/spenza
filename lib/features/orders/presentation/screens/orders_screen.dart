@@ -9,6 +9,7 @@ import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/utils/tab_index_notifier.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/auth/presentation/bloc/auth_status_bloc.dart';
@@ -186,7 +187,7 @@ class _OrdersContentState extends State<_OrdersContent> {
   }
 
   void _onScroll() {
-    if (!_scrollController.hasClients) return;
+    if (!mounted || !_scrollController.hasClients) return;
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.position.pixels;
     if (maxScroll - currentScroll <= 200) {
@@ -305,6 +306,57 @@ class _OrdersContentState extends State<_OrdersContent> {
       return _buildEmptyOrdersState(context, keyPrefix);
     }
 
+    final isTabletLandscape = context.isTabletLandscape;
+
+    if (isTabletLandscape) {
+      return GridView.builder(
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
+        ),
+        padding: EdgeInsets.only(
+          left: 24.0,
+          top: 16.0,
+          right: 24.0,
+          bottom: context.screenPadding.bottom + 10.0,
+        ),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16.0,
+          mainAxisSpacing: 16.0,
+          mainAxisExtent: 210.0,
+        ),
+        itemCount: currentOrders.length + (state.isLoadingMore ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (index >= currentOrders.length) {
+            return const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
+              child: Center(
+                child: CircularProgressIndicator(color: AppColors.primary500),
+              ),
+            );
+          }
+
+          final order = currentOrders[index];
+          return OrderCard(
+            order: order,
+            margin: EdgeInsets.zero,
+            onTap: () => context.push(RoutePaths.orderDetails, extra: order.orderNumber),
+          )
+              .animate(key: ValueKey('${keyPrefix}_card_${order.id}'))
+              .fadeIn(
+                duration: 250.ms,
+                delay: (index * 40).clamp(0, 240).ms,
+              )
+              .slideY(
+                begin: 0.08,
+                end: 0,
+                curve: Curves.easeOutCubic,
+              );
+        },
+      );
+    }
+
     return ListView.builder(
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(
@@ -418,7 +470,7 @@ class _OrdersContentState extends State<_OrdersContent> {
             // Start Shopping CTA Button
             CustomButton(
               text: 'start_shopping'.tr(),
-              width: 220.0,
+              width: context.isTabletLandscape ? context.width * 0.35 : 220.0,
               height: 48.0,
               onPressed: () => context.go(RoutePaths.home),
             )

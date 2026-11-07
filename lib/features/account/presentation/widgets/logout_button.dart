@@ -30,7 +30,7 @@ class LogoutButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SvgPicture.asset(
-                AppAssets.logoutIcon,
+                AppAssets.logoutRoundedIcon,
               ),
               // Text
               Text(

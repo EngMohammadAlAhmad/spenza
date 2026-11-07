@@ -26,6 +26,7 @@ class CustomTextField extends StatelessWidget {
   final bool? allowTwoDecimalPlaces;
   final double? horizontalContentPadding;
   final double? verticalContentPadding;
+  final double? height;
   final void Function(String)? onChanged;
   final void Function(String)? onSubmitted;
   final FocusNode? focusNode;
@@ -58,6 +59,7 @@ class CustomTextField extends StatelessWidget {
     this.allowTwoDecimalPlaces,
     this.horizontalContentPadding = 16.0,
     this.verticalContentPadding = 16.0,
+    this.height,
     this.onChanged,
     this.onSubmitted,
     this.focusNode,
@@ -85,6 +87,10 @@ class CustomTextField extends StatelessWidget {
       }
     }
 
+    final double effectiveVerticalPadding = (height != null && verticalContentPadding == 16.0)
+        ? ((height! - 22.0) / 2).clamp(0.0, 20.0)
+        : verticalContentPadding!;
+
     Widget textField = TextFormField(
       controller: controller,
       style: style,
@@ -103,6 +109,7 @@ class CustomTextField extends StatelessWidget {
       onChanged: onChanged,
       inputFormatters: formatters,
       decoration: InputDecoration(
+        isDense: height != null ? true : null,
         hintText: hintText,
         hintStyle: hintStyle ??
             Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -154,10 +161,17 @@ class CustomTextField extends StatelessWidget {
         ),
         contentPadding: EdgeInsets.symmetric(
           horizontal: horizontalContentPadding!,
-          vertical: verticalContentPadding!,
+          vertical: effectiveVerticalPadding,
         ),
       ),
     );
+
+    if (height != null) {
+      textField = SizedBox(
+        height: height,
+        child: textField,
+      );
+    }
 
     if (label != null) {
       return Column(

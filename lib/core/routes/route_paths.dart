@@ -12,6 +12,7 @@ abstract class RoutePaths {
   static const categoryProducts = '/category-products';
   static const brandProducts = '/brand-products';
   static const productDetails = 'details';
+  static const search = '/search';
   static const orders = '/orders';
   static const favorites = '/favorites';
   static const account = '/account';

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:spenza/features/cart/domain/entities/checkout_options_entity.dart';
 
 class DeliveryOptionModel extends DeliveryOptionEntity {
@@ -113,7 +114,11 @@ class CheckoutOptionsModel extends CheckoutOptionsEntity {
           ? json['delivery_fee'] as num
           : (num.tryParse(json['delivery_fee']?.toString() ?? '') ?? 0),
       deliveryOptions: parsedDeliveryOptions,
-      currency: json['currency']?.toString() ?? 'USD',
+      currency: (json['currency'] != null &&
+              json['currency'].toString().isNotEmpty &&
+              json['currency'].toString().toUpperCase() != 'USD')
+          ? json['currency'].toString()
+          : 'sp_currency'.tr(),
       paymentZone: json['payment_zone']?.toString() ?? '',
       paymentZoneLabel: json['payment_zone_label']?.toString() ?? '',
       paymentMethods: parsedPaymentMethods,

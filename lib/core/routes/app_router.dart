@@ -33,6 +33,7 @@ import 'package:spenza/features/sections/presentation/screens/sections_screen.da
 import 'package:spenza/features/categories/presentation/screens/category_products_screen.dart';
 import 'package:spenza/features/products/presentation/blocs/product_details_bloc/product_details_bloc.dart';
 import 'package:spenza/features/products/presentation/screens/product_details_screen.dart';
+import 'package:spenza/features/search/presentation/screens/search_screen.dart';
 import 'package:spenza/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:spenza/features/onboarding/presentation/screens/splash_screen.dart';
 import 'package:spenza/features/favorites/presentation/screens/favorites_screen.dart';
@@ -156,6 +157,18 @@ class AppRouter {
         builder: (context, state) => const NotificationsScreen(),
       ),
       GoRoute(
+        path: RoutePaths.search,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) {
+          final categoryId = int.tryParse(state.uri.queryParameters['categoryId'] ?? '');
+          final brandId = int.tryParse(state.uri.queryParameters['brandId'] ?? '');
+          return SearchScreen(
+            categoryId: categoryId,
+            brandId: brandId,
+          );
+        },
+      ),
+      GoRoute(
         path: RoutePaths.orderSuccess,
         builder: (context, state) {
           final order = state.extra as OrderResponseEntity?;
@@ -267,6 +280,7 @@ class AppRouter {
                   ),
                   GoRoute(
                     path: 'product/:productId',
+                    parentNavigatorKey: rootNavigatorKey,
                     builder: (context, state) {
                       final id = int.tryParse(state.pathParameters['productId'] ?? '') ?? 0;
                       return BlocProvider(

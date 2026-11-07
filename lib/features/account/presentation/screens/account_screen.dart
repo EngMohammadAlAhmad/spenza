@@ -73,9 +73,12 @@ class _AccountScreenState extends State<AccountScreen> {
       primaryButtonColor: AppColors.primary500,
       secondaryButtonText: 'cancel'.tr(),
       onPrimaryPressed: () async {
-        Navigator.of(context).pop();
+        final navigator = Navigator.of(context, rootNavigator: true);
+        navigator.pop();
+
         await di.sl<LogoutUseCase>().call();
         await di.sl<CacheHelper>().deleteAuthToken();
+
         if (context.mounted) {
           context.read<AuthStatusBloc>().add(UpdateAuthStatus(false));
           context.go(RoutePaths.home);

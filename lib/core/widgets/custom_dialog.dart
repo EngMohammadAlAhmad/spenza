@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 
 class AppCustomDialog extends StatefulWidget {
@@ -65,6 +66,7 @@ class AppCustomDialog extends StatefulWidget {
 
     return showGeneralDialog<T>(
       context: context,
+      useRootNavigator: true,
       barrierDismissible: barrierDismissible,
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       barrierColor: Colors.black.withValues(alpha: 0.5),
@@ -165,38 +167,46 @@ class _AppCustomDialogState extends State<AppCustomDialog>
     final bgColor = widget.iconBackgroundColor ?? widget.iconColor.withValues(alpha: 0.12);
     const double iconDiameter = 76.0;
     const double iconRadius = iconDiameter / 2;
+    final isTabletLandscape = context.isTabletLandscape;
 
     return Dialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      insetPadding: const EdgeInsets.fromLTRB(24.0, 52.0, 24.0, 24.0),
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.topCenter,
-        children: [
-          // Main Dialog Body Box
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(
-              22.0,
-              hasIcon ? (iconRadius + 22.0) : 26.0,
-              22.0,
-              22.0,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(28.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.14),
-                  blurRadius: 30.0,
-                  spreadRadius: 0.0,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: isTabletLandscape ? 0.0 : 24.0,
+        vertical: 52.0,
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: isTabletLandscape ? 450.0 : 400.0,
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.topCenter,
+          children: [
+            // Main Dialog Body Box
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.fromLTRB(
+                22.0,
+                hasIcon ? (iconRadius + 22.0) : 26.0,
+                22.0,
+                22.0,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(28.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.14),
+                    blurRadius: 30.0,
+                    spreadRadius: 0.0,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
               children: [
                 // Title
                 Text(
@@ -244,7 +254,7 @@ class _AppCustomDialogState extends State<AppCustomDialog>
                         child: CustomButton(
                           text: widget.secondaryButtonText!,
                           onPressed: widget.onSecondaryPressed ??
-                              () => Navigator.of(context).pop(false),
+                              () => Navigator.of(context, rootNavigator: true).pop(false),
                           height: 48.0,
                           fontSize: 14.0,
                           isOutlined: true,
@@ -264,7 +274,7 @@ class _AppCustomDialogState extends State<AppCustomDialog>
                         onPressed: widget.isLoading
                             ? null
                             : (widget.onPrimaryPressed ??
-                                () => Navigator.of(context).pop(true)),
+                                () => Navigator.of(context, rootNavigator: true).pop(true)),
                         height: 48.0,
                         fontSize: 14.0,
                         isLoading: widget.isLoading,
@@ -327,7 +337,8 @@ class _AppCustomDialogState extends State<AppCustomDialog>
             ),
         ],
       ),
-    );
+    ),
+  );
   }
 }
 
@@ -359,8 +370,8 @@ class ConfirmationDialog extends StatelessWidget {
       primaryButtonText: confirmText,
       primaryButtonColor: confirmColor ?? AppColors.primary500,
       secondaryButtonText: cancelText,
-      onPrimaryPressed: () => Navigator.of(context).pop(true),
-      onSecondaryPressed: () => Navigator.of(context).pop(false),
+      onPrimaryPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
+      onSecondaryPressed: () => Navigator.of(context, rootNavigator: true).pop(false),
     );
   }
 }

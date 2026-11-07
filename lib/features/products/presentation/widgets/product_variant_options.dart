@@ -37,17 +37,17 @@ class ProductVariantOptions extends StatelessWidget {
             duration: const Duration(milliseconds: 250),
             padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
             decoration: BoxDecoration(
-              color: isSelected ? AppColors.primaryTint : AppColors.neutral200,
+              color: isSelected ? AppColors.primaryTint : Colors.transparent,
               borderRadius: AppRadius.extraLarge,
               border: Border.all(
-                color: isSelected ? AppColors.primary : AppColors.fillColor,
+                color: isSelected ? AppColors.primary : AppColors.neutralBorderDefault,
                 width: 2.0,
               ),
             ),
             child: Text(
               opt.label,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: isSelected ? AppColors.primary : null,
+                color: isSelected ? AppColors.primary : AppColors.textSecondary,
                 fontWeight: FontWeight.bold,
               ),
             ),

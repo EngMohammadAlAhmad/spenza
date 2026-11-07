@@ -36,7 +36,13 @@ class CartState extends Equatable {
 
   int get totalItemsCount => items.fold(0, (sum, item) => sum + item.quantity);
 
-  String get currency => cartPreview?.currency ?? 'ل.س';
+  String get currency {
+    final cur = cartPreview?.currency;
+    if (cur == null || cur.isEmpty || cur.toUpperCase() == 'USD') {
+      return 'sp_currency'.tr();
+    }
+    return cur;
+  }
 
   CartState copyWith({
     RequestStatus? status,

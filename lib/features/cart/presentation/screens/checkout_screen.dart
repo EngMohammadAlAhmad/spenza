@@ -177,7 +177,7 @@ class _CheckoutViewState extends State<_CheckoutView> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.backgroundLight,
+        backgroundColor: AppColors.neutralBackground,
         body: Column(
           children: [
             // 1. Header Widget

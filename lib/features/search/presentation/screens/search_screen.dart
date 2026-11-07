@@ -11,7 +11,6 @@ import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/app_scaffold.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
-import 'package:spenza/core/widgets/cart_header_icon_button.dart';
 import 'package:spenza/core/widgets/filter_bottom_sheet.dart';
 import 'package:spenza/features/search/presentation/widgets/search_empty_widget.dart';
 import 'package:spenza/core/widgets/product_card.dart';
@@ -127,9 +126,9 @@ class _SearchScreenState extends State<SearchScreen> {
             focusNode: _focusNode,
             onSubmitted: (value) => _performSearch(value),
           ),
-          headerActions: const [CartHeaderIconButton()],
           subtitleWidget: const SizedBox(),
           backgroundColor: AppColors.neutralBackground,
+          safeAreaBottom: false,
           body: BlocBuilder<SearchBloc, BaseState<SearchResultEntity>>(
             builder: (context, state) {
               if (state.requestStatus == RequestStatus.init) {

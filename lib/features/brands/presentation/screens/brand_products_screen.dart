@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
+import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/responsive_utils.dart';
@@ -13,8 +15,6 @@ import 'package:spenza/core/widgets/filter_bottom_sheet.dart';
 import 'package:spenza/core/widgets/product_card.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/core/widgets/sort_bottom_sheet.dart';
-import 'package:spenza/core/utils/animations/circular_reveal_route.dart';
-import 'package:spenza/features/search/presentation/screens/search_screen.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
 import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/features/brands/domain/entities/brand_products_result_entity.dart';
@@ -192,14 +192,8 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
               Expanded(
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTapDown: (details) {
-                    Navigator.push(
-                      context,
-                      CircularRevealRoute(
-                        page: SearchScreen(brandId: widget.brandId),
-                        center: details.globalPosition,
-                      ),
-                    );
+                  onTap: () {
+                    context.push('${RoutePaths.search}?brandId=${widget.brandId}');
                   },
                   child: AbsorbPointer(
                     child: AppSearchField(

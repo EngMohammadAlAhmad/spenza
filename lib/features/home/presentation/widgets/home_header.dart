@@ -8,7 +8,6 @@ import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
-import 'package:spenza/core/utils/animations/circular_reveal_route.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/widgets/app_header.dart';
@@ -17,7 +16,6 @@ import 'package:spenza/core/widgets/cart_header_icon_button.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_bloc.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_event.dart';
 import 'package:spenza/features/addresses/presentation/bloc/addresses_state.dart';
-import 'package:spenza/features/search/presentation/screens/search_screen.dart';
 import 'package:spenza/injection_locator.dart' as di;
 
 class HomeHeader extends StatelessWidget {
@@ -162,14 +160,8 @@ class _HomeHeaderContentState extends State<_HomeHeaderContent> {
       ).animate().fadeIn(delay: 100.ms, duration: 400.ms).slideX(begin: 0.1, end: 0),
       bottomChild: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTapDown: (details) {
-          Navigator.push(
-            context,
-            CircularRevealRoute(
-              page: const SearchScreen(),
-              center: details.globalPosition,
-            ),
-          );
+        onTap: () {
+          context.push(RoutePaths.search);
         },
         child: AbsorbPointer(
           child: AppSearchField(

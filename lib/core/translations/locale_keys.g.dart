@@ -285,7 +285,9 @@ abstract class  LocaleKeys {
   static const added_qty_unit_to_cart = 'added_qty_unit_to_cart';
   static const total_amount_currency = 'total_amount_currency';
   static const save_amount = 'save_amount';
+  static const ratings = 'ratings';
   static const ratings_count = 'ratings_count';
+  static const ratings_from_count = 'ratings_from_count';
   static const sales_count = 'sales_count';
   static const out_of_stock = 'out_of_stock';
   static const in_stock = 'in_stock';
@@ -297,7 +299,9 @@ abstract class  LocaleKeys {
   static const for_unit_prefix = 'for_unit_prefix';
   static const order_now = 'order_now';
   static const quantity = 'quantity';
+  static const max_qty_per_order = 'max_qty_per_order';
   static const description = 'description';
+  static const specifications = 'specifications';
   static const you_may_also_like = 'you_may_also_like';
   static const piece_unit = 'piece_unit';
   static const add_to_cart = 'add_to_cart';

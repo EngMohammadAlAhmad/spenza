@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/general_error_widget.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
@@ -88,11 +89,10 @@ class Step2DeliveryAndPaymentView extends StatelessWidget {
             ? selectedAddress!.cityName
             : (options?.paymentZoneLabel ?? 'Damascus');
         final locationLabel = '$areaName، $cityName';
+        final isTabletLandscape = context.isTabletLandscape;
 
-        return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 24.0),
-          child: Column(
+        Widget buildDeliveryMethodSection() {
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 1. Delivery Method Section Header
@@ -131,6 +131,7 @@ class Step2DeliveryAndPaymentView extends StatelessWidget {
                 ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.zero,
                   itemCount: deliveryOptions.length,
                   separatorBuilder: (_, _) => const SizedBox(height: 12.0),
                   itemBuilder: (context, index) {
@@ -162,8 +163,14 @@ class Step2DeliveryAndPaymentView extends StatelessWidget {
                     );
                   },
                 ),
-              const SizedBox(height: 24.0),
+            ],
+          );
+        }
 
+        Widget buildPaymentMethodSection() {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               // 2. Payment Method Section Header
               Text(
                 'payment_method'.tr(),
@@ -187,6 +194,7 @@ class Step2DeliveryAndPaymentView extends StatelessWidget {
               else
                 ListView.separated(
                   shrinkWrap: true,
+                  padding: EdgeInsets.zero,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: paymentMethods.length,
                   separatorBuilder: (_, _) => const SizedBox(height: 12.0),
@@ -225,8 +233,59 @@ class Step2DeliveryAndPaymentView extends StatelessWidget {
                     );
                   },
                 ),
+            ],
+          );
+        }
+
+        Widget bodyContent;
+
+        if (isTabletLandscape) {
+          bodyContent = Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // First Child: Delivery Method Section (Right side in RTL)
+              Expanded(
+                flex: 1,
+                child: buildDeliveryMethodSection(),
+              ),
+              const SizedBox(width: 20.0),
+
+              // Second Child: Payment Method Section (Left side in RTL)
+              Expanded(
+                flex: 1,
+                child: buildPaymentMethodSection(),
+              ),
+            ],
+          );
+        } else {
+          bodyContent = Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              buildDeliveryMethodSection(),
+              const SizedBox(height: 24.0),
+              buildPaymentMethodSection(),
               const SizedBox(height: 24.0),
             ],
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async {
+            if (selectedAddress != null) {
+              final cityId = selectedAddress!.cityId > 0
+                  ? selectedAddress!.cityId
+                  : 1;
+              context
+                  .read<CartBloc>()
+                  .add(GetCheckoutOptionsEvent(cityId: cityId));
+            }
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
+            ),
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 24.0),
+            child: bodyContent,
           ),
         );
       },

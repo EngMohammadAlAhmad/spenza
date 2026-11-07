@@ -76,7 +76,7 @@ class CartHeaderIconButton extends StatelessWidget {
                     child: Container(
                       key: ValueKey<int>(itemCount),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 4.0,
+                        horizontal: 7.0,
                         vertical: 1.0,
                       ),
                       constraints: const BoxConstraints(

@@ -1,10 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/features/cart/domain/entities/cart_item_entity.dart';
 
 class AddToCartSnackBar {
@@ -101,10 +102,15 @@ class _AddToCartBannerWidgetState extends State<_AddToCartBannerWidget>
 
   @override
   Widget build(BuildContext context) {
+    final isTabletLandscape = context.isTabletLandscape;
+    final horizontalPadding = isTabletLandscape
+        ? (context.width - (context.width * 0.33)) / 2
+        : 16.0;
+
     return Positioned(
       bottom: 120.0,
-      left: 16.0,
-      right: 16.0,
+      left: horizontalPadding,
+      right: horizontalPadding,
       child: SlideTransition(
         position: _offsetAnimation,
         child: Material(
@@ -131,8 +137,8 @@ class _AddToCartBannerWidgetState extends State<_AddToCartBannerWidget>
                   clipBehavior: Clip.none,
                   children: [
                     Container(
-                      width: 50,
-                      height: 50,
+                      width: 50.0,
+                      height: 50.0,
                       decoration: BoxDecoration(
                         borderRadius: AppRadius.mediumPlus,
                         color: AppColors.neutral200,

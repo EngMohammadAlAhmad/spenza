@@ -11,6 +11,7 @@ class ProductSellingUnitsSection extends StatefulWidget {
   final num defaultPrice;
   final NumberFormat formatter;
   final ValueChanged<int> onUnitSelected;
+  final bool isTabletLandscape;
 
   const ProductSellingUnitsSection({
     super.key,
@@ -20,6 +21,7 @@ class ProductSellingUnitsSection extends StatefulWidget {
     required this.defaultPrice,
     required this.formatter,
     required this.onUnitSelected,
+    required this.isTabletLandscape,
   });
 
   @override
@@ -30,8 +32,8 @@ class _ProductSellingUnitsSectionState extends State<ProductSellingUnitsSection>
   late final ScrollController _scrollController;
   int _currentIndex = 0;
   double _scrollProgress = 0.0;
+  bool isTabletLandscape = false;
 
-  static const double _itemWidth = 180.0;
   static const double _itemSpacing = 12.0;
 
   @override
@@ -197,7 +199,7 @@ class _ProductSellingUnitsSectionState extends State<ProductSellingUnitsSection>
                 },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 250),
-                  width: _itemWidth,
+                  width: widget.isTabletLandscape ? 278.0 : 180.0,
                   padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 12.0),
                   decoration: BoxDecoration(
                     color: isSelected ? AppColors.primaryTint : Colors.white,

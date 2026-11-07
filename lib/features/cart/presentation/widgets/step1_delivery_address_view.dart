@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/general_error_widget.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
@@ -84,6 +85,108 @@ class Step1DeliveryAddressView extends StatelessWidget {
           selectedAddress = matches.isNotEmpty ? matches.first : state.addresses.first;
         }
 
+        final isTabletLandscape = context.isTabletLandscape;
+
+        Widget buildAddressListSection() {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'where_to_deliver_question'.tr(),
+                style: const TextStyle(
+                  fontSize: 17.0,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.neutral900,
+                ),
+              ),
+              if (state.addresses.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Center(
+                    child: Text(
+                      'no_addresses_add_new_note'.tr(),
+                      style: const TextStyle(
+                        fontSize: 14.0,
+                        color: AppColors.neutral,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                )
+              else
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.only(top: 10.0),
+                  itemCount: state.addresses.length,
+                  separatorBuilder: (_, _) => const SizedBox(height: 12.0),
+                  itemBuilder: (context, index) {
+                    final address = state.addresses[index];
+                    final isSelected = address.id == selectedAddressId;
+                    return CheckoutAddressCard(
+                      address: address,
+                      isSelected: isSelected,
+                      onTap: () {
+                        onAddressSelected(address.id);
+                        final cityId = address.cityId > 0 ? address.cityId : 1;
+                        context
+                            .read<CartBloc>()
+                            .add(GetCheckoutOptionsEvent(cityId: cityId));
+                      },
+                    );
+                  },
+                ),
+            ],
+          );
+        }
+
+        Widget buildAddAndNoticeSection() {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DashedAddAddressButton(
+                onTap: () {
+                  context.push(RoutePaths.addAddress);
+                },
+              ),
+              const SizedBox(height: 16.0),
+              DeliveryNoticeBanner(selectedAddress: selectedAddress),
+            ],
+          );
+        }
+
+        Widget bodyContent;
+
+        if (isTabletLandscape) {
+          bodyContent = Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // First Item: List of Addresses
+              Expanded(
+                flex: 1,
+                child: buildAddressListSection(),
+              ),
+              const SizedBox(width: 20.0),
+
+              // Second Item: Dashed Add Address Button under it Delivery Info Notice Banner
+              Expanded(
+                flex: 1,
+                child: buildAddAndNoticeSection(),
+              ),
+            ],
+          );
+        } else {
+          bodyContent = Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              buildAddressListSection(),
+              const SizedBox(height: 14.0),
+              buildAddAndNoticeSection(),
+              const SizedBox(height: 20.0),
+            ],
+          );
+        }
+
         return RefreshIndicator(
           onRefresh: () async {
             context.read<AddressesBloc>().add(const GetAddressesEvent());
@@ -93,71 +196,7 @@ class Step1DeliveryAddressView extends StatelessWidget {
               parent: BouncingScrollPhysics(),
             ),
             padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Title Question
-                Text(
-                  'where_to_deliver_question'.tr(),
-                  style: const TextStyle(
-                    fontSize: 17.0,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.neutral900,
-                  ),
-                ),
-                // Address List Selection
-                if (state.addresses.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    child: Center(
-                      child: Text(
-                        'no_addresses_add_new_note'.tr(),
-                        style: const TextStyle(
-                          fontSize: 14.0,
-                          color: AppColors.neutral,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  )
-                else
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.only(top: 10.0),
-                    itemCount: state.addresses.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 12.0),
-                    itemBuilder: (context, index) {
-                      final address = state.addresses[index];
-                      final isSelected = address.id == selectedAddressId;
-                      return CheckoutAddressCard(
-                        address: address,
-                        isSelected: isSelected,
-                        onTap: () {
-                          onAddressSelected(address.id);
-                          final cityId = address.cityId > 0 ? address.cityId : 1;
-                          context
-                              .read<CartBloc>()
-                              .add(GetCheckoutOptionsEvent(cityId: cityId));
-                        },
-                      );
-                    },
-                  ),
-                const SizedBox(height: 14.0),
-
-                // Dashed Add Address Button
-                DashedAddAddressButton(
-                  onTap: () {
-                    context.push(RoutePaths.addAddress);
-                  },
-                ),
-                const SizedBox(height: 16.0),
-
-                // Delivery Info Notice Banner
-                DeliveryNoticeBanner(selectedAddress: selectedAddress),
-                const SizedBox(height: 20.0),
-              ],
-            ),
+            child: bodyContent,
           ),
         );
       },

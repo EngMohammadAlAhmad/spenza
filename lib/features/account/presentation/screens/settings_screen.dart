@@ -7,7 +7,7 @@ import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/widgets/app_header.dart';
-import 'package:spenza/features/account/presentation/widgets/selection_bottom_sheet.dart';
+import 'package:spenza/core/widgets/selection_bottom_sheet.dart';
 import 'package:spenza/features/account/presentation/widgets/settings_tile.dart';
 import 'package:spenza/features/language/presentation/blocs/language_bloc.dart';
 import 'package:spenza/injection_locator.dart';

@@ -12,6 +12,7 @@ import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favo
 import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favorites_event.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/app_back_button.dart';
 import 'package:spenza/core/widgets/app_icon_placeholder.dart';
 import 'package:spenza/core/widgets/circle_action_button.dart';
@@ -34,6 +35,7 @@ class ProductImageGallery extends StatefulWidget {
   final String? video;
   final String? model3d;
   final Widget? child;
+  final bool isTabletLandscape;
 
   const ProductImageGallery({
     super.key,
@@ -43,6 +45,7 @@ class ProductImageGallery extends StatefulWidget {
     this.video,
     this.model3d,
     this.child,
+    this.isTabletLandscape = false,
   });
 
   @override
@@ -90,6 +93,286 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
   @override
   Widget build(BuildContext context) {
     final currentItem = _allMedia[_currentIndex];
+    final isTablet = widget.isTabletLandscape || context.isTabletLandscape;
+
+    if (isTablet) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Tablet Main Image Container
+          Container(
+            height: 400.0,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: AppRadius.overMedium,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.04),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: AppRadius.overMedium,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 500),
+                      switchInCurve: Curves.easeOutCubic,
+                      switchOutCurve: Curves.easeInCubic,
+                      transitionBuilder: (child, animation) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: ScaleTransition(
+                            scale: Tween<double>(begin: 0.94, end: 1.0).animate(animation),
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: KeyedSubtree(
+                        key: ValueKey<int>(_currentIndex),
+                        child: _buildMainContent(currentItem),
+                      ),
+                    ),
+                  ),
+                  // Top Edge Vignette
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 80.0,
+                    child: IgnorePointer(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black.withValues(alpha: 0.30),
+                              Colors.black.withValues(alpha: 0.0),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Controls (Back, Share, Favorite)
+                  Positioned(
+                    top: 16.0,
+                    left: 16.0,
+                    right: 16.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const AppBackButton(
+                          backgroundColor: Colors.white,
+                          withShadow: true,
+                        )
+                            .animate()
+                            .fadeIn(duration: 650.ms, delay: 200.ms)
+                            .scale(
+                              begin: const Offset(0.4, 0.4),
+                              duration: 750.ms,
+                              curve: Curves.easeOutBack,
+                            ),
+                        Row(
+                          children: [
+                            CircleActionButton(
+                              iconPath: AppAssets.shareIcon,
+                              onTap: () {},
+                            )
+                                .animate()
+                                .fadeIn(duration: 650.ms, delay: 350.ms)
+                                .scale(
+                                  begin: const Offset(0.4, 0.4),
+                                  duration: 750.ms,
+                                  curve: Curves.easeOutBack,
+                                ),
+                            const SizedBox(width: 12),
+                            BlocBuilder<FavoritesBloc, BaseState<List<ProductEntity>>>(
+                              builder: (context, state) {
+                                final isFavorite = state.data?.any((p) => p.id == widget.product.id) ?? false;
+                                return FavoriteButton(
+                                  initialFavorite: isFavorite,
+                                  onFavoriteChanged: (isFav) {
+                                    context.read<FavoritesBloc>().add(ToggleFavoriteEvent(widget.product));
+                                  },
+                                );
+                              },
+                            )
+                                .animate()
+                                .fadeIn(duration: 650.ms, delay: 500.ms)
+                                .scale(
+                                  begin: const Offset(0.4, 0.4),
+                                  duration: 750.ms,
+                                  curve: Curves.easeOutBack,
+                                ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Page Counter Pill Badge (1/6)
+                  if (_allMedia.length > 1)
+                    Positioned(
+                      bottom: 16.0,
+                      left: 16.0,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        child: Row(
+                          spacing: 7.0,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SvgPicture.asset(AppAssets.imagesIcon),
+                            Text(
+                              '${_currentIndex + 1}/${_allMedia.length}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                          .animate()
+                          .fadeIn(duration: 500.ms, delay: 300.ms),
+                    ),
+                  // Save Discount Badge
+                  if (widget.product.discountPercentage > 0)
+                    Positioned(
+                      bottom: 16.0,
+                      right: 16.0,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: AppRadius.large,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.primary.withValues(alpha: 0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0.0, 4.0),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          'save_amount'.tr(args: [
+                            (widget.product.price - widget.product.discountedPrice).toStringAsFixed(0),
+                            'sp_currency'.tr()
+                          ]),
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                        ),
+                      )
+                          .animate()
+                          .fadeIn(delay: 500.ms, duration: 650.ms)
+                          .scale(begin: const Offset(0.4, 0.4), duration: 750.ms, curve: Curves.easeOutBack),
+                    ),
+                ],
+              ),
+            ),
+          )
+              .animate()
+              .fadeIn(duration: 800.ms)
+              .scale(
+                begin: const Offset(0.95, 0.95),
+                duration: 800.ms,
+                curve: Curves.easeOutCubic,
+              ),
+
+          const SizedBox(height: 16.0),
+
+          // Media Row (Thumbnails/Icons)
+          SizedBox(
+            height: 76.0,
+            child: ListView.separated(
+              clipBehavior: Clip.none,
+              padding: const EdgeInsets.symmetric(vertical: 6.0),
+              scrollDirection: Axis.horizontal,
+              itemCount: _allMedia.length,
+              separatorBuilder: (_, _) => const SizedBox(width: 10.0),
+              itemBuilder: (context, index) {
+                final item = _allMedia[index];
+                final isSelected = _currentIndex == index;
+                return AnimatedScale(
+                  scale: isSelected ? 1.08 : 1.0,
+                  duration: const Duration(milliseconds: 350),
+                  curve: Curves.easeOutBack,
+                  child: GestureDetector(
+                    onTap: () => setState(() => _currentIndex = index),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 350),
+                      width: 60.0,
+                      height: 60.0,
+                      decoration: BoxDecoration(
+                        color: isSelected ? AppColors.secondary.withValues(alpha: 0.1) : Colors.white,
+                        borderRadius: AppRadius.large,
+                        border: Border.all(
+                          color: isSelected ? AppColors.secondary : AppColors.fillColor,
+                          width: isSelected ? 2.5 : 1.5,
+                        ),
+                        boxShadow: isSelected
+                            ? [
+                                BoxShadow(
+                                  color: AppColors.secondary.withValues(alpha: 0.25),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                )
+                              ]
+                            : [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.03),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          if (item.type == GalleryItemType.image && item.url != null)
+                            ClipRRect(
+                              borderRadius: AppRadius.upMedium,
+                              child: CachedNetworkImage(
+                                imageUrl: item.url!,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
+                              ),
+                            )
+                          else
+                            _buildThumbnailIcon(item.type, isSelected),
+                          if (item.type == GalleryItemType.model3d)
+                            const Icon(Icons.view_in_ar_rounded, color: Colors.white, size: 24),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+                    .animate()
+                    .fadeIn(delay: (350 + index * 120).ms, duration: 700.ms)
+                    .scale(
+                      begin: const Offset(0.5, 0.5),
+                      duration: 700.ms,
+                      curve: Curves.easeOutBack,
+                    );
+              },
+            ),
+          ),
+          if (widget.child != null) ...[
+            const SizedBox(height: 12.0),
+            widget.child!,
+          ],
+        ],
+      );
+    }
 
     return Column(
       children: [
@@ -302,9 +585,10 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                 const SizedBox(height: 20.0),
                 // Media Row (Thumbnails/Icons)
                 SizedBox(
-                  height: 64.0,
+                  height: 76.0,
                   child: ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    clipBehavior: Clip.none,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6.0),
                     scrollDirection: Axis.horizontal,
                     itemCount: _allMedia.length,
                     separatorBuilder: (_, _) => const SizedBox(width: 10.0),
@@ -319,7 +603,8 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                           onTap: () => setState(() => _currentIndex = index),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 350),
-                            width: 64.0,
+                            width: 60.0,
+                            height: 60.0,
                             decoration: BoxDecoration(
                               color: isSelected ? AppColors.secondary.withValues(alpha: 0.1) : Colors.white,
                               borderRadius: AppRadius.large,

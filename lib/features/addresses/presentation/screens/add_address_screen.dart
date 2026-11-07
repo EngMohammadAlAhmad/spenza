@@ -9,6 +9,8 @@ import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
+import 'package:spenza/core/widgets/app_bottom_container.dart';
 import 'package:spenza/core/widgets/app_scaffold.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
@@ -239,431 +241,455 @@ class _AddAddressViewState extends State<_AddAddressView> {
 
                   final isLoadingLocations =
                       state.locationsStatus == RequestStatus.loading;
+                  final isTabletLandscape = context.isTabletLandscape;
+
+                  Widget buildFirstColumn() {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // 1. Address Type Selector
+                        Text(
+                          'address_type'.tr(),
+                          style: const TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.neutral900,
+                          ),
+                        ),
+                        const SizedBox(height: 10.0),
+                        Row(
+                          children: [
+                            _TypeChip(
+                              title: 'home_label'.tr(),
+                              isSelected: _selectedType == 'home',
+                              onTap: () => _onTypeSelected('home', 'Home'),
+                            ),
+                            const SizedBox(width: 10.0),
+                            _TypeChip(
+                              title: 'work_label'.tr(),
+                              isSelected: _selectedType == 'work',
+                              onTap: () => _onTypeSelected('work', 'Work'),
+                            ),
+                            const SizedBox(width: 10.0),
+                            _TypeChip(
+                              title: 'other_label'.tr(),
+                              isSelected: _selectedType == 'other',
+                              onTap: () => _onTypeSelected('other', 'Other'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20.0),
+
+                        // 2. Governorates and Cities Dropdowns
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Governorate Dropdown
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'governorate'.tr(),
+                                    style: const TextStyle(
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.neutral900,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 14.0),
+                                    height: 48,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: AppRadius.overMedium,
+                                    ),
+                                    child: isLoadingLocations
+                                        ? const Center(
+                                            child: CupertinoActivityIndicator(),
+                                          )
+                                        : DropdownButtonHideUnderline(
+                                            child: DropdownButton<GovernorateEntity>(
+                                              value: state.governorates.contains(_selectedGovernorate)
+                                                  ? _selectedGovernorate
+                                                  : null,
+                                              isExpanded: true,
+                                              hint: Text(
+                                                'select_governorate'.tr(),
+                                                style: const TextStyle(
+                                                  fontSize: 14.0,
+                                                  color: AppColors.neutral,
+                                                ),
+                                              ),
+                                              icon: const Icon(
+                                                Icons.keyboard_arrow_down_rounded,
+                                                color: AppColors.neutral,
+                                              ),
+                                              items: state.governorates.map((gov) {
+                                                return DropdownMenuItem<GovernorateEntity>(
+                                                  value: gov,
+                                                  child: Text(
+                                                    gov.name,
+                                                    style: const TextStyle(
+                                                      fontSize: 14.0,
+                                                      fontWeight: FontWeight.w500,
+                                                      color: AppColors.neutral900,
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                              onChanged: (val) {
+                                                if (val != null) {
+                                                  setState(() {
+                                                    _selectedGovernorate = val;
+                                                    _selectedCity = val.cities.isNotEmpty
+                                                        ? val.cities.first
+                                                        : null;
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 12.0),
+
+                            // Area / City Dropdown
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'area'.tr(),
+                                    style: const TextStyle(
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.neutral900,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 14.0),
+                                    height: 48,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: AppRadius.overMedium,
+                                    ),
+                                    child: isLoadingLocations
+                                        ? const Center(
+                                            child: CupertinoActivityIndicator(),
+                                          )
+                                        : DropdownButtonHideUnderline(
+                                            child: DropdownButton<CityEntity>(
+                                              value: (_selectedGovernorate?.cities.contains(_selectedCity) ?? false)
+                                                  ? _selectedCity
+                                                  : null,
+                                              isExpanded: true,
+                                              hint: Text(
+                                                'select_area'.tr(),
+                                                style: const TextStyle(
+                                                  fontSize: 14.0,
+                                                  color: AppColors.neutral,
+                                                ),
+                                              ),
+                                              icon: const Icon(
+                                                Icons.keyboard_arrow_down_rounded,
+                                                color: AppColors.neutral,
+                                              ),
+                                              items: (_selectedGovernorate?.cities ?? [])
+                                                  .map((city) {
+                                                return DropdownMenuItem<CityEntity>(
+                                                  value: city,
+                                                  child: Text(
+                                                    city.name,
+                                                    style: const TextStyle(
+                                                      fontSize: 14.0,
+                                                      fontWeight: FontWeight.w500,
+                                                      color: AppColors.neutral900,
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                              onChanged: (val) {
+                                                if (val != null) {
+                                                  setState(() {
+                                                    _selectedCity = val;
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20.0),
+
+                        // 3. Address Details Fields (Street, Building, Floor)
+                        Text(
+                          'address_details'.tr(),
+                          style: const TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.neutral900,
+                          ),
+                        ),
+                        const SizedBox(height: 8.0),
+                        CustomTextField(
+                          controller: _streetController,
+                          hintText: 'street_example'.tr(),
+                          fillColor: Colors.white,
+                          validator: (val) {
+                            if (val == null || val.trim().isEmpty) {
+                              return 'street_validation'.tr();
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 10.0),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CustomTextField(
+                                controller: _buildingController,
+                                hintText: 'building_example'.tr(),
+                                fillColor: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 12.0),
+                            Expanded(
+                              child: CustomTextField(
+                                controller: _floorController,
+                                hintText: 'floor_example'.tr(),
+                                fillColor: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4.0),
+                        Text(
+                          'address_helper_text'.tr(),
+                          style: const TextStyle(
+                            fontSize: 12.0,
+                            color: AppColors.neutral,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+
+                  Widget buildSecondColumn() {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // 4. Delivery Phone Field
+                        Text(
+                          'delivery_phone_number'.tr(),
+                          style: const TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.neutral900,
+                          ),
+                        ),
+                        const SizedBox(height: 8.0),
+                        Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: CustomTextField(
+                            controller: _phoneController,
+                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                  color: AppColors.neutral900,
+                                ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              _PhoneInputFormatter(),
+                            ],
+                            prefixIcon: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(width: 20.0),
+                                SvgPicture.asset(AppAssets.syFlag, width: 24),
+                                const SizedBox(width: 8.0),
+                                Text(
+                                  '+963',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                        color: AppColors.neutral700,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                SizedBox(
+                                  width: 25.0,
+                                  height: 52.0,
+                                  child: VerticalDivider(
+                                    color: AppColors.primaryLight
+                                        .withValues(alpha: 0.5),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            textDirection: TextDirection.ltr,
+                            forPhone: true,
+                            borderColor: AppColors.primaryLight
+                                .withValues(alpha: 0.5),
+                            hintText: '9xx xxx xxx',
+                            hintStyle: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: AppColors.neutral,
+                                ),
+                            fillColor: Colors.white,
+                            validator: (val) {
+                              if (val == null || val.trim().isEmpty) {
+                                return 'phone_validation'.tr();
+                              }
+                              final clean = val.replaceAll(' ', '');
+                              if (!clean.startsWith('9') || clean.length != 9) {
+                                return 'valid_phone_error'.tr();
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 20.0),
+
+                        // 5. Default Address Switch Box
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 12.0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: AppRadius.upMedium,
+                          ),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(AppAssets.homeIcon2),
+                              const SizedBox(width: 10.0),
+                              Expanded(
+                                child: Text(
+                                  'set_as_default_checkbox'.tr(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              CupertinoSwitch(
+                                value: _isDefault,
+                                activeTrackColor: AppColors.primary500,
+                                onChanged: (val) {
+                                  setState(() => _isDefault = val);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+
+                        // 6. Delivery Availability Banner
+                        if (_selectedGovernorate != null &&
+                            _selectedCity != null)
+                          Container(
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE8F5E9),
+                              borderRadius: AppRadius.upMedium,
+                              border: Border.all(
+                                color: const Color(0xFFC8E6C9),
+                                width: 1.0,
+                              ),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.check_circle_rounded,
+                                  color: Color(0xFF2E7D32),
+                                  size: 22.0,
+                                ),
+                                const SizedBox(width: 12.0),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'we_deliver_to'.tr(args: [_selectedGovernorate!.name, _selectedCity!.name]),
+                                        style: const TextStyle(
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFF1B5E20),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4.0),
+                                      Text(
+                                        'delivery_info_text'.tr(args: ['${_selectedCity!.deliveryPrice}']),
+                                        style: const TextStyle(
+                                          fontSize: 13.0,
+                                          color: Color(0xFF2E7D32),
+                                          height: 1.3,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    );
+                  }
+
+                  Widget formBody;
+
+                  if (isTabletLandscape) {
+                    formBody = Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // First Child: Address Type + Dropdowns + Details
+                        Expanded(
+                          flex: 1,
+                          child: buildFirstColumn(),
+                        ),
+                        const SizedBox(width: 20.0),
+
+                        // Second Child: Delivery Phone + Default Switch + Availability Banner
+                        Expanded(
+                          flex: 1,
+                          child: buildSecondColumn(),
+                        ),
+                      ],
+                    );
+                  } else {
+                    formBody = Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        buildFirstColumn(),
+                        const SizedBox(height: 20.0),
+                        buildSecondColumn(),
+                      ],
+                    );
+                  }
 
                   return SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 32.0),
                     child: Form(
                       key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // 1. Address Type Selector
-                          Text(
-                            'address_type'.tr(),
-                            style: const TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.neutral900,
-                            ),
-                          ),
-                          const SizedBox(height: 10.0),
-                          Row(
-                            children: [
-                              _TypeChip(
-                                title: 'home_label'.tr(),
-                                isSelected: _selectedType == 'home',
-                                onTap: () => _onTypeSelected('home', 'Home'),
-                              ),
-                              const SizedBox(width: 10.0),
-                              _TypeChip(
-                                title: 'work_label'.tr(),
-                                isSelected: _selectedType == 'work',
-                                onTap: () => _onTypeSelected('work', 'Work'),
-                              ),
-                              const SizedBox(width: 10.0),
-                              _TypeChip(
-                                title: 'other_label'.tr(),
-                                isSelected: _selectedType == 'other',
-                                onTap: () => _onTypeSelected('other', 'Other'),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20.0),
-
-                          // 2. Governorates and Cities Dropdowns
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Governorate Dropdown
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'governorate'.tr(),
-                                      style: const TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.neutral900,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 14.0),
-                                      height: 48,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: AppRadius.overMedium,
-                                      ),
-                                      child: isLoadingLocations
-                                          ? const Center(
-                                        child: CupertinoActivityIndicator(),
-                                      )
-                                          : DropdownButtonHideUnderline(
-                                        child: DropdownButton<
-                                            GovernorateEntity>(
-                                          value: state.governorates
-                                              .contains(_selectedGovernorate)
-                                              ? _selectedGovernorate
-                                              : null,
-                                          isExpanded: true,
-                                          hint: Text(
-                                            'select_governorate'.tr(),
-                                            style: const TextStyle(
-                                              fontSize: 14.0,
-                                              color: AppColors.neutral,
-                                            ),
-                                          ),
-                                          icon: const Icon(
-                                            Icons
-                                                .keyboard_arrow_down_rounded,
-                                            color: AppColors.neutral,
-                                          ),
-                                          items: state.governorates
-                                              .map((gov) {
-                                            return DropdownMenuItem<
-                                                GovernorateEntity>(
-                                              value: gov,
-                                              child: Text(
-                                                gov.name,
-                                                style: const TextStyle(
-                                                  fontSize: 14.0,
-                                                  fontWeight:
-                                                  FontWeight.w500,
-                                                  color: AppColors.neutral900,
-                                                ),
-                                              ),
-                                            );
-                                          }).toList(),
-                                          onChanged: (val) {
-                                            if (val != null) {
-                                              setState(() {
-                                                _selectedGovernorate = val;
-                                                _selectedCity = val
-                                                    .cities.isNotEmpty
-                                                    ? val.cities.first
-                                                    : null;
-                                              });
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 12.0),
-
-                              // Area / City Dropdown
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'area'.tr(),
-                                      style: const TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.neutral900,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 14.0),
-                                      height: 48,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: AppRadius.overMedium,
-                                      ),
-                                      child: isLoadingLocations
-                                          ? const Center(
-                                        child: CupertinoActivityIndicator(),
-                                      )
-                                          : DropdownButtonHideUnderline(
-                                        child: DropdownButton<
-                                            CityEntity>(
-                                          value: (_selectedGovernorate
-                                              ?.cities
-                                              .contains(
-                                              _selectedCity) ??
-                                              false)
-                                              ? _selectedCity
-                                              : null,
-                                          isExpanded: true,
-                                          hint: Text(
-                                            'select_area'.tr(),
-                                            style: const TextStyle(
-                                              fontSize: 14.0,
-                                              color: AppColors.neutral,
-                                            ),
-                                          ),
-                                          icon: const Icon(
-                                            Icons
-                                                .keyboard_arrow_down_rounded,
-                                            color: AppColors.neutral,
-                                          ),
-                                          items: (_selectedGovernorate
-                                              ?.cities ??
-                                              [])
-                                              .map((city) {
-                                            return DropdownMenuItem<
-                                                CityEntity>(
-                                              value: city,
-                                              child: Text(
-                                                city.name,
-                                                style: const TextStyle(
-                                                  fontSize: 14.0,
-                                                  fontWeight:
-                                                  FontWeight.w500,
-                                                  color:
-                                                  AppColors.neutral900,
-                                                ),
-                                              ),
-                                            );
-                                          }).toList(),
-                                          onChanged: (val) {
-                                            if (val != null) {
-                                              setState(() {
-                                                _selectedCity = val;
-                                              });
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20.0),
-
-                          // 3. Address Details Fields (Street, Building, Floor)
-                          Text(
-                            'address_details'.tr(),
-                            style: const TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.neutral900,
-                            ),
-                          ),
-                          const SizedBox(height: 8.0),
-                          CustomTextField(
-                            controller: _streetController,
-                            hintText: 'street_example'.tr(),
-                            fillColor: Colors.white,
-                            validator: (val) {
-                              if (val == null || val.trim().isEmpty) {
-                                return 'street_validation'.tr();
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 10.0),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomTextField(
-                                  controller: _buildingController,
-                                  hintText: 'building_example'.tr(),
-                                  fillColor: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(width: 12.0),
-                              Expanded(
-                                child: CustomTextField(
-                                  controller: _floorController,
-                                  hintText: 'floor_example'.tr(),
-                                  fillColor: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4.0),
-                          Text(
-                            'address_helper_text'.tr(),
-                            style: const TextStyle(
-                              fontSize: 12.0,
-                              color: AppColors.neutral,
-                            ),
-                          ),
-                          const SizedBox(height: 20.0),
-
-                          // 4. Delivery Phone Field
-                          Text(
-                            'delivery_phone_number'.tr(),
-                            style: const TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.neutral900,
-                            ),
-                          ),
-                          const SizedBox(height: 8.0),
-                          Directionality(
-                            textDirection: TextDirection.ltr,
-                            child: CustomTextField(
-                              controller: _phoneController,
-                              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                    color: AppColors.neutral900,
-                                  ),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                                _PhoneInputFormatter(),
-                              ],
-                              prefixIcon: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const SizedBox(width: 20.0),
-                                  SvgPicture.asset(AppAssets.syFlag, width: 24),
-                                  const SizedBox(width: 8.0),
-                                  Text(
-                                    '+963',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                          color: AppColors.neutral700,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                                  SizedBox(
-                                    width: 25.0,
-                                    height: 52.0,
-                                    child: VerticalDivider(
-                                      color: AppColors.primaryLight
-                                          .withValues(alpha: 0.5),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              textDirection: TextDirection.ltr,
-                              forPhone: true,
-                              borderColor: AppColors.primaryLight
-                                  .withValues(alpha: 0.5),
-                              hintText: '9xx xxx xxx',
-                              hintStyle: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                    color: AppColors.neutral,
-                                  ),
-                              fillColor: Colors.white,
-                              validator: (val) {
-                                if (val == null || val.trim().isEmpty) {
-                                  return 'phone_validation'.tr();
-                                }
-                                final clean = val.replaceAll(' ', '');
-                                if (!clean.startsWith('9') || clean.length != 9) {
-                                  return 'valid_phone_error'.tr();
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 20.0),
-
-                          // 5. Default Address Switch Box
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 12.0,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: AppRadius.upMedium,
-                            ),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(AppAssets.homeIcon2),
-                                const SizedBox(width: 10.0),
-                                Expanded(
-                                  child: Text(
-                                    'set_as_default_checkbox'.tr(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge!
-                                        .copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                CupertinoSwitch(
-                                  value: _isDefault,
-                                  activeTrackColor: AppColors.primary500,
-                                  onChanged: (val) {
-                                    setState(() => _isDefault = val);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 16.0),
-
-                          // 6. Delivery Availability Banner
-                          if (_selectedGovernorate != null &&
-                              _selectedCity != null)
-                            Container(
-                              padding: const EdgeInsets.all(16.0),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFE8F5E9),
-                                borderRadius: AppRadius.upMedium,
-                                border: Border.all(
-                                  color: const Color(0xFFC8E6C9),
-                                  width: 1.0,
-                                ),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Icon(
-                                    Icons.check_circle_rounded,
-                                    color: Color(0xFF2E7D32),
-                                    size: 22.0,
-                                  ),
-                                  const SizedBox(width: 12.0),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'we_deliver_to'.tr(args: [_selectedGovernorate!.name, _selectedCity!.name]),
-                                          style: const TextStyle(
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xFF1B5E20),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4.0),
-                                        Text(
-                                          'delivery_info_text'.tr(args: ['${_selectedCity!.deliveryPrice}']),
-                                          style: const TextStyle(
-                                            fontSize: 13.0,
-                                            color: Color(0xFF2E7D32),
-                                            height: 1.3,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
+                      child: formBody,
                     ),
                   );
                 },
@@ -676,23 +702,10 @@ class _AddAddressViewState extends State<_AddAddressView> {
                 final isLoading = isEditing
                     ? state.updateAddressStatus == RequestStatus.loading
                     : state.addAddressStatus == RequestStatus.loading;
-                return Container(
-                  padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 20.0),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(24.0),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 8,
-                        offset: Offset(0, -2),
-                      ),
-                    ],
-                  ),
+                return AppBottomContainer(
                   child: CustomButton(
                     text: isEditing ? 'تعديل العنوان' : 'save_address'.tr(),
+                    height: 48.0,
                     isLoading: isLoading,
                     onPressed: isLoading ? null : () => _submitAddress(context),
                   ),

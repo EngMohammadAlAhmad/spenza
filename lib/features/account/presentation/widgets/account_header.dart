@@ -76,11 +76,11 @@ class AccountHeader extends StatelessWidget {
           // Name, Phone & Role Badge (Middle)
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 isLoading && user == null
                     ? const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4.0),
+                        padding: .symmetric(vertical: 4.0),
                         child: AnimatedThreeDots(color: Colors.white),
                       )
                     : Text(

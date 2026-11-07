@@ -12,11 +12,13 @@ import 'package:spenza/features/orders/presentation/utils/order_localization_hel
 class OrderCard extends StatelessWidget {
   final OrderResponseEntity order;
   final VoidCallback? onTap;
+  final EdgeInsetsGeometry? margin;
 
   const OrderCard({
     super.key,
     required this.order,
     this.onTap,
+    this.margin,
   });
 
   @override
@@ -27,7 +29,7 @@ class OrderCard extends StatelessWidget {
     final actionLabel = _getActionLabel(order);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12.0),
+      margin: margin ?? const EdgeInsets.only(bottom: 12.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: AppRadius.upMedium,

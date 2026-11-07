@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
+import 'package:spenza/core/widgets/app_bottom_container.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/snackbar_service.dart';
 import 'package:spenza/features/cart/domain/entities/cart_item_entity.dart';
@@ -61,86 +63,90 @@ class ProductDetailsBottomBar extends StatelessWidget {
     }
 
     final isOutOfStock = selectedVariant != null ? !selectedVariant.inStock : !product.storage.inStock;
+    final isTabletLandscape = context.isTabletLandscape;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 16.0,
-            offset: const Offset(0, -4),
+    Widget buildTotalWidget() => _AnimatedTotalWidget(
+          totalPrice: totalPrice.toInt(),
+          quantity: state.quantity,
+          unitTitle: unitTitle,
+          formatter: formatter,
+        );
+
+    Widget buildAddToCartButton() => CustomButton(
+          text: isOutOfStock ? 'out_of_stock'.tr() : 'add_to_cart'.tr(),
+          height: 52.0,
+          icon: SvgPicture.asset(
+            AppAssets.cartIcon2,
+            width: 20,
+            height: 20,
           ),
-        ],
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-          child: Row(
-            children: [
-              // Right side in RTL: Animated Total Details
-              Expanded(
-                flex: 2,
-                child: _AnimatedTotalWidget(
-                  totalPrice: totalPrice.toInt(),
-                  quantity: state.quantity,
-                  unitTitle: unitTitle,
-                  formatter: formatter,
-                ),
-              ),
-              const SizedBox(width: 16.0),
+          onPressed: isOutOfStock
+              ? null
+              : () {
+                  final isLoggedIn = di.sl<CacheHelper>().getAuthToken().isNotEmpty;
+                  if (!isLoggedIn) {
+                    SnackbarService.showAuthRequired(context);
+                    return;
+                  }
 
-              Expanded(
-                flex: 3,
-                child: CustomButton(
-                  text: isOutOfStock ? 'out_of_stock'.tr() : 'add_to_cart'.tr(),
-                  height: 52.0,
-                  icon: SvgPicture.asset(
-                    AppAssets.cartIcon2,
-                    width: 20,
-                    height: 20,
+                  final int? variantId = selectedVariant?.id ??
+                      (product.defaultVariantId > 0
+                          ? product.defaultVariantId
+                          : (product.variants.isNotEmpty ? product.variants.first.id : null));
+
+                  final cartItem = CartItemEntity(
+                    productId: product.id,
+                    productTitle: product.title,
+                    productImage: product.mainImage,
+                    unitPrice: unitPrice,
+                    originalPrice: product.price,
+                    quantity: state.quantity,
+                    unitId: selectedUnit?.id ?? 0,
+                    unitTitle: unitTitle,
+                    variantId: variantId,
+                    variantLabel: selectedVariant?.label,
+                  );
+
+                  context.read<CartBloc>().add(AddToCartEvent(cartItem));
+                  AddToCartSnackBar.show(context, item: cartItem);
+
+                  if (onAddToCart != null) {
+                    onAddToCart!();
+                  }
+                },
+        );
+
+    return AppBottomContainer(
+      maxContentWidth: 550.0,
+      child: isTabletLandscape
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: buildTotalWidget(),
+                ),
+                const SizedBox(width: 24.0),
+                Flexible(
+                  child: SizedBox(
+                    width: 320.0,
+                    child: buildAddToCartButton(),
                   ),
-                  onPressed: isOutOfStock
-                      ? null
-                      : () {
-                          final isLoggedIn = di.sl<CacheHelper>().getAuthToken().isNotEmpty;
-                          if (!isLoggedIn) {
-                            SnackbarService.showAuthRequired(context);
-                            return;
-                          }
-
-                          final int? variantId = selectedVariant?.id ??
-                              (product.defaultVariantId > 0
-                                  ? product.defaultVariantId
-                                  : (product.variants.isNotEmpty ? product.variants.first.id : null));
-
-                          final cartItem = CartItemEntity(
-                            productId: product.id,
-                            productTitle: product.title,
-                            productImage: product.mainImage,
-                            unitPrice: unitPrice,
-                            originalPrice: product.price,
-                            quantity: state.quantity,
-                            unitId: selectedUnit?.id ?? 0,
-                            unitTitle: unitTitle,
-                            variantId: variantId,
-                            variantLabel: selectedVariant?.label,
-                          );
-
-                          context.read<CartBloc>().add(AddToCartEvent(cartItem));
-                          AddToCartSnackBar.show(context, item: cartItem);
-
-                          if (onAddToCart != null) {
-                            onAddToCart!();
-                          }
-                        },
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: buildTotalWidget(),
+                ),
+                const SizedBox(width: 16.0),
+                Expanded(
+                  flex: 3,
+                  child: buildAddToCartButton(),
+                ),
+              ],
+            ),
     );
   }
 }

@@ -31,51 +31,54 @@ class EmptyResultWidget extends StatelessWidget {
     final effectiveSubtitle = subtitle ?? 'empty_cart_subtitle'.tr();
     final effectiveAsset = imagePath ?? AppAssets.cartEmpty;
 
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          children: [
-            SvgPicture.asset(
-              effectiveAsset,
-              width: 180,
-              fit: BoxFit.contain,
-            ),
-            const SizedBox(height: 24.0),
-            Text(
-              effectiveTitle,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+    return Center(
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                effectiveAsset,
+                width: 200,
+                fit: BoxFit.contain,
               ),
-              textAlign: TextAlign.center,
-            ),
-            if (effectiveSubtitle.isNotEmpty) ...[
-              const SizedBox(height: 8.0),
+              const SizedBox(height: 24.0),
               Text(
-                effectiveSubtitle,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: AppColors.neutral,
+                effectiveTitle,
+                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                  fontWeight: .w800,
                 ),
                 textAlign: TextAlign.center,
               ),
+              if (effectiveSubtitle.isNotEmpty) ...[
+                const SizedBox(height: 8.0),
+                Text(
+                  effectiveSubtitle,
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: AppColors.tertiary,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+              if (showShoppingButton) ...[
+                const SizedBox(height: 32.0),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 450.0),
+                  child: CustomButton(
+                    text: buttonText ?? 'start_shopping'.tr(),
+                    height: 52.0,
+                    onPressed: onShoppingPressed ??
+                        () {
+                          context.go(RoutePaths.home);
+                        },
+                  ),
+                ),
+              ],
             ],
-            if (showShoppingButton) ...[
-              const SizedBox(height: 32.0),
-              CustomButton(
-                text: buttonText ?? 'start_shopping'.tr(),
-                height: 52.0,
-                onPressed: onShoppingPressed ??
-                    () {
-                      context.go(RoutePaths.home);
-                    },
-              ),
-              const SizedBox(height: 24.0),
-            ],
-          ],
+          ),
         ),
       ),
     );

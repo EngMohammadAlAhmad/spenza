@@ -6,6 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
+import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
 import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
 import 'package:spenza/features/cart/presentation/blocs/cart_bloc/cart_bloc.dart';
@@ -66,11 +68,10 @@ class _Step3ReviewAndConfirmViewState
     final cartState = context.watch<CartBloc>().state;
     final totalItemsCount = cartState.totalItemsCount;
     final totalCartPrice = cartState.totalCartPrice;
+    final isTabletLandscape = context.isTabletLandscape;
 
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 32.0),
-      child: Column(
+    Widget buildFirstColumn() {
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 1. Delivery Summary
@@ -94,8 +95,14 @@ class _Step3ReviewAndConfirmViewState
             items: cartState.items,
             onEditCartPressed: widget.onEditCartPressed,
           ),
-          const SizedBox(height: 16.0),
+        ],
+      );
+    }
 
+    Widget buildSecondColumn() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           // 4. Coupon Code Input Row
           Row(
             children: [
@@ -105,36 +112,21 @@ class _Step3ReviewAndConfirmViewState
                   controller: _couponController,
                   hintText: 'write_discount_code'.tr(),
                   fillColor: Colors.white,
-                  verticalContentPadding: 12.0,
+                  height: 52.0,
                 ),
               ),
               const SizedBox(width: 10.0),
 
-              // Apply Button
-              SizedBox(
-                height: 48.0,
+              // Apply Button using App CustomButton
+              CustomButton(
+                text: 'apply'.tr(),
+                height: 52.0,
                 width: 80.0,
-                child: OutlinedButton(
-                  onPressed: () {
-                    // Apply coupon logic
-                  },
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: AppColors.primary500, width: 1.5),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: AppRadius.mediumPlus,
-                    ),
-                    backgroundColor: const Color(0xFFFDF2F2),
-                    padding: EdgeInsets.zero,
-                  ),
-                  child: Text(
-                    'apply'.tr(),
-                    style: const TextStyle(
-                      color: AppColors.primary500,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14.0,
-                    ),
-                  ),
-                ),
+                isOutlined: true,
+                underlayerColor: AppColors.primaryTint,
+                onPressed: () {
+                  // Apply coupon logic
+                },
               ),
             ],
           ),
@@ -228,9 +220,9 @@ class _Step3ReviewAndConfirmViewState
                     Text(
                       'earn_points_notice'.tr(),
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.warningAlert,
-                      ),
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.warningAlert,
+                          ),
                     ),
                     SvgPicture.asset(
                       AppAssets.iconSmall,
@@ -249,14 +241,51 @@ class _Step3ReviewAndConfirmViewState
             child: Text(
               'agree_terms_confirm_order'.tr(),
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: AppColors.tertiary,
-              ),
+                    color: AppColors.tertiary,
+                  ),
               textAlign: TextAlign.center,
             ),
           ),
+        ],
+      );
+    }
+
+    Widget bodyContent;
+
+    if (isTabletLandscape) {
+      bodyContent = Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // First Child: Delivery Summary + Payment Summary + Items Summary
+          Expanded(
+            flex: 1,
+            child: buildFirstColumn(),
+          ),
+          const SizedBox(width: 20.0),
+
+          // Second Child: Coupon Code Input + Driver Note + Price Summary + Terms Notice
+          Expanded(
+            flex: 1,
+            child: buildSecondColumn(),
+          ),
+        ],
+      );
+    } else {
+      bodyContent = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          buildFirstColumn(),
+          const SizedBox(height: 16.0),
+          buildSecondColumn(),
           const SizedBox(height: 20.0),
         ],
-      ),
+      );
+    }
+
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 32.0),
+      child: bodyContent,
     );
   }
 }
