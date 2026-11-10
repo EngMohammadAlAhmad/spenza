@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
+import 'package:spenza/core/widgets/general_error_widget.dart';
 import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
@@ -69,7 +70,10 @@ class _BrandsGridViewState extends State<BrandsGridView> {
               onRetry: () => context.read<BrandsBloc>().add(const GetBrandsEvent(isRefresh: true)),
             );
           }
-          return Center(child: Text(state.errorMessage));
+          return GeneralErrorWidget(
+            message: state.errorMessage,
+            onRetry: () => context.read<BrandsBloc>().add(const GetBrandsEvent(isRefresh: true)),
+          );
         }
 
         final brands = state.data ?? [];

@@ -651,7 +651,7 @@ class _BankTransferReceiptScreenState
 
       // 3. Fixed Bottom Button using AppBottomContainer
       bottomNavigationBar: AppBottomContainer(
-        padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 10.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 0.0),
         child: CustomButton(
           text: 'send_receipt'.tr(),
           height: 52.0,

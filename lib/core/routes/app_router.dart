@@ -19,6 +19,8 @@ import 'package:spenza/features/account/presentation/screens/account_screen.dart
 import 'package:spenza/features/account/presentation/screens/settings_screen.dart';
 import 'package:spenza/features/account/presentation/screens/my_info_screen.dart';
 import 'package:spenza/features/account/presentation/screens/business_account_screen.dart';
+import 'package:spenza/features/account/presentation/screens/business_account_wizard_screen.dart';
+import 'package:spenza/features/account/presentation/screens/help_and_support_screen.dart';
 import 'package:spenza/features/account/domain/entities/user_entity.dart';
 import 'package:spenza/features/addresses/presentation/screens/addresses_screen.dart';
 import 'package:spenza/features/addresses/presentation/screens/add_address_screen.dart';
@@ -119,6 +121,14 @@ class AppRouter {
       GoRoute(
         path: RoutePaths.businessAccount,
         builder: (context, state) => const BusinessAccountScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.businessAccountWizard,
+        builder: (context, state) => const BusinessAccountWizardScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.helpAndSupport,
+        builder: (context, state) => const HelpAndSupportScreen(),
       ),
       GoRoute(
         path: RoutePaths.cart,

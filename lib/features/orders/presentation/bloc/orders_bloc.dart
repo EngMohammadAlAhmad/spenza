@@ -54,6 +54,12 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     GetMyOrdersEvent event,
     Emitter<OrdersState> emit,
   ) async {
+    if (!event.isRefresh &&
+        state.getMyOrdersStatus == RequestStatus.success &&
+        state.orders.isNotEmpty) {
+      return;
+    }
+
     if (!event.isRefresh) {
       emit(state.copyWith(getMyOrdersStatus: RequestStatus.loading));
     }

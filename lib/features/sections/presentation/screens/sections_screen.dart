@@ -3,10 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/tab_index_notifier.dart';
+import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/features/brands/presentation/blocs/brands_bloc/brands_bloc.dart';
 import 'package:spenza/features/brands/presentation/widgets/brands_grid_view.dart';
 import 'package:spenza/features/categories/presentation/blocs/categories_bloc/categories_bloc.dart';
 import 'package:spenza/features/categories/presentation/widgets/categories_grid_view.dart';
+import 'package:spenza/features/language/domain/entities/language_entity.dart';
+import 'package:spenza/features/language/presentation/blocs/language_bloc.dart';
 import 'package:spenza/features/sections/presentation/widgets/sections_header.dart';
 import 'package:spenza/injection_locator.dart' as di;
 
@@ -89,8 +92,15 @@ class _SectionsScreenState extends State<SectionsScreen> {
             create: (context) => di.sl<BrandsBloc>()..add(const GetBrandsEvent(isRefresh: true)),
           ),
         ],
-        child: Scaffold(
-          backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+        child: BlocListener<LanguageBloc, BaseState<LanguageEntity>>(
+          listenWhen: (previous, current) =>
+              previous.data?.code != current.data?.code,
+          listener: (context, state) {
+            context.read<CategoriesBloc>().add(const GetCategoriesEvent(isRefresh: true));
+            context.read<BrandsBloc>().add(const GetBrandsEvent(isRefresh: true));
+          },
+          child: Scaffold(
+            backgroundColor: AppColors.primary.withValues(alpha: 0.1),
           body: Column(
             children: [
               SectionsHeader(
@@ -118,6 +128,7 @@ class _SectionsScreenState extends State<SectionsScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

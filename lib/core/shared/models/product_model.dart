@@ -14,13 +14,19 @@ class ProductModel extends ProductEntity {
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
+    String parseBrand(dynamic b) {
+      if (b is String) return b;
+      if (b is Map<String, dynamic>) return b['name']?.toString() ?? '';
+      return '';
+    }
+
     return ProductModel(
       id: json['id'] ?? 0,
       title: json['title'] ?? '',
-      photo: json['photo'] ?? '',
+      photo: (json['photo'] ?? json['main_image'])?.toString() ?? '',
       rate: json['rate'] ?? 0,
-      reviewsCount: json['reviews_count'] ?? 0,
-      brand: json['brand'] ?? '',
+      reviewsCount: json['reviews_count'] ?? json['ratings_count'] ?? 0,
+      brand: parseBrand(json['brand']),
       price: json['price'] ?? 0,
       discountedPrice: json['discounted_price'] ?? 0,
       discountPercentage: json['discount_percentage'] ?? 0,
@@ -40,5 +46,4 @@ class ProductModel extends ProductEntity {
       'discount_percentage': discountPercentage,
     };
   }
-
 }

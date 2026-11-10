@@ -25,6 +25,8 @@ import 'package:spenza/features/home/presentation/widgets/order_again_section.da
 import 'package:spenza/features/home/presentation/widgets/shop_by_brand_section.dart';
 import 'package:spenza/features/home/presentation/widgets/shop_by_category_section.dart';
 import 'package:spenza/features/home/presentation/widgets/today_orders_section.dart';
+import 'package:spenza/features/language/domain/entities/language_entity.dart';
+import 'package:spenza/features/language/presentation/blocs/language_bloc.dart';
 import 'package:spenza/injection_locator.dart' as di;
 
 class HomeScreen extends StatefulWidget {
@@ -70,8 +72,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return BlocProvider(
       create: (context) => di.sl<HomeBloc>()..add(const GetHomeDataEvent()),
-      child: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
+      child: BlocListener<LanguageBloc, BaseState<LanguageEntity>>(
+        listenWhen: (previous, current) =>
+            previous.data?.code != current.data?.code,
+        listener: (context, state) {
+          context.read<HomeBloc>().add(const GetHomeDataEvent());
+        },
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
           backgroundColor: AppColors.primary.withValues(alpha: 0.1),
           body: BlocBuilder<HomeBloc, BaseState<HomeDataEntity>>(
@@ -110,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           child: SingleChildScrollView(
                             physics: const BouncingScrollPhysics(),
-                            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 170.0),
+                            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 170.0),
                             child: Column(
                               spacing: 25.0,
                               children: [
@@ -123,31 +131,37 @@ class _HomeScreenState extends State<HomeScreen> {
                                     .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic),
 
                                 if (isTablet && isLoggedIn)
-                                  IntrinsicHeight(
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: [
-                                        Expanded(
-                                          child: const PointsCard()
-                                              .animate(key: ValueKey('${keyPrefix}_points'), delay: 60.ms)
-                                              .fadeIn(duration: 450.ms)
-                                              .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
-                                        ),
-                                        const SizedBox(width: 16.0),
-                                        Expanded(
-                                          child: const FreeDeliveryCard()
-                                              .animate(key: ValueKey('${keyPrefix}_free_delivery'), delay: 160.ms)
-                                              .fadeIn(duration: 450.ms)
-                                              .scaleXY(begin: 0.94, end: 1, curve: Curves.easeOutCubic),
-                                        ),
-                                      ],
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: IntrinsicHeight(
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        children: [
+                                          Expanded(
+                                            child: const PointsCard()
+                                                .animate(key: ValueKey('${keyPrefix}_points'), delay: 60.ms)
+                                                .fadeIn(duration: 450.ms)
+                                                .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
+                                          ),
+                                          const SizedBox(width: 16.0),
+                                          Expanded(
+                                            child: const FreeDeliveryCard()
+                                                .animate(key: ValueKey('${keyPrefix}_free_delivery'), delay: 160.ms)
+                                                .fadeIn(duration: 450.ms)
+                                                .scaleXY(begin: 0.94, end: 1, curve: Curves.easeOutCubic),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   )
                                 else if (!isTablet && isLoggedIn)
-                                  const PointsCard()
-                                      .animate(key: ValueKey('${keyPrefix}_points'), delay: 60.ms)
-                                      .fadeIn(duration: 450.ms)
-                                      .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: const PointsCard()
+                                        .animate(key: ValueKey('${keyPrefix}_points'), delay: 60.ms)
+                                        .fadeIn(duration: 450.ms)
+                                        .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
+                                  ),
 
                                 ShopByCategorySection(
                                   categories: data?.categories ?? [],
@@ -164,10 +178,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       .slideY(begin: 0.1, end: 0, curve: Curves.easeOutCubic),
 
                                 if (!isTablet || !isLoggedIn)
-                                  const FreeDeliveryCard()
-                                      .animate(key: ValueKey('${keyPrefix}_free_delivery'), delay: 160.ms)
-                                      .fadeIn(duration: 450.ms)
-                                      .scaleXY(begin: 0.94, end: 1, curve: Curves.easeOutCubic),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: const FreeDeliveryCard()
+                                        .animate(key: ValueKey('${keyPrefix}_free_delivery'), delay: 160.ms)
+                                        .fadeIn(duration: 450.ms)
+                                        .scaleXY(begin: 0.94, end: 1, curve: Curves.easeOutCubic),
+                                  ),
 
                                 TodayOffersSection(
                                   products: data?.discountedProducts ?? [],
@@ -211,8 +228,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 class FreeDeliveryCard extends StatelessWidget {

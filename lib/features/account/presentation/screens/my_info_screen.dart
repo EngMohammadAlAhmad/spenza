@@ -8,6 +8,8 @@ import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
+import 'package:spenza/core/widgets/app_bottom_container.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/custom_text_field.dart';
@@ -71,64 +73,134 @@ class _MyInfoContentState extends State<_MyInfoContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.neutralBackground,
-      body: BlocConsumer<MyInfoBloc, MyInfoState>(
-        listenWhen: (previous, current) =>
-            previous.updateProfileStatus != current.updateProfileStatus ||
-            previous.requestPhoneStatus != current.requestPhoneStatus,
-        listener: (context, myInfoState) {
-          // 1. Profile Update Listener
-          if (myInfoState.updateProfileStatus == RequestStatus.success) {
-            SnackbarService.showSuccess(context, message: 'profile_updated_success'.tr());
-            context.pop(myInfoState.user);
-            context.read<MyInfoBloc>().add(const ResetMyInfoStatusEvent());
-          } else if (myInfoState.updateProfileStatus == RequestStatus.error) {
-            SnackbarService.showError(
-              context,
-              message: myInfoState.errorMessage ?? 'profile_update_error'.tr(),
-            );
-          }
+    final isTabletLandscape = context.isTabletLandscape;
 
-          // 2. Phone Change Request Listener
-          if (myInfoState.requestPhoneStatus == RequestStatus.success) {
-            SnackbarService.showSuccess(
-              context,
-              message: myInfoState.phoneChangeMessage ?? 'otp_sent_success'.tr(),
-            );
+    return BlocConsumer<MyInfoBloc, MyInfoState>(
+      listenWhen: (previous, current) =>
+          previous.updateProfileStatus != current.updateProfileStatus ||
+          previous.requestPhoneStatus != current.requestPhoneStatus,
+      listener: (context, myInfoState) {
+        // 1. Profile Update Listener
+        if (myInfoState.updateProfileStatus == RequestStatus.success) {
+          SnackbarService.showSuccess(context, message: 'profile_updated_success'.tr());
+          context.pop(myInfoState.user);
+          context.read<MyInfoBloc>().add(const ResetMyInfoStatusEvent());
+        } else if (myInfoState.updateProfileStatus == RequestStatus.error) {
+          SnackbarService.showError(
+            context,
+            message: myInfoState.errorMessage ?? 'profile_update_error'.tr(),
+          );
+        }
 
-            final rawPhone = _newPhoneController.text.replaceAll(' ', '');
-            final formattedPhone = rawPhone.startsWith('0') ? rawPhone.substring(1) : rawPhone;
+        // 2. Phone Change Request Listener
+        if (myInfoState.requestPhoneStatus == RequestStatus.success) {
+          SnackbarService.showSuccess(
+            context,
+            message: myInfoState.phoneChangeMessage ?? 'otp_sent_success'.tr(),
+          );
 
-            context.read<MyInfoBloc>().add(const ResetMyInfoStatusEvent());
+          final rawPhone = _newPhoneController.text.replaceAll(' ', '');
+          final formattedPhone = rawPhone.startsWith('0') ? rawPhone.substring(1) : rawPhone;
 
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => BlocProvider.value(
-                  value: context.read<MyInfoBloc>(),
-                  child: PhoneChangeOtpScreen(phoneNumber: formattedPhone),
-                ),
+          context.read<MyInfoBloc>().add(const ResetMyInfoStatusEvent());
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => BlocProvider.value(
+                value: context.read<MyInfoBloc>(),
+                child: PhoneChangeOtpScreen(phoneNumber: formattedPhone),
               ),
-            ).then((result) {
-              if (result != null && result != false) {
-                if (context.mounted) {
-                  context.pop(result);
-                }
+            ),
+          ).then((result) {
+            if (result != null && result != false) {
+              if (context.mounted) {
+                context.pop(result);
               }
-            });
-          } else if (myInfoState.requestPhoneStatus == RequestStatus.error) {
-            SnackbarService.showError(
-              context,
-              message: myInfoState.errorMessage ?? 'phone_change_error'.tr(),
-            );
-          }
-        },
-        builder: (context, myInfoState) {
-          final isSaving = myInfoState.updateProfileStatus == RequestStatus.loading;
-          final isRequestingPhone = myInfoState.requestPhoneStatus == RequestStatus.loading;
+            }
+          });
+        } else if (myInfoState.requestPhoneStatus == RequestStatus.error) {
+          SnackbarService.showError(
+            context,
+            message: myInfoState.errorMessage ?? 'phone_change_error'.tr(),
+          );
+        }
+      },
+      builder: (context, myInfoState) {
+        final isSaving = myInfoState.updateProfileStatus == RequestStatus.loading;
+        final isRequestingPhone = myInfoState.requestPhoneStatus == RequestStatus.loading;
 
-          return Column(
+        final fullNameField = _buildTextFieldSection(
+          label: 'full_name'.tr(),
+          controller: _nameController,
+          hintText: 'enter_full_name'.tr(),
+        );
+
+        final emailField = _buildTextFieldSection(
+          label: 'email_optional'.tr(),
+          controller: _emailController,
+          hintText: 'example@domain.com',
+          keyboardType: TextInputType.emailAddress,
+        );
+
+        final mobileNumberSection = _buildMobileNumberSection(context, _currentUser, isRequestingPhone);
+
+        Widget bodyContent;
+        if (isTabletLandscape) {
+          bodyContent = Directionality(
+            textDirection: TextDirection.ltr,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Physical LEFT side: Remaining fields (Phone, Dropdown, Banner)
+                Expanded(
+                  child: Directionality(
+                    textDirection: Directionality.of(context),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 18.0,
+                      children: [
+                        mobileNumberSection,
+                        _buildAccountTypeBanner(_currentUser),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16.0),
+
+                // Physical RIGHT side: Full Name + Email
+                Expanded(
+                  child: Directionality(
+                    textDirection: Directionality.of(context),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 18.0,
+                      children: [
+                        fullNameField,
+                        emailField,
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          bodyContent = Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 18.0,
+            children: [
+              fullNameField,
+              emailField,
+              mobileNumberSection,
+              _buildAccountTypeBanner(_currentUser),
+            ],
+          );
+        }
+
+        return Scaffold(
+          backgroundColor: AppColors.neutralBackground,
+          body: Column(
             children: [
               // Header
               _buildHeader(context),
@@ -138,66 +210,36 @@ class _MyInfoContentState extends State<_MyInfoContent> {
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 32.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 18.0,
-                    children: [
-                      // 1. Full Name Field
-                      _buildTextFieldSection(
-                        label: 'full_name'.tr(),
-                        controller: _nameController,
-                        hintText: 'enter_full_name'.tr(),
-                      ),
-
-                      // 2. Email Field (Optional)
-                      _buildTextFieldSection(
-                        label: 'email_optional'.tr(),
-                        controller: _emailController,
-                        hintText: 'example@domain.com',
-                        keyboardType: TextInputType.emailAddress,
-                      ),
-
-                      // 3. Mobile Number Section
-                      _buildMobileNumberSection(context, _currentUser),
-
-                      // 4. Expandable Phone Change Dropdown
-                      if (_isPhoneChangeExpanded)
-                        _buildPhoneChangeDropdown(context, isRequestingPhone),
-
-                      // 5. Account Type Banner
-                      _buildAccountTypeBanner(_currentUser),
-
-                      const SizedBox(height: 10.0),
-
-                      // 6. Save Button
-                      CustomButton(
-                        text: 'save_changes'.tr(),
-                        height: 52.0,
-                        isLoading: isSaving,
-                        onPressed: () {
-                          FocusScope.of(context).unfocus();
-                          final name = _nameController.text.trim();
-                          final email = _emailController.text.trim();
-
-                          if (name.isEmpty) {
-                            SnackbarService.showError(context, message: 'enter_name_validation'.tr());
-                            return;
-                          }
-
-                          context.read<MyInfoBloc>().add(UpdateProfileEvent(
-                                name: name,
-                                email: email,
-                              ));
-                        },
-                      ),
-                    ],
-                  ),
+                  child: bodyContent,
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+          bottomNavigationBar: AppBottomContainer(
+            padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 0.0),
+            child: CustomButton(
+              text: 'save_changes'.tr(),
+              height: 52.0,
+              isLoading: isSaving,
+              onPressed: () {
+                FocusScope.of(context).unfocus();
+                final name = _nameController.text.trim();
+                final email = _emailController.text.trim();
+
+                if (name.isEmpty) {
+                  SnackbarService.showError(context, message: 'enter_name_validation'.tr());
+                  return;
+                }
+
+                context.read<MyInfoBloc>().add(UpdateProfileEvent(
+                      name: name,
+                      email: email,
+                    ));
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -246,7 +288,7 @@ class _MyInfoContentState extends State<_MyInfoContent> {
     );
   }
 
-  Widget _buildMobileNumberSection(BuildContext context, UserEntity? user) {
+  Widget _buildMobileNumberSection(BuildContext context, UserEntity? user, bool isRequestingPhone) {
     final phoneText = user != null ? user.formattedPhoneNumber : '----------------';
 
     return Column(
@@ -264,9 +306,9 @@ class _MyInfoContentState extends State<_MyInfoContent> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: AppRadius.overMedium,
-            border: Border.all(color: const Color(0xFFF3F4F6)),
+            color: Colors.transparent,
+            borderRadius: AppRadius.brandRadius,
+            border: Border.all(color: AppColors.neutralBorderStrong, width: 1.5),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -287,109 +329,142 @@ class _MyInfoContentState extends State<_MyInfoContent> {
 
               // Change Phone Button
               InkWell(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
                 onTap: () {
                   FocusScope.of(context).unfocus();
                   setState(() {
                     _isPhoneChangeExpanded = !_isPhoneChangeExpanded;
                   });
                 },
-                child: Text(
-                  _isPhoneChangeExpanded ? 'cancel'.tr() : 'change_phone'.tr(),
-                  style: const TextStyle(
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFC74436),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 220),
+                  layoutBuilder: (currentChild, previousChildren) {
+                    return Stack(
+                      alignment: AlignmentDirectional.centerEnd,
+                      children: [
+                        ...previousChildren,
+                        ...? (currentChild != null ? [currentChild] : null),
+                      ],
+                    );
+                  },
+                  child: Text(
+                    _isPhoneChangeExpanded ? 'cancel'.tr() : 'change_phone'.tr(),
+                    key: ValueKey<bool>(_isPhoneChangeExpanded),
+                    style: TextStyle(
+                      fontSize: 13.0,
+                      fontWeight: FontWeight.bold,
+                      color: _isPhoneChangeExpanded
+                          ? AppColors.textSecondary
+                          : const Color(0xFFC74436),
+                    ),
                   ),
                 ),
               ),
             ],
           ),
         ),
+
+        // Animated Expanding Dropdown
+        _buildPhoneChangeDropdown(context, isRequestingPhone),
       ],
     );
   }
 
   Widget _buildPhoneChangeDropdown(BuildContext context, bool isLoading) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: AppRadius.overMedium,
-        border: Border.all(color: const Color(0xFFC74436).withValues(alpha: 0.3)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 12.0,
-        children: [
-          Text(
-            'enter_new_phone'.tr(),
-            style: const TextStyle(
-              fontSize: 13.0,
-              fontWeight: FontWeight.bold,
-              color: AppColors.neutral900,
-            ),
-          ),
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: CustomTextField(
-              controller: _newPhoneController,
-              hintText: '9xx xxx xxx',
-              forPhone: true,
-              fillColor: const Color(0xFFF9FAFB),
-              borderColor: const Color(0xFFE5E7EB),
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                _PhoneInputFormatter(),
-              ],
-              prefixIcon: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(width: 14.0),
-                  SvgPicture.asset(AppAssets.syFlag, width: 22),
-                  const SizedBox(width: 6.0),
-                  Text(
-                    '+963',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: AppColors.neutral700,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  SizedBox(
-                    width: 20.0,
-                    height: 48.0,
-                    child: VerticalDivider(
-                      color: AppColors.primaryLight.withValues(alpha: 0.5),
-                    ),
-                  ),
-                ],
+    return AnimatedCrossFade(
+      firstChild: const SizedBox(width: double.infinity),
+      secondChild: Padding(
+        padding: const EdgeInsets.only(top: 4.0),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: AppRadius.brandRadius,
+            border: Border.all(color: AppColors.neutralBorderStrong),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
-            ),
+            ],
           ),
-          CustomButton(
-            text: 'send_otp'.tr(),
-            height: 46.0,
-            isLoading: isLoading,
-            onPressed: () {
-              FocusScope.of(context).unfocus();
-              final raw = _newPhoneController.text.replaceAll(' ', '');
-              if (raw.length < 9) {
-                SnackbarService.showError(context, message: 'valid_phone_error'.tr());
-                return;
-              }
-              final fullPhone = raw.startsWith('0') ? raw : '0$raw';
-              context.read<MyInfoBloc>().add(RequestPhoneChangeEvent(phoneNumber: fullPhone));
-            },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 12.0,
+            children: [
+              Text(
+                'enter_new_phone'.tr(),
+                style: const TextStyle(
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.neutral900,
+                ),
+              ),
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: CustomTextField(
+                  controller: _newPhoneController,
+                  hintText: '9xx xxx xxx',
+                  forPhone: true,
+                  fillColor: const Color(0xFFF9FAFB),
+                  borderColor: const Color(0xFFE5E7EB),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    _PhoneInputFormatter(),
+                  ],
+                  prefixIcon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(width: 14.0),
+                      SvgPicture.asset(AppAssets.syFlag, width: 22),
+                      const SizedBox(width: 6.0),
+                      Text(
+                        '+963',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: AppColors.neutral700,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      SizedBox(
+                        width: 20.0,
+                        height: 24.0,
+                        child: VerticalDivider(
+                          color: AppColors.primaryLight.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              CustomButton(
+                text: 'send_otp'.tr(),
+                height: 46.0,
+                isLoading: isLoading,
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  final raw = _newPhoneController.text.replaceAll(' ', '');
+                  if (raw.length < 9) {
+                    SnackbarService.showError(context, message: 'valid_phone_error'.tr());
+                    return;
+                  }
+                  final fullPhone = raw.startsWith('0') ? raw : '0$raw';
+                  context.read<MyInfoBloc>().add(RequestPhoneChangeEvent(phoneNumber: fullPhone));
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
+      crossFadeState: _isPhoneChangeExpanded
+          ? CrossFadeState.showSecond
+          : CrossFadeState.showFirst,
+      duration: const Duration(milliseconds: 380),
+      sizeCurve: Curves.easeInOutCubic,
+      firstCurve: Curves.easeOutCubic,
+      secondCurve: Curves.easeInCubic,
     );
   }
 

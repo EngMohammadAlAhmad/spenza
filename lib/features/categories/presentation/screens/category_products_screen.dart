@@ -19,7 +19,10 @@ import 'package:spenza/core/widgets/sort_bottom_sheet.dart';
 import 'package:spenza/features/categories/domain/entities/category_products_result_entity.dart';
 import 'package:spenza/features/categories/presentation/blocs/category_products_bloc/category_products_bloc.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
+import 'package:spenza/core/widgets/general_error_widget.dart';
 import 'package:spenza/core/errors/failure.dart';
+import 'package:spenza/features/language/domain/entities/language_entity.dart';
+import 'package:spenza/features/language/presentation/blocs/language_bloc.dart';
 
 class CategoryProductsScreen extends StatefulWidget {
   final int categoryId;
@@ -74,8 +77,18 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+    return BlocListener<LanguageBloc, BaseState<LanguageEntity>>(
+      listenWhen: (previous, current) =>
+          previous.data?.code != current.data?.code,
+      listener: (context, state) {
+        context.read<CategoryProductsBloc>().add(GetCategoryProductsEvent(
+              categoryId: _currentCategoryId,
+              isRefresh: true,
+              sort: _selectedSortKey,
+            ));
+      },
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: AppColors.primary.withValues(alpha: 0.1),
         body: Column(
@@ -104,8 +117,9 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildHeader(BuildContext context, BaseState<CategoryProductsResultEntity> state) {
     final currentCategoryName = state.data?.category.name ?? "";
@@ -333,7 +347,21 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
           },
         );
       }
-      return Center(child: Text(state.errorMessage));
+      return GeneralErrorWidget(
+        message: state.errorMessage,
+        onRetry: () {
+          context.read<CategoryProductsBloc>().add(
+                GetCategoryProductsEvent(
+                  categoryId: _currentCategoryId,
+                  sort: _selectedSortKey,
+                  minPrice: state.minPrice,
+                  maxPrice: state.maxPrice,
+                  inStock: state.inStock,
+                  isRefresh: true,
+                ),
+              );
+        },
+      );
     }
 
     if (products.isEmpty) {

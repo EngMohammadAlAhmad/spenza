@@ -9,9 +9,11 @@ import 'package:spenza/core/shared/entities/product_entity.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/base_state.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/utils/tab_index_notifier.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/core/widgets/product_card.dart';
+import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/features/auth/presentation/bloc/auth_status_bloc.dart';
 import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favorites_bloc.dart';
 import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favorites_event.dart';
@@ -55,6 +57,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
     final keyPrefix = 'fav_anim_$_animTrigger';
+    final crossAxisCount = context.gridColumns(
+      mobile: 2,
+      tabletPortrait: 4,
+      tabletLandscape: 6,
+      desktop: 6,
+    );
 
     return PopScope(
       canPop: false,
@@ -88,7 +96,21 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         final products = state.data ?? [];
 
                         if (state.isLoading && products.isEmpty) {
-                          return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+                          return GridView.builder(
+                            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 100.0),
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: crossAxisCount,
+                              childAspectRatio: 174 / 250,
+                              crossAxisSpacing: 12.0,
+                              mainAxisSpacing: 12.0,
+                            ),
+                            itemCount: crossAxisCount * 3,
+                            itemBuilder: (_, _) => const ShimmerPlaceholder(
+                              width: double.infinity,
+                              height: double.infinity,
+                              borderRadius: BorderRadius.all(Radius.circular(16)),
+                            ),
+                          );
                         }
 
                         if (products.isEmpty) {
@@ -100,9 +122,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
                         return GridView.builder(
                           padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 100.0),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.7,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: crossAxisCount,
+                            childAspectRatio: 174 / 250,
                             crossAxisSpacing: 12.0,
                             mainAxisSpacing: 12.0,
                           ),
@@ -138,135 +160,145 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   Widget _buildLoginPrompt(BuildContext context, String keyPrefix) {
-    return Column(
-      spacing: 15.0,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.favorite_outline_rounded,
-          size: 96.0,
-          color: AppColors.primary.withValues(alpha: 0.3),
-        )
-            .animate(key: ValueKey('${keyPrefix}_login_icon'))
-            .scale(duration: 600.ms, curve: Curves.easeOutBack),
-        Text(
-          'save_your_favorite_products'.tr(),
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: AppColors.neutral900,
+    return Center(
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          spacing: 15.0,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.favorite_outline_rounded,
+              size: 96.0,
+              color: AppColors.primary.withValues(alpha: 0.3),
+            )
+                .animate(key: ValueKey('${keyPrefix}_login_icon'))
+                .scale(duration: 600.ms, curve: Curves.easeOutBack),
+            Text(
+              'save_your_favorite_products'.tr(),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.neutral900,
+                  ),
+              textAlign: TextAlign.center,
+            )
+                .animate(key: ValueKey('${keyPrefix}_login_title'))
+                .fadeIn(delay: 200.ms)
+                .slideY(begin: 0.2, end: 0),
+            Text(
+              'save_favorites_login_desc'.tr(),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+              textAlign: TextAlign.center,
+            )
+                .animate(key: ValueKey('${keyPrefix}_login_desc'))
+                .fadeIn(delay: 400.ms)
+                .slideY(begin: 0.2, end: 0.0),
+            CustomButton(
+              text: 'login'.tr(),
+              onPressed: () => context.push(RoutePaths.login),
+              icon: SvgPicture.asset(AppAssets.loginIcon),
+              width: 200.0,
+            )
+                .animate(key: ValueKey('${keyPrefix}_login_btn'))
+                .fadeIn(delay: 600.ms)
+                .scale(begin: const Offset(0.95, 0.95)),
+            TextButton(
+              onPressed: () => context.go(RoutePaths.home),
+              child: Text(
+                'browse_store_first'.tr(),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
-          textAlign: TextAlign.center,
-        )
-            .animate(key: ValueKey('${keyPrefix}_login_title'))
-            .fadeIn(delay: 200.ms)
-            .slideY(begin: 0.2, end: 0),
-        Text(
-          'save_favorites_login_desc'.tr(),
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: AppColors.textSecondary,
-              ),
-          textAlign: TextAlign.center,
-        )
-            .animate(key: ValueKey('${keyPrefix}_login_desc'))
-            .fadeIn(delay: 400.ms)
-            .slideY(begin: 0.2, end: 0.0),
-        CustomButton(
-          text: 'login'.tr(),
-          onPressed: () => context.push(RoutePaths.login),
-          icon: SvgPicture.asset(AppAssets.loginIcon),
-          width: 200.0,
-        )
-            .animate(key: ValueKey('${keyPrefix}_login_btn'))
-            .fadeIn(delay: 600.ms)
-            .scale(begin: const Offset(0.95, 0.95)),
-        TextButton(
-          onPressed: () => context.go(RoutePaths.home),
-          child: Text(
-            'browse_store_first'.tr(),
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppColors.textSecondary,
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-        ).animate(key: ValueKey('${keyPrefix}_login_browse')).fadeIn(delay: 800.ms),
-      ],
+            ).animate(key: ValueKey('${keyPrefix}_login_browse')).fadeIn(delay: 800.ms),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _buildNoFavoritesState(BuildContext context, String keyPrefix) {
-    return Column(
-      spacing: 15.0,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // Creative Empty State Illustration for Favorites
-        Stack(
-          alignment: Alignment.center,
+    return Center(
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          spacing: 15.0,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              height: 160,
-              width: 160,
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-            )
-                .animate(key: ValueKey('${keyPrefix}_empty_circle'), onPlay: (c) => c.repeat(reverse: true))
-                .scaleXY(begin: 0.9, end: 1.1, duration: 2.seconds, curve: Curves.easeInOut),
-            Icon(
-              Icons.favorite_rounded,
-              size: 80,
-              color: AppColors.primary.withValues(alpha: 0.5),
-            )
-                .animate(key: ValueKey('${keyPrefix}_empty_heart'), onPlay: (c) => c.repeat(reverse: true))
-                .moveY(begin: -5, end: 5, duration: 1.5.seconds, curve: Curves.easeInOut),
-            Positioned(
-              top: 20,
-              left: 20,
-              child: const Icon(Icons.star_rounded, size: 30, color: AppColors.secondary)
-                  .animate(key: ValueKey('${keyPrefix}_empty_star'), onPlay: (c) => c.repeat())
-                  .rotate(duration: 4.seconds),
+            // Creative Empty State Illustration for Favorites
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  height: 160,
+                  width: 160,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                )
+                    .animate(key: ValueKey('${keyPrefix}_empty_circle'), onPlay: (c) => c.repeat(reverse: true))
+                    .scaleXY(begin: 0.9, end: 1.1, duration: 2.seconds, curve: Curves.easeInOut),
+                Icon(
+                  Icons.favorite_rounded,
+                  size: 80,
+                  color: AppColors.primary.withValues(alpha: 0.5),
+                )
+                    .animate(key: ValueKey('${keyPrefix}_empty_heart'), onPlay: (c) => c.repeat(reverse: true))
+                    .moveY(begin: -5, end: 5, duration: 1.5.seconds, curve: Curves.easeInOut),
+                Positioned(
+                  top: 20,
+                  left: 20,
+                  child: const Icon(Icons.star_rounded, size: 30, color: AppColors.secondary)
+                      .animate(key: ValueKey('${keyPrefix}_empty_star'), onPlay: (c) => c.repeat())
+                      .rotate(duration: 4.seconds),
+                ),
+                Positioned(
+                  bottom: 10,
+                  right: 10,
+                  child: const Icon(Icons.auto_awesome, size: 25, color: AppColors.secondary)
+                      .animate(key: ValueKey('${keyPrefix}_empty_sparkle'), onPlay: (c) => c.repeat(reverse: true))
+                      .scaleXY(begin: 0.8, end: 1.2, duration: 2.seconds),
+                ),
+              ],
             ),
-            Positioned(
-              bottom: 10,
-              right: 10,
-              child: const Icon(Icons.auto_awesome, size: 25, color: AppColors.secondary)
-                  .animate(key: ValueKey('${keyPrefix}_empty_sparkle'), onPlay: (c) => c.repeat(reverse: true))
-                  .scaleXY(begin: 0.8, end: 1.2, duration: 2.seconds),
-            ),
+            const SizedBox(height: 20),
+            Text(
+              'your_favorites_waiting'.tr(),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.neutral900,
+                  ),
+              textAlign: TextAlign.center,
+            )
+                .animate(key: ValueKey('${keyPrefix}_empty_title'))
+                .fadeIn(delay: 200.ms)
+                .slideY(begin: 0.2, end: 0),
+            Text(
+              'empty_favorites_desc'.tr(),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+              textAlign: TextAlign.center,
+            )
+                .animate(key: ValueKey('${keyPrefix}_empty_desc'))
+                .fadeIn(delay: 400.ms)
+                .slideY(begin: 0.2, end: 0.0),
+            const SizedBox(height: 10),
+            CustomButton(
+              text: 'discover_products'.tr(),
+              onPressed: () => context.go(RoutePaths.categories),
+              width: 220.0,
+            )
+                .animate(key: ValueKey('${keyPrefix}_empty_btn'))
+                .fadeIn(delay: 600.ms)
+                .scale(begin: const Offset(0.95, 0.95)),
           ],
         ),
-        const SizedBox(height: 20),
-        Text(
-          'your_favorites_waiting'.tr(),
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: AppColors.neutral900,
-              ),
-          textAlign: TextAlign.center,
-        )
-            .animate(key: ValueKey('${keyPrefix}_empty_title'))
-            .fadeIn(delay: 200.ms)
-            .slideY(begin: 0.2, end: 0),
-        Text(
-          'empty_favorites_desc'.tr(),
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: AppColors.textSecondary,
-              ),
-          textAlign: TextAlign.center,
-        )
-            .animate(key: ValueKey('${keyPrefix}_empty_desc'))
-            .fadeIn(delay: 400.ms)
-            .slideY(begin: 0.2, end: 0.0),
-        const SizedBox(height: 10),
-        CustomButton(
-          text: 'discover_products'.tr(),
-          onPressed: () => context.go(RoutePaths.categories),
-          width: 220.0,
-        )
-            .animate(key: ValueKey('${keyPrefix}_empty_btn'))
-            .fadeIn(delay: 600.ms)
-            .scale(begin: const Offset(0.95, 0.95)),
-      ],
+      ),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/app_back_button.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/orders/domain/entities/order_details_entity.dart';
@@ -29,8 +30,8 @@ class OrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<OrdersBloc>(
-      create: (context) => sl<OrdersBloc>()..add(GetOrderDetailsEvent(orderNumber)),
+    return BlocProvider<OrdersBloc>.value(
+      value: sl<OrdersBloc>()..add(GetOrderDetailsEvent(orderNumber)),
       child: Scaffold(
         backgroundColor: AppColors.neutralBackground,
         body: BlocBuilder<OrdersBloc, OrdersState>(
@@ -102,6 +103,96 @@ class _OrderDetailsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat('#,##0');
+    final isTabletLandscape = context.isTabletLandscape;
+
+    final stepperCard = OrderDetailsStepperCard(
+      tracking: order.tracking,
+      orderStatus: order.status,
+      statusLabel: order.statusLabel,
+      rejectionReason: order.rejectionReason,
+    );
+
+    final paymentCard = OrderDetailsPaymentCard(
+      order: order,
+      formatter: formatter,
+    ).animate(delay: 250.ms).fadeIn(duration: 500.ms).slideY(
+          begin: 0.08,
+          end: 0.0,
+          curve: Curves.easeOutCubic,
+        );
+
+    final deliveryCard = OrderDetailsDeliveryCard(order: order)
+        .animate(delay: 380.ms)
+        .fadeIn(duration: 500.ms)
+        .slideY(
+          begin: 0.08,
+          end: 0.0,
+          curve: Curves.easeOutCubic,
+        );
+
+    final productsCard = OrderDetailsProductsCard(
+      order: order,
+      formatter: formatter,
+    ).animate(delay: 510.ms).fadeIn(duration: 500.ms).slideY(
+          begin: 0.08,
+          end: 0.0,
+          curve: Curves.easeOutCubic,
+        );
+
+    final invoiceCard = OrderDetailsInvoiceCard(
+      orderNumber: order.orderNumber,
+      orderStatus: order.statusLabel,
+    )
+        .animate(delay: 640.ms)
+        .fadeIn(duration: 500.ms)
+        .slideY(
+          begin: 0.08,
+          end: 0.0,
+          curve: Curves.easeOutCubic,
+        );
+
+    final Widget cardsContent;
+    if (isTabletLandscape) {
+      cardsContent = Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Left Side: Stepper Card -> Products & Totals Card
+          Expanded(
+            child: Column(
+              spacing: 14.0,
+              children: [
+                stepperCard,
+                productsCard,
+              ],
+            ),
+          ),
+          const SizedBox(width: 16.0),
+
+          // Right Side: Payment Card -> Delivery Address Card -> Invoice Card
+          Expanded(
+            child: Column(
+              spacing: 14.0,
+              children: [
+                paymentCard,
+                deliveryCard,
+                invoiceCard,
+              ],
+            ),
+          ),
+        ],
+      );
+    } else {
+      cardsContent = Column(
+        spacing: 14.0,
+        children: [
+          stepperCard,
+          paymentCard,
+          deliveryCard,
+          productsCard,
+          invoiceCard,
+        ],
+      );
+    }
 
     return Column(
       children: [
@@ -119,61 +210,7 @@ class _OrderDetailsContent extends StatelessWidget {
             ),
             child: Padding(
               padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, context.height * 0.1),
-              child: Column(
-                spacing: 14.0,
-                children: [
-                  // 1. Stepper Card
-                  OrderDetailsStepperCard(
-                    tracking: order.tracking,
-                    orderStatus: order.status,
-                    statusLabel: order.statusLabel,
-                    rejectionReason: order.rejectionReason,
-                  ),
-
-                  // 2. Payment Card
-                  OrderDetailsPaymentCard(
-                    order: order,
-                    formatter: formatter,
-                  ).animate(delay: 250.ms).fadeIn(duration: 500.ms).slideY(
-                    begin: 0.08,
-                    end: 0.0,
-                    curve: Curves.easeOutCubic,
-                  ),
-
-                  // 3. Delivery Address Card
-                  OrderDetailsDeliveryCard(order: order)
-                      .animate(delay: 380.ms)
-                      .fadeIn(duration: 500.ms)
-                      .slideY(
-                        begin: 0.08,
-                        end: 0.0,
-                        curve: Curves.easeOutCubic,
-                      ),
-
-                  // 4. Products & Totals Card
-                  OrderDetailsProductsCard(
-                    order: order,
-                    formatter: formatter,
-                  ).animate(delay: 510.ms).fadeIn(duration: 500.ms).slideY(
-                        begin: 0.08,
-                        end: 0.0,
-                        curve: Curves.easeOutCubic,
-                      ),
-
-                  // 5. Invoice Card
-                  OrderDetailsInvoiceCard(
-                    orderNumber: order.orderNumber,
-                    orderStatus: order.statusLabel,
-                  )
-                      .animate(delay: 640.ms)
-                      .fadeIn(duration: 500.ms)
-                      .slideY(
-                        begin: 0.08,
-                        end: 0.0,
-                        curve: Curves.easeOutCubic,
-                      ),
-                ],
-              ),
+              child: cardsContent,
             ),
           ),
         ),

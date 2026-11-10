@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -94,10 +95,13 @@ class _PhoneChangeOtpScreenState extends State<PhoneChangeOtpScreen> {
               previous.confirmPhoneStatus != current.confirmPhoneStatus,
               listener: (context, state) {
                 if (state.confirmPhoneStatus == RequestStatus.success) {
-                  SnackbarService.showSuccess(context, message: 'تم تغيير رقم الموبايل بنجاح');
+                  SnackbarService.showSuccess(
+                    context,
+                    message: state.phoneChangeMessage ?? 'phone_changed_success'.tr(),
+                  );
                   context.pop(state.user ?? true);
                 } else if (state.confirmPhoneStatus == RequestStatus.error) {
-                  SnackbarService.showError(context, message: state.errorMessage ?? 'حدث خطأ أثناء تأكيد الرقم');
+                  SnackbarService.showError(context, message: state.errorMessage ?? 'confirm_phone_error'.tr());
                 }
               },
               builder: (context, state) {
@@ -115,7 +119,7 @@ class _PhoneChangeOtpScreenState extends State<PhoneChangeOtpScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'شو الرمز يلي وصلك؟',
+                            'enter_received_code'.tr(),
                             style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                               color: AppColors.primary,
                               fontWeight: FontWeight.w700,
@@ -125,7 +129,7 @@ class _PhoneChangeOtpScreenState extends State<PhoneChangeOtpScreen> {
                             TextSpan(
                               children: [
                                 TextSpan(
-                                  text: 'بعتنالك رمز من 6 أرقام على ',
+                                  text: 'otp_sent_to'.tr(),
                                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                     color: AppColors.neutral,
                                   ),
@@ -154,7 +158,7 @@ class _PhoneChangeOtpScreenState extends State<PhoneChangeOtpScreen> {
                             child: Text.rich(
                               TextSpan(
                                 children: [
-                                  const TextSpan(text: 'ما وصل الرمز؟ ابعتلي ياه مرة تانية بعد '),
+                                  TextSpan(text: 'otp_resend_prompt'.tr()),
                                   TextSpan(
                                     text: '00:${_resendCountdown.toString().padLeft(2, '0')}',
                                     style: const TextStyle(color: AppColors.blue, fontWeight: FontWeight.bold),
@@ -171,9 +175,9 @@ class _PhoneChangeOtpScreenState extends State<PhoneChangeOtpScreen> {
                                   context.read<MyInfoBloc>().add(RequestPhoneChangeEvent(phoneNumber: widget.phoneNumber));
                                   _startTimer();
                                 },
-                                child: const Text(
-                                  'إعادة إرسال الرمز',
-                                  style: TextStyle(
+                                child: Text(
+                                  'resend_code'.tr(),
+                                  style: const TextStyle(
                                     color: AppColors.primary,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -182,7 +186,7 @@ class _PhoneChangeOtpScreenState extends State<PhoneChangeOtpScreen> {
                             ),
                           const SizedBox(height: 12.0),
                           CustomButton(
-                            text: 'تحقّق',
+                            text: 'verify'.tr(),
                             height: 52.0,
                             isLoading: isLoading,
                             onPressed: _isOtpComplete && !isLoading

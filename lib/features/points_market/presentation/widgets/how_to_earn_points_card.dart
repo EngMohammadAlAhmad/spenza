@@ -32,10 +32,8 @@ class HowToEarnPointsCard extends StatelessWidget {
         children: [
           Text(
             'how_to_earn_points'.tr(),
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              fontWeight: .bold,
             ),
           )
               .animate()
@@ -51,6 +49,7 @@ class HowToEarnPointsCard extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: _buildStepItem(
+                  context,
                   iconPath: AppAssets.productsIconBig,
                   label: 'step_place_order'.tr(),
                 )
@@ -75,6 +74,7 @@ class HowToEarnPointsCard extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: _buildStepItem(
+                  context,
                   iconPath: AppAssets.orderArrivedIcon,
                   label: 'step_order_arrives'.tr(),
                 )
@@ -116,14 +116,15 @@ class HowToEarnPointsCard extends StatelessWidget {
 
           // Explanation Text
           Center(
-            child: Text(
-              'points_explain_text'.tr(),
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppColors.neutral,
-                height: 1.3,
+            child: Padding(
+              padding: const .symmetric(horizontal: 10.0),
+              child: Text(
+                'points_explain_text'.tr(),
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: AppColors.tertiary,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
           )
               .animate()
@@ -134,7 +135,7 @@ class HowToEarnPointsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStepItem({
+  Widget _buildStepItem(BuildContext context, {
     required String iconPath,
     required String label,
   }) {
@@ -151,10 +152,9 @@ class HowToEarnPointsCard extends StatelessWidget {
         Text(
           label,
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 12,
-            color: Colors.black87,
-            fontWeight: FontWeight.w500,
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+            fontWeight: .bold,
+            color: AppColors.textBody,
           ),
         ),
       ],

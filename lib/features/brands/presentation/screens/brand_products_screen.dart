@@ -16,9 +16,12 @@ import 'package:spenza/core/widgets/product_card.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/core/widgets/sort_bottom_sheet.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
+import 'package:spenza/core/widgets/general_error_widget.dart';
 import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/features/brands/domain/entities/brand_products_result_entity.dart';
 import 'package:spenza/features/brands/presentation/blocs/brand_products_bloc/brand_products_bloc.dart';
+import 'package:spenza/features/language/domain/entities/language_entity.dart';
+import 'package:spenza/features/language/presentation/blocs/language_bloc.dart';
 
 class BrandProductsScreen extends StatefulWidget {
   final int brandId;
@@ -31,7 +34,7 @@ class BrandProductsScreen extends StatefulWidget {
 
 class _BrandProductsScreenState extends State<BrandProductsScreen> {
   final ScrollController _scrollController = ScrollController();
-  String _selectedSortKey = 'default';
+  String _selectedSortKey = 'newest';
 
   @override
   void initState() {
@@ -84,7 +87,17 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
       desktop: 6,
     );
 
-    return Scaffold(
+    return BlocListener<LanguageBloc, BaseState<LanguageEntity>>(
+      listenWhen: (previous, current) =>
+          previous.data?.code != current.data?.code,
+      listener: (context, state) {
+        context.read<BrandProductsBloc>().add(GetBrandProductsEvent(
+              brandId: widget.brandId,
+              isRefresh: true,
+              sort: _selectedSortKey,
+            ));
+      },
+      child: Scaffold(
       backgroundColor: AppColors.neutralBackground,
       body: BlocBuilder<BrandProductsBloc, BaseState<BrandProductsResultEntity>>(
         builder: (context, state) {
@@ -113,7 +126,21 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
                           },
                         );
                       }
-                      return Center(child: Text(state.errorMessage));
+                      return GeneralErrorWidget(
+                        message: state.errorMessage,
+                        onRetry: () {
+                          context.read<BrandProductsBloc>().add(
+                                GetBrandProductsEvent(
+                                  brandId: widget.brandId,
+                                  sort: _selectedSortKey,
+                                  minPrice: state.minPrice,
+                                  maxPrice: state.maxPrice,
+                                  inStock: state.inStock,
+                                  isRefresh: true,
+                                ),
+                              );
+                        },
+                      );
                     }
 
                     if (products.isEmpty) {
@@ -158,8 +185,9 @@ class _BrandProductsScreenState extends State<BrandProductsScreen> {
           );
         },
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildHeader(BuildContext context, BaseState<BrandProductsResultEntity> state) {
     final brandName = state.data?.brand.name ?? "";

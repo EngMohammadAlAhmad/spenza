@@ -24,7 +24,7 @@ class AppBlocProviders extends StatelessWidget {
           create: (context) => di.sl<ThemeBloc>()..add(GetThemeEvent()),
         ),
         BlocProvider<LanguageBloc>(
-          create: (context) => di.sl<LanguageBloc>(),
+          create: (context) => di.sl<LanguageBloc>()..add(LoadCurrentLanguageEvent()),
         ),
         BlocProvider<OnboardingBloc>(
           create: (context) => di.sl<OnboardingBloc>(),

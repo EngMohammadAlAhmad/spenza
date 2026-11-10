@@ -23,26 +23,29 @@ class TodayOffersSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: .spaceBetween,
       children: [
-        Row(
-          mainAxisAlignment: .spaceBetween,
-          children: [
-            Text(
-              'today_offers'.tr(),
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: .spaceBetween,
+            children: [
+              Text(
+                'today_offers'.tr(),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            /*const Spacer(),
-            ViewAllButton(
-              onPressed: () {},
-            ),*/
-          ],
+              /*const Spacer(),
+              ViewAllButton(
+                onPressed: () {},
+              ),*/
+            ],
+          ),
         ),
         SizedBox(
           height: 298.2,
           child: isLoading
               ? ListView.separated(
-                  padding: EdgeInsets.zero,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   itemCount: 3,
                   scrollDirection: Axis.horizontal,
                   separatorBuilder: (context, index) => const SizedBox(width: 15.0),
@@ -53,7 +56,7 @@ class TodayOffersSection extends StatelessWidget {
                   ),
                 )
               : ListView.separated(
-                  padding: EdgeInsets.zero,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   itemCount: products.length,
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),

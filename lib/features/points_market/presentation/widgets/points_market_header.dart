@@ -9,6 +9,7 @@ import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/base_state.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/features/points_market/domain/entities/points_summary_entity.dart';
 import 'package:spenza/features/points_market/presentation/blocs/points_market_bloc/points_market_bloc.dart';
@@ -18,6 +19,8 @@ class PointsMarketHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTabletLandscape = context.isTabletLandscape;
+
     return BlocBuilder<PointsMarketBloc, BaseState<PointsSummaryEntity>>(
       builder: (context, state) {
         final points = state.data?.balance ?? 0;
@@ -39,7 +42,7 @@ class PointsMarketHeader extends StatelessWidget {
             bottom: 24.0,
           ),
           bottomChild: Column(
-            spacing: 12.0,
+            spacing: 16.0,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // User Points Balance Row
@@ -93,10 +96,10 @@ class PointsMarketHeader extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16.0),
 
               // Glassmorphism Progress Container
               Container(
+                width: isTabletLandscape ? context.width * 0.27 : null,
                 padding: const EdgeInsets.all(14.0),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.18),
@@ -111,12 +114,11 @@ class PointsMarketHeader extends StatelessWidget {
                   children: [
                     Text(
                       'points_card_progress_desc'.tr(),
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.95),
-                        fontSize: 12.5,
-                        height: 1.3,
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontWeight: .bold,
+                        color: Colors.white,
                       ),
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.start,
                     ),
                     const SizedBox(height: 10.0),
                     ClipRRect(
@@ -133,7 +135,6 @@ class PointsMarketHeader extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 16.0),
 
               // Action Buttons Row
               Row(

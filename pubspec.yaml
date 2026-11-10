@@ -36,6 +36,7 @@ dependencies:
   flutter_staggered_animations:
   flutter_animate:
   animated_text_kit:
+  share_plus:
 
 dev_dependencies:
   flutter_test:

@@ -29,6 +29,13 @@ class AppRadius {
     bottomRight: Radius.circular(8.0),
   );
 
+  static const BorderRadius brandRadius2 = BorderRadius.only(
+    topLeft: Radius.circular(14.0),
+    topRight: Radius.circular(14.0),
+    bottomLeft: Radius.circular(14.0),
+    bottomRight: Radius.circular(6.0),
+  );
+
   // Or using individual radius values
   static const double smallValue = 4;
   static const double mediumValue = 8;

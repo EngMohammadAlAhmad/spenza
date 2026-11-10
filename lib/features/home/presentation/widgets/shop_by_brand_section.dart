@@ -26,25 +26,28 @@ class ShopByBrandSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          mainAxisAlignment: .spaceBetween,
-          children: [
-            Text(
-              'shop_by_brand'.tr(),
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: .bold,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: .spaceBetween,
+            children: [
+              Text(
+                'shop_by_brand'.tr(),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: .bold,
+                ),
               ),
-            ),
-            ViewAllButton(
-              onPressed: () => context.go('${RoutePaths.categories}?tab=1'),
-            ),
-          ],
+              ViewAllButton(
+                onPressed: () => context.go('${RoutePaths.categories}?tab=1'),
+              ),
+            ],
+          ),
         ),
         SizedBox(
           height: 64.0,
           child: isLoading
               ? ListView.separated(
-                  padding: EdgeInsets.zero,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   itemCount: 5,
                   scrollDirection: Axis.horizontal,
                   separatorBuilder: (context, index) => const SizedBox(width: 12.0),
@@ -55,7 +58,7 @@ class ShopByBrandSection extends StatelessWidget {
                   ),
                 )
               : ListView.separated(
-                  padding: EdgeInsets.zero,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   itemCount: brands.length,
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),

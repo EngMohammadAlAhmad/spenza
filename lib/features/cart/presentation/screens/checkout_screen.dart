@@ -32,8 +32,8 @@ class CheckoutScreen extends StatelessWidget {
         BlocProvider.value(
           value: di.sl<AddressesBloc>(),
         ),
-        BlocProvider(
-          create: (context) => di.sl<OrdersBloc>(),
+        BlocProvider.value(
+          value: di.sl<OrdersBloc>(),
         ),
       ],
       child: const _CheckoutView(),

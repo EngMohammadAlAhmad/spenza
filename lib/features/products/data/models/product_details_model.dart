@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:spenza/core/shared/models/brand_model.dart';
 import 'package:spenza/core/shared/models/category_model.dart';
 import 'package:spenza/core/shared/models/product_model.dart';
@@ -10,12 +11,15 @@ class ProductDetailsModel extends ProductDetailsEntity {
   });
 
   factory ProductDetailsModel.fromJson(Map<String, dynamic> json) {
-    final data = json['data'] as Map<String, dynamic>;
+    final data = json['data'] as Map<String, dynamic>? ?? {};
+    final productJson = data['product'] as Map<String, dynamic>? ?? {};
     return ProductDetailsModel(
-      product: ProductItemModel.fromJson(data['product'] as Map<String, dynamic>),
-      relatedProducts: (data['related_products'] as List)
-          .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      product: ProductItemModel.fromJson(productJson),
+      relatedProducts: (data['related_products'] as List?)
+              ?.whereType<Map<String, dynamic>>()
+              .map((e) => ProductModel.fromJson(e))
+              .toList() ??
+          [],
     );
   }
 }
@@ -56,8 +60,12 @@ class ProductItemModel extends ProductItemEntity {
       sideImages: (json['side_images'] as List?)?.map((e) => e.toString()).toList() ?? [],
       video: json['video'],
       model3d: json['model_3d'],
-      brand: BrandModel.fromJson(json['brand'] as Map<String, dynamic>),
-      category: CategoryModel.fromJson(json['category'] as Map<String, dynamic>),
+      brand: json['brand'] != null && json['brand'] is Map<String, dynamic>
+          ? BrandModel.fromJson(json['brand'] as Map<String, dynamic>)
+          : const BrandModel(id: 0, name: '', image: '', productsCount: 0),
+      category: json['category'] != null && json['category'] is Map<String, dynamic>
+          ? CategoryModel.fromJson(json['category'] as Map<String, dynamic>)
+          : CategoryModel(id: 0, name: 'no_category_name'.tr(), image: '', productsCount: 0),
       rate: json['rate'] ?? 0,
       ratingsCount: json['ratings_count'] ?? 0,
       price: json['price'] ?? 0,
@@ -65,21 +73,27 @@ class ProductItemModel extends ProductItemEntity {
       discountPercentage: json['discount_percentage'] ?? 0,
       defaultUnitId: json['default_unit_id'] ?? 0,
       units: (json['units'] as List?)
-              ?.map((e) => ProductUnitModel.fromJson(e as Map<String, dynamic>))
+              ?.whereType<Map<String, dynamic>>()
+              .map((e) => ProductUnitModel.fromJson(e))
               .toList() ??
           [],
       variantOptions: (json['variant_options'] as List?)
-              ?.map((e) => ProductVariantOptionModel.fromJson(e as Map<String, dynamic>))
+              ?.whereType<Map<String, dynamic>>()
+              .map((e) => ProductVariantOptionModel.fromJson(e))
               .toList() ??
           [],
       variants: (json['variants'] as List?)
-              ?.map((e) => ProductVariantModel.fromJson(e as Map<String, dynamic>))
+              ?.whereType<Map<String, dynamic>>()
+              .map((e) => ProductVariantModel.fromJson(e))
               .toList() ??
           [],
       defaultVariantId: json['default_variant_id'] ?? 0,
-      storage: ProductStorageModel.fromJson(json['storage'] as Map<String, dynamic>),
+      storage: json['storage'] != null && json['storage'] is Map<String, dynamic>
+          ? ProductStorageModel.fromJson(json['storage'] as Map<String, dynamic>)
+          : const ProductStorageModel(qtyAvailable: 0, inStock: true, isLowStock: false),
       specifications: (json['specifications'] as List?)
-              ?.map((e) => ProductSpecificationModel.fromJson(e as Map<String, dynamic>))
+              ?.whereType<Map<String, dynamic>>()
+              .map((e) => ProductSpecificationModel.fromJson(e))
               .toList() ??
           [],
     );
@@ -119,9 +133,11 @@ class ProductVariantOptionModel extends ProductVariantOptionEntity {
     return ProductVariantOptionModel(
       attributeId: json['attribute_id'] ?? 0,
       name: json['name'] ?? '',
-      values: (json['values'] as List)
-          .map((e) => ProductVariantOptionValueModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      values: (json['values'] as List?)
+              ?.whereType<Map<String, dynamic>>()
+              .map((e) => ProductVariantOptionValueModel.fromJson(e))
+              .toList() ??
+          [],
     );
   }
 }
@@ -190,7 +206,8 @@ class ProductSpecificationModel extends ProductSpecificationEntity {
       attributeId: json['attribute_id'] ?? 0,
       name: json['name'] ?? '',
       values: (json['values'] as List?)
-              ?.map((e) => ProductSpecificationValueModel.fromJson(e as Map<String, dynamic>))
+              ?.whereType<Map<String, dynamic>>()
+              .map((e) => ProductSpecificationValueModel.fromJson(e))
               .toList() ??
           [],
     );

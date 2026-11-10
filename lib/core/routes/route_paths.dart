@@ -28,4 +28,6 @@ abstract class RoutePaths {
   static const settings = '/settings';
   static const myInfo = '/my-info';
   static const businessAccount = '/business-account';
+  static const businessAccountWizard = '/business-account-wizard';
+  static const helpAndSupport = '/help-and-support';
 }

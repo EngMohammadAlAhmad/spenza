@@ -2,14 +2,27 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/utils/tab_index_notifier.dart';
+import 'package:spenza/features/addresses/presentation/bloc/addresses_bloc.dart';
+import 'package:spenza/features/addresses/presentation/bloc/addresses_event.dart';
+import 'package:spenza/features/cart/presentation/blocs/cart_bloc/cart_bloc.dart';
+import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favorites_bloc.dart';
+import 'package:spenza/features/favorites/presentation/blocs/favorites_bloc/favorites_event.dart';
+import 'package:spenza/features/language/domain/entities/language_entity.dart';
+import 'package:spenza/features/language/presentation/blocs/language_bloc.dart';
+import 'package:spenza/features/orders/presentation/bloc/orders_bloc.dart';
+import 'package:spenza/features/orders/presentation/bloc/orders_event.dart';
+import 'package:spenza/features/points_market/presentation/blocs/points_market_bloc/points_market_bloc.dart';
+import 'package:spenza/injection_locator.dart' as di;
 
 class HomeShell extends StatefulWidget {
   const HomeShell({
@@ -118,57 +131,75 @@ class _HomeShellState extends State<HomeShell> {
       ),
     ];
 
-    return PopScope(
-      canPop: isHome,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        if (!isHome) {
-          widget.navigationShell.goBranch(0);
+    return BlocListener<LanguageBloc, BaseState<LanguageEntity>>(
+      listenWhen: (previous, current) =>
+          previous.data?.code != current.data?.code,
+      listener: (context, state) {
+        context.read<FavoritesBloc>().add(GetFavoritesEvent());
+        context.read<CartBloc>().add(const GetCartEvent());
+        context.read<PointsMarketBloc>().add(const GetMyPointsEvent());
+        if (di.sl.isRegistered<AddressesBloc>()) {
+          di.sl<AddressesBloc>().add(const GetAddressesEvent(isRefresh: true));
+        }
+        if (di.sl.isRegistered<OrdersBloc>()) {
+          di.sl<OrdersBloc>().add(const GetMyOrdersEvent(isRefresh: true));
         }
       },
-      child: Scaffold(
-        extendBody: true,
-        backgroundColor: AppColors.backgroundLight,
-        body: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onHorizontalDragUpdate: _onHorizontalDragUpdate,
-          onHorizontalDragEnd: _onHorizontalDragEnd,
-          child: widget.navigationShell,
-        ),
-        bottomNavigationBar: Container(
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(30.0)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.08),
-                blurRadius: 20.0,
-                offset: const Offset(0, -5),
-              ),
-            ],
+      child: PopScope(
+        canPop: isHome,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          if (!isHome) {
+            widget.navigationShell.goBranch(0);
+          }
+        },
+        child: Scaffold(
+          extendBody: true,
+          backgroundColor: AppColors.backgroundLight,
+          body: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onHorizontalDragUpdate: _onHorizontalDragUpdate,
+            onHorizontalDragEnd: _onHorizontalDragEnd,
+            child: KeyedSubtree(
+              key: ValueKey('shell_branches_${context.locale.languageCode}'),
+              child: widget.navigationShell,
+            ),
           ),
-          child: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: context.isTablet ? context.width * 0.25 : 12.0, vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: List.generate(items.length, (index) {
-                  final isSelected = index == widget.navigationShell.currentIndex;
-                  final item = items[index];
+          bottomNavigationBar: Container(
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(30.0)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 20.0,
+                  offset: const Offset(0, -5),
+                ),
+              ],
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: context.isTablet ? context.width * 0.25 : 12.0, vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: List.generate(items.length, (index) {
+                    final isSelected = index == widget.navigationShell.currentIndex;
+                    final item = items[index];
 
-                  return Expanded(
-                    child: GestureDetector(
-                      onTap: () => _onTabTapped(index),
-                      behavior: HitTestBehavior.opaque,
-                      child: _NavTabItem(
-                        item: item,
-                        isSelected: isSelected,
-                        inactiveColor: inactiveColor,
+                    return Expanded(
+                      child: GestureDetector(
+                        onTap: () => _onTabTapped(index),
+                        behavior: HitTestBehavior.opaque,
+                        child: _NavTabItem(
+                          item: item,
+                          isSelected: isSelected,
+                          inactiveColor: inactiveColor,
+                        ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  }),
+                ),
               ),
             ),
           ),

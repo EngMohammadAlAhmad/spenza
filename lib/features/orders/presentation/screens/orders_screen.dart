@@ -92,8 +92,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
               );
             }
 
-            return BlocProvider<OrdersBloc>(
-              create: (context) => sl<OrdersBloc>()..add(const GetMyOrdersEvent()),
+            return BlocProvider<OrdersBloc>.value(
+              value: sl<OrdersBloc>()..add(const GetMyOrdersEvent()),
               child: _OrdersContent(
                 key: ValueKey('${keyPrefix}_content'),
                 animTrigger: _animTrigger,

@@ -18,8 +18,8 @@ class RippleButtonWrapper extends StatefulWidget {
     this.builder,
     this.borderRadius,
     this.color,
-    this.minOpacity = 0.05,
-    this.maxOpacity = 0.35,
+    this.minOpacity = 0.0,
+    this.maxOpacity = 1.0,
   }) : assert(child != null || builder != null, 'Either child or builder must be provided');
 
   @override
@@ -29,10 +29,6 @@ class RippleButtonWrapper extends StatefulWidget {
 class _RippleButtonWrapperState extends State<RippleButtonWrapper>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _scale1XAnimation;
-  late Animation<double> _scale1YAnimation;
-  late Animation<double> _scale2XAnimation;
-  late Animation<double> _scale2YAnimation;
   late Animation<double> _opacityAnimation;
   late Animation<Color?> _textColorAnimation;
 
@@ -41,22 +37,8 @@ class _RippleButtonWrapperState extends State<RippleButtonWrapper>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 950),
+      duration: const Duration(milliseconds: 1100),
     )..repeat(reverse: true);
-
-    _scale1XAnimation = Tween<double>(begin: 1.0, end: 1.025).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-    _scale1YAnimation = Tween<double>(begin: 1.0, end: 1.12).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-
-    _scale2XAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-    _scale2YAnimation = Tween<double>(begin: 1.0, end: 1.24).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
 
     _opacityAnimation = Tween<double>(
       begin: widget.minOpacity,
@@ -84,38 +66,23 @@ class _RippleButtonWrapperState extends State<RippleButtonWrapper>
     final effectiveRadius = widget.borderRadius ?? AppRadius.brandRadius;
     final pulseColor = widget.color ?? AppColors.primary;
 
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, _) {
-        final animatedColor = _textColorAnimation.value ?? AppColors.primary;
-        final currentChild = widget.builder != null
-            ? widget.builder!(context, animatedColor)
-            : widget.child!;
+    return ClipRRect(
+      borderRadius: effectiveRadius,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, _) {
+          final animatedColor = _textColorAnimation.value ?? AppColors.primary;
+          final currentChild = widget.builder != null
+              ? widget.builder!(context, animatedColor)
+              : widget.child!;
 
-        final opacityVal = _opacityAnimation.value.clamp(0.0, 1.0);
+          final opacityVal = _opacityAnimation.value.clamp(0.0, 1.0);
 
-        return Stack(
-          alignment: Alignment.center,
-          clipBehavior: Clip.none,
-          children: [
-            // Outer Soft Ambient Glow
-            Positioned.fill(
-              child: Transform.scale(
-                scaleX: _scale2XAnimation.value,
-                scaleY: _scale2YAnimation.value,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: pulseColor.withValues(alpha: (opacityVal * 0.5).clamp(0.0, 1.0)),
-                    borderRadius: effectiveRadius,
-                  ),
-                ),
-              ),
-            ),
-            // Inner Breathing Ring
-            Positioned.fill(
-              child: Transform.scale(
-                scaleX: _scale1XAnimation.value,
-                scaleY: _scale1YAnimation.value,
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              // Pulsing Background Fill (Strictly inside button border)
+              Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(
                     color: pulseColor.withValues(alpha: opacityVal),
@@ -123,12 +90,12 @@ class _RippleButtonWrapperState extends State<RippleButtonWrapper>
                   ),
                 ),
               ),
-            ),
-            // Child Button
-            currentChild,
-          ],
-        );
-      },
+              // Child Button
+              currentChild,
+            ],
+          );
+        },
+      ),
     );
   }
 }

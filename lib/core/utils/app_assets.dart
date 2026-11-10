@@ -21,6 +21,7 @@ class AppAssets {
   static const String roundedIconWhite = '$_images/rounded_icon_white.svg';
   static const String slogan = '$_images/slogan.svg';
   static const String splashScreen = '$_images/splash_screen.svg';
+  static const String supportIllustration = '$_images/support.svg';
   static const String syFlag = '$_images/sy.svg';
 
   // PNG Images
@@ -128,8 +129,12 @@ class AppAssets {
   static const String todayOffersIcon = '$_icons/today_offers_icon.svg';
   static const String trendIcon = '$_icons/trend_icon.svg';
   static const String truckIcon = '$_icons/truck_icon.svg';
-  static const String bellIcon = '$_icons/bell_icon.svg';
+  static const String mailIcon = '$_icons/mail_icon.svg';
+  static const String phoneIcon = '$_icons/phone_icon.svg';
   static const String questionIcon = '$_icons/question_icon.svg';
   static const String shareIcon = '$_icons/share_icon.svg';
   static const String imagesIcon = '$_icons/images.svg';
+  static const String uploadIcon = '$_icons/upload_icon.svg';
+  static const String cameraIcon = '$_icons/camera_icon.svg';
+  static const String galleryIcon = '$_icons/gallery_icon.svg';
 }

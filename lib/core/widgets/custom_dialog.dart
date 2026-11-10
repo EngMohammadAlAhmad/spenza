@@ -276,7 +276,7 @@ class _AppCustomDialogState extends State<AppCustomDialog>
                             : (widget.onPrimaryPressed ??
                                 () => Navigator.of(context, rootNavigator: true).pop(true)),
                         height: 48.0,
-                        fontSize: 14.0,
+                        fontSize: 16.0,
                         isLoading: widget.isLoading,
                         textColor: widget.primaryTextColor,
                         borderRadius: AppRadius.large,

@@ -176,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SizedBox(
               width: 25.0,
-              height: 52.0,
+              height: 24.0,
               child: VerticalDivider(
                 color: AppColors.primaryLight.withValues(alpha: 0.5),
               ),
@@ -187,9 +187,6 @@ class _LoginPageState extends State<LoginPage> {
         forPhone: true,
         borderColor: AppColors.primaryLight.withValues(alpha: 0.5),
         hintText: '9xx xxx xxx',
-        hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-          color: AppColors.neutral,
-        ),
         fillColor: Colors.white,
       ),
     );

@@ -517,51 +517,53 @@ class _CartViewState extends State<_CartView> {
     final isTabletLandscape = context.isTabletLandscape;
 
     Widget buildPriceInfo() => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'total_before_delivery'.tr(),
-              style: const TextStyle(
-                fontSize: 13.0,
-                color: AppColors.neutral,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 2.0),
-            Text(
-              '${formatter.format(state.totalCartPrice)} $currency',
-              style: const TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.w900,
-                color: Colors.black87,
-              ),
-            ),
-          ],
-        );
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'total_before_delivery'.tr(),
+          style: const TextStyle(
+            fontSize: 13.0,
+            color: AppColors.neutral,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 2.0),
+        Text(
+          '${formatter.format(state.totalCartPrice)} $currency',
+          style: const TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.w900,
+            color: Colors.black87,
+          ),
+        ),
+      ],
+    );
 
     Widget buildCheckoutButton({required double width}) => SizedBox(
-          width: width,
-          child: Hero(
-            tag: 'checkout_bottom_button_hero',
-            child: Material(
-              color: Colors.transparent,
-              child: CustomButton(
-                text: 'كمّل الطلب',
-                height: 52.0,
-                onPressed: () {
-                  context.push(RoutePaths.checkout);
-                },
-              ),
-            ),
+      width: width,
+      child: Hero(
+        tag: 'checkout_bottom_button_hero',
+        child: Material(
+          color: Colors.transparent,
+          child: CustomButton(
+            text: 'complete_order'.tr(),
+            height: 52.0,
+            onPressed: () {
+              context.push(RoutePaths.checkout);
+            },
           ),
-        );
+        ),
+      ),
+    );
 
     return AppBottomContainer(
       maxContentWidth: 550.0,
-      padding: EdgeInsets.symmetric(
-        horizontal: isTabletLandscape ? 32.0 : 16.0,
-        vertical: 12.0,
+      padding: EdgeInsets.fromLTRB(
+        isTabletLandscape ? 32.0 : 16.0,
+        12.0,
+        isTabletLandscape ? 32.0 : 16.0,
+        0.0,
       ),
       child: isTabletLandscape
           ? Row(
@@ -589,7 +591,7 @@ class _CartViewState extends State<_CartView> {
   // ================= Empty Cart Sticky Footer =================
   Widget _buildEmptyCartFooter(BuildContext context) {
     return AppBottomContainer(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+      padding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 0.0),
       child: CustomButton(
         text: 'start_shopping'.tr(),
         height: 48.0,

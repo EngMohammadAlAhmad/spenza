@@ -32,9 +32,10 @@ class ProductHeaderSection extends StatelessWidget {
           child: Text(
             product.category.name,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
-                ),
+              color: AppColors.primary,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: .start,
           ),
         ).animate().fadeIn(delay: 300.ms, duration: 600.ms).slideX(begin: 0.08, end: 0, duration: 600.ms, curve: Curves.easeOutCubic),
         const SizedBox(height: 10.0),
@@ -43,7 +44,7 @@ class ProductHeaderSection extends StatelessWidget {
         Text(
           product.title,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w800),
-          textAlign: TextAlign.right,
+          textAlign: .start,
         ).animate().fadeIn(delay: 400.ms, duration: 600.ms).slideX(begin: 0.08, end: 0, duration: 600.ms, curve: Curves.easeOutCubic),
 
         const SizedBox(height: 16.0),

@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 

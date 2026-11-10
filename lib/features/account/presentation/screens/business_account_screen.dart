@@ -1,11 +1,13 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
-import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/utils/responsive_utils.dart';
+import 'package:spenza/core/widgets/app_bottom_container.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 
@@ -14,6 +16,83 @@ class BusinessAccountScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTabletLandscape = context.isTabletLandscape;
+
+    // Right Section: Hero Illustration, Title & Subtitle
+    final heroSection = Column(
+      children: [
+        SvgPicture.asset(
+          AppAssets.enterpriseIllustration,
+        ),
+        const SizedBox(height: 16.0),
+        Text(
+          'business_account_hero_title'.tr(),
+          style: const TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            color: AppColors.neutral900,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 6.0),
+        Text(
+          'business_account_hero_subtitle'.tr(),
+          style: const TextStyle(
+            fontSize: 13.0,
+            color: AppColors.textSecondary,
+            height: 1.4,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+
+    // Left Section: Features & Steps Cards
+    final detailsSection = Column(
+      children: [
+        _buildFeaturesCard(context),
+        const SizedBox(height: 16.0),
+        _buildStepsCard(context),
+      ],
+    );
+
+    Widget contentBody;
+
+    if (isTabletLandscape) {
+      contentBody = Directionality(
+        textDirection: TextDirection.ltr,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Physical LEFT side: Details Section (Features & Steps Cards)
+            Expanded(
+              child: Directionality(
+                textDirection: Directionality.of(context),
+                child: detailsSection,
+              ),
+            ),
+            const SizedBox(width: 20.0),
+
+            // Physical RIGHT side: Hero Section (Illustration, Title & Subtitle)
+            Expanded(
+              child: Directionality(
+                textDirection: Directionality.of(context),
+                child: heroSection,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      contentBody = Column(
+        children: [
+          heroSection,
+          const SizedBox(height: 20.0),
+          detailsSection,
+        ],
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.neutralBackground,
       body: Column(
@@ -26,83 +105,18 @@ class BusinessAccountScreen extends StatelessWidget {
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 32.0),
-              child: Column(
-                children: [
-                  // Illustration
-                  SvgPicture.asset(
-                    AppAssets.enterpriseIllustration,
-                  ),
-                  const SizedBox(height: 16.0),
-
-                  // Title & Subtitle
-                  Text(
-                    'business_account_hero_title'.tr(),
-                    style: const TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.neutral900,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 6.0),
-                  Text(
-                    'business_account_hero_subtitle'.tr(),
-                    style: const TextStyle(
-                      fontSize: 13.0,
-                      color: AppColors.textSecondary,
-                      height: 1.4,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20.0),
-
-                  // Features Card
-                  _buildFeaturesCard(context),
-                  const SizedBox(height: 16.0),
-
-                  // How it works Card
-                  _buildStepsCard(context),
-                  const SizedBox(height: 16.0),
-                ],
-              ),
+              child: contentBody,
             ),
           ),
-
-          // Fixed Bottom White Container with Button
-          _buildBottomBar(context),
         ],
       ),
-    );
-  }
-
-  Widget _buildBottomBar(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32.0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.fromLTRB(
-        20.0,
-        16.0,
-        20.0,
-        context.screenPadding.bottom > 0
-            ? context.screenPadding.bottom + 8.0
-            : 20.0,
-      ),
-      child: CustomButton(
-        text: 'start_request'.tr(),
-        height: 52.0,
-        onPressed: () {
-          // Business account request start action
-        },
+      bottomNavigationBar: AppBottomContainer(
+        padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 0.0),
+        child: CustomButton(
+          text: 'start_request'.tr(),
+          height: 52.0,
+          onPressed: () => context.push(RoutePaths.businessAccountWizard),
+        ),
       ),
     );
   }

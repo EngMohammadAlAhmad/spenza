@@ -28,25 +28,28 @@ class ShopByCategorySection extends StatelessWidget {
       crossAxisAlignment: .start,
       mainAxisAlignment: .spaceBetween,
       children: [
-        Row(
-          mainAxisAlignment: .spaceBetween,
-          children: [
-            Text(
-              'sections'.tr(),
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: .bold,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: .spaceBetween,
+            children: [
+              Text(
+                'sections'.tr(),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: .bold,
+                ),
               ),
-            ),
-            ViewAllButton(
-              onPressed: () => context.go('${RoutePaths.categories}?tab=0'),
-            ),
-          ],
+              ViewAllButton(
+                onPressed: () => context.go('${RoutePaths.categories}?tab=0'),
+              ),
+            ],
+          ),
         ),
         SizedBox(
           height: 125.0,
           child: isLoading
               ? ListView.separated(
-                  padding: EdgeInsets.zero,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   itemCount: 5,
                   scrollDirection: Axis.horizontal,
                   separatorBuilder: (context, index) => const SizedBox(width: 16.0),
@@ -63,7 +66,7 @@ class ShopByCategorySection extends StatelessWidget {
                   ),
                 )
               : ListView.separated(
-                  padding: EdgeInsets.zero,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   itemCount: categories.length,
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),

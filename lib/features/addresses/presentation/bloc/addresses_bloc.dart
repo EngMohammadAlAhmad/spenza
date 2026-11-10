@@ -33,6 +33,12 @@ class AddressesBloc extends Bloc<AddressesEvent, AddressesState> {
     GetAddressesEvent event,
     Emitter<AddressesState> emit,
   ) async {
+    if (!event.isRefresh &&
+        state.getAddressesStatus == RequestStatus.success &&
+        state.addresses.isNotEmpty) {
+      return;
+    }
+
     emit(state.copyWith(getAddressesStatus: RequestStatus.loading));
 
     final result = await getAddressesUseCase();
@@ -70,7 +76,7 @@ class AddressesBloc extends Bloc<AddressesEvent, AddressesState> {
           addAddressStatus: RequestStatus.success,
           addAddressSuccessMessage: successResult.message,
         ));
-        add(const GetAddressesEvent());
+        add(const GetAddressesEvent(isRefresh: true));
       },
     );
   }
@@ -96,7 +102,7 @@ class AddressesBloc extends Bloc<AddressesEvent, AddressesState> {
           updateAddressStatus: RequestStatus.success,
           updateAddressSuccessMessage: message,
         ));
-        add(const GetAddressesEvent());
+        add(const GetAddressesEvent(isRefresh: true));
       },
     );
   }
@@ -122,7 +128,7 @@ class AddressesBloc extends Bloc<AddressesEvent, AddressesState> {
           deleteAddressStatus: RequestStatus.success,
           deleteAddressSuccessMessage: message,
         ));
-        add(const GetAddressesEvent());
+        add(const GetAddressesEvent(isRefresh: true));
       },
     );
   }

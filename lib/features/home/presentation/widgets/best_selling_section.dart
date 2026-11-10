@@ -26,26 +26,29 @@ class BestSellingSection extends StatelessWidget {
       crossAxisAlignment: .start,
       mainAxisAlignment: .spaceBetween,
       children: [
-        Row(
-          mainAxisAlignment: .spaceBetween,
-          children: [
-            Text(
-              'best_selling'.tr(),
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: .spaceBetween,
+            children: [
+              Text(
+                'best_selling'.tr(),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            /*const Spacer(),
-            ViewAllButton(
-              onPressed: () {},
-            ),*/
-          ],
+              /*const Spacer(),
+              ViewAllButton(
+                onPressed: () {},
+              ),*/
+            ],
+          ),
         ),
         SizedBox(
           height: 284.0,
           child: isLoading
               ? ListView.separated(
-                  padding: EdgeInsets.zero,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   itemCount: 3,
                   scrollDirection: Axis.horizontal,
                   separatorBuilder: (context, index) => const SizedBox(width: 15.0),
@@ -56,7 +59,7 @@ class BestSellingSection extends StatelessWidget {
                   ),
                 )
               : ListView.separated(
-                  padding: EdgeInsets.zero,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   itemCount: products.length,
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),

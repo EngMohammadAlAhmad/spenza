@@ -10,7 +10,12 @@ abstract class AddressesEvent extends Equatable {
 }
 
 class GetAddressesEvent extends AddressesEvent {
-  const GetAddressesEvent();
+  final bool isRefresh;
+
+  const GetAddressesEvent({this.isRefresh = false});
+
+  @override
+  List<Object?> get props => [isRefresh];
 }
 
 class AddAddressEvent extends AddressesEvent {

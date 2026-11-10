@@ -27,8 +27,8 @@ class OrderAgainSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => di.sl<OrdersBloc>()..add(const GetMyOrdersEvent(page: 1)),
+    return BlocProvider.value(
+      value: di.sl<OrdersBloc>()..add(const GetMyOrdersEvent(page: 1)),
       child: const _OrderAgainContent(),
     );
   }
@@ -57,26 +57,30 @@ class _OrderAgainContent extends StatelessWidget {
           spacing: 12.0,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'order_again'.tr(),
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                const Spacer(),
-                ViewAllButton(
-                  onPressed: () => _goToOrdersTab(context),
-                  text: 'orders',
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'order_again'.tr(),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const Spacer(),
+                  ViewAllButton(
+                    onPressed: () => _goToOrdersTab(context),
+                    text: 'orders',
+                  ),
+                ],
+              ),
             ),
             if (isLoading)
               SizedBox(
                 height: 214.0,
                 child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   scrollDirection: Axis.horizontal,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: 4,
@@ -89,13 +93,17 @@ class _OrderAgainContent extends StatelessWidget {
                 ),
               )
             else if (isEmpty)
-              _EmptyOrderAgainCard(
-                onOrdersPressed: () => _goToOrdersTab(context),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: _EmptyOrderAgainCard(
+                  onOrdersPressed: () => _goToOrdersTab(context),
+                ),
               )
             else
               SizedBox(
                 height: 214.0,
                 child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),
                   itemCount: state.orders.length,

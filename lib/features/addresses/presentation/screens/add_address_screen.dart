@@ -191,7 +191,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
               previous.updateAddressStatus != current.updateAddressStatus,
           listener: (context, state) {
             if (state.updateAddressStatus == RequestStatus.success) {
-              final msg = state.updateAddressSuccessMessage ?? 'تم تعديل العنوان بنجاح';
+              final msg = state.updateAddressSuccessMessage ?? 'address_updated_success'.tr();
               SnackbarService.showSuccess(context, message: msg);
               context.pop(true);
             } else if (state.updateAddressStatus == RequestStatus.error) {
@@ -204,7 +204,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
         ),
       ],
       child: AppScaffold(
-        title: isEditing ? 'تعديل العنوان' : 'new_address'.tr(),
+        title: isEditing ? 'edit_address'.tr() : 'new_address'.tr(),
         body: Column(
           children: [
             // Form Scrollable Body
@@ -528,7 +528,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
                                 ),
                                 SizedBox(
                                   width: 25.0,
-                                  height: 52.0,
+                                  height: 24.0,
                                   child: VerticalDivider(
                                     color: AppColors.primaryLight
                                         .withValues(alpha: 0.5),
@@ -541,12 +541,6 @@ class _AddAddressViewState extends State<_AddAddressView> {
                             borderColor: AppColors.primaryLight
                                 .withValues(alpha: 0.5),
                             hintText: '9xx xxx xxx',
-                            hintStyle: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                  color: AppColors.neutral,
-                                ),
                             fillColor: Colors.white,
                             validator: (val) {
                               if (val == null || val.trim().isEmpty) {
@@ -704,7 +698,7 @@ class _AddAddressViewState extends State<_AddAddressView> {
                     : state.addAddressStatus == RequestStatus.loading;
                 return AppBottomContainer(
                   child: CustomButton(
-                    text: isEditing ? 'تعديل العنوان' : 'save_address'.tr(),
+                    text: isEditing ? 'edit_address'.tr() : 'save_address'.tr(),
                     height: 48.0,
                     isLoading: isLoading,
                     onPressed: isLoading ? null : () => _submitAddress(context),

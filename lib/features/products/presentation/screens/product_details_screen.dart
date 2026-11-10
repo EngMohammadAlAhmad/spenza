@@ -4,8 +4,12 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/utils/base_state.dart';
 import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
+import 'package:spenza/core/widgets/general_error_widget.dart';
+import 'package:spenza/features/language/domain/entities/language_entity.dart';
+import 'package:spenza/features/language/presentation/blocs/language_bloc.dart';
 import 'package:spenza/features/products/domain/entities/product_details_entity.dart';
 import 'package:spenza/features/products/presentation/blocs/product_details_bloc/product_details_bloc.dart';
 import 'package:spenza/features/products/presentation/widgets/product_details_bottom_bar.dart';
@@ -26,38 +30,52 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
-      builder: (context, state) {
-        final data = state.dataState.data;
+    debugPrint('=============== Product ID: $productId');
 
-        return Scaffold(
-          backgroundColor: AppColors.neutralBackground,
-          body: data != null
-              ? _buildContent(context, state, data)
-              : state.dataState.isError
-                  ? (state.dataState.failure is OfflineFailure
-                      ? NoInternetWidget(
-                          onRetry: () => context
-                              .read<ProductDetailsBloc>()
-                              .add(GetProductDetailsEvent(productId: productId)),
-                        )
-                      : SafeArea(
-                          child: Center(
-                            child: Text(state.dataState.errorMessage),
-                          ),
-                        ))
-                  : _buildLoadingGrid(),
-          bottomNavigationBar: data != null
-              ? ProductDetailsBottomBar(
-                  state: state,
-                  data: data,
-                  onAddToCart: () {
-                    // Action for adding to cart
-                  },
-                )
-              : null,
-        );
+    return BlocListener<LanguageBloc, BaseState<LanguageEntity>>(
+      listenWhen: (previous, current) =>
+          previous.data?.code != current.data?.code,
+      listener: (context, state) {
+        context
+            .read<ProductDetailsBloc>()
+            .add(GetProductDetailsEvent(productId: productId));
       },
+      child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
+        builder: (context, state) {
+          final data = state.dataState.data;
+
+          return Scaffold(
+            backgroundColor: AppColors.neutralBackground,
+            body: data != null
+                ? _buildContent(context, state, data)
+                : state.dataState.isError
+                    ? (state.dataState.failure is OfflineFailure
+                        ? NoInternetWidget(
+                            onRetry: () => context
+                                .read<ProductDetailsBloc>()
+                                .add(GetProductDetailsEvent(productId: productId)),
+                          )
+                        : SafeArea(
+                            child: GeneralErrorWidget(
+                              message: state.dataState.errorMessage,
+                              onRetry: () => context
+                                  .read<ProductDetailsBloc>()
+                                  .add(GetProductDetailsEvent(productId: productId)),
+                            ),
+                          ))
+                    : _buildLoadingGrid(),
+            bottomNavigationBar: data != null
+                ? ProductDetailsBottomBar(
+                    state: state,
+                    data: data,
+                    onAddToCart: () {
+                      // Action for adding to cart
+                    },
+                  )
+                : null,
+          );
+        },
+      ),
     );
   }
 
@@ -114,16 +132,16 @@ class ProductDetailsScreen extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 40.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 // Right Column (in RTL: Gallery + Description + Specifications)
                 Expanded(
                   flex: 5,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       ProductImageGallery(
                         product: product.toProductEntity(),
@@ -137,8 +155,8 @@ class ProductDetailsScreen extends StatelessWidget {
                       Text(
                         'description'.tr(),
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w800,
-                            ),
+                          fontWeight: FontWeight.w800,
+                        ),
                       ).animate().fadeIn(delay: 1200.ms, duration: 600.ms),
                       const SizedBox(height: 12.0),
                       Text(

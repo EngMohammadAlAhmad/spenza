@@ -47,6 +47,7 @@ class CheckoutStepsBottomBar extends StatelessWidget {
     return AppBottomContainer(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       child: Row(
+        spacing: 10.0,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Price Info Column (Animates in when step > 1 & cross-fades smoothly between step 2 and 3)

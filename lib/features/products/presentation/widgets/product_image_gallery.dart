@@ -4,7 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:spenza/core/services/share_service.dart';
 import 'package:spenza/core/shared/entities/product_entity.dart';
+import 'package:spenza/injection_locator.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/base_state.dart';
@@ -60,6 +62,13 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
   void initState() {
     super.initState();
     _prepareMedia();
+  }
+
+  void _shareProduct() {
+    sl<ShareService>().shareProduct(
+      productId: widget.product.id,
+      title: widget.product.title,
+    );
   }
 
   void _prepareMedia() {
@@ -182,7 +191,7 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                           children: [
                             CircleActionButton(
                               iconPath: AppAssets.shareIcon,
-                              onTap: () {},
+                              onTap: _shareProduct,
                             )
                                 .animate()
                                 .fadeIn(duration: 650.ms, delay: 350.ms)
@@ -462,7 +471,7 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                       children: [
                         CircleActionButton(
                           iconPath: AppAssets.shareIcon,
-                          onTap: () {},
+                          onTap: _shareProduct,
                         )
                             .animate()
                             .fadeIn(duration: 650.ms, delay: 350.ms)

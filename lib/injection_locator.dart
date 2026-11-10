@@ -8,6 +8,7 @@ import 'package:spenza/core/databases/api/language_interpretation.dart';
 import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/services/crash_reporter.dart';
 import 'package:spenza/core/services/firebase_crash_reporter.dart';
+import 'package:spenza/core/services/share_service.dart';
 import 'package:spenza/features/addresses/data/datasources/addresses_datasource.dart';
 import 'package:spenza/features/addresses/data/repositories/addresses_repository_impl.dart';
 import 'package:spenza/features/addresses/domain/repositories/addresses_repository.dart';
@@ -126,7 +127,7 @@ Future<void> init() async {
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
-  sl.registerLazySingleton<LanguageInterceptor>(() => LanguageInterceptor());
+  sl.registerLazySingleton<LanguageInterceptor>(() => LanguageInterceptor(cacheHelper: sl()));
   sl.registerLazySingleton<ApiConsumer>(() => DioConsumer(
     dio: sl(),
     languageInterceptor: sl(),
@@ -140,6 +141,7 @@ Future<void> init() async {
     return cacheHelper;
   });
   sl.registerLazySingleton<CrashReporter>(() => FirebaseCrashReporter());
+  sl.registerLazySingleton<ShareService>(() => ShareServiceImpl());
 
   //! External
 
@@ -155,7 +157,7 @@ Future<void> init() async {
 
   // Bloc
   sl.registerFactory(() => ThemeBloc(getThemeUseCase: sl(), saveThemeUseCase: sl()));
-  sl.registerFactory(() => LanguageBloc());
+  sl.registerFactory(() => LanguageBloc(languageInterceptor: sl()));
   sl.registerFactory(() => OnboardingBloc(
         getOnboardingStatusUseCase: sl(),
         setOnboardingStatusUseCase: sl(),
@@ -279,7 +281,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => PointsMarketDatasource(api: sl()));
 
   // Orders Feature
-  sl.registerFactory(() => OrdersBloc(
+  sl.registerLazySingleton(() => OrdersBloc(
         createOrderUseCase: sl(),
         getMyOrdersUseCase: sl(),
         getOrderDetailsUseCase: sl(),

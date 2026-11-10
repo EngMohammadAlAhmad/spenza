@@ -46,41 +46,51 @@ class ProductPriceCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  if (hasDiscount) ...[
+              Flexible(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    if (hasDiscount) ...[
+                      Flexible(
+                        child: Text(
+                          formatter.format(originalPrice),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppColors.neutral,
+                            decoration: TextDecoration.lineThrough,
+                            fontSize: 14.0,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 8.0),
+                    ],
                     Text(
-                      formatter.format(originalPrice),
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.neutral,
-                        decoration: TextDecoration.lineThrough,
-                        fontSize: 14.0,
+                      '${formatter.format(currentPrice)} ',
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
-                    const SizedBox(width: 8.0),
+                    Text(
+                      'sp_currency'.tr(),
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
                   ],
-                  Text(
-                    '${formatter.format(currentPrice)} ',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                  Text(
-                    'sp_currency'.tr(),
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ],
+                ),
               ),
-              Text(
-                'for_unit_prefix'.tr(args: [unitTitle]),
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppColors.neutral700,
-                    ),
+              const SizedBox(width: 8.0),
+              Flexible(
+                child: Text(
+                  'for_unit_prefix'.tr(args: [unitTitle]),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: AppColors.neutral700,
+                      ),
+                  textAlign: TextAlign.end,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
@@ -99,7 +109,6 @@ class ProductPriceCard extends StatelessWidget {
             onTap: () => context.push(RoutePaths.businessAccount),
             borderRadius: AppRadius.medium,
             child: Row(
-              spacing: 10.0,
               children: [
                 Container(
                   width: 36.0,
@@ -114,25 +123,33 @@ class ProductPriceCard extends StatelessWidget {
                     colorFilter: const ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'buying_for_business'.tr(),
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                const SizedBox(width: 10.0),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'buying_for_business'.tr(),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    const SizedBox(height: 2.0),
-                    Text(
-                      'open_business_account_desc'.tr(),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.tertiary,
+                      const SizedBox(height: 2.0),
+                      Text(
+                        'open_business_account_desc'.tr(),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.tertiary,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 8.0),
                 Text(
                   'order_now'.tr(),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -140,10 +157,11 @@ class ProductPriceCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                const SizedBox(width: 4.0),
                 const Icon(
                   Icons.arrow_forward_ios,
                   color: AppColors.primary,
-                  size: 15.0,
+                  size: 14.0,
                 ),
               ],
             ),

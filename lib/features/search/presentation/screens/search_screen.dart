@@ -16,6 +16,7 @@ import 'package:spenza/features/search/presentation/widgets/search_empty_widget.
 import 'package:spenza/core/widgets/product_card.dart';
 import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/core/widgets/no_internet_widget.dart';
+import 'package:spenza/core/widgets/general_error_widget.dart';
 import 'package:spenza/core/errors/failure.dart';
 import 'package:spenza/features/search/domain/entities/search_result_entity.dart';
 import 'package:spenza/features/search/presentation/blocs/search_bloc/search_bloc.dart';
@@ -156,7 +157,14 @@ class _SearchScreenState extends State<SearchScreen> {
                     },
                   );
                 }
-                return Center(child: Text(state.errorMessage));
+                return GeneralErrorWidget(
+                  message: state.errorMessage,
+                  onRetry: () {
+                    if (_controller.text.isNotEmpty || _minPrice != null || _maxPrice != null || _inStock != null) {
+                      _performSearch(_controller.text);
+                    }
+                  },
+                );
               }
 
               if (products.isEmpty) {

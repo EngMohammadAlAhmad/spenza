@@ -110,11 +110,22 @@ class CustomTextField extends StatelessWidget {
       inputFormatters: formatters,
       decoration: InputDecoration(
         isDense: height != null ? true : null,
+        constraints: height != null
+            ? BoxConstraints(
+                minHeight: height!,
+                maxHeight: height!,
+              )
+            : null,
         hintText: hintText,
         hintStyle: hintStyle ??
-            Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: AppColors.neutral,
-                ),
+            (shouldRestrictPhone
+                ? Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: AppColors.neutral,
+                      letterSpacing: 0.5,
+                    )
+                : Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: AppColors.neutral,
+                    )),
         prefixIcon: prefixIcon,
         prefixIconConstraints: prefixIconConstraints ?? const BoxConstraints(minWidth: 25.0, minHeight: 25.0),
         suffixIcon: suffixIcon,
@@ -165,13 +176,6 @@ class CustomTextField extends StatelessWidget {
         ),
       ),
     );
-
-    if (height != null) {
-      textField = SizedBox(
-        height: height,
-        child: textField,
-      );
-    }
 
     if (label != null) {
       return Column(

@@ -8,10 +8,11 @@ class SearchDatasource {
   SearchDatasource({required this.api});
 
   Future<SearchResultModel> searchProducts(SearchParams params) async {
+    final String? sortParam = (params.sort == null || params.sort == 'default') ? null : params.sort;
     final Map<String, dynamic> queryParameters = {
       'category_id': params.categoryId,
       'brand_id': params.brandId,
-      'sort': params.sort,
+      'sort': sortParam,
       'min_price': params.minPrice,
       'max_price': params.maxPrice,
       'in_stock': params.inStock,

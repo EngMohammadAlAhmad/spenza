@@ -83,36 +83,33 @@ class CartBar extends StatelessWidget {
                           ),
                           alignment: Alignment.center,
                           child: SvgPicture.asset(
-                            AppAssets.cartIcon,
+                            AppAssets.cartIcon2,
                             colorFilter: const ColorFilter.mode(
                               AppColors.primary,
-                              BlendMode.overlay,
+                              BlendMode.srcIn,
                             ),
                           ),
                         ),
 
                         // Yellow Quantity Badge on Top-Left of Circle
                         Positioned(
-                          top: -2,
-                          left: -2,
+                          top: -5.0,
+                          left: -5.0,
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFF2B211),
+                            decoration: BoxDecoration(
+                              color: AppColors.secondary,
                               shape: BoxShape.circle,
                             ),
                             constraints: const BoxConstraints(
-                              minWidth: 20,
-                              minHeight: 20,
+                              minWidth: 22.0,
+                              minHeight: 22.0,
                             ),
                             alignment: Alignment.center,
                             child: Text(
                               '$itemCount',
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 11.0,
-                                fontWeight: FontWeight.bold,
-                                height: 1.0,
+                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                fontWeight: .bold,
                               ),
                             ),
                           ),
