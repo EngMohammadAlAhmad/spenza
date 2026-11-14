@@ -158,14 +158,13 @@ class CartBar extends StatelessWidget {
                       ),
                       child: Row(
                         spacing: 2.0,
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisSize: .min,
                         children: [
                           Text(
                             'view_cart'.tr(),
-                            style: const TextStyle(
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                               color: AppColors.primary,
-                              fontSize: 13.0,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: .bold,
                             ),
                           ),
                           const Icon(
