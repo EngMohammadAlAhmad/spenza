@@ -34,11 +34,11 @@ class AppTabSelector extends StatelessWidget {
   /// If null, defaults to [borderRadius] (which is [AppRadius.brandRadius]).
   final BorderRadiusGeometry? indicatorRadius;
 
-  /// Background color of the outer container. Defaults to [AppColors.neutral200].
-  final Color backgroundColor;
+  /// Background color of the outer container. Defaults to [AppColors.containerBoxBackground].
+  final Color? backgroundColor;
 
   /// Color of the sliding selected item container (pill). Defaults to [AppColors.primaryTint].
-  final Color indicatorColor;
+  final Color? indicatorColor;
 
   /// Box shadow list applied to the sliding indicator pill.
   final List<BoxShadow>? indicatorShadow;
@@ -56,16 +56,16 @@ class AppTabSelector extends StatelessWidget {
   final Curve animationCurve;
 
   /// Text color when tab is selected. Defaults to [AppColors.primaryBold].
-  final Color activeTextColor;
+  final Color? activeTextColor;
 
   /// Text color when tab is unselected. Defaults to [AppColors.neutral].
-  final Color inactiveTextColor;
+  final Color? inactiveTextColor;
 
   /// Background color of the count badge when tab is selected. Defaults to [Colors.white].
-  final Color activeBadgeBackgroundColor;
+  final Color? activeBadgeBackgroundColor;
 
   /// Background color of the count badge when tab is unselected. Defaults to `Color(0xFFE2DDD7)`.
-  final Color inactiveBadgeBackgroundColor;
+  final Color? inactiveBadgeBackgroundColor;
 
   /// Text color of the count badge when selected. If null, uses [activeTextColor].
   final Color? activeBadgeTextColor;
@@ -83,17 +83,17 @@ class AppTabSelector extends StatelessWidget {
     required this.onTabChanged,
     this.borderRadius = AppRadius.brandRadius,
     this.indicatorRadius,
-    this.backgroundColor = AppColors.neutral200,
-    this.indicatorColor = AppColors.primaryTint,
+    this.backgroundColor,
+    this.indicatorColor,
     this.indicatorShadow,
     this.height = 44.0,
     this.padding = const EdgeInsets.all(4.0),
     this.animationDuration = const Duration(milliseconds: 280),
     this.animationCurve = Curves.fastOutSlowIn,
-    this.activeTextColor = AppColors.primaryBold,
-    this.inactiveTextColor = AppColors.neutral,
-    this.activeBadgeBackgroundColor = Colors.white,
-    this.inactiveBadgeBackgroundColor = const Color(0xFFE2DDD7),
+    this.activeTextColor,
+    this.inactiveTextColor,
+    this.activeBadgeBackgroundColor,
+    this.inactiveBadgeBackgroundColor,
     this.activeBadgeTextColor,
     this.inactiveBadgeTextColor,
     this.titleTextStyle,
@@ -102,6 +102,18 @@ class AppTabSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final effectiveIndicatorRadius = indicatorRadius ?? borderRadius;
+    final isDark = AppColors.isDarkMode(context);
+
+    final effectiveBackgroundColor = backgroundColor ?? AppColors.containerBoxBackgroundColor(context);
+    final effectiveIndicatorColor = indicatorColor ??
+        (isDark ? const Color(0xFF42201D) : AppColors.primaryTint);
+    final effectiveActiveTextColor = activeTextColor ??
+        (isDark ? AppColors.primaryLight : AppColors.primaryBold);
+    final effectiveInactiveTextColor = inactiveTextColor ?? AppColors.secondaryTextColor(context);
+    final effectiveActiveBadgeBackgroundColor = activeBadgeBackgroundColor ??
+        (isDark ? AppColors.cardDark : Colors.white);
+    final effectiveInactiveBadgeBackgroundColor = inactiveBadgeBackgroundColor ??
+        (isDark ? const Color(0xFF383634) : const Color(0xFFE2DDD7));
 
     final AlignmentDirectional alignment = items.length <= 1
         ? AlignmentDirectional.center
@@ -114,7 +126,7 @@ class AppTabSelector extends StatelessWidget {
       height: height,
       padding: padding,
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: effectiveBackgroundColor,
         borderRadius: borderRadius,
       ),
       child: Stack(
@@ -129,7 +141,7 @@ class AppTabSelector extends StatelessWidget {
               heightFactor: 1.0,
               child: Container(
                 decoration: BoxDecoration(
-                  color: indicatorColor,
+                  color: effectiveIndicatorColor,
                   borderRadius: effectiveIndicatorRadius,
                   boxShadow: indicatorShadow,
                 ),
@@ -155,7 +167,7 @@ class AppTabSelector extends StatelessWidget {
                         AnimatedDefaultTextStyle(
                           duration: const Duration(milliseconds: 200),
                           style: (titleTextStyle ?? Theme.of(context).textTheme.bodyLarge!).copyWith(
-                            color: isSelected ? activeTextColor : inactiveTextColor,
+                            color: isSelected ? effectiveActiveTextColor : effectiveInactiveTextColor,
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                           ),
                           child: Text(item.title),
@@ -169,8 +181,8 @@ class AppTabSelector extends StatelessWidget {
                             padding: const EdgeInsets.all(2.0),
                             decoration: BoxDecoration(
                               color: isSelected
-                                  ? activeBadgeBackgroundColor
-                                  : inactiveBadgeBackgroundColor,
+                                  ? effectiveActiveBadgeBackgroundColor
+                                  : effectiveInactiveBadgeBackgroundColor,
                               shape: BoxShape.circle,
                             ),
                             alignment: Alignment.center,
@@ -181,8 +193,8 @@ class AppTabSelector extends StatelessWidget {
                                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: isSelected
-                                      ? (activeBadgeTextColor ?? activeTextColor)
-                                      : (inactiveBadgeTextColor ?? inactiveTextColor),
+                                      ? (activeBadgeTextColor ?? effectiveActiveTextColor)
+                                      : (inactiveBadgeTextColor ?? effectiveInactiveTextColor),
                                 ),
                                 child: Text(
                                   item.count! > 99 ? '+99' : '${item.count}',

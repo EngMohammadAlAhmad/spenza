@@ -117,6 +117,7 @@ class CodegenLoader extends AssetLoader{
   "best_selling": "الأكثر طلباً",
   "sp_currency": "ل.س",
   "order_again": "اطلبها من جديد",
+  "order_again_button": "اطلب من جديد",
   "deliver_to": "التوصيل لِـ",
   "select_region": "اختر منطقتك",
   "no_previous_orders_again": "مافي طلبات سابقة لإعادة طلبها",
@@ -159,6 +160,9 @@ class CodegenLoader extends AssetLoader{
   "points_card_subtitle": "استبدلها بتوصيل مجاني\nأو خصم",
   "reorder": "إعادة الطلب",
   "reorder_confirm_msg": "هل أنت تأكد من أنك تريد إعادة طلب هذا الطلب ({}) بقيمة {} ل.س؟",
+  "reorder_preview_desc": "فحصنا منتجات طلب {} بأحدث الأسعار وحسب حسابك.",
+  "total_today": "المجموع اليوم",
+  "price_became_instead": "السعر صار {} بدل {}",
   "confirm_order": "تأكيد الطلب",
   "reorder_success": "تمت إعادة الطلب بنجاح",
   "reorder_error": "تعذر إعادة الطلب، يرجى المحاولة لاحقاً",
@@ -304,6 +308,7 @@ class CodegenLoader extends AssetLoader{
   "prices_include_tax": "الأسعار شاملة الضريبة.",
   "total_before_delivery": "المجموع قبل التوصيل",
   "added_qty_unit_to_cart": "انضافت {} {} لسلتك",
+  "added_n_items_to_cart": "انضافت {} منتجات لسلتك",
   "total_amount_currency": "المجموع {} ل.س",
   "save_amount": "وفّر {} {}",
   "ratings": "التقييمات",
@@ -488,7 +493,12 @@ class CodegenLoader extends AssetLoader{
   "from_gallery": "من الصور",
   "change_photo": "تغيير الصورة",
   "contact_phone_number": "رقم التواصل",
-  "contact_phone_note": "منتصل على هالرقم لنتأكد من التفاصيل"
+  "contact_phone_note": "منتصل على هالرقم لنتأكد من التفاصيل",
+  "splash_slogan": "كل ما تحتاجه... أقرب مما تتخيل.",
+  "splash_slogan_mark_word": "كل",
+  "splash_slogan_part1_rest": " ما تحتاجه... ",
+  "splash_slogan_highlight_word": "أقرب",
+  "splash_slogan_part2_rest": " مما تتخيل."
 };
 static const Map<String,dynamic> _en = {
   "home": "Home",
@@ -593,6 +603,7 @@ static const Map<String,dynamic> _en = {
   "best_selling": "Best Selling",
   "sp_currency": "SYP",
   "order_again": "Order Again",
+  "order_again_button": "Order Again",
   "deliver_to": "Deliver to",
   "select_region": "Select your region",
   "no_previous_orders_again": "No previous orders to order again",
@@ -635,6 +646,9 @@ static const Map<String,dynamic> _en = {
   "points_card_subtitle": "Redeem for free delivery\nor discount",
   "reorder": "Reorder",
   "reorder_confirm_msg": "Are you sure you want to reorder ({}) worth {} SYP?",
+  "reorder_preview_desc": "We checked order {} items at today's prices and according to your account.",
+  "total_today": "Total Today",
+  "price_became_instead": "Price became {} instead of {}",
   "confirm_order": "Confirm Order",
   "reorder_success": "Reorder placed successfully",
   "reorder_error": "Could not reorder, please try again later",
@@ -780,6 +794,7 @@ static const Map<String,dynamic> _en = {
   "prices_include_tax": "Prices include tax.",
   "total_before_delivery": "Total before delivery",
   "added_qty_unit_to_cart": "Added {} {} to your cart",
+  "added_n_items_to_cart": "Added {} items to your cart",
   "total_amount_currency": "Total {} SYP",
   "save_amount": "Save {} {}",
   "ratings": "Ratings",
@@ -964,7 +979,12 @@ static const Map<String,dynamic> _en = {
   "from_gallery": "From Gallery",
   "change_photo": "Change Photo",
   "contact_phone_number": "Contact Number",
-  "contact_phone_note": "We will call this number to verify the details"
+  "contact_phone_note": "We will call this number to verify the details",
+  "splash_slogan": "Everything you need... closer than you think.",
+  "splash_slogan_mark_word": "Everything",
+  "splash_slogan_part1_rest": " you need... ",
+  "splash_slogan_highlight_word": "closer",
+  "splash_slogan_part2_rest": " than you think."
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ar": _ar, "en": _en};
 }

@@ -66,7 +66,7 @@ class _AppSearchFieldState extends State<AppSearchField> {
   Widget build(BuildContext context) {
     return CustomTextField(
       controller: _effectiveController,
-      fillColor: AppColors.neutralBackground,
+      fillColor: AppColors.containerBoxBackgroundColor(context),
       focusNode: widget.focusNode,
       readOnly: widget.readOnly,
       onTap: widget.onTap,
@@ -78,13 +78,13 @@ class _AppSearchFieldState extends State<AppSearchField> {
           padding: const EdgeInsetsDirectional.only(start: 16.0, end: 8.0),
           child: SvgPicture.asset(
             AppAssets.searchIcon,
-            colorFilter: const ColorFilter.mode(AppColors.neutral, BlendMode.srcIn),
+            colorFilter: ColorFilter.mode(AppColors.secondaryTextColor(context), BlendMode.srcIn),
           ),
         ),
       ),
       suffixIcon: widget.onSubmitted != null
           ? IconButton(
-              icon: const Icon(Icons.search, color: AppColors.neutral),
+              icon: Icon(Icons.search, color: AppColors.secondaryTextColor(context)),
               onPressed: _triggerSearch,
             )
           : null,

@@ -101,6 +101,7 @@
   "best_selling": "الأكثر طلباً",
   "sp_currency": "ل.س",
   "order_again": "اطلبها من جديد",
+  "order_again_button": "اطلب من جديد",
   "deliver_to": "التوصيل لِـ",
   "select_region": "اختر منطقتك",
   "no_previous_orders_again": "مافي طلبات سابقة لإعادة طلبها",
@@ -143,6 +144,9 @@
   "points_card_subtitle": "استبدلها بتوصيل مجاني\nأو خصم",
   "reorder": "إعادة الطلب",
   "reorder_confirm_msg": "هل أنت تأكد من أنك تريد إعادة طلب هذا الطلب ({}) بقيمة {} ل.س؟",
+  "reorder_preview_desc": "فحصنا منتجات طلب {} بأحدث الأسعار وحسب حسابك.",
+  "total_today": "المجموع اليوم",
+  "price_became_instead": "السعر صار {} بدل {}",
   "confirm_order": "تأكيد الطلب",
   "reorder_success": "تمت إعادة الطلب بنجاح",
   "reorder_error": "تعذر إعادة الطلب، يرجى المحاولة لاحقاً",
@@ -288,6 +292,7 @@
   "prices_include_tax": "الأسعار شاملة الضريبة.",
   "total_before_delivery": "المجموع قبل التوصيل",
   "added_qty_unit_to_cart": "انضافت {} {} لسلتك",
+  "added_n_items_to_cart": "انضافت {} منتجات لسلتك",
   "total_amount_currency": "المجموع {} ل.س",
   "save_amount": "وفّر {} {}",
   "ratings": "التقييمات",
@@ -472,5 +477,10 @@
   "from_gallery": "من الصور",
   "change_photo": "تغيير الصورة",
   "contact_phone_number": "رقم التواصل",
-  "contact_phone_note": "منتصل على هالرقم لنتأكد من التفاصيل"
+  "contact_phone_note": "منتصل على هالرقم لنتأكد من التفاصيل",
+  "splash_slogan": "كل ما تحتاجه... أقرب مما تتخيل.",
+  "splash_slogan_mark_word": "كل",
+  "splash_slogan_part1_rest": " ما تحتاجه... ",
+  "splash_slogan_highlight_word": "أقرب",
+  "splash_slogan_part2_rest": " مما تتخيل."
 }

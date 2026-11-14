@@ -105,6 +105,7 @@ abstract class  LocaleKeys {
   static const best_selling = 'best_selling';
   static const sp_currency = 'sp_currency';
   static const order_again = 'order_again';
+  static const order_again_button = 'order_again_button';
   static const deliver_to = 'deliver_to';
   static const select_region = 'select_region';
   static const no_previous_orders_again = 'no_previous_orders_again';
@@ -147,6 +148,9 @@ abstract class  LocaleKeys {
   static const points_card_subtitle = 'points_card_subtitle';
   static const reorder = 'reorder';
   static const reorder_confirm_msg = 'reorder_confirm_msg';
+  static const reorder_preview_desc = 'reorder_preview_desc';
+  static const total_today = 'total_today';
+  static const price_became_instead = 'price_became_instead';
   static const confirm_order = 'confirm_order';
   static const reorder_success = 'reorder_success';
   static const reorder_error = 'reorder_error';
@@ -233,6 +237,15 @@ abstract class  LocaleKeys {
   static const we_deliver_to = 'we_deliver_to';
   static const delivery_info_text = 'delivery_info_text';
   static const save_address = 'save_address';
+  static const edit_address = 'edit_address';
+  static const delete_address_title = 'delete_address_title';
+  static const delete_address_confirm = 'delete_address_confirm';
+  static const address_updated_success = 'address_updated_success';
+  static const address_deleted_success = 'address_deleted_success';
+  static const phone_changed_success = 'phone_changed_success';
+  static const confirm_phone_error = 'confirm_phone_error';
+  static const enter_received_code = 'enter_received_code';
+  static const otp_resend_prompt = 'otp_resend_prompt';
   static const default_badge = 'default_badge';
   static const add_address_desc = 'add_address_desc';
   static const sort_newest = 'sort_newest';
@@ -283,6 +296,7 @@ abstract class  LocaleKeys {
   static const prices_include_tax = 'prices_include_tax';
   static const total_before_delivery = 'total_before_delivery';
   static const added_qty_unit_to_cart = 'added_qty_unit_to_cart';
+  static const added_n_items_to_cart = 'added_n_items_to_cart';
   static const total_amount_currency = 'total_amount_currency';
   static const save_amount = 'save_amount';
   static const ratings = 'ratings';
@@ -468,5 +482,10 @@ abstract class  LocaleKeys {
   static const change_photo = 'change_photo';
   static const contact_phone_number = 'contact_phone_number';
   static const contact_phone_note = 'contact_phone_note';
+  static const splash_slogan = 'splash_slogan';
+  static const splash_slogan_mark_word = 'splash_slogan_mark_word';
+  static const splash_slogan_part1_rest = 'splash_slogan_part1_rest';
+  static const splash_slogan_highlight_word = 'splash_slogan_highlight_word';
+  static const splash_slogan_part2_rest = 'splash_slogan_part2_rest';
 
 }

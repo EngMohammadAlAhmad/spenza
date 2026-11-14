@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
-          backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+          backgroundColor: AppColors.screenBackgroundColor(context),
           body: BlocBuilder<HomeBloc, BaseState<HomeDataEntity>>(
             builder: (context, state) {
               if (state.isError && state.data == null) {

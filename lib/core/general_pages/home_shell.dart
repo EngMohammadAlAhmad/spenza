@@ -99,7 +99,7 @@ class _HomeShellState extends State<HomeShell> {
 
   @override
   Widget build(BuildContext context) {
-    final inactiveColor = AppColors.neutral;
+    final inactiveColor = AppColors.secondaryTextColor(context);
     final currentIndex = widget.navigationShell.currentIndex;
     final isHome = currentIndex == 0;
 
@@ -155,7 +155,7 @@ class _HomeShellState extends State<HomeShell> {
         },
         child: Scaffold(
           extendBody: true,
-          backgroundColor: AppColors.backgroundLight,
+          backgroundColor: AppColors.screenBackgroundColor(context),
           body: GestureDetector(
             behavior: HitTestBehavior.translucent,
             onHorizontalDragUpdate: _onHorizontalDragUpdate,
@@ -168,11 +168,13 @@ class _HomeShellState extends State<HomeShell> {
           bottomNavigationBar: Container(
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.cardBackgroundColor(context),
               borderRadius: const BorderRadius.vertical(top: Radius.circular(30.0)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
+                  color: AppColors.isDarkMode(context)
+                      ? Colors.black.withValues(alpha: 0.3)
+                      : Colors.black.withValues(alpha: 0.08),
                   blurRadius: 20.0,
                   offset: const Offset(0, -5),
                 ),
@@ -231,7 +233,11 @@ class _NavTabItem extends StatelessWidget {
           curve: Curves.easeOut,
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primaryTint : Colors.transparent,
+            color: isSelected
+                ? (AppColors.isDarkMode(context)
+                    ? const Color(0xFF42201D)
+                    : AppColors.primaryTint)
+                : Colors.transparent,
             borderRadius: AppRadius.extra4Large,
           ),
           child: SvgPicture.asset(

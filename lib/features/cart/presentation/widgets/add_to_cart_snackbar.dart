@@ -11,7 +11,14 @@ import 'package:spenza/features/cart/domain/entities/cart_item_entity.dart';
 class AddToCartSnackBar {
   AddToCartSnackBar._();
 
-  static void show(BuildContext parentContext, {required CartItemEntity item}) {
+  static void show(
+    BuildContext parentContext, {
+    CartItemEntity? item,
+    List<CartItemEntity>? items,
+  }) {
+    final itemList = items ?? (item != null ? [item] : <CartItemEntity>[]);
+    if (itemList.isEmpty) return;
+
     final formatter = NumberFormat('#,##0');
     final overlay = Overlay.of(parentContext);
 
@@ -19,7 +26,7 @@ class AddToCartSnackBar {
 
     overlayEntry = OverlayEntry(
       builder: (_) => _AddToCartBannerWidget(
-        item: item,
+        items: itemList,
         formatter: formatter,
         onDismiss: () {
           if (overlayEntry.mounted) {
@@ -56,13 +63,13 @@ class AddToCartSnackBar {
 }
 
 class _AddToCartBannerWidget extends StatefulWidget {
-  final CartItemEntity item;
+  final List<CartItemEntity> items;
   final NumberFormat formatter;
   final VoidCallback onDismiss;
   final VoidCallback onViewCart;
 
   const _AddToCartBannerWidget({
-    required this.item,
+    required this.items,
     required this.formatter,
     required this.onDismiss,
     required this.onViewCart,
@@ -100,12 +107,158 @@ class _AddToCartBannerWidgetState extends State<_AddToCartBannerWidget>
     super.dispose();
   }
 
+  Widget _buildItemImage(String? url) {
+    if (url != null && url.isNotEmpty) {
+      return Image.network(
+        url,
+        fit: BoxFit.cover,
+        errorBuilder: (_, _, _) => const Icon(
+          Icons.image_not_supported_outlined,
+          color: AppColors.neutral,
+          size: 18,
+        ),
+      );
+    }
+    return const Icon(
+      Icons.image_outlined,
+      color: AppColors.neutral,
+      size: 18,
+    );
+  }
+
+  Widget _buildThumbnailWidget() {
+    final items = widget.items;
+    if (items.length == 1) {
+      final singleItem = items.first;
+      return Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            width: 50.0,
+            height: 50.0,
+            decoration: BoxDecoration(
+              borderRadius: AppRadius.mediumPlus,
+              color: AppColors.neutral200,
+            ),
+            child: ClipRRect(
+              borderRadius: AppRadius.mediumPlus,
+              child: _buildItemImage(singleItem.productImage),
+            ),
+          ),
+          Positioned(
+            bottom: -2.0,
+            left: -2.0,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.check_circle,
+                color: Color(0xFF2EA45B),
+                size: 20.0,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    final firstImage = items[0].productImage;
+    final secondImage = items.length > 1 ? items[1].productImage : null;
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        SizedBox(
+          width: 50.0,
+          height: 50.0,
+          child: Stack(
+            children: [
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  width: 36.0,
+                  height: 36.0,
+                  decoration: BoxDecoration(
+                    borderRadius: AppRadius.medium,
+                    color: AppColors.neutral200,
+                    border: Border.all(color: Colors.white, width: 1.5),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: AppRadius.medium,
+                    child: _buildItemImage(secondImage),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 2,
+                left: 0,
+                child: Container(
+                  width: 36.0,
+                  height: 36.0,
+                  decoration: BoxDecoration(
+                    borderRadius: AppRadius.medium,
+                    color: AppColors.neutral200,
+                    border: Border.all(color: Colors.white, width: 1.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: AppRadius.medium,
+                    child: _buildItemImage(firstImage),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          bottom: -2.0,
+          left: -2.0,
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.check_circle,
+              color: Color(0xFF2EA45B),
+              size: 20.0,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isTabletLandscape = context.isTabletLandscape;
     final horizontalPadding = isTabletLandscape
         ? (context.width - (context.width * 0.33)) / 2
         : 16.0;
+
+    final isSingleItem = widget.items.length == 1;
+    final singleItem = widget.items.first;
+
+    final num totalPrice = widget.items.fold(
+      0,
+      (sum, item) => sum + item.totalPrice,
+    );
+
+    final titleText = isSingleItem
+        ? 'added_qty_unit_to_cart'.tr(
+            args: ['${singleItem.quantity}', singleItem.unitTitle],
+          )
+        : 'added_n_items_to_cart'.tr(
+            args: ['${widget.items.length}'],
+          );
 
     return Positioned(
       bottom: 120.0,
@@ -132,50 +285,7 @@ class _AddToCartBannerWidgetState extends State<_AddToCartBannerWidget>
             child: Row(
               spacing: 12.0,
               children: [
-                // Product Image with Checkmark Badge
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      width: 50.0,
-                      height: 50.0,
-                      decoration: BoxDecoration(
-                        borderRadius: AppRadius.mediumPlus,
-                        color: AppColors.neutral200,
-                      ),
-                      child: ClipRRect(
-                        borderRadius: AppRadius.mediumPlus,
-                        child: widget.item.productImage != null && widget.item.productImage!.isNotEmpty
-                            ? Image.network(
-                          widget.item.productImage!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => const Icon(
-                            Icons.image_not_supported_outlined,
-                            color: AppColors.neutral,
-                          ),
-                        ) : const Icon(
-                          Icons.image_outlined,
-                          color: AppColors.neutral,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: -2.0,
-                      left: -2.0,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.check_circle,
-                          color: Color(0xFF2EA45B),
-                          size: 20.0,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                _buildThumbnailWidget(),
                 // Text details
                 Expanded(
                   child: Column(
@@ -183,7 +293,7 @@ class _AddToCartBannerWidgetState extends State<_AddToCartBannerWidget>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'added_qty_unit_to_cart'.tr(args: ['${widget.item.quantity}', widget.item.unitTitle]),
+                        titleText,
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -195,7 +305,9 @@ class _AddToCartBannerWidgetState extends State<_AddToCartBannerWidget>
                       ),
                       const SizedBox(height: 2.0),
                       Text(
-                        'total_amount_currency'.tr(args: [widget.formatter.format(widget.item.totalPrice)]),
+                        'total_amount_currency'.tr(
+                          args: [widget.formatter.format(totalPrice)],
+                        ),
                         style: const TextStyle(
                           fontSize: 13,
                           color: AppColors.neutral,

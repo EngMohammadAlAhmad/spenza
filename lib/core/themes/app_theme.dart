@@ -12,8 +12,12 @@ class AppTheme {
       onSecondary: Colors.black54,
       error: isDark ? AppColors.errorDark : AppColors.errorLight,
       onError: Colors.white,
-      surface: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+      surface: isDark ? AppColors.neutralBackgroundDark : AppColors.neutralBackground,
       onSurface: isDark ? AppColors.onSurfaceDark : AppColors.onSurfaceLight,
+      surfaceContainer: isDark ? AppColors.cardDark : AppColors.cardLight,
+      surfaceContainerHighest: isDark ? const Color(0xFF333130) : AppColors.neutralBackground,
+      outline: isDark ? AppColors.borderDark : AppColors.borderLight,
+      outlineVariant: isDark ? AppColors.dividerDark : AppColors.neutral200,
     );
 
     final baseTextColor = isDark ? AppColors.onSurfaceDark : AppColors.onSurfaceLight;
@@ -145,7 +149,8 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: colorScheme.surface,
+      scaffoldBackgroundColor: isDark ? AppColors.neutralBackgroundDark : AppColors.neutralBackground,
+      cardColor: isDark ? AppColors.cardDark : AppColors.cardLight,
       primaryColor: colorScheme.primary,
       disabledColor: isDark ? AppColors.disabledDark : AppColors.disabledLight,
       textTheme: textTheme,

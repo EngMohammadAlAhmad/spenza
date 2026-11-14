@@ -28,7 +28,7 @@ class OrderAgainSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: di.sl<OrdersBloc>()..add(const GetMyOrdersEvent(page: 1)),
+      value: di.sl<OrdersBloc>()..add(const GetMyOrdersEvent(page: 1, type: 'completed')),
       child: const _OrderAgainContent(),
     );
   }
@@ -49,9 +49,16 @@ class _OrderAgainContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<OrdersBloc, OrdersState>(
       builder: (context, state) {
+        final completedOrders = state.orders.where((o) {
+          final statusLower = o.status.toLowerCase();
+          final isCancelled = statusLower.contains('cancel') ||
+              statusLower.contains('canceled') ||
+              o.tracking?.isCancelled == true;
+          return o.isCompleted && !isCancelled;
+        }).toList();
         final isLoading =
-            state.getMyOrdersStatus == RequestStatus.loading && state.orders.isEmpty;
-        final isEmpty = state.orders.isEmpty;
+            state.getMyOrdersStatus == RequestStatus.loading && completedOrders.isEmpty;
+        final isEmpty = completedOrders.isEmpty;
 
         return Column(
           spacing: 12.0,
@@ -106,10 +113,10 @@ class _OrderAgainContent extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),
-                  itemCount: state.orders.length,
+                  itemCount: completedOrders.length,
                   separatorBuilder: (_, _) => const SizedBox(width: 12.0),
                   itemBuilder: (context, index) {
-                    final order = state.orders[index];
+                    final order = completedOrders[index];
                     return OrderAgainCard(order: order)
                         .animate(delay: (60 * index).ms)
                         .fadeIn(duration: 400.ms)
@@ -267,7 +274,7 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
 
     final String imagePath = order.itemImages.isNotEmpty
         ? order.itemImages.first
-        : AppAssets.tempOrderAgain1;
+        : AppAssets.logoWatermark;
 
     final String title = order.orderNumber.isNotEmpty
         ? 'order_hash'.tr(args: [order.orderNumber])
@@ -313,36 +320,32 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Top Image
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20.0)),
-                child: SizedBox(
-                  width: 156.0,
-                  height: 110.0,
-                  child: imagePath.startsWith('http')
-                      ? Image.network(
-                          imagePath,
-                          width: 156.0,
-                          height: 110.0,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => Image.asset(
-                            AppAssets.tempOrderAgain1,
-                            width: 156.0,
-                            height: 110.0,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : Image.asset(
-                          imagePath,
-                          width: 156.0,
-                          height: 110.0,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => Image.asset(
-                            AppAssets.tempOrderAgain1,
-                            width: 156.0,
-                            height: 110.0,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+              Container(
+                width: 156.0,
+                height: 96.0,
+                margin: .all(10.0),
+                decoration: BoxDecoration(
+                  borderRadius: AppRadius.mediumPlus,
+                  color: AppColors.secondary.withValues(alpha: 0.5),
+                ),
+                child: imagePath.startsWith('http') ? Image.network(
+                  imagePath,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) => Image.asset(
+                    AppAssets.logoWatermark,
+                    color: AppColors.primary,
+                    fit: BoxFit.contain,
+                  ),
+                )
+                    : Image.asset(
+                  imagePath,
+                  color: AppColors.primary.withValues(alpha: 0.5),
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, _, _) => Image.asset(
+                    AppAssets.logoWatermark,
+                    color: AppColors.primary,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
 

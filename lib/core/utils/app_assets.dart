@@ -3,7 +3,6 @@ class AppAssets {
 
   static const String _images = 'assets/images';
   static const String _png = 'assets/images/png';
-  static const String _temp = 'assets/images/temp';
   static const String _icons = 'assets/icons';
 
   static const String translations = 'assets/translations';
@@ -19,8 +18,9 @@ class AppAssets {
   static const String personalData = '$_images/personal_data.svg';
   static const String roundedIcon = '$_images/rounded_icon.svg';
   static const String roundedIconWhite = '$_images/rounded_icon_white.svg';
+  static const String logoIcon = '$_images/logo.svg';
   static const String slogan = '$_images/slogan.svg';
-  static const String splashScreen = '$_images/splash_screen.svg';
+  static const String splashScreen = '$_png/splash_screen.png';
   static const String supportIllustration = '$_images/support.svg';
   static const String syFlag = '$_images/sy.svg';
 
@@ -34,22 +34,11 @@ class AppAssets {
   static const String onboarding3 = '$_png/onboarding_3.png';
   static const String pattern = '$_png/pattern.png';
   static const String patternRadial = '$_png/pattern_radial.png';
+  static const String splashScreenTabletPortrait = '$_png/splash_screen_tablet_portrait.png';
+  static const String splashScreenTabletLandscape = '$_png/splash_screen_tablet_landscape.png';
   static const String stripes = '$_png/stripes.png';
   static const String vector1 = '$_png/vector_1.png';
   static const String vector2 = '$_png/vector_2.png';
-
-  // Temp / Mock Images
-  static const String tempAd = '$_temp/ad.png';
-  static const String tempArts = '$_temp/arts.png';
-  static const String tempOfferImage1 = '$_temp/offer_image_1.png';
-  static const String tempOfferImage2 = '$_temp/offer_image_2.png';
-  static const String tempOrderAgain1 = '$_temp/order_again_1.png';
-  static const String tempOrderAgain2 = '$_temp/order_again_2.png';
-  static const String tempOrderAgain3 = '$_temp/order_again_3.png';
-  static const String tempOrderAgain4 = '$_temp/order_again_4.png';
-  static const String tempPens = '$_temp/pens.png';
-  static const String tempScoolar = '$_temp/scoolar.png';
-  static const String tempSupplies = '$_temp/supplies.png';
 
   // Icons
   static const String accountIcon = '$_icons/account_icon.svg';

@@ -31,11 +31,13 @@ class OrderCard extends StatelessWidget {
     return Container(
       margin: margin ?? const EdgeInsets.only(bottom: 12.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.cardBackgroundColor(context),
         borderRadius: AppRadius.upMedium,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: AppColors.isDarkMode(context)
+                ? Colors.black.withValues(alpha: 0.2)
+                : Colors.black.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -64,14 +66,15 @@ class OrderCard extends StatelessWidget {
                             order.orderNumber,
                             style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               fontWeight: FontWeight.w800,
+                              color: AppColors.textPrimary(context),
                             ),
                           ),
                           const SizedBox(height: 4.0),
                           Text(
                             '${_formatDate(order.placedAt)} · ${order.itemsCount} ${order.itemsCount == 1 ? 'item_unit'.tr() : 'items_unit'.tr()}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12.0,
-                              color: AppColors.textSecondary,
+                              color: AppColors.secondaryTextColor(context),
                             ),
                           ),
                           const SizedBox(height: 8.0),
@@ -106,12 +109,12 @@ class OrderCard extends StatelessWidget {
                   ],
                 ),
 
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
                   child: Divider(
                     height: 1,
                     thickness: 1,
-                    color: Color(0xFFF3F4F6),
+                    color: AppColors.dividerColor(context),
                   ),
                 ),
 
@@ -128,6 +131,7 @@ class OrderCard extends StatelessWidget {
                           '${formatter.format(order.totalAmount)} ${'sp_currency'.tr()}',
                           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                             fontWeight: FontWeight.w800,
+                            color: AppColors.textPrimary(context),
                           ),
                         ),
                         const SizedBox(height: 3.0),
@@ -138,9 +142,9 @@ class OrderCard extends StatelessWidget {
                               order.paymentMethodLabel.isNotEmpty
                                   ? order.paymentMethodLabel
                                   : 'cash_on_delivery_title'.tr(),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 11.0,
-                                color: AppColors.textSecondary,
+                                color: AppColors.secondaryTextColor(context),
                               ),
                             ),
                             if (order.paymentStatusLabel.isNotEmpty) ...[

@@ -8,17 +8,29 @@ class ThemeLocalDatasource {
   ThemeLocalDatasource({required this.cacheHelper});
 
   Future saveTheme({required ThemeEntity theme}) async {
-    var themeValue = theme.themeType == ThemeType.dark ? 'dark' : 'light';
+    String themeValue;
+    switch (theme.themeType) {
+      case ThemeType.dark:
+        themeValue = 'dark';
+        break;
+      case ThemeType.system:
+        themeValue = 'system';
+        break;
+      case ThemeType.light:
+        themeValue = 'light';
+        break;
+    }
     await cacheHelper.saveData(key: Strings.THEME_KEY, value: themeValue);
   }
 
   Future<ThemeEntity> getTheme() async {
     var themeValue = await cacheHelper.getData(key: Strings.THEME_KEY);
-    if(themeValue == 'dark') {
+    if (themeValue == 'dark') {
       return ThemeEntity(themeType: ThemeType.dark);
+    } else if (themeValue == 'system') {
+      return ThemeEntity(themeType: ThemeType.system);
     } else {
       return ThemeEntity(themeType: ThemeType.light);
     }
   }
-
 }

@@ -2,11 +2,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/enums/request_state.dart';
 import 'package:spenza/core/themes/app_colors.dart';
+import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/widgets/app_back_button.dart';
+import 'package:spenza/core/widgets/app_bottom_container.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
 import 'package:spenza/features/orders/domain/entities/order_details_entity.dart';
 import 'package:spenza/features/orders/presentation/bloc/orders_bloc.dart';
@@ -18,6 +21,7 @@ import 'package:spenza/features/orders/presentation/widgets/order_details_invoic
 import 'package:spenza/features/orders/presentation/widgets/order_details_payment_card.dart';
 import 'package:spenza/features/orders/presentation/widgets/order_details_products_card.dart';
 import 'package:spenza/features/orders/presentation/widgets/order_details_stepper_card.dart';
+import 'package:spenza/features/orders/presentation/widgets/reorder_preview_bottom_sheet.dart';
 import 'package:spenza/injection_locator.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
@@ -194,27 +198,58 @@ class _OrderDetailsContent extends StatelessWidget {
       );
     }
 
-    return Column(
-      children: [
-        // Red Curved Header (Fixed)
-        OrderDetailsHeader(order: order)
-            .animate()
-            .fadeIn(duration: 400.ms)
-            .slideY(begin: -0.05, end: 0, curve: Curves.easeOutCubic),
+    final statusLower = order.status.toLowerCase();
+    final bool isCancelled = statusLower.contains('cancel') ||
+        statusLower.contains('canceled') ||
+        statusLower.contains('rejected') ||
+        statusLower.contains('failed') ||
+        order.tracking?.isCancelled == true;
 
-        // appCards Content (Scrollable)
-        Expanded(
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(
-              parent: BouncingScrollPhysics(),
-            ),
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, context.height * 0.1),
-              child: cardsContent,
+    final bool isCompletedOrder = order.isCompleted && !isCancelled;
+
+    return Scaffold(
+      backgroundColor: AppColors.neutralBackground,
+      body: Column(
+        children: [
+          // Red Curved Header (Fixed)
+          OrderDetailsHeader(order: order)
+              .animate()
+              .fadeIn(duration: 400.ms)
+              .slideY(begin: -0.05, end: 0, curve: Curves.easeOutCubic),
+
+          // appCards Content (Scrollable)
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics(),
+              ),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  16.0,
+                  16.0,
+                  16.0,
+                  isCompletedOrder ? 16.0 : context.height * 0.1,
+                ),
+                child: cardsContent,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
+      bottomNavigationBar: isCompletedOrder
+          ? AppBottomContainer(
+              child: CustomButton(
+                text: 'order_again_button'.tr(),
+                icon: SvgPicture.asset(
+                  AppAssets.refreshIcon,
+                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  width: 20.0,
+                  height: 20.0,
+                ),
+                onPressed: () => ReorderPreviewBottomSheet.show(context, order),
+              ),
+            )
+          : null,
     );
   }
 }

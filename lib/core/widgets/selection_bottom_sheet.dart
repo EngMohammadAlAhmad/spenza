@@ -34,9 +34,9 @@ class SelectionBottomSheet<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: Color(0xFFF9F6F0),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(32.0)),
+      decoration: BoxDecoration(
+        color: AppColors.screenBackgroundColor(context),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32.0)),
       ),
       padding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 32.0),
       child: Column(
@@ -47,7 +47,7 @@ class SelectionBottomSheet<T> extends StatelessWidget {
             width: 40.0,
             height: 4.0,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: AppColors.dragHandleColor(context),
               borderRadius: AppRadius.micro,
             ),
           ),
@@ -59,18 +59,18 @@ class SelectionBottomSheet<T> extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () => Navigator.pop(context),
-                child: const Icon(
+                child: Icon(
                   Icons.close_rounded,
                   size: 24.0,
-                  color: Colors.black87,
+                  color: AppColors.textPrimary(context),
                 ),
               ),
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: AppColors.textPrimary(context),
                 ),
               ),
               const SizedBox(width: 24.0),
@@ -108,16 +108,20 @@ class _SelectionOptionCard<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = AppColors.isDarkMode(context);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFDE8E8) : Colors.white,
+          color: isSelected
+              ? (isDark ? const Color(0xFF4A1F1C) : const Color(0xFFFDE8E8))
+              : AppColors.cardBackgroundColor(context),
           borderRadius: AppRadius.large,
           border: isSelected
-              ? Border.all(color: const Color(0xFFC74436), width: 1.2)
-              : null,
+              ? Border.all(color: AppColors.primary500, width: 1.2)
+              : (isDark ? Border.all(color: AppColors.borderDark, width: 1.0) : null),
         ),
         child: Row(
           children: [
@@ -128,7 +132,9 @@ class _SelectionOptionCard<T> extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? const Color(0xFFC74436) : Colors.grey[300]!,
+                  color: isSelected
+                      ? AppColors.primary500
+                      : (isDark ? Colors.grey[600]! : Colors.grey[300]!),
                   width: 2.0,
                 ),
               ),
@@ -138,7 +144,7 @@ class _SelectionOptionCard<T> extends StatelessWidget {
                       width: 10.0,
                       height: 10.0,
                       decoration: const BoxDecoration(
-                        color: Color(0xFFC74436),
+                        color: AppColors.primary500,
                         shape: BoxShape.circle,
                       ),
                     )
@@ -152,15 +158,17 @@ class _SelectionOptionCard<T> extends StatelessWidget {
               height: 44.0,
               decoration: BoxDecoration(
                 color: isSelected
-                    ? Colors.white
-                    : AppColors.neutral200.withValues(alpha: 0.6),
+                    ? (isDark ? AppColors.cardDark : Colors.white)
+                    : (isDark
+                        ? AppColors.tileIconBackgroundColor(context)
+                        : AppColors.neutral200.withValues(alpha: 0.6)),
                 shape: BoxShape.circle,
               ),
               alignment: Alignment.center,
               child: SvgPicture.asset(
                 option.iconPath,
                 colorFilter: ColorFilter.mode(
-                  isSelected ? const Color(0xFFC74436) : AppColors.neutral700,
+                  isSelected ? AppColors.primary500 : AppColors.textPrimary(context),
                   BlendMode.srcIn,
                 ),
               ),
@@ -174,18 +182,18 @@ class _SelectionOptionCard<T> extends StatelessWidget {
                 children: [
                   Text(
                     option.title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: AppColors.textPrimary(context),
                     ),
                   ),
                   const SizedBox(height: 2.0),
                   Text(
                     option.subtitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13.0,
-                      color: AppColors.textSecondary,
+                      color: AppColors.secondaryTextColor(context),
                     ),
                   ),
                 ],

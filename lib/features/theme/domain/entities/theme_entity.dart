@@ -1,6 +1,7 @@
 enum ThemeType {
   light,
   dark,
+  system,
 }
 
 class ThemeEntity {

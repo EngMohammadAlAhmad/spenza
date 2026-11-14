@@ -26,6 +26,19 @@ class MyApp extends StatelessWidget {
               final themeType = themeState.data?.themeType ?? ThemeType.light;
               final currentLocale = context.locale;
 
+              final ThemeMode themeMode;
+              switch (themeType) {
+                case ThemeType.dark:
+                  themeMode = ThemeMode.dark;
+                  break;
+                case ThemeType.system:
+                  themeMode = ThemeMode.system;
+                  break;
+                case ThemeType.light:
+                  themeMode = ThemeMode.light;
+                  break;
+              }
+
               // Sync the API interceptor with EasyLocalization's active locale
               if (di.sl.isRegistered<LanguageInterceptor>()) {
                 di.sl<LanguageInterceptor>().setLanguage(currentLocale.languageCode);
@@ -35,9 +48,14 @@ class MyApp extends StatelessWidget {
                 title: 'Spenza Store',
                 debugShowCheckedModeBanner: false,
                 theme: AppTheme.getTheme(
-                  isDark: themeType == ThemeType.dark,
+                  isDark: false,
                   locale: currentLocale,
                 ),
+                darkTheme: AppTheme.getTheme(
+                  isDark: true,
+                  locale: currentLocale,
+                ),
+                themeMode: themeMode,
                 localizationsDelegates: context.localizationDelegates,
                 supportedLocales: context.supportedLocales,
                 locale: currentLocale,

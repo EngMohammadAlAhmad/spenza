@@ -101,6 +101,7 @@
   "best_selling": "Best Selling",
   "sp_currency": "SYP",
   "order_again": "Order Again",
+  "order_again_button": "Order Again",
   "deliver_to": "Deliver to",
   "select_region": "Select your region",
   "no_previous_orders_again": "No previous orders to order again",
@@ -143,6 +144,9 @@
   "points_card_subtitle": "Redeem for free delivery\nor discount",
   "reorder": "Reorder",
   "reorder_confirm_msg": "Are you sure you want to reorder ({}) worth {} SYP?",
+  "reorder_preview_desc": "We checked order {} items at today's prices and according to your account.",
+  "total_today": "Total Today",
+  "price_became_instead": "Price became {} instead of {}",
   "confirm_order": "Confirm Order",
   "reorder_success": "Reorder placed successfully",
   "reorder_error": "Could not reorder, please try again later",
@@ -288,6 +292,7 @@
   "prices_include_tax": "Prices include tax.",
   "total_before_delivery": "Total before delivery",
   "added_qty_unit_to_cart": "Added {} {} to your cart",
+  "added_n_items_to_cart": "Added {} items to your cart",
   "total_amount_currency": "Total {} SYP",
   "save_amount": "Save {} {}",
   "ratings": "Ratings",
@@ -472,5 +477,10 @@
   "from_gallery": "From Gallery",
   "change_photo": "Change Photo",
   "contact_phone_number": "Contact Number",
-  "contact_phone_note": "We will call this number to verify the details"
+  "contact_phone_note": "We will call this number to verify the details",
+  "splash_slogan": "Everything you need... closer than you think.",
+  "splash_slogan_mark_word": "Everything",
+  "splash_slogan_part1_rest": " you need... ",
+  "splash_slogan_highlight_word": "closer",
+  "splash_slogan_part2_rest": " than you think."
 }

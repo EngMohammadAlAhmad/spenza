@@ -12,6 +12,7 @@ import 'package:spenza/core/utils/app_size.dart';
 import 'package:spenza/core/utils/responsive_utils.dart';
 import 'package:spenza/core/utils/tab_index_notifier.dart';
 import 'package:spenza/core/widgets/custom_button.dart';
+import 'package:spenza/core/widgets/shimmer_placeholder.dart';
 import 'package:spenza/features/auth/presentation/bloc/auth_status_bloc.dart';
 import 'package:spenza/features/orders/presentation/bloc/orders_bloc.dart';
 import 'package:spenza/features/orders/presentation/bloc/orders_event.dart';
@@ -67,7 +68,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
         StatefulNavigationShell.of(context).goBranch(0);
       },
       child: Scaffold(
-        backgroundColor: AppColors.neutralBackground,
+        backgroundColor: AppColors.screenBackgroundColor(context),
         body: BlocBuilder<AuthStatusBloc, AuthStatusState>(
           builder: (context, authState) {
             if (!authState.isLoggedIn) {
@@ -259,10 +260,8 @@ class _OrdersContentState extends State<_OrdersContent> {
   }
 
   Widget _buildOrdersBody(BuildContext context, OrdersState state, String keyPrefix) {
-    if (state.getMyOrdersStatus == RequestStatus.loading && state.orders.isEmpty) {
-      return const Center(
-        child: CircularProgressIndicator(color: AppColors.primary500),
-      );
+    if (state.getMyOrdersStatus == RequestStatus.loading) {
+      return _buildOrdersShimmer(context);
     }
 
     if (state.getMyOrdersStatus == RequestStatus.error && state.orders.isEmpty) {
@@ -479,6 +478,51 @@ class _OrdersContentState extends State<_OrdersContent> {
                 .scale(begin: const Offset(0.95, 0.95)),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildOrdersShimmer(BuildContext context) {
+    final isTabletLandscape = context.isTabletLandscape;
+
+    if (isTabletLandscape) {
+      return GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.only(
+          left: 24.0,
+          top: 16.0,
+          right: 24.0,
+          bottom: context.screenPadding.bottom + 10.0,
+        ),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16.0,
+          mainAxisSpacing: 16.0,
+          mainAxisExtent: 180.0,
+        ),
+        itemCount: 6,
+        itemBuilder: (context, index) => const ShimmerPlaceholder(
+          width: double.infinity,
+          height: 180.0,
+          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+        ),
+      );
+    }
+
+    return ListView.separated(
+      physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.only(
+        left: 16.0,
+        top: 16.0,
+        right: 16.0,
+        bottom: context.screenPadding.bottom + 10.0,
+      ),
+      itemCount: 5,
+      separatorBuilder: (_, _) => const SizedBox(height: 12.0),
+      itemBuilder: (context, index) => const ShimmerPlaceholder(
+        width: double.infinity,
+        height: 160.0,
+        borderRadius: BorderRadius.all(Radius.circular(16.0)),
       ),
     );
   }

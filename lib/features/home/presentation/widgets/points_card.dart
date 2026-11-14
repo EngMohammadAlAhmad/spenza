@@ -22,11 +22,11 @@ class PointsCard extends StatelessWidget {
 
         return Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.cardBackgroundColor(context),
             borderRadius: AppRadius.brandRadius,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
+                color: AppColors.cardShadow(context),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -63,18 +63,21 @@ class PointsCard extends StatelessWidget {
                                   text: '${'your_balance'.tr()} ',
                                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                                     fontWeight: FontWeight.bold,
+                                    color: AppColors.textPrimary(context),
                                   ),
                                 ),
                                 TextSpan(
                                   text: '$points ',
                                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                                     fontWeight: FontWeight.bold,
+                                    color: AppColors.textPrimary(context),
                                   ),
                                 ),
                                 TextSpan(
                                   text: 'points_unit'.tr(),
                                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                                     fontWeight: FontWeight.bold,
+                                    color: AppColors.textPrimary(context),
                                   ),
                                 ),
                               ],
@@ -84,7 +87,7 @@ class PointsCard extends StatelessWidget {
                           Text(
                             'points_card_subtitle'.tr(),
                             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: AppColors.tertiary,
+                              color: AppColors.secondaryTextColor(context),
                             ),
                           ),
                         ],

@@ -10,6 +10,7 @@ import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/app_size.dart';
+import 'package:spenza/core/widgets/app_circle_icon.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
 import 'package:spenza/core/widgets/cart_header_icon_button.dart';
@@ -38,6 +39,7 @@ class _HomeHeaderContent extends StatefulWidget {
 }
 
 class _HomeHeaderContentState extends State<_HomeHeaderContent> {
+
   @override
   void initState() {
     super.initState();
@@ -53,7 +55,7 @@ class _HomeHeaderContentState extends State<_HomeHeaderContent> {
 
     return AppHeader(
       style: AppHeaderStyle.light,
-      backgroundColor: AppColors.backgroundLight,
+      backgroundColor: AppColors.headerBackgroundColor(context),
       showBackButton: false,
       borderRadius: const BorderRadius.only(
         bottomLeft: Radius.circular(34.0),
@@ -99,7 +101,10 @@ class _HomeHeaderContentState extends State<_HomeHeaderContent> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SvgPicture.asset(AppAssets.locationIcon),
+                      AppCircleIcon(
+                        iconPath: AppAssets.locationIcon,
+                      ),
+                      //SvgPicture.asset(AppAssets.locationIcon),
                       const SizedBox(width: 6.0),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,7 +115,7 @@ class _HomeHeaderContentState extends State<_HomeHeaderContent> {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall!
-                                .copyWith(color: AppColors.neutral),
+                                .copyWith(color: AppColors.secondaryTextColor(context)),
                           ),
                           Row(
                             mainAxisSize: MainAxisSize.min,

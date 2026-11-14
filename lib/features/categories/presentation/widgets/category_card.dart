@@ -25,11 +25,11 @@ class CategoryCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.cardBackgroundColor(context),
         borderRadius: AppRadius.extraLarge,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: AppColors.cardShadow(context),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -73,6 +73,7 @@ class CategoryCard extends StatelessWidget {
                     title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
+                          color: AppColors.textPrimary(context),
                         ),
                     textAlign: TextAlign.right,
                     maxLines: 1,
@@ -82,7 +83,7 @@ class CategoryCard extends StatelessWidget {
                   Text(
                     subtitle,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.neutral,
+                          color: AppColors.secondaryTextColor(context),
                         ),
                     textAlign: TextAlign.right,
                   ),

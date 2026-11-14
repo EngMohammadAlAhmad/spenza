@@ -46,11 +46,11 @@ class _ProductCardState extends State<ProductCard> {
         curve: Curves.easeOut,
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.cardBackgroundColor(context),
             borderRadius: AppRadius.overMedium,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
+                color: AppColors.cardShadow(context),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -144,10 +144,10 @@ class _ProductCardState extends State<ProductCard> {
                             product.brand,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.neutral),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.secondaryTextColor(context)),
                           ),
-                          const SizedBox(width: 4.0),
-                          const Text('•', style: TextStyle(color: AppColors.neutral)),
+                          SizedBox(width: 4.0),
+                          Text('•', style: TextStyle(color: AppColors.secondaryTextColor(context))),
                           const SizedBox(width: 4.0),
                           const Icon(Icons.star_rounded, size: 14.0, color: AppColors.secondary),
                           Text(
@@ -161,7 +161,10 @@ class _ProductCardState extends State<ProductCard> {
                         product.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.2),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          height: 1.2,
+                          color: AppColors.textPrimary(context),
+                        ),
                       ),
                       const Spacer(),
                       Row(
@@ -177,7 +180,7 @@ class _ProductCardState extends State<ProductCard> {
                           const SizedBox(width: 4.0),
                           Text(
                             'sp_currency'.tr(),
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.neutral),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.secondaryTextColor(context)),
                           ),
                         ],
                       ),

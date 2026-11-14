@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 
 class AppColors {
   static const Color primary = Color(0xFFD46B60);
@@ -9,6 +9,7 @@ class AppColors {
   static const Color primaryDark = Color(0xFFC64420);
   static const Color primaryLight = Color(0xFFEFC6C2);
   static const Color primaryTint = Color(0xFFFAE6E3);
+  static const Color primaryTintDark = Color(0xFF382321);
 
   static const Color neutral = Color(0xFF737373);
   static const Color neutral200 = Color(0xFFF0F0F0);
@@ -33,7 +34,7 @@ class AppColors {
   // Card/Container surfaces
   static const Color cardLight = Color(0xFFFFFFFF);
   static const Color cardBackgroundLight = Color(0xFFE6E7E8);
-  static const Color cardDark = Color(0xFF1E293B);
+  static const Color cardDark = Color(0xFF262524);
 
   // Text on surface
   static const Color onSurfaceLight = Color(0xFF0F172A);
@@ -63,7 +64,7 @@ class AppColors {
 
   // Borders
   static const Color borderLight = Color(0xFFE2E8F0);
-  static const Color borderDark = Color(0xFF334155);
+  static const Color borderDark = Color(0xFF383634);
 
   // Disabled
   static const Color disabledLight = Color(0xFFCBD5E1);
@@ -75,7 +76,7 @@ class AppColors {
 
   // Divider
   static const Color dividerLight = Color(0xFFE2E8F0);
-  static const Color dividerDark = Color(0xFF334155);
+  static const Color dividerDark = Color(0xFF383634);
 
   static const Color blue = Color(0xFF566AB0);
   static const Color blue2 = Color(0xFF1447E6);
@@ -85,4 +86,88 @@ class AppColors {
   static const Color neutralBorderDefault = Color(0xFFEEEAE5);
   static const Color thirdAccent = Color(0xFFE9ECF7);
 
+  static const Color neutralBackgroundDark = Color(0xFF1B1A19);
+
+  // Central Theme-Aware Color Helpers
+  static bool isDarkMode(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.dark;
+  }
+
+  static Color primaryColor(BuildContext context) {
+    return isDarkMode(context) ? primaryDark : primary;
+  }
+
+  static Color primaryTintColor(BuildContext context) {
+    return isDarkMode(context) ? primaryTintDark : primaryTint;
+  }
+
+  static Color secondaryColor(BuildContext context) {
+    return isDarkMode(context) ? secondaryDark : secondary;
+  }
+
+  static Color screenBackgroundColor(BuildContext context) {
+    return isDarkMode(context) ? neutralBackgroundDark : neutralBackground;
+  }
+
+  static Color cardBackgroundColor(BuildContext context) {
+    return isDarkMode(context) ? cardDark : cardLight;
+  }
+
+  static Color bottomSheetBackgroundColor(BuildContext context) {
+    return isDarkMode(context) ? cardDark : const Color(0xFFF9F6F2);
+  }
+
+  static Color headerBackgroundColor(BuildContext context) {
+    return isDarkMode(context) ? cardDark : backgroundLight;
+  }
+
+  static Color containerBoxBackgroundColor(BuildContext context) {
+    return isDarkMode(context) ? const Color(0xFF333130) : neutralBackground;
+  }
+
+  static Color tileIconBackgroundColor(BuildContext context) {
+    return isDarkMode(context) ? const Color(0xFF383634) : neutralBackground;
+  }
+
+  static Color textPrimary(BuildContext context) {
+    return isDarkMode(context) ? onSurfaceDark : onSurfaceLight;
+  }
+
+  static Color secondaryTextColor(BuildContext context) {
+    return isDarkMode(context) ? secondaryTextDark : tertiary;
+  }
+
+  static Color dividerColor(BuildContext context) {
+    return isDarkMode(context) ? dividerDark : neutral200;
+  }
+
+  static Color getBorderColor(BuildContext context) {
+    return isDarkMode(context) ? borderDark : borderLight;
+  }
+
+  static Color getDisabledColor(BuildContext context) {
+    return isDarkMode(context) ? disabledDark : disabledLight;
+  }
+
+  static Color getErrorColor(BuildContext context) {
+    return isDarkMode(context) ? errorDark : errorLight;
+  }
+
+  static Color getSuccessColor(BuildContext context) {
+    return isDarkMode(context) ? successDark : successLight;
+  }
+
+  static Color getWarningColor(BuildContext context) {
+    return isDarkMode(context) ? warningDark : warningLight;
+  }
+
+  static Color dragHandleColor(BuildContext context) {
+    return isDarkMode(context) ? const Color(0xFF616161) : const Color(0xFFE0E0E0);
+  }
+
+  static Color cardShadow(BuildContext context) {
+    return isDarkMode(context)
+        ? Colors.black.withValues(alpha: 0.2)
+        : Colors.black.withValues(alpha: 0.04);
+  }
 }

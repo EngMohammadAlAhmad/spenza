@@ -95,7 +95,7 @@ class AppHeader extends StatelessWidget {
         break;
       case AppHeaderStyle.light:
         decoration = BoxDecoration(
-          color: backgroundColor ?? Colors.white,
+          color: backgroundColor ?? AppColors.headerBackgroundColor(context),
           borderRadius: borderRadius ??
               const BorderRadius.vertical(
                 bottom: Radius.circular(28.0),
@@ -103,7 +103,9 @@ class AppHeader extends StatelessWidget {
           boxShadow: boxShadow ??
               [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.black.withValues(alpha: 0.2)
+                      : Colors.black.withValues(alpha: 0.03),
                   blurRadius: 10,
                   offset: const Offset(0.0, 5.0),
                 ),
@@ -121,6 +123,7 @@ class AppHeader extends StatelessWidget {
         : Theme.of(context).textTheme.titleMedium!.copyWith(
             fontWeight: FontWeight.bold,
             fontSize: 18.0,
+            color: Theme.of(context).colorScheme.onSurface,
           );
 
     final defaultSubtitleStyle = style == AppHeaderStyle.gradient
@@ -128,9 +131,9 @@ class AppHeader extends StatelessWidget {
             color: Colors.white.withValues(alpha: 0.85),
             fontSize: 13.0,
           )
-        : const TextStyle(
+        : TextStyle(
             fontSize: 13.0,
-            color: AppColors.neutral,
+            color: AppColors.secondaryTextColor(context),
           );
 
     final effectivePadding = padding ??

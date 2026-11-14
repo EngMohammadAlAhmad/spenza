@@ -25,15 +25,15 @@ class OrdersHeader extends StatelessWidget {
       style: AppHeaderStyle.light,
       title: 'my_orders'.tr(),
       showBackButton: false,
-      titleTextStyle: const TextStyle(
+      titleTextStyle: TextStyle(
         fontSize: 20.0,
         fontWeight: FontWeight.bold,
-        color: AppColors.neutral900,
+        color: AppColors.textPrimary(context),
       ),
       borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28.0)),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withValues(alpha: 0.04),
+          color: AppColors.cardShadow(context),
           blurRadius: 10,
           offset: const Offset(0.0, 4.0),
         ),
@@ -47,16 +47,6 @@ class OrdersHeader extends StatelessWidget {
       bottomChild: AppTabSelector(
         selectedIndex: selectedTabIndex,
         onTabChanged: onTabChanged,
-        backgroundColor: AppColors.neutralBackground,
-        activeTextColor: const Color(0xFF91292B),
-        inactiveTextColor: const Color(0xFF7D7873),
-        indicatorShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
         items: [
           AppTabItem(
             title: 'active_orders'.tr(),

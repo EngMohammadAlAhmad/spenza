@@ -39,21 +39,29 @@ class SettingsTile extends StatelessWidget {
                 width: 36.0,
                 height: 36.0,
                 decoration: BoxDecoration(
-                  color: AppColors.neutralBackground,
+                  color: AppColors.tileIconBackgroundColor(context),
                   borderRadius: AppRadius.ordinary,
                 ),
                 alignment: Alignment.center,
-                child: SvgPicture.asset(iconPath, width: 20.0, height: 20.0),
+                child: SvgPicture.asset(
+                  iconPath,
+                  width: 20.0,
+                  height: 20.0,
+                  colorFilter: ColorFilter.mode(
+                    AppColors.textPrimary(context),
+                    BlendMode.srcIn,
+                  ),
+                ),
               ),
               const SizedBox(width: 12.0),
 
               // 2. Title
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: AppColors.textPrimary(context),
                 ),
               ),
 
@@ -63,9 +71,9 @@ class SettingsTile extends StatelessWidget {
               if (value != null) ...[
                 Text(
                   value!,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14.0,
-                    color: AppColors.neutral,
+                    color: AppColors.secondaryTextColor(context),
                   ),
                 ),
                 if (showChevron || trailing != null) const SizedBox(width: 6.0),
@@ -75,9 +83,9 @@ class SettingsTile extends StatelessWidget {
               if (trailing != null)
                 trailing!
               else if (showChevron)
-                const Icon(
+                Icon(
                   Icons.chevron_right_rounded,
-                  color: AppColors.neutral,
+                  color: AppColors.secondaryTextColor(context),
                 ),
             ],
           ),

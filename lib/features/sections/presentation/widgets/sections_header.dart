@@ -23,7 +23,7 @@ class SectionsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppHeader(
       style: AppHeaderStyle.light,
-      backgroundColor: AppColors.backgroundLight,
+      backgroundColor: AppColors.headerBackgroundColor(context),
       showBackButton: false,
       borderRadius: const BorderRadius.only(
         bottomLeft: Radius.circular(34.0),
@@ -42,6 +42,7 @@ class SectionsHeader extends StatelessWidget {
             'sections'.tr(),
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary(context),
             ),
           ).animate().fadeIn(delay: 100.ms, duration: 400.ms).slideX(begin: 0.2, end: 0.0),
           Expanded(

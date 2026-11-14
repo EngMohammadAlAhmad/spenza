@@ -88,7 +88,7 @@ class AppScaffold extends StatelessWidget {
     this.headerBottomChild,
     this.headerStyle = AppHeaderStyle.light,
     this.appBar,
-    this.backgroundColor = AppColors.neutralBackground,
+    this.backgroundColor,
     this.floatingActionButton,
     this.floatingActionButtonLocation,
     this.bottomNavigationBar,

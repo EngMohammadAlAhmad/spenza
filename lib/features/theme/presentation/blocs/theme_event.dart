@@ -14,4 +14,11 @@ class ToggleThemeEvent extends ThemeEvent {
   List<Object?> get props => [];
 }
 
+class ChangeThemeEvent extends ThemeEvent {
+  final ThemeType themeType;
 
+  const ChangeThemeEvent({required this.themeType});
+
+  @override
+  List<Object?> get props => [themeType];
+}

@@ -15,33 +15,47 @@ class ThemeBloc extends Bloc<ThemeEvent, BaseState<ThemeEntity>> {
   ThemeBloc({
     required this.getThemeUseCase,
     required this.saveThemeUseCase,
-  }) : super(BaseState<ThemeEntity>()) {
+  }) : super(BaseState<ThemeEntity>(data: ThemeEntity(themeType: ThemeType.light))) {
     on<GetThemeEvent>(onGetTheme);
     on<ToggleThemeEvent>(onToggleTheme);
+    on<ChangeThemeEvent>(onChangeTheme);
   }
 
   Future<void> onGetTheme(GetThemeEvent event, Emitter<BaseState<ThemeEntity>> emit) async {
     emit(state.copyWith(requestStatus: RequestStatus.loading));
     final result = await getThemeUseCase.call();
     result.fold(
-          (left) => emit(state.copyWith(requestStatus: RequestStatus.error, failure: left)),
-          (right) => emit(state.copyWith(requestStatus: RequestStatus.success, data: right)),
+      (left) => emit(state.copyWith(
+        requestStatus: RequestStatus.error,
+        failure: left,
+        data: ThemeEntity(themeType: ThemeType.light),
+      )),
+      (right) => emit(state.copyWith(requestStatus: RequestStatus.success, data: right)),
     );
   }
 
   Future<void> onToggleTheme(ToggleThemeEvent event, Emitter<BaseState<ThemeEntity>> emit) async {
-    if (state.data != null) {
-      final newThemeType = state.data!.themeType == ThemeType.dark
-          ? ThemeType.light
-          : ThemeType.dark;
+    final currentType = state.data?.themeType ?? ThemeType.light;
+    final newThemeType = currentType == ThemeType.dark
+        ? ThemeType.light
+        : ThemeType.dark;
 
-      final newThemeEntity = ThemeEntity(themeType: newThemeType);
-      final result = await saveThemeUseCase.call(theme: newThemeEntity);
+    final newThemeEntity = ThemeEntity(themeType: newThemeType);
+    final result = await saveThemeUseCase.call(theme: newThemeEntity);
 
-      result.fold(
-            (left) => emit(state.copyWith(requestStatus: RequestStatus.error, failure: left)),
-            (right) => emit(state.copyWith(requestStatus: RequestStatus.success, data: newThemeEntity)),
-      );
-    }
+    result.fold(
+      (left) => emit(state.copyWith(requestStatus: RequestStatus.error, failure: left)),
+      (right) => emit(state.copyWith(requestStatus: RequestStatus.success, data: newThemeEntity)),
+    );
+  }
+
+  Future<void> onChangeTheme(ChangeThemeEvent event, Emitter<BaseState<ThemeEntity>> emit) async {
+    final newThemeEntity = ThemeEntity(themeType: event.themeType);
+    final result = await saveThemeUseCase.call(theme: newThemeEntity);
+
+    result.fold(
+      (left) => emit(state.copyWith(requestStatus: RequestStatus.error, failure: left)),
+      (right) => emit(state.copyWith(requestStatus: RequestStatus.success, data: newThemeEntity)),
+    );
   }
 }

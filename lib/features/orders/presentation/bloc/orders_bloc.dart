@@ -60,9 +60,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       return;
     }
 
-    if (!event.isRefresh) {
-      emit(state.copyWith(getMyOrdersStatus: RequestStatus.loading));
-    }
+    emit(state.copyWith(getMyOrdersStatus: RequestStatus.loading));
 
     final result = await getMyOrdersUseCase(
       page: event.page,

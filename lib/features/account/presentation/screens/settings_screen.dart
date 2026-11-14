@@ -11,6 +11,8 @@ import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/core/widgets/selection_bottom_sheet.dart';
 import 'package:spenza/features/account/presentation/widgets/settings_tile.dart';
 import 'package:spenza/features/language/presentation/blocs/language_bloc.dart';
+import 'package:spenza/features/theme/domain/entities/theme_entity.dart';
+import 'package:spenza/features/theme/presentation/blocs/theme_bloc.dart';
 import 'package:spenza/injection_locator.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -63,7 +65,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  void _showThemeBottomSheet(BuildContext context) {
+  void _showThemeBottomSheet(BuildContext context, ThemeType currentThemeType) {
+    final selectedId = currentThemeType == ThemeType.dark
+        ? 'dark'
+        : (currentThemeType == ThemeType.system ? 'system' : 'light');
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -71,7 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (bottomSheetContext) {
         return SelectionBottomSheet<String>(
           title: 'theme'.tr(),
-          selectedValue: 'system',
+          selectedValue: selectedId,
           options: [
             SelectionOption(
               id: 'light',
@@ -92,17 +98,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
               iconPath: AppAssets.phoneDeviceIcon,
             ),
           ],
-          onOptionSelected: (theme) {
+          onOptionSelected: (themeStr) {
             Navigator.pop(bottomSheetContext);
+            final newThemeType = themeStr == 'dark'
+                ? ThemeType.dark
+                : (themeStr == 'system' ? ThemeType.system : ThemeType.light);
+
+            if (newThemeType != currentThemeType) {
+              context.read<ThemeBloc>().add(ChangeThemeEvent(themeType: newThemeType));
+            }
           },
         );
       },
     );
   }
 
+  String _getThemeText(ThemeType type) {
+    switch (type) {
+      case ThemeType.dark:
+        return 'dark_theme'.tr();
+      case ThemeType.system:
+        return 'system_theme'.tr();
+      case ThemeType.light:
+        return 'light_theme'.tr();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isTabletLandscape = context.isTabletLandscape;
+    final themeState = context.watch<ThemeBloc>().state;
+    final currentThemeType = themeState.data?.themeType ?? ThemeType.light;
 
     // Section 1: Notifications
     final notificationsSection = Column(
@@ -112,20 +138,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
           child: Text(
             'notifications'.tr(),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13.0,
               fontWeight: FontWeight.w600,
-              color: AppColors.neutral700,
+              color: AppColors.secondaryTextColor(context),
             ),
           ),
         ),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.cardBackgroundColor(context),
             borderRadius: AppRadius.large,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
+                color: AppColors.isDarkMode(context)
+                    ? Colors.black.withValues(alpha: 0.2)
+                    : Colors.black.withValues(alpha: 0.03),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -144,7 +172,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     activeThumbColor: Colors.white,
                     activeTrackColor: AppColors.primary,
                     inactiveThumbColor: Colors.white,
-                    inactiveTrackColor: AppColors.neutralBorderStrong,
+                    inactiveTrackColor: AppColors.isDarkMode(context)
+                        ? AppColors.borderDark
+                        : AppColors.neutralBorderStrong,
                     trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
                     trackOutlineWidth: WidgetStateProperty.all(0),
                     onChanged: (val) {
@@ -154,12 +184,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Divider(
                     height: 1.0,
                     thickness: 0.8,
-                    color: AppColors.neutral200,
+                    color: AppColors.dividerColor(context),
                   ),
                 ),
                 // Item 2: Offers & Discounts
@@ -171,7 +201,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     activeThumbColor: Colors.white,
                     activeTrackColor: AppColors.primary,
                     inactiveThumbColor: Colors.white,
-                    inactiveTrackColor: AppColors.neutralBorderStrong,
+                    inactiveTrackColor: AppColors.isDarkMode(context)
+                        ? AppColors.borderDark
+                        : AppColors.neutralBorderStrong,
                     trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
                     trackOutlineWidth: WidgetStateProperty.all(0),
                     onChanged: (val) {
@@ -190,7 +222,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Text(
             'order_notifications_info'.tr(),
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: AppColors.tertiary,
+              color: AppColors.secondaryTextColor(context),
             ),
           ),
         ),
@@ -205,20 +237,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
           child: Text(
             'app'.tr(),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13.0,
               fontWeight: FontWeight.w600,
-              color: AppColors.neutral700,
+              color: AppColors.secondaryTextColor(context),
             ),
           ),
         ),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.cardBackgroundColor(context),
             borderRadius: AppRadius.large,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
+                color: AppColors.isDarkMode(context)
+                    ? Colors.black.withValues(alpha: 0.2)
+                    : Colors.black.withValues(alpha: 0.03),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -238,12 +272,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   showChevron: true,
                   onTap: () => _showLanguageBottomSheet(context),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Divider(
                     height: 1.0,
                     thickness: 0.8,
-                    color: AppColors.neutral200,
+                    color: AppColors.dividerColor(context),
                   ),
                 ),
 
@@ -251,16 +285,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile(
                   iconPath: AppAssets.moonIcon,
                   title: 'theme'.tr(),
-                  value: 'system_theme'.tr(),
+                  value: _getThemeText(currentThemeType),
                   showChevron: true,
-                  onTap: () => _showThemeBottomSheet(context),
+                  onTap: () => _showThemeBottomSheet(context, currentThemeType),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Divider(
                     height: 1.0,
                     thickness: 0.8,
-                    color: AppColors.neutral200,
+                    color: AppColors.dividerColor(context),
                   ),
                 ),
 
@@ -272,12 +306,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   showChevron: true,
                   onTap: () {},
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Divider(
                     height: 1.0,
                     thickness: 0.8,
-                    color: AppColors.neutral200,
+                    color: AppColors.dividerColor(context),
                   ),
                 ),
 
@@ -332,7 +366,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.neutralBackground,
+      backgroundColor: AppColors.screenBackgroundColor(context),
       body: Column(
         children: [
           AppHeader(
