@@ -35,6 +35,15 @@ class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     final product = widget.product;
+    final num calcDiscount = product.discountPercentage > 0
+        ? product.discountPercentage
+        : ((product.price > 0 &&
+        product.discountedPrice > 0 &&
+        product.discountedPrice < product.price)
+        ? (((product.price - product.discountedPrice) / product.price) * 100)
+        .round()
+        : 0);
+
     return GestureDetector(
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) => setState(() => _pressed = false),
@@ -64,7 +73,7 @@ class _ProductCardState extends State<ProductCard> {
                 flex: 3,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppColors.secondary.withValues(alpha: 0.3),
+                    color: AppColors.secondaryTintColor(context),
                     borderRadius: AppRadius.topOnly,
                   ),
                   child: Stack(
@@ -73,31 +82,31 @@ class _ProductCardState extends State<ProductCard> {
                         borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
                         child: product.photo != null && product.photo!.isNotEmpty
                             ? CachedNetworkImage(
-                                imageUrl: product.photo!,
-                                width: double.infinity,
-                                height: double.infinity,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => const ShimmerPlaceholder(
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                ),
-                                errorWidget: (context, url, error) => const AppIconPlaceholder(size: 60),
-                              )
-                            : const AppIconPlaceholder(size: 120.0),
+                          imageUrl: product.photo!,
+                          width: double.infinity,
+                          height: double.infinity,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => const ShimmerPlaceholder(
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
+                          errorWidget: (context, url, error) => const AppIconPlaceholder(size: 60),
+                        )
+                            : const AppIconPlaceholder(size: 100.0),
                       ),
                       // Discount Badge
-                      if (product.discountPercentage > 0)
-                        Positioned(
+                      if (calcDiscount > 0)
+                        PositionedDirectional(
                           top: 8.0,
-                          right: 8.0,
+                          end: 8.0,
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                             decoration: BoxDecoration(
-                              color: AppColors.primary,
+                              color: AppColors.primaryColor(context),
                               borderRadius: AppRadius.large,
                             ),
                             child: Text(
-                              '-${product.discountPercentage.toInt()}%',
+                              '${calcDiscount.round()}%-',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 10,
@@ -114,7 +123,7 @@ class _ProductCardState extends State<ProductCard> {
                           builder: (context, state) {
                             final isFavorite = state.data?.any((p) => p.id == product.id) ?? false;
                             return FavoriteButton(
-                              size: 18.0,
+                              iconSize: 18.0,
                               color: AppColors.grey,
                               initialFavorite: isFavorite,
                               onFavoriteChanged: (isFav) {
@@ -161,28 +170,17 @@ class _ProductCardState extends State<ProductCard> {
                         product.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          height: 1.2,
-                          color: AppColors.textPrimary(context),
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: AppColors.textPrimaryColor(context),
                         ),
                       ),
                       const Spacer(),
-                      Row(
-                        crossAxisAlignment: .center,
-                        children: [
-                          Text(
-                            product.discountedPrice.toString(),
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                          const SizedBox(width: 4.0),
-                          Text(
-                            'sp_currency'.tr(),
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.secondaryTextColor(context)),
-                          ),
-                        ],
+                      Text(
+                        '${product.discountedPrice} ${'sp_currency'.tr()}',
+                        style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                          fontWeight: .w800,
+                          color: AppColors.primaryColor(context),
+                        ),
                       ),
                     ],
                   ),

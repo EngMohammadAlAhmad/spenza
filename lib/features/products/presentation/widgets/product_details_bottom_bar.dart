@@ -76,7 +76,8 @@ class ProductDetailsBottomBar extends StatelessWidget {
           text: isOutOfStock ? 'out_of_stock'.tr() : 'add_to_cart'.tr(),
           height: 52.0,
           icon: SvgPicture.asset(
-            AppAssets.cartIcon2,
+            AppAssets.cartIcon,
+            colorFilter: .mode(Colors.white, .srcIn),
             width: 20,
             height: 20,
           ),

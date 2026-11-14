@@ -28,7 +28,7 @@ class OrdersHeader extends StatelessWidget {
       titleTextStyle: TextStyle(
         fontSize: 20.0,
         fontWeight: FontWeight.bold,
-        color: AppColors.textPrimary(context),
+        color: AppColors.textPrimaryColor(context),
       ),
       borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28.0)),
       boxShadow: [

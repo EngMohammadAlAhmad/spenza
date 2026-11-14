@@ -73,7 +73,7 @@ class CategoryCard extends StatelessWidget {
                     title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary(context),
+                          color: AppColors.textPrimaryColor(context),
                         ),
                     textAlign: TextAlign.right,
                     maxLines: 1,

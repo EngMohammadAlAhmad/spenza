@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/widgets/app_icon_container.dart';
 import 'package:spenza/features/addresses/domain/entities/address_entity.dart';
 
 class Step3DeliverySummaryCard extends StatelessWidget {
@@ -53,8 +54,10 @@ class Step3DeliverySummaryCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  SvgPicture.asset(
-                    AppAssets.deliveryLocationIcon,
+                  AppIconContainer(
+                    iconPath: AppAssets.locationIcon,
+                    size: 32.0,
+                    iconSize: 18.0,
                   ),
                   const SizedBox(width: 6.0),
                   Text(

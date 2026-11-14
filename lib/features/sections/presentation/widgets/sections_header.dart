@@ -42,7 +42,7 @@ class SectionsHeader extends StatelessWidget {
             'sections'.tr(),
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary(context),
+              color: AppColors.textPrimaryColor(context),
             ),
           ).animate().fadeIn(delay: 100.ms, duration: 400.ms).slideX(begin: 0.2, end: 0.0),
           Expanded(

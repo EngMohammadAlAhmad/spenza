@@ -100,7 +100,7 @@ class _SectionsScreenState extends State<SectionsScreen> {
             context.read<BrandsBloc>().add(const GetBrandsEvent(isRefresh: true));
           },
           child: Scaffold(
-            backgroundColor: AppColors.screenBackgroundColor(context),
+            backgroundColor: AppColors.neutralBackgroundColor(context),
           body: Column(
             children: [
               SectionsHeader(

@@ -71,9 +71,9 @@ class _OrderAgainContent extends StatelessWidget {
                 children: [
                   Text(
                     'order_again'.tr(),
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      fontWeight: .w800,
+                    ),
                   ),
                   const Spacer(),
                   ViewAllButton(
@@ -142,14 +142,14 @@ class _EmptyOrderAgainCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 18.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.neutralBackgroundSurfaceColor(context),
         borderRadius: AppRadius.overMedium,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 12.0,
             spreadRadius: 0.0,
-            offset: const Offset(0, 4),
+            offset: const Offset(0.0, 4.0),
           ),
         ],
       ),
@@ -305,7 +305,7 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
           width: 156.0,
           height: 214.0,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.neutralBackgroundSurfaceColor(context),
             borderRadius: AppRadius.large,
             boxShadow: [
               BoxShadow(
@@ -326,7 +326,7 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
                 margin: .all(10.0),
                 decoration: BoxDecoration(
                   borderRadius: AppRadius.mediumPlus,
-                  color: AppColors.secondary.withValues(alpha: 0.5),
+                  color: AppColors.secondaryTintColor(context),
                 ),
                 child: imagePath.startsWith('http') ? Image.network(
                   imagePath,
@@ -336,8 +336,7 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
                     color: AppColors.primary,
                     fit: BoxFit.contain,
                   ),
-                )
-                    : Image.asset(
+                ) : Image.asset(
                   imagePath,
                   color: AppColors.primary.withValues(alpha: 0.5),
                   fit: BoxFit.contain,
@@ -364,21 +363,18 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
                             title,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: AppColors.neutral900,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14.0,
-                                ),
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: AppColors.tertiaryColor(context),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           const SizedBox(height: 2.0),
                           Text(
                             dateStr,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: AppColors.neutral,
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w500,
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: AppColors.tertiaryColor(context),
                             ),
                           ),
                         ],
@@ -392,10 +388,9 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
                               fit: BoxFit.scaleDown,
                               child: Text(
                                 '${formatter.format(order.totalAmount)} ${'sp_currency'.tr()}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 14.0,
-                                  color: AppColors.neutral900,
+                                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                  color: AppColors.textPrimaryColor(context),
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ),
@@ -404,10 +399,10 @@ class _OrderAgainCardState extends State<OrderAgainCard> {
                             onTap: () => _showReorderDialog(context, order),
                             borderRadius: AppRadius.large,
                             child: Container(
-                              width: 36.0,
-                              height: 36.0,
+                              width: 32.0,
+                              height: 32.0,
                               decoration: const BoxDecoration(
-                                color: Color(0xFFDB6C60),
+                                color: AppColors.primary,
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(

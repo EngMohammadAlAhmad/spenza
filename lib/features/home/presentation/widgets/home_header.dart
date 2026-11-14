@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spenza/core/databases/cache/cache_helper.dart';
 import 'package:spenza/core/routes/route_paths.dart';
@@ -10,7 +9,7 @@ import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
 import 'package:spenza/core/utils/app_size.dart';
-import 'package:spenza/core/widgets/app_circle_icon.dart';
+import 'package:spenza/core/widgets/app_icon_container.dart';
 import 'package:spenza/core/widgets/app_header.dart';
 import 'package:spenza/core/widgets/app_search_field.dart';
 import 'package:spenza/core/widgets/cart_header_icon_button.dart';
@@ -55,7 +54,7 @@ class _HomeHeaderContentState extends State<_HomeHeaderContent> {
 
     return AppHeader(
       style: AppHeaderStyle.light,
-      backgroundColor: AppColors.headerBackgroundColor(context),
+      backgroundColor: AppColors.neutralBackgroundSurfaceColor(context),
       showBackButton: false,
       borderRadius: const BorderRadius.only(
         bottomLeft: Radius.circular(34.0),
@@ -101,10 +100,11 @@ class _HomeHeaderContentState extends State<_HomeHeaderContent> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      AppCircleIcon(
+                      AppIconContainer(
                         iconPath: AppAssets.locationIcon,
+                        primaryColors: true,
+                        isCircle: true,
                       ),
-                      //SvgPicture.asset(AppAssets.locationIcon),
                       const SizedBox(width: 6.0),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,7 +115,7 @@ class _HomeHeaderContentState extends State<_HomeHeaderContent> {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall!
-                                .copyWith(color: AppColors.secondaryTextColor(context)),
+                                .copyWith(color: AppColors.tertiaryColor(context)),
                           ),
                           Row(
                             mainAxisSize: MainAxisSize.min,
@@ -126,15 +126,13 @@ class _HomeHeaderContentState extends State<_HomeHeaderContent> {
                                     .textTheme
                                     .bodyMedium!
                                     .copyWith(
-                                      color: AppColors.primary,
                                       fontWeight: FontWeight.w700,
                                     ),
                               ),
                               const SizedBox(width: 2.0),
                               const Icon(
-                                Icons.keyboard_arrow_down_rounded,
+                                Icons.open_in_new,
                                 size: 18.0,
-                                color: AppColors.primary,
                               ),
                             ],
                           ),
@@ -147,17 +145,17 @@ class _HomeHeaderContentState extends State<_HomeHeaderContent> {
             },
           ),
           Row(
-            spacing: 5.0,
+            spacing: 10.0,
             mainAxisSize: MainAxisSize.min,
             children: [
               const CartHeaderIconButton(),
-              IconButton(
-                padding: const EdgeInsets.all(6.0),
-                constraints: const BoxConstraints(),
+              AppIconContainer(
+                iconPath: AppAssets.notificationsIcon,
+                isCircle: true,
+                size: 44.0,
                 onPressed: () {
                   context.push(RoutePaths.notifications);
                 },
-                icon: SvgPicture.asset(AppAssets.notificationsIcon),
               ),
             ],
           ),

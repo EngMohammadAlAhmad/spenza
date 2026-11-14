@@ -236,9 +236,8 @@ class _ProductSellingUnitsSectionState extends State<ProductSellingUnitsSection>
                             child: Text(
                               u.title,
                               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: isSelected ? AppColors.primaryDark : null,
-                                  ),
+                                fontWeight: FontWeight.bold,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),

@@ -35,8 +35,8 @@ class ShopByCategorySection extends StatelessWidget {
             children: [
               Text(
                 'sections'.tr(),
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: .bold,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  fontWeight: .w800,
                 ),
               ),
               ViewAllButton(
@@ -46,7 +46,7 @@ class ShopByCategorySection extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 125.0,
+          height: 131.0,
           child: isLoading
               ? ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -81,7 +81,7 @@ class ShopByCategorySection extends StatelessWidget {
                             width: 80.0,
                             height: 80.0,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: AppColors.neutralBackgroundSurfaceColor(context),
                               borderRadius: AppRadius.overMedium,
                             ),
                             child: ClipRRect(
@@ -108,9 +108,9 @@ class ShopByCategorySection extends StatelessWidget {
                             maxLines: 2,
                             overflow: .ellipsis,
                             textAlign: .center,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: AppColors.neutral900,
+                              color: AppColors.textBodyColor(context),
                             ),
                           ),
                         ],

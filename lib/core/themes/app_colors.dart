@@ -6,22 +6,29 @@ class AppColors {
   static const Color primary500 = Color(0xFFC74436);
   static const Color primary600 = Color(0xFF9D352B);
   static const Color primary700 = Color(0xFF772820);
-  static const Color primaryDark = Color(0xFFC64420);
+  static const Color primaryDark = Color(0xFFE1968F);
   static const Color primaryLight = Color(0xFFEFC6C2);
   static const Color primaryTint = Color(0xFFFAE6E3);
-  static const Color primaryTintDark = Color(0xFF382321);
+  static const Color primaryTintDark = Color(0xFF3A1410);
 
   static const Color neutral = Color(0xFF737373);
   static const Color neutral200 = Color(0xFFF0F0F0);
+
   static const Color neutralBackground = Color(0xFFF7F4F0);
+  static const Color neutralBackgroundDark = Color(0xFF292826);
+  static const Color neutralBackgroundCanvasDark = Color(0xFF151414);
+
   static const Color neutralBorderStrong = Color(0xFFDDD8D2);
   static const Color neutral700 = Color(0xFF555555);
   static const Color neutral900 = Color(0xFF444444);
 
   static const Color secondary = Color(0xFFF2B211);
   static const Color secondaryDark = Color(0xFFF59E0B);
+  static const Color secondaryTint = Color(0xFFFDF2D3);
+  static const Color secondaryTintDark = Color(0xFF423104);
 
   static const Color tertiary = Color(0xFF756F6A);
+  static const Color tertiaryDark = Color(0xFF9C9792);
 
   static const Color fillColor = Color(0xFFF6F2EC);
   static const Color borderColor = Color(0xFF383839);
@@ -30,6 +37,9 @@ class AppColors {
   static const Color surfaceLight = Color(0xFFF8FAFC);
   static const Color surfaceDark = Color(0xFF0F172A);
   static const Color backgroundLight = Color(0xFFF9F9F9);
+
+  static const Color neutralBackgroundSurface = Color(0xFFFFFFFF);
+  static const Color neutralBackgroundSurfaceDark = Color(0xFF1F1E1D);
 
   // Card/Container surfaces
   static const Color cardLight = Color(0xFFFFFFFF);
@@ -45,6 +55,10 @@ class AppColors {
   static const Color secondaryTextDark = Color(0xFF94A3B8);
   static const Color textSecondary = Color(0xFF9D9791);
   static const Color textBody = Color(0xFF57524E);
+  static const Color textBodyDark = Color(0xFFC9C5C1);
+
+  static const Color textPrimary = Color(0xFF1A1A1A);
+  static const Color textPrimaryDark = Color(0xFFF2F0EE);
 
   // Success
   static const Color successLight = Color(0xFF10B981);
@@ -61,6 +75,7 @@ class AppColors {
   static const Color alert = Color(0xFFFB3748);
   static const Color errorLight = Color(0xFFEF4444);
   static const Color errorDark = Color(0xFFF87171);
+
 
   // Borders
   static const Color borderLight = Color(0xFFE2E8F0);
@@ -86,8 +101,6 @@ class AppColors {
   static const Color neutralBorderDefault = Color(0xFFEEEAE5);
   static const Color thirdAccent = Color(0xFFE9ECF7);
 
-  static const Color neutralBackgroundDark = Color(0xFF1B1A19);
-
   // Central Theme-Aware Color Helpers
   static bool isDarkMode(BuildContext context) {
     return Theme.of(context).brightness == Brightness.dark;
@@ -97,16 +110,36 @@ class AppColors {
     return isDarkMode(context) ? primaryDark : primary;
   }
 
+  static Color tertiaryColor(BuildContext context) {
+    return isDarkMode(context) ? tertiaryDark : tertiary;
+  }
+
   static Color primaryTintColor(BuildContext context) {
     return isDarkMode(context) ? primaryTintDark : primaryTint;
+  }
+
+  static Color secondaryTintColor(BuildContext context) {
+    return isDarkMode(context) ? secondaryTintDark : secondaryTint;
   }
 
   static Color secondaryColor(BuildContext context) {
     return isDarkMode(context) ? secondaryDark : secondary;
   }
 
-  static Color screenBackgroundColor(BuildContext context) {
+  static Color neutralBackgroundColor(BuildContext context) {
     return isDarkMode(context) ? neutralBackgroundDark : neutralBackground;
+  }
+
+  static Color neutralBackgroundCanvasColor(BuildContext context) {
+    return isDarkMode(context) ? neutralBackgroundCanvasDark : neutralBackground;
+  }
+
+  static Color neutralBackgroundSurfaceColor(BuildContext context) {
+    return isDarkMode(context) ? neutralBackgroundSurfaceDark : neutralBackgroundSurface;
+  }
+
+  static Color textBodyColor(BuildContext context) {
+    return isDarkMode(context) ? textBodyDark : textBody;
   }
 
   static Color cardBackgroundColor(BuildContext context) {
@@ -129,8 +162,8 @@ class AppColors {
     return isDarkMode(context) ? const Color(0xFF383634) : neutralBackground;
   }
 
-  static Color textPrimary(BuildContext context) {
-    return isDarkMode(context) ? onSurfaceDark : onSurfaceLight;
+  static Color textPrimaryColor(BuildContext context) {
+    return isDarkMode(context) ? textPrimaryDark : textPrimary;
   }
 
   static Color secondaryTextColor(BuildContext context) {

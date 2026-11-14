@@ -733,8 +733,7 @@ class _TypeChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color:
-              isSelected ? AppColors.neutralBackgroundInverse : Colors.white,
+          color: isSelected ? AppColors.neutralBackgroundInverse : Colors.white,
           borderRadius: AppRadius.extra4Large,
           border: Border.all(
             color: isSelected

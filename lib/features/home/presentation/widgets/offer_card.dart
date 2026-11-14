@@ -43,7 +43,7 @@ class _OfferCardState extends State<OfferCard> {
           width: 172.0,
           height: 298.2,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.neutralBackgroundSurfaceColor(context),
             borderRadius: AppRadius.overMedium,
           ),
           child: Column(
@@ -53,7 +53,7 @@ class _OfferCardState extends State<OfferCard> {
                 height: 160.0,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: AppColors.secondary.withValues(alpha: 0.5),
+                  color: AppColors.secondaryTintColor(context),
                   borderRadius: AppRadius.topOnly,
                 ),
                 child: Stack(
@@ -78,15 +78,15 @@ class _OfferCardState extends State<OfferCard> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                           decoration: BoxDecoration(
-                            color: AppColors.secondary,
+                            color: AppColors.primary,
                             borderRadius: AppRadius.large,
                           ),
                           child: Text(
-                            '-${product.discountPercentage.toInt()}%',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            '${product.discountPercentage.toInt()}%-',
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: AppColors.textPrimaryColor(context),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -97,7 +97,6 @@ class _OfferCardState extends State<OfferCard> {
                         builder: (context, state) {
                           final isFavorite = state.data?.any((p) => p.id == product.id) ?? false;
                           return FavoriteButton(
-                            size: 20.0,
                             initialFavorite: isFavorite,
                             onFavoriteChanged: (isFav) {
                               context.read<FavoritesBloc>().add(ToggleFavoriteEvent(product));
@@ -125,11 +124,13 @@ class _OfferCardState extends State<OfferCard> {
                           const SizedBox(width: 2.0),
                           const Icon(Icons.star_rounded, size: 20.0, color: AppColors.secondary),
                           const SizedBox(width: 4.0),
-                          const Text('•', style: TextStyle(color: AppColors.neutral)),
+                          Text('•', style: TextStyle(color: AppColors.tertiaryColor(context))),
                           const SizedBox(width: 4.0),
                           Text(
                             product.brand,
-                            style: Theme.of(context).textTheme.bodySmall,
+                            style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              color: AppColors.tertiaryColor(context),
+                            ),
                           ),
                         ],
                       ),
@@ -137,34 +138,24 @@ class _OfferCardState extends State<OfferCard> {
                         product.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColors.neutral900,
-                            ),
-                      ),
-                      Row(
-                        spacing: 5.0,
-                        children: [
-                          Text(
-                            product.discountedPrice.toString(),
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primary,
-                                ),
-                          ),
-                          Text(
-                            'sp_currency'.tr(),
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: AppColors.neutral,
-                                ),
-                          ),
-                        ],
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: AppColors.textPrimaryColor(context),
+                          fontWeight: .bold,
+                        ),
                       ),
                       Text(
-                        '${product.price}',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColors.neutral,
-                              decoration: TextDecoration.lineThrough,
-                            ),
+                        '${product.price} ${'sp_currency'.tr()}',
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: AppColors.tertiaryColor(context),
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                      Text(
+                        '${product.discountedPrice} ${'sp_currency'.tr()}',
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryColor(context),
+                        ),
                       ),
                     ],
                   ),

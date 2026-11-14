@@ -57,7 +57,7 @@ class AppBackButton extends StatelessWidget {
           child: Icon(
             icon ?? Icons.arrow_back_ios_new_rounded,
             size: iconSize,
-            color: iconColor ?? AppColors.textPrimary(context),
+            color: iconColor ?? AppColors.textPrimaryColor(context),
           ),
         ),
       ),

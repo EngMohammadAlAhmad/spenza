@@ -31,7 +31,7 @@ class TodayOffersSection extends StatelessWidget {
               Text(
                 'today_offers'.tr(),
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .w800,
                 ),
               ),
               /*const Spacer(),
@@ -50,7 +50,7 @@ class TodayOffersSection extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   separatorBuilder: (context, index) => const SizedBox(width: 15.0),
                   itemBuilder: (context, index) => ShimmerPlaceholder(
-                    width: 172,
+                    width: 172.0,
                     height: 298.2,
                     borderRadius: AppRadius.overMedium,
                   ),

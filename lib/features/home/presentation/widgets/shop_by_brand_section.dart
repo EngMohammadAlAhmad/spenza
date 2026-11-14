@@ -33,8 +33,8 @@ class ShopByBrandSection extends StatelessWidget {
             children: [
               Text(
                 'shop_by_brand'.tr(),
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: .bold,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  fontWeight: .w800,
                 ),
               ),
               ViewAllButton(

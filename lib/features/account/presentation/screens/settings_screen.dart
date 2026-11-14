@@ -366,7 +366,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.screenBackgroundColor(context),
+      backgroundColor: AppColors.neutralBackgroundColor(context),
       body: Column(
         children: [
           AppHeader(

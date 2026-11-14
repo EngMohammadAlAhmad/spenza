@@ -4,13 +4,15 @@ import 'package:spenza/core/themes/app_colors.dart';
 
 class FavoriteButton extends StatefulWidget {
   final double size;
+  final double iconSize;
   final Color? color;
   final bool initialFavorite;
   final void Function(bool isFavorite)? onFavoriteChanged;
 
   const FavoriteButton({
     super.key,
-    this.size = 22.0,
+    this.size = 36.0,
+    this.iconSize = 18.0,
     this.color,
     this.initialFavorite = false,
     this.onFavoriteChanged,
@@ -47,9 +49,11 @@ class _FavoriteButtonState extends State<FavoriteButton> {
         }
       },
       child: Container(
-        padding: const EdgeInsets.all(10.0),
+        width: widget.size,
+        height: widget.size,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.neutralBackgroundSurfaceColor(context),
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
@@ -61,9 +65,12 @@ class _FavoriteButtonState extends State<FavoriteButton> {
         ),
         child: Icon(
           _isFavorite ? Icons.favorite : Icons.favorite_border,
-          size: widget.size,
-          color: _isFavorite ? AppColors.primary : (widget.color ?? AppColors.neutral),
-        ).animate(target: _isFavorite ? 1 : 0)
+          size: widget.iconSize,
+          color: _isFavorite
+              ? AppColors.primaryColor(context)
+              : (widget.color ?? AppColors.tertiaryColor(context)),
+        )
+            .animate(target: _isFavorite ? 1 : 0)
             .scaleXY(begin: 1.0, end: 1.3, duration: 150.ms)
             .then()
             .scaleXY(begin: 1.3, end: 1.0, duration: 150.ms),

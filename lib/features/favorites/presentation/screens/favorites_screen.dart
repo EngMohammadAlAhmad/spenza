@@ -71,7 +71,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         StatefulNavigationShell.of(context).goBranch(0);
       },
       child: Scaffold(
-        backgroundColor: AppColors.screenBackgroundColor(context),
+        backgroundColor: AppColors.neutralBackgroundColor(context),
         body: Column(
           children: [
             FavoritesHeader(key: ValueKey('${keyPrefix}_header')),
@@ -178,7 +178,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               'save_your_favorite_products'.tr(),
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary(context),
+                    color: AppColors.textPrimaryColor(context),
                   ),
               textAlign: TextAlign.center,
             )
@@ -270,7 +270,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               'your_favorites_waiting'.tr(),
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary(context),
+                    color: AppColors.textPrimaryColor(context),
                   ),
               textAlign: TextAlign.center,
             )

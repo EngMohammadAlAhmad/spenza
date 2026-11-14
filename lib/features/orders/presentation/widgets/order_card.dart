@@ -66,7 +66,7 @@ class OrderCard extends StatelessWidget {
                             order.orderNumber,
                             style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               fontWeight: FontWeight.w800,
-                              color: AppColors.textPrimary(context),
+                              color: AppColors.textPrimaryColor(context),
                             ),
                           ),
                           const SizedBox(height: 4.0),
@@ -131,7 +131,7 @@ class OrderCard extends StatelessWidget {
                           '${formatter.format(order.totalAmount)} ${'sp_currency'.tr()}',
                           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                             fontWeight: FontWeight.w800,
-                            color: AppColors.textPrimary(context),
+                            color: AppColors.textPrimaryColor(context),
                           ),
                         ),
                         const SizedBox(height: 3.0),

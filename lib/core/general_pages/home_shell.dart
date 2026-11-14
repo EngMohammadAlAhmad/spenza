@@ -155,7 +155,7 @@ class _HomeShellState extends State<HomeShell> {
         },
         child: Scaffold(
           extendBody: true,
-          backgroundColor: AppColors.screenBackgroundColor(context),
+          backgroundColor: AppColors.neutralBackgroundColor(context),
           body: GestureDetector(
             behavior: HitTestBehavior.translucent,
             onHorizontalDragUpdate: _onHorizontalDragUpdate,

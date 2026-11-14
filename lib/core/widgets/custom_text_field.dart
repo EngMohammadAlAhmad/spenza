@@ -23,6 +23,7 @@ class CustomTextField extends StatelessWidget {
   final bool? forPhone;
   final Color? fillColor;
   final Color? borderColor;
+  final BorderRadius? borderRadius;
   final bool? allowTwoDecimalPlaces;
   final double? horizontalContentPadding;
   final double? verticalContentPadding;
@@ -56,6 +57,7 @@ class CustomTextField extends StatelessWidget {
     this.forPhone = false,
     this.fillColor,
     this.borderColor,
+    this.borderRadius,
     this.allowTwoDecimalPlaces,
     this.horizontalContentPadding = 16.0,
     this.verticalContentPadding = 16.0,
@@ -91,6 +93,8 @@ class CustomTextField extends StatelessWidget {
         ? ((height! - 22.0) / 2).clamp(0.0, 20.0)
         : verticalContentPadding!;
 
+    final bool isTransparentBorder = borderColor == Colors.transparent;
+
     Widget textField = TextFormField(
       controller: controller,
       style: style,
@@ -120,42 +124,62 @@ class CustomTextField extends StatelessWidget {
         hintStyle: hintStyle ??
             (shouldRestrictPhone
                 ? Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: AppColors.neutral,
+                      color: AppColors.tertiaryColor(context),
                       letterSpacing: 0.5,
                     )
-                : Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: AppColors.neutral,
+                : Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: AppColors.tertiaryColor(context),
                     )),
         prefixIcon: prefixIcon,
         prefixIconConstraints: prefixIconConstraints ?? const BoxConstraints(minWidth: 25.0, minHeight: 25.0),
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: fillColor ?? AppColors.neutral200,
-        border: OutlineInputBorder(
-          borderRadius: AppRadius.brandRadius,
-          borderSide: BorderSide(
-            color: borderColor ?? AppColors.neutral200,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: AppRadius.brandRadius,
-          borderSide: BorderSide(
-            color: borderColor ?? AppColors.neutral200,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: AppRadius.brandRadius,
-          borderSide: BorderSide(
-            color: Theme.of(context).primaryColor,
-            width: 1.0,
-          ),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: AppRadius.brandRadius,
-          borderSide: BorderSide(
-            color: (borderColor ?? AppColors.neutral200).withValues(alpha: 0.5),
-          ),
-        ),
+        border: isTransparentBorder
+            ? OutlineInputBorder(
+                borderRadius: borderRadius ?? AppRadius.brandRadius,
+                borderSide: BorderSide.none,
+              )
+            : OutlineInputBorder(
+                borderRadius: borderRadius ?? AppRadius.brandRadius,
+                borderSide: BorderSide(
+                  color: borderColor ?? AppColors.neutral200,
+                ),
+              ),
+        enabledBorder: isTransparentBorder
+            ? OutlineInputBorder(
+                borderRadius: borderRadius ?? AppRadius.brandRadius,
+                borderSide: BorderSide.none,
+              )
+            : OutlineInputBorder(
+                borderRadius: borderRadius ?? AppRadius.brandRadius,
+                borderSide: BorderSide(
+                  color: borderColor ?? AppColors.neutral200,
+                ),
+              ),
+        focusedBorder: isTransparentBorder
+            ? OutlineInputBorder(
+                borderRadius: borderRadius ?? AppRadius.brandRadius,
+                borderSide: BorderSide.none,
+              )
+            : OutlineInputBorder(
+                borderRadius: borderRadius ?? AppRadius.brandRadius,
+                borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor,
+                  width: 1.0,
+                ),
+              ),
+        disabledBorder: isTransparentBorder
+            ? OutlineInputBorder(
+                borderRadius: borderRadius ?? AppRadius.brandRadius,
+                borderSide: BorderSide.none,
+              )
+            : OutlineInputBorder(
+                borderRadius: borderRadius ?? AppRadius.brandRadius,
+                borderSide: BorderSide(
+                  color: (borderColor ?? AppColors.neutral200).withValues(alpha: 0.5),
+                ),
+              ),
         errorBorder: OutlineInputBorder(
           borderRadius: AppRadius.brandRadius,
           borderSide: const BorderSide(

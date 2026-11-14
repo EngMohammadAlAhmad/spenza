@@ -35,7 +35,7 @@ class SelectionBottomSheet<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.screenBackgroundColor(context),
+        color: AppColors.neutralBackgroundColor(context),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32.0)),
       ),
       padding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 32.0),
@@ -62,7 +62,7 @@ class SelectionBottomSheet<T> extends StatelessWidget {
                 child: Icon(
                   Icons.close_rounded,
                   size: 24.0,
-                  color: AppColors.textPrimary(context),
+                  color: AppColors.textPrimaryColor(context),
                 ),
               ),
               Text(
@@ -70,7 +70,7 @@ class SelectionBottomSheet<T> extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary(context),
+                  color: AppColors.textPrimaryColor(context),
                 ),
               ),
               const SizedBox(width: 24.0),
@@ -168,7 +168,7 @@ class _SelectionOptionCard<T> extends StatelessWidget {
               child: SvgPicture.asset(
                 option.iconPath,
                 colorFilter: ColorFilter.mode(
-                  isSelected ? AppColors.primary500 : AppColors.textPrimary(context),
+                  isSelected ? AppColors.primary500 : AppColors.textPrimaryColor(context),
                   BlendMode.srcIn,
                 ),
               ),
@@ -185,7 +185,7 @@ class _SelectionOptionCard<T> extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary(context),
+                      color: AppColors.textPrimaryColor(context),
                     ),
                   ),
                   const SizedBox(height: 2.0),

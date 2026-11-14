@@ -48,7 +48,7 @@ class SettingsTile extends StatelessWidget {
                   width: 20.0,
                   height: 20.0,
                   colorFilter: ColorFilter.mode(
-                    AppColors.textPrimary(context),
+                    AppColors.textPrimaryColor(context),
                     BlendMode.srcIn,
                   ),
                 ),
@@ -61,7 +61,7 @@ class SettingsTile extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary(context),
+                  color: AppColors.textPrimaryColor(context),
                 ),
               ),
 

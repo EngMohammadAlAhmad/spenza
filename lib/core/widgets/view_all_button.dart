@@ -24,13 +24,13 @@ class ViewAllButton extends StatelessWidget {
           Text(
             text.tr(),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
-                ),
+              color: AppColors.primaryColor(context),
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          const Icon(
+          Icon(
             Icons.arrow_forward_ios,
-            color: AppColors.primary,
+            color: AppColors.primaryColor(context),
             size: 13.0,
           ),
         ],

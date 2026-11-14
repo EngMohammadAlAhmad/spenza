@@ -77,13 +77,13 @@ class CartBar extends StatelessWidget {
                         Container(
                           width: 44.0,
                           height: 44.0,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
+                          decoration: BoxDecoration(
+                            color: AppColors.neutralBackgroundSurfaceColor(context),
                             shape: BoxShape.circle,
                           ),
                           alignment: Alignment.center,
                           child: SvgPicture.asset(
-                            AppAssets.cartIcon2,
+                            AppAssets.cartIcon,
                             colorFilter: const ColorFilter.mode(
                               AppColors.primary,
                               BlendMode.srcIn,
@@ -110,6 +110,7 @@ class CartBar extends StatelessWidget {
                               '$itemCount',
                               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                 fontWeight: .bold,
+                                color: AppColors.textPrimary,
                               ),
                             ),
                           ),
@@ -152,7 +153,7 @@ class CartBar extends StatelessWidget {
                         vertical: 8.0,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.neutralBackgroundSurfaceColor(context),
                         borderRadius: AppRadius.large,
                       ),
                       child: Row(

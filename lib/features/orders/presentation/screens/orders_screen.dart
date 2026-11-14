@@ -68,7 +68,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
         StatefulNavigationShell.of(context).goBranch(0);
       },
       child: Scaffold(
-        backgroundColor: AppColors.screenBackgroundColor(context),
+        backgroundColor: AppColors.neutralBackgroundColor(context),
         body: BlocBuilder<AuthStatusBloc, AuthStatusState>(
           builder: (context, authState) {
             if (!authState.isLoggedIn) {
