@@ -71,7 +71,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         StatefulNavigationShell.of(context).goBranch(0);
       },
       child: Scaffold(
-        backgroundColor: AppColors.neutralBackgroundColor(context),
+        backgroundColor: AppColors.neutralBackgroundCanvasColor(context),
         body: Column(
           children: [
             FavoritesHeader(key: ValueKey('${keyPrefix}_header')),
@@ -280,8 +280,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             Text(
               'empty_favorites_desc'.tr(),
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppColors.secondaryTextColor(context),
-                  ),
+                color: AppColors.tertiaryColor(context),
+              ),
               textAlign: TextAlign.center,
             )
                 .animate(key: ValueKey('${keyPrefix}_empty_desc'))
@@ -301,4 +301,5 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       ),
     );
   }
+
 }

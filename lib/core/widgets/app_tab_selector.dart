@@ -102,25 +102,20 @@ class AppTabSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final effectiveIndicatorRadius = indicatorRadius ?? borderRadius;
-    final isDark = AppColors.isDarkMode(context);
 
     final effectiveBackgroundColor = backgroundColor ?? AppColors.containerBoxBackgroundColor(context);
-    final effectiveIndicatorColor = indicatorColor ??
-        (isDark ? const Color(0xFF42201D) : AppColors.primaryTint);
-    final effectiveActiveTextColor = activeTextColor ??
-        (isDark ? AppColors.primaryLight : AppColors.primaryBold);
-    final effectiveInactiveTextColor = inactiveTextColor ?? AppColors.secondaryTextColor(context);
-    final effectiveActiveBadgeBackgroundColor = activeBadgeBackgroundColor ??
-        (isDark ? AppColors.cardDark : Colors.white);
-    final effectiveInactiveBadgeBackgroundColor = inactiveBadgeBackgroundColor ??
-        (isDark ? const Color(0xFF383634) : const Color(0xFFE2DDD7));
+    final effectiveIndicatorColor = indicatorColor ?? AppColors.primaryTintColor(context);
+    final effectiveActiveTextColor = activeTextColor ?? AppColors.primaryStrongColor(context);
+    final effectiveInactiveTextColor = inactiveTextColor ?? AppColors.tertiaryColor(context);
+    final effectiveActiveBadgeBackgroundColor = activeBadgeBackgroundColor ?? AppColors.badgeColor(context);
+    final effectiveInactiveBadgeBackgroundColor = inactiveBadgeBackgroundColor ?? AppColors.badgeInactiveColor(context);
 
     final AlignmentDirectional alignment = items.length <= 1
         ? AlignmentDirectional.center
         : AlignmentDirectional(
-            -1.0 + (2.0 * selectedIndex / (items.length - 1)),
-            0.0,
-          );
+      -1.0 + (2.0 * selectedIndex / (items.length - 1)),
+      0.0,
+    );
 
     return Container(
       height: height,
@@ -168,7 +163,7 @@ class AppTabSelector extends StatelessWidget {
                           duration: const Duration(milliseconds: 200),
                           style: (titleTextStyle ?? Theme.of(context).textTheme.bodyLarge!).copyWith(
                             color: isSelected ? effectiveActiveTextColor : effectiveInactiveTextColor,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isSelected ? .bold : .normal,
                           ),
                           child: Text(item.title),
                         ),

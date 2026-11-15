@@ -40,6 +40,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final effectiveRadius = borderRadius ?? AppRadius.brandRadius;
     final button = _buildButton(context, effectiveRadius);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SizedBox(
       width: width ?? double.infinity,
@@ -51,7 +52,7 @@ class CustomButton extends StatelessWidget {
                 Container(
                   height: height + _underlayerOffset,
                   decoration: BoxDecoration(
-                    color: underlayerColor ?? AppColors.primaryLight,
+                    color: underlayerColor ?? (isDark ? Colors.transparent : AppColors.primaryLight),
                     borderRadius: effectiveRadius,
                   ),
                 ),

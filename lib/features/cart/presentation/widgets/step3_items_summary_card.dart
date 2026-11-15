@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/widgets/app_icon_container.dart';
 import 'package:spenza/features/cart/domain/entities/cart_item_entity.dart';
 
 class Step3ItemsSummaryCard extends StatelessWidget {
@@ -44,8 +45,8 @@ class Step3ItemsSummaryCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  SvgPicture.asset(
-                    AppAssets.productsIcon,
+                  AppIconContainer(
+                    iconPath: AppAssets.cartIcon,
                   ),
                   const SizedBox(width: 8.0),
                   Text(

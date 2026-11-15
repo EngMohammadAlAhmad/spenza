@@ -99,7 +99,7 @@ class AppAssets {
   static const String priceFromTopIcon = '$_icons/price_from_top_icon.svg';
   static const String preparingIcon = '$_icons/preparing_icon.svg';
   static const String productIcon = '$_icons/product_icon.svg';
-  static const String productsIcon = '$_icons/products_icon.svg';
+  //static const String productsIcon = '$_icons/products_icon.svg';
   static const String productsIconBig = '$_icons/products_icon_big.svg';
   static const String rateIcon = '$_icons/rate_icon.svg';
   static const String refreshIcon = '$_icons/refresh_icon.svg';

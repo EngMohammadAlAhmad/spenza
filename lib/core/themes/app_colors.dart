@@ -109,6 +109,9 @@ class AppColors {
   static Color primaryColor(BuildContext context) {
     return isDarkMode(context) ? primaryDark : primary;
   }
+  static Color primaryStrongColor(BuildContext context) {
+    return isDarkMode(context) ? primaryLight : primaryBold;
+  }
 
   static Color tertiaryColor(BuildContext context) {
     return isDarkMode(context) ? tertiaryDark : tertiary;
@@ -146,6 +149,14 @@ class AppColors {
     return isDarkMode(context) ? cardDark : cardLight;
   }
 
+  static Color badgeColor(BuildContext context) {
+    return isDarkMode(context) ? borderDark : cardLight;
+  }
+
+  static Color badgeInactiveColor(BuildContext context) {
+    return isDarkMode(context) ? grey.withValues(alpha: 0.2) : neutralBorderDefault;
+  }
+
   static Color bottomSheetBackgroundColor(BuildContext context) {
     return isDarkMode(context) ? cardDark : const Color(0xFFF9F6F2);
   }
@@ -156,6 +167,10 @@ class AppColors {
 
   static Color containerBoxBackgroundColor(BuildContext context) {
     return isDarkMode(context) ? const Color(0xFF333130) : neutralBackground;
+  }
+
+  static Color placeholderColor(BuildContext context) {
+    return isDarkMode(context) ? dividerDark : secondaryTint;
   }
 
   static Color tileIconBackgroundColor(BuildContext context) {
@@ -172,10 +187,6 @@ class AppColors {
 
   static Color dividerColor(BuildContext context) {
     return isDarkMode(context) ? dividerDark : neutral200;
-  }
-
-  static Color getBorderColor(BuildContext context) {
-    return isDarkMode(context) ? borderDark : borderLight;
   }
 
   static Color getDisabledColor(BuildContext context) {

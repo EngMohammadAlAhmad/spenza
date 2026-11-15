@@ -93,42 +93,41 @@ class _SectionsScreenState extends State<SectionsScreen> {
           ),
         ],
         child: BlocListener<LanguageBloc, BaseState<LanguageEntity>>(
-          listenWhen: (previous, current) =>
-              previous.data?.code != current.data?.code,
+          listenWhen: (previous, current) => previous.data?.code != current.data?.code,
           listener: (context, state) {
             context.read<CategoriesBloc>().add(const GetCategoriesEvent(isRefresh: true));
             context.read<BrandsBloc>().add(const GetBrandsEvent(isRefresh: true));
           },
           child: Scaffold(
-            backgroundColor: AppColors.neutralBackgroundColor(context),
-          body: Column(
-            children: [
-              SectionsHeader(
-                key: ValueKey('${keyPrefix}_header'),
-                currentPage: _currentPage,
-                onTabTapped: _onTabTapped,
-              ),
-              const SizedBox(height: 16.0),
-              // Animated Content
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: PageView(
-                    controller: _pageController,
-                    onPageChanged: (index) => setState(() => _currentPage = index),
-                    physics: const BouncingScrollPhysics(),
-                    children: [
-                      CategoriesGridView(key: ValueKey('${keyPrefix}_categories')),
-                      BrandsGridView(key: ValueKey('${keyPrefix}_brands')),
-                    ],
+            backgroundColor: AppColors.neutralBackgroundCanvasColor(context),
+            body: Column(
+              children: [
+                SectionsHeader(
+                  key: ValueKey('${keyPrefix}_header'),
+                  currentPage: _currentPage,
+                  onTabTapped: _onTabTapped,
+                ),
+                const SizedBox(height: 16.0),
+                // Animated Content
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: PageView(
+                      controller: _pageController,
+                      onPageChanged: (index) => setState(() => _currentPage = index),
+                      physics: const BouncingScrollPhysics(),
+                      children: [
+                        CategoriesGridView(key: ValueKey('${keyPrefix}_categories')),
+                        BrandsGridView(key: ValueKey('${keyPrefix}_brands')),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

@@ -95,7 +95,7 @@ class AppHeader extends StatelessWidget {
         break;
       case AppHeaderStyle.light:
         decoration = BoxDecoration(
-          color: backgroundColor ?? AppColors.headerBackgroundColor(context),
+          color: backgroundColor ?? AppColors.neutralBackgroundSurfaceColor(context),
           borderRadius: borderRadius ??
               const BorderRadius.vertical(
                 bottom: Radius.circular(28.0),

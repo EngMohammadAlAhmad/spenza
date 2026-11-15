@@ -6,6 +6,7 @@ import 'package:spenza/core/routes/route_paths.dart';
 import 'package:spenza/core/themes/app_colors.dart';
 import 'package:spenza/core/themes/app_radius.dart';
 import 'package:spenza/core/utils/app_assets.dart';
+import 'package:spenza/core/widgets/app_icon_container.dart';
 import 'package:spenza/features/orders/domain/entities/order_response_entity.dart';
 import 'package:spenza/features/orders/presentation/utils/order_localization_helper.dart';
 
@@ -72,19 +73,17 @@ class OrderCard extends StatelessWidget {
                           const SizedBox(height: 4.0),
                           Text(
                             '${_formatDate(order.placedAt)} · ${order.itemsCount} ${order.itemsCount == 1 ? 'item_unit'.tr() : 'items_unit'.tr()}',
-                            style: TextStyle(
-                              fontSize: 12.0,
-                              color: AppColors.secondaryTextColor(context),
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: AppColors.tertiaryColor(context),
                             ),
                           ),
                           const SizedBox(height: 8.0),
 
                           // Item Thumbnails
-                          _buildThumbnails(order.itemImages),
+                          _buildThumbnails(context, order.itemImages),
                         ],
                       ),
                     ),
-                    const SizedBox(width: 8.0),
                     // Order Status Badge
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -200,16 +199,15 @@ class OrderCard extends StatelessWidget {
                       children: [
                         Text(
                           actionLabel,
-                          style: const TextStyle(
-                            fontSize: 13.0,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFC74436),
+                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontWeight: .bold,
+                            color: AppColors.primaryColor(context),
                           ),
                         ),
-                        const Icon(
+                        Icon(
                           Icons.chevron_right_rounded,
-                          size: 18.0,
-                          color: Color(0xFFC74436),
+                          size: 20.0,
+                          color: AppColors.primaryColor(context),
                         ),
                       ],
                     ),
@@ -223,7 +221,7 @@ class OrderCard extends StatelessWidget {
     );
   }
 
-  Widget _buildThumbnails(List<String> images) {
+  Widget _buildThumbnails(BuildContext context, List<String> images) {
     final Widget thumbnailsRow;
 
     if (images.isNotEmpty) {
@@ -241,7 +239,7 @@ class OrderCard extends StatelessWidget {
                 width: 36.0,
                 height: 36.0,
                 fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => _buildPlaceholderSquare(),
+                errorBuilder: (_, _, _) => _buildPlaceholderSquare(context),
               ),
             );
           }).toList(),
@@ -257,7 +255,7 @@ class OrderCard extends StatelessWidget {
           spacing: 6.0,
           children: List.generate(
             count,
-            (_) => _buildPlaceholderSquare(),
+                (_) => _buildPlaceholderSquare(context),
           ),
         ),
       );
@@ -281,8 +279,14 @@ class OrderCard extends StatelessWidget {
     );
   }
 
-  Widget _buildPlaceholderSquare() {
-    return SvgPicture.asset(AppAssets.productsIcon, height: 44.0, width: 44.0);
+  Widget _buildPlaceholderSquare(BuildContext context) {
+    return AppIconContainer(
+      iconPath: AppAssets.cartIcon,
+      borderRadius: AppRadius.medium,
+      iconSize: 25.0,
+      size: 44.0,
+      backgroundColor: AppColors.tileIconBackgroundColor(context),
+    );
   }
 
   String _formatDate(String dateStr) {
@@ -318,8 +322,8 @@ class OrderCard extends StatelessWidget {
         label.contains('إلغاء') ||
         label.contains('مرفوض')) {
       return _StatusStyle(
-        backgroundColor: const Color(0xFFFEE2E2),
-        textColor: const Color(0xFFDC2626),
+        backgroundColor: AppColors.alert.withValues(alpha: 0.2),
+        textColor: AppColors.alert,
       );
     }
 
@@ -331,8 +335,8 @@ class OrderCard extends StatelessWidget {
         label.contains('مكتمل') ||
         label.contains('استلام')) {
       return _StatusStyle(
-        backgroundColor: const Color(0xFFD1FAE5),
-        textColor: const Color(0xFF059669),
+        backgroundColor: AppColors.successLight.withValues(alpha: 0.2),
+        textColor: AppColors.successLight,
       );
     }
 
@@ -341,8 +345,8 @@ class OrderCard extends StatelessWidget {
         label.contains('مندوب') ||
         label.contains('توصيل')) {
       return _StatusStyle(
-        backgroundColor: const Color(0xFFFEF3C7),
-        textColor: const Color(0xFFB45309),
+        backgroundColor: AppColors.warningLight.withValues(alpha: 0.2),
+        textColor: AppColors.warningLight,
       );
     }
 
@@ -351,8 +355,8 @@ class OrderCard extends StatelessWidget {
         status == 'processing' ||
         label.contains('تجهيز')) {
       return _StatusStyle(
-        backgroundColor: const Color(0xFFEEF2FF),
-        textColor: const Color(0xFF4F46E5),
+        backgroundColor: AppColors.blue2.withValues(alpha: 0.2),
+        textColor: AppColors.blue,
       );
     }
 
@@ -362,14 +366,14 @@ class OrderCard extends StatelessWidget {
         label.contains('حوالة') ||
         label.contains('تأكيد')) {
       return _StatusStyle(
-        backgroundColor: const Color(0xFFFEF3C7),
-        textColor: AppColors.warningAlert,
+        backgroundColor: AppColors.warningLight.withValues(alpha: 0.2),
+        textColor: AppColors.warningLight,
       );
     }
 
     return _StatusStyle(
-      backgroundColor: const Color(0xFFEEF2FF),
-      textColor: const Color(0xFF3B82F6),
+      backgroundColor: AppColors.blue2.withValues(alpha: 0.2),
+      textColor: AppColors.blue,
     );
   }
 
@@ -388,8 +392,8 @@ class OrderCard extends StatelessWidget {
         label.contains('مرفوض') ||
         label.contains('غير')) {
       return _StatusStyle(
-        backgroundColor: const Color(0xFFFEE2E2),
-        textColor: const Color(0xFFDC2626),
+        backgroundColor: AppColors.alert.withValues(alpha: 0.2),
+        textColor: AppColors.alert,
       );
     } else if (status == 'paid' ||
         status == 'completed' ||
@@ -397,8 +401,8 @@ class OrderCard extends StatelessWidget {
         label.contains('مدفوع') ||
         label.contains('مكتمل')) {
       return _StatusStyle(
-        backgroundColor: const Color(0xFFD1FAE5),
-        textColor: const Color(0xFF059669),
+        backgroundColor: AppColors.successLight.withValues(alpha: 0.2),
+        textColor: AppColors.successLight,
       );
     } else if (order.needsPaymentReview ||
         status.contains('review') ||
@@ -407,14 +411,14 @@ class OrderCard extends StatelessWidget {
         label.contains('انتظار') ||
         label.contains('تأكيد')) {
       return _StatusStyle(
-        backgroundColor: const Color(0xFFFEF3C7),
-        textColor: AppColors.warningAlert,
+        backgroundColor: AppColors.warningDark.withValues(alpha: 0.2),
+        textColor: AppColors.warningLight,
       );
     }
 
     return _StatusStyle(
-      backgroundColor: const Color(0xFFF3F4F6),
-      textColor: const Color(0xFF6B7280),
+      backgroundColor: AppColors.blue2.withValues(alpha: 0.2),
+      textColor: AppColors.blue,
     );
   }
 

@@ -42,23 +42,21 @@ class CategoryCard extends StatelessWidget {
             flex: 3,
             child: ClipRRect(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
-              child: imageUrl != null && imageUrl!.isNotEmpty
-                  ? CachedNetworkImage(
-                      imageUrl: imageUrl!,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => const ShimmerPlaceholder(
-                        width: double.infinity,
-                        height: double.infinity,
-                      ),
-                      errorWidget: (context, url, error) => Container(
-                        color: AppColors.fillColor,
-                        child: const AppIconPlaceholder(size: 100.0),
-                      ),
-                    )
-                  : Container(
-                      color: AppColors.fillColor,
-                      child: const AppIconPlaceholder(size: 100.0),
-                    ),
+              child: imageUrl != null && imageUrl!.isNotEmpty ? CachedNetworkImage(
+                imageUrl: imageUrl!,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => const ShimmerPlaceholder(
+                  width: double.infinity,
+                  height: double.infinity,
+                ),
+                errorWidget: (context, url, error) => Container(
+                  color: AppColors.secondaryTintColor(context),
+                  child: const AppIconPlaceholder(size: 100.0),
+                ),
+              ) : Container(
+                color: AppColors.placeholderColor(context),
+                child: const AppIconPlaceholder(size: 100.0),
+              ),
             ),
           ),
           Expanded(
@@ -71,10 +69,10 @@ class CategoryCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimaryColor(context),
-                        ),
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      fontWeight: .bold,
+                      color: AppColors.textPrimaryColor(context),
+                    ),
                     textAlign: TextAlign.right,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -82,9 +80,9 @@ class CategoryCard extends StatelessWidget {
                   const SizedBox(height: 4.0),
                   Text(
                     subtitle,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.secondaryTextColor(context),
-                        ),
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: AppColors.tertiaryColor(context),
+                    ),
                     textAlign: TextAlign.right,
                   ),
                 ],

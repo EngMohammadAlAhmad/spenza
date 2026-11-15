@@ -23,7 +23,7 @@ class SectionsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppHeader(
       style: AppHeaderStyle.light,
-      backgroundColor: AppColors.headerBackgroundColor(context),
+      backgroundColor: AppColors.neutralBackgroundSurfaceColor(context),
       showBackButton: false,
       borderRadius: const BorderRadius.only(
         bottomLeft: Radius.circular(34.0),
